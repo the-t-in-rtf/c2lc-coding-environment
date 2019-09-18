@@ -2,10 +2,11 @@
 
 import React from 'react';
 import Interpreter from './Interpreter';
+import type {Program} from './Interpreter';
 import TurtleGraphics from './TurtleGraphics';
 
 type AppState = {
-    program: Array<string>
+    program: Program
 };
 
 export default class App extends React.Component<{}, AppState> {

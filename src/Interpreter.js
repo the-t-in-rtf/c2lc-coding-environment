@@ -1,5 +1,7 @@
 // @flow
 
+export type Program = Array<string>;
+
 type CommandHandler = {
     (Interpreter): void
 };
@@ -11,7 +13,7 @@ export default class Interpreter {
         this.commands = commands;
     }
 
-    run(program: Array<string>): void {
+    run(program: Program): void {
         for (const command of program) {
             const handler = this.commands[command];
             if (handler) {
