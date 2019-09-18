@@ -3,14 +3,18 @@
 import React from 'react';
 import Interpreter from './Interpreter';
 import type {Program} from './Interpreter';
+import ProgramTextEditor from './ProgramTextEditor';
+import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
 
 type AppState = {
-    program: Program
+    program: Program,
+    programVer: number
 };
 
 export default class App extends React.Component<{}, AppState> {
     interpreter: Interpreter;
+    syntax: TextSyntax;
     turtleGraphicsRef: { current: null | TurtleGraphics };
 
     constructor(props: {}) {
@@ -26,7 +30,8 @@ export default class App extends React.Component<{}, AppState> {
                 "left",
                 "forward",
                 "left"
-            ]
+            ],
+            programVer: 1
         };
 
         this.interpreter = new Interpreter(
@@ -49,9 +54,21 @@ export default class App extends React.Component<{}, AppState> {
             }
         );
 
+        this.syntax = new TextSyntax();
         this.turtleGraphicsRef = React.createRef<TurtleGraphics>();
 
+        this.setProgram = this.setProgram.bind(this);
         this.handleClickRun = this.handleClickRun.bind(this);
+    }
+
+    setProgram: (Program) => void;
+    setProgram(program: Program) {
+        this.setState((state) => {
+            return {
+                program: program,
+                programVer: state.programVer + 1
+            }
+        });
     }
 
     handleClickRun: () => void;
@@ -62,10 +79,15 @@ export default class App extends React.Component<{}, AppState> {
     render() {
         return (
             <div>
+                <ProgramTextEditor
+                    program={this.state.program}
+                    programVer={this.state.programVer}
+                    syntax={this.syntax}
+                    onChange={this.setProgram} />
                 <div className='c2lc-graphics'>
                     <TurtleGraphics ref={this.turtleGraphicsRef} />
                 </div>
-                <button onClick={ this.handleClickRun }>Run</button>
+                <button onClick={this.handleClickRun}>Run</button>
             </div>
         );
     }
