@@ -6,6 +6,7 @@ import type {Program} from './Interpreter';
 import ProgramTextEditor from './ProgramTextEditor';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
+import './App.css';
 
 type AppState = {
     program: Program,
@@ -84,7 +85,7 @@ export default class App extends React.Component<{}, AppState> {
                     programVer={this.state.programVer}
                     syntax={this.syntax}
                     onChange={this.setProgram} />
-                <div className='c2lc-graphics'>
+                <div className='App__turtle-graphics'>
                     <TurtleGraphics ref={this.turtleGraphicsRef} />
                 </div>
                 <button onClick={this.handleClickRun}>Run</button>

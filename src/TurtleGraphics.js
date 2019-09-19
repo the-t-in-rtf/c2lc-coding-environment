@@ -2,6 +2,7 @@
 
 import React from 'react';
 import * as C2lcMath from './C2lcMath';
+import './TurtleGraphics.css';
 
 type TurtleGraphicsState = {
     location: {
@@ -95,10 +96,11 @@ export default class TurtleGraphics extends React.Component<{}, TurtleGraphicsSt
         return (
             <div>
                 <span
+                    className='TurtleGraphics__drawing-area'
                     role='img'
-                    className='c2lc-turtleGraphics-drawingArea'
                     aria-label='Drawing area'>
                     <svg
+                        className='TurtleGraphics__svg'
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox='-100 -100 200 200'>
                         {this.state.path.map((pathSegment, i) => {
@@ -110,7 +112,7 @@ export default class TurtleGraphics extends React.Component<{}, TurtleGraphicsSt
                                 key={i} />
                         })}
                         <polygon
-                            className='c2lc-turtleGraphics-turtle'
+                            className='TurtleGraphics__turtle'
                             transform={turtleTransform}
                             points='-6 4 6 4 0 -9'/>
                     </svg>
