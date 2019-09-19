@@ -56,13 +56,10 @@ export default class App extends React.Component<{}, AppState> {
         );
 
         this.syntax = new TextSyntax();
-        this.turtleGraphicsRef = React.createRef<TurtleGraphics>();
 
-        this.setProgram = this.setProgram.bind(this);
-        this.handleClickRun = this.handleClickRun.bind(this);
+        this.turtleGraphicsRef = React.createRef<TurtleGraphics>();
     }
 
-    setProgram: (Program) => void;
     setProgram(program: Program) {
         this.setState((state) => {
             return {
@@ -72,10 +69,13 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
-    handleClickRun: () => void;
-    handleClickRun() {
+    handleChangeProgram = (program: Program) => {
+        this.setProgram(program);
+    };
+
+    handleClickRun = () => {
         this.interpreter.run(this.state.program);
-    }
+    };
 
     render() {
         return (
@@ -84,7 +84,7 @@ export default class App extends React.Component<{}, AppState> {
                     program={this.state.program}
                     programVer={this.state.programVer}
                     syntax={this.syntax}
-                    onChange={this.setProgram} />
+                    onChange={this.handleChangeProgram} />
                 <div className='App__turtle-graphics'>
                     <TurtleGraphics ref={this.turtleGraphicsRef} />
                 </div>

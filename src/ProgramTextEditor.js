@@ -34,8 +34,6 @@ export default class ProgramTextEditor extends React.Component<ProgramTextEditor
             programVer: props.programVer,
             text: props.syntax.print(props.program)
         };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleBlur = this.handleBlur.bind(this);
     }
 
     static getDerivedStateFromProps(props: ProgramTextEditorProps, state: ProgramTextEditorState) {
@@ -49,23 +47,21 @@ export default class ProgramTextEditor extends React.Component<ProgramTextEditor
         }
     }
 
-    handleChange: (SyntheticEvent<HTMLTextAreaElement>) => void;
-    handleChange(e: SyntheticEvent<HTMLTextAreaElement>) {
+    handleChange = (e: SyntheticEvent<HTMLTextAreaElement>) => {
         // Update the local program text state
         this.setState({
             text: e.currentTarget.value
         });
-    }
+    };
 
-    handleBlur: () => void;
-    handleBlur() {
+    handleBlur = () => {
         // Call the props.onChange handler at blur.
         // We could implement a much more sophisticated strategy here, such as
         // checking if the program is valid at each edit (textarea.onChange)
         // and call the onChange handler if the program has changed (and it is
         // valid).
         this.props.onChange(this.props.syntax.read(this.state.text));
-    }
+    };
 
     render() {
         return (
