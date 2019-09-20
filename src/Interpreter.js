@@ -9,7 +9,11 @@ type CommandHandler = {
 export default class Interpreter {
     commands: { [string]: CommandHandler };
 
-    constructor(commands: { [string]: CommandHandler }) {
+    constructor() {
+        this.commands = {};
+    }
+
+    setCommandHandlers(commands: { [string]: CommandHandler }) {
         this.commands = commands;
     }
 
