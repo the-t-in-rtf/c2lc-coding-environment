@@ -83,7 +83,10 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     render() {
+        // TODO: Don't configure the interpreter here -- render should have no side-efffects
+        //     - Maybe use https://reactjs.org/docs/react-component.html#componentdidupdate
         // TODO: Don't make anonymous CommandHandlers each time we render
+        // TODO: Register Dash CommandHandlers on successful connect, rather than on enable the feature support
         // TODO: When Dash is enabled, also draw on the screen
         // TODO: Show Dash connection status in the UI
 

@@ -12,3 +12,11 @@
     - [Event Handling for React (Flow documentation)](https://flow.org/en/docs/react/events/)
     - [Ecma TC39 "Class field declarations for JavaScript" proposal](https://github.com/tc39/proposal-class-fields)
 - Provide dependencies to an object instance via constructor parameters
+
+### Naming
+
+- JavaScript classes: UpperCamelCase
+- Flow types: UpperCamelCase
+- Methods and Functions: lowerCamelCase
+- Event handlers begin with "handle" (for example `handleClick`)
+- Event emitters begin with "on" (for example `onClick={this.handleClick}`)
