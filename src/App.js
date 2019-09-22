@@ -18,10 +18,13 @@ type AppSettings = {
     dashSupport: boolean
 }
 
+type DeviceConnectionStatus = "notConnected" | "connecting" | "connected";
+
 type AppState = {
     program: Program,
     programVer: number,
-    settings: AppSettings
+    settings: AppSettings,
+    dashConnectionStatus: DeviceConnectionStatus
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -52,7 +55,8 @@ export default class App extends React.Component<{}, AppState> {
             programVer: 1,
             settings: {
                 dashSupport: this.appContext.bluetoothApiIsAvailable
-            }
+            },
+            dashConnectionStatus: "notConnected"
         };
 
         this.interpreter = new Interpreter();
@@ -103,51 +107,24 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickConnectDash = () => {
-        this.dashDriver.connect();
+        this.setState({
+            dashConnectionStatus: "connecting"
+        });
+        this.dashDriver.connect().then(() => {
+            this.setState({
+                dashConnectionStatus: "connected"
+            });
+        }, (error) => {
+            console.log("ERROR");
+            console.log(error.name);
+            console.log(error.message);
+            this.setState({
+                dashConnectionStatus: "notConnected"
+            });
+        });
     };
 
     render() {
-        // TODO: Don't configure the interpreter here -- render should have no side-efffects
-        //     - Maybe use https://reactjs.org/docs/react-component.html#componentdidupdate
-        // TODO: Don't make anonymous CommandHandlers each time we render
-        // TODO: Register Dash CommandHandlers on successful connect, rather than on enable the feature support
-        // TODO: When Dash is enabled, also draw on the screen
-        // TODO: Show Dash connection status in the UI
-
-        /*
-        if (this.state.settings.dashSupport) {
-            this.interpreter.setCommandHandlers({
-                forward: () => {
-                    this.dashDriver.forward();
-                },
-                left: () => {
-                    this.dashDriver.left();
-                },
-                right: () => {
-                    this.dashDriver.right();
-                }
-            });
-        } else {
-            this.interpreter.setCommandHandlers({
-                forward: () => {
-                    if (this.turtleGraphicsRef.current !== null) {
-                        this.turtleGraphicsRef.current.forward(40);
-                    }
-                },
-                left: () => {
-                    if (this.turtleGraphicsRef.current !== null) {
-                        this.turtleGraphicsRef.current.turnLeft(90);
-                    }
-                },
-                right: () => {
-                    if (this.turtleGraphicsRef.current !== null) {
-                        this.turtleGraphicsRef.current.turnRight(90);
-                    }
-                }
-            });
-        }
-        */
-
         return (
             <div>
                 <ProgramTextEditor
@@ -164,5 +141,29 @@ export default class App extends React.Component<{}, AppState> {
                 }
             </div>
         );
+    }
+
+    componentDidUpdate(prevProps: {}, prevState: AppState) {
+        if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
+            console.log(this.state.dashConnectionStatus);
+
+            // TODO: When Dash is connected, also draw on the screen
+            // TODO: Show Dash connection status in the UI
+            // TODO: Handle Dash disconnection
+
+            if (this.state.dashConnectionStatus === "connected") {
+                this.interpreter.setCommandHandlers({
+                    forward: () => {
+                        return this.dashDriver.forward();
+                    },
+                    left: () => {
+                        return this.dashDriver.left();
+                    },
+                    right: () => {
+                        return this.dashDriver.right();
+                    }
+                });
+            }
+        }
     }
 }
