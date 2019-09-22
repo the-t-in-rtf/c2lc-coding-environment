@@ -55,8 +55,32 @@ export default class App extends React.Component<{}, AppState> {
             }
         };
 
-        this.dashDriver = new DashDriver();
         this.interpreter = new Interpreter();
+        this.interpreter.setCommandHandlers({
+            forward: () => {
+                if (this.turtleGraphicsRef.current !== null) {
+                    return this.turtleGraphicsRef.current.forward(40);
+                } else {
+                    return Promise.reject();
+                }
+            },
+            left: () => {
+                if (this.turtleGraphicsRef.current !== null) {
+                    return this.turtleGraphicsRef.current.turnLeft(90);
+                } else {
+                    return Promise.reject();
+                }
+            },
+            right: () => {
+                if (this.turtleGraphicsRef.current !== null) {
+                    return this.turtleGraphicsRef.current.turnRight(90);
+                } else {
+                    return Promise.reject();
+                }
+            }
+        });
+
+        this.dashDriver = new DashDriver();
         this.syntax = new TextSyntax();
         this.turtleGraphicsRef = React.createRef<TurtleGraphics>();
     }
@@ -90,6 +114,7 @@ export default class App extends React.Component<{}, AppState> {
         // TODO: When Dash is enabled, also draw on the screen
         // TODO: Show Dash connection status in the UI
 
+        /*
         if (this.state.settings.dashSupport) {
             this.interpreter.setCommandHandlers({
                 forward: () => {
@@ -121,6 +146,7 @@ export default class App extends React.Component<{}, AppState> {
                 }
             });
         }
+        */
 
         return (
             <div>
