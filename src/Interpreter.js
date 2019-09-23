@@ -2,25 +2,36 @@
 
 export type Program = Array<string>;
 
-type CommandHandler = {
+export type CommandHandler = {
     (Interpreter): Promise<void>
 };
+
+// TODO: I don't think that Interpreter having memory is quite the right
+//       factoring. But this will evolve. Maybe something like a parameterized
+//       Project<T> that contains program and memory.
 
 export default class Interpreter {
     commands: { [string]: CommandHandler };
     program: Program;
     programCounter: number;
+    memory: { [string]: any };
     isRunning: boolean;
 
     constructor() {
         this.commands = {};
         this.program = [];
         this.programCounter = 0;
+        this.memory = {};
         this.isRunning = false;
     }
 
     setCommandHandlers(commands: { [string]: CommandHandler }) {
         this.commands = commands;
+    }
+
+    setProgram(program: Program): void {
+        this.program = program;
+        this.programCounter = 0;
     }
 
     run(program: Program): void {
