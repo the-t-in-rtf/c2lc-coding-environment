@@ -20,7 +20,7 @@ test('New Interpreter has an empty program', () => {
     expect(interpreter.programCounter).toBe(0);
 });
 
-test("Stepping an empty program leaves the program counter at 0", (done) => {
+test('Stepping an empty program leaves the program counter at 0', (done) => {
     const interpreter = new Interpreter();
     expect(interpreter.programCounter).toBe(0);
     interpreter.step().then(() => {
@@ -29,11 +29,9 @@ test("Stepping an empty program leaves the program counter at 0", (done) => {
     });
 });
 
-test("Step a program with 1 command", (done) => {
+test('Step a program with 1 command', (done) => {
     const interpreter = new Interpreter();
-    interpreter.setCommandHandlers({
-        'increment-x': makeIncrement('x')
-    });
+    interpreter.addCommandHandler('increment-x', 'test', makeIncrement('x'));
     interpreter.setProgram(['increment-x']);
     interpreter.memory.x = 10;
 
@@ -51,11 +49,9 @@ test("Step a program with 1 command", (done) => {
     });
 });
 
-test("Step a program with 2 commands", (done) => {
+test('Step a program with 2 commands', (done) => {
     const interpreter = new Interpreter();
-    interpreter.setCommandHandlers({
-        'increment-x': makeIncrement('x')
-    });
+    interpreter.addCommandHandler('increment-x', 'test', makeIncrement('x'));
     interpreter.setProgram(['increment-x', 'increment-x']);
     interpreter.memory.x = 10;
 

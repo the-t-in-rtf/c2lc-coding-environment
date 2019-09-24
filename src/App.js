@@ -18,7 +18,7 @@ type AppSettings = {
     dashSupport: boolean
 }
 
-type DeviceConnectionStatus = "notConnected" | "connecting" | "connected";
+type DeviceConnectionStatus = 'notConnected' | 'connecting' | 'connected';
 
 type AppState = {
     program: Program,
@@ -43,46 +43,56 @@ export default class App extends React.Component<{}, AppState> {
 
         this.state = {
             program: [
-                "forward",
-                "left",
-                "forward",
-                "left",
-                "forward",
-                "left",
-                "forward",
-                "left"
+                'forward',
+                'left',
+                'forward',
+                'left',
+                'forward',
+                'left',
+                'forward',
+                'left'
             ],
             programVer: 1,
             settings: {
                 dashSupport: this.appContext.bluetoothApiIsAvailable
             },
-            dashConnectionStatus: "notConnected"
+            dashConnectionStatus: 'notConnected'
         };
 
         this.interpreter = new Interpreter();
-        this.interpreter.setCommandHandlers({
-            forward: () => {
+        this.interpreter.addCommandHandler(
+            'forward',
+            'turtleGraphics',
+            () => {
                 if (this.turtleGraphicsRef.current !== null) {
                     return this.turtleGraphicsRef.current.forward(40);
                 } else {
                     return Promise.reject();
                 }
-            },
-            left: () => {
+            }
+        );
+        this.interpreter.addCommandHandler(
+            'left',
+            'turtleGraphics',
+            () => {
                 if (this.turtleGraphicsRef.current !== null) {
                     return this.turtleGraphicsRef.current.turnLeft(90);
                 } else {
                     return Promise.reject();
                 }
-            },
-            right: () => {
+            }
+        );
+        this.interpreter.addCommandHandler(
+            'right',
+            'turtleGraphics',
+            () => {
                 if (this.turtleGraphicsRef.current !== null) {
                     return this.turtleGraphicsRef.current.turnRight(90);
                 } else {
                     return Promise.reject();
                 }
             }
-        });
+        );
 
         this.dashDriver = new DashDriver();
         this.syntax = new TextSyntax();
@@ -108,18 +118,18 @@ export default class App extends React.Component<{}, AppState> {
 
     handleClickConnectDash = () => {
         this.setState({
-            dashConnectionStatus: "connecting"
+            dashConnectionStatus: 'connecting'
         });
         this.dashDriver.connect().then(() => {
             this.setState({
-                dashConnectionStatus: "connected"
+                dashConnectionStatus: 'connected'
             });
         }, (error) => {
-            console.log("ERROR");
+            console.log('ERROR');
             console.log(error.name);
             console.log(error.message);
             this.setState({
-                dashConnectionStatus: "notConnected"
+                dashConnectionStatus: 'notConnected'
             });
         });
     };
@@ -147,22 +157,16 @@ export default class App extends React.Component<{}, AppState> {
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 
-            // TODO: When Dash is connected, also draw on the screen
             // TODO: Show Dash connection status in the UI
             // TODO: Handle Dash disconnection
 
-            if (this.state.dashConnectionStatus === "connected") {
-                this.interpreter.setCommandHandlers({
-                    forward: () => {
-                        return this.dashDriver.forward();
-                    },
-                    left: () => {
-                        return this.dashDriver.left();
-                    },
-                    right: () => {
-                        return this.dashDriver.right();
-                    }
-                });
+            if (this.state.dashConnectionStatus === 'connected') {
+                this.interpreter.addCommandHandler('forward', 'dash',
+                    this.dashDriver.forward.bind(this.dashDriver));
+                this.interpreter.addCommandHandler('left', 'dash',
+                    this.dashDriver.left.bind(this.dashDriver));
+                this.interpreter.addCommandHandler('right', 'dash',
+                    this.dashDriver.right.bind(this.dashDriver));
             }
         }
     }

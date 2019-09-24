@@ -2,16 +2,14 @@
 
 export type Program = Array<string>;
 
-export type CommandHandler = {
-    (Interpreter): Promise<void>
-};
+export type CommandHandler = { (Interpreter): Promise<void> };
 
 // TODO: I don't think that Interpreter having memory is quite the right
 //       factoring. But this will evolve. Maybe something like a parameterized
 //       Project<T> that contains program and memory.
 
 export default class Interpreter {
-    commands: { [string]: CommandHandler };
+    commands: { [command: string]: { [namespace: string]: CommandHandler } };
     program: Program;
     programCounter: number;
     memory: { [string]: any };
@@ -25,8 +23,13 @@ export default class Interpreter {
         this.isRunning = false;
     }
 
-    setCommandHandlers(commands: { [string]: CommandHandler }) {
-        this.commands = commands;
+    addCommandHandler(command: string, namespace: string, handler: CommandHandler) {
+        let commandNamespaces = this.commands[command];
+        if (!commandNamespaces) {
+            commandNamespaces = {};
+            this.commands[command] = commandNamespaces;
+        }
+        commandNamespaces[namespace] = handler;
     }
 
     setProgram(program: Program): void {
@@ -64,13 +67,13 @@ export default class Interpreter {
                 resolve();
             } else {
                 const command = this.program[this.programCounter];
-                const handler = this.commands[command];
-                if (!handler) {
-                    reject(new Error("Unknown command: " + command));
+                const handlers = this.lookUpCommandHandlers(command);
+                if (handlers.length === 0) {
+                    reject(new Error(`Unknown command: ${command}`));
                 } else {
-                    // When the command handler has completed,
+                    // When the command handlers have completed,
                     // increment the programCounter and resolve the step Promise
-                    handler(this).then(() => {
+                    this.callCommandHandlers(handlers).then(() => {
                         this.programCounter = this.programCounter + 1;
                         resolve();
                     }, (error) => {
@@ -81,5 +84,26 @@ export default class Interpreter {
                 }
             }
         });
+    }
+
+    callCommandHandlers(handlers: Array<CommandHandler>): Promise<any> {
+        const promises = [];
+        for (const handler of handlers) {
+            promises.push(handler(this));
+        }
+        return Promise.all(promises);
+    };
+
+    lookUpCommandHandlers(command: string): Array<CommandHandler> {
+        const commandNamespaces = this.commands[command];
+        if (commandNamespaces) {
+            const handlers = [];
+            for (const namespace in commandNamespaces) {
+                handlers.push(commandNamespaces[namespace]);
+            }
+            return handlers;
+        } else {
+            return [];
+        }
     }
 }
