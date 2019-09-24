@@ -72,3 +72,29 @@ test('Step a program with 2 commands', (done) => {
         });
     });
 });
+
+test('Step a program with 2 handlers for the same command', (done) => {
+    const interpreter = new Interpreter();
+    interpreter.addCommandHandler('increment', 'x', makeIncrement('x'));
+    interpreter.addCommandHandler('increment', 'y', makeIncrement('y'));
+    interpreter.setProgram(['increment']);
+    interpreter.memory.x = 10;
+    interpreter.memory.y = 20;
+
+    expect(interpreter.programCounter).toBe(0);
+    expect(interpreter.memory.x).toBe(10);
+    expect(interpreter.memory.y).toBe(20);
+    interpreter.step().then(() => {
+        expect(interpreter.programCounter).toBe(1);
+        expect(interpreter.memory.x).toBe(11);
+        expect(interpreter.memory.y).toBe(21);
+        done();
+    });
+});
+
+test('Stepping a program with an unknown command rejects with Error', () => {
+    const interpreter = new Interpreter();
+    interpreter.setProgram(['unknown-command']);
+
+    return expect(interpreter.step()).rejects.toThrow('Unknown command: unknown-command');
+});
