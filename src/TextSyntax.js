@@ -1,6 +1,6 @@
 // @flow
 
-import type {Program} from './Interpreter';
+import type {Program} from './types';
 
 export default class TextSyntax {
     read(text: string): Program {

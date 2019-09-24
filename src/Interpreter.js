@@ -1,6 +1,6 @@
 // @flow
 
-export type Program = Array<string>;
+import type {Program} from './types';
 
 export type CommandHandler = { (Interpreter): Promise<void> };
 

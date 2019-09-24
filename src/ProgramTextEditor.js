@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react';
-import type {Program} from './Interpreter';
 import TextSyntax from './TextSyntax';
 import * as Utils from './Utils';
+import type {Program} from './types';
 
 type ProgramTextEditorProps = {
     program: Program,

@@ -2,12 +2,13 @@
 
 import React from 'react';
 import DashDriver from './DashDriver';
+import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
-import type {Program} from './Interpreter';
 import ProgramTextEditor from './ProgramTextEditor';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
+import type {DeviceConnectionStatus, Program} from './types';
 import './App.css';
 
 type AppContext = {
@@ -17,8 +18,6 @@ type AppContext = {
 type AppSettings = {
     dashSupport: boolean
 }
-
-type DeviceConnectionStatus = 'notConnected' | 'connecting' | 'connected';
 
 type AppState = {
     program: Program,
@@ -147,7 +146,9 @@ export default class App extends React.Component<{}, AppState> {
                 </div>
                 <button onClick={this.handleClickRun}>Run</button>
                 {this.state.settings.dashSupport &&
-                    <button onClick={this.handleClickConnectDash}>Connect Dash</button>
+                    <DeviceConnectControl
+                        onClickConnect={this.handleClickConnectDash}
+                        connectionStatus={this.state.dashConnectionStatus} />
                 }
             </div>
         );
