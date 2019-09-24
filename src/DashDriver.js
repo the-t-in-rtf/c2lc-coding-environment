@@ -1,7 +1,7 @@
 // @flow
 
-const dashServiceUuid = "af237777-879d-6186-1f49-deca0e85d9c1";
-const dashCommandCharacteristicUuid = "af230002-879d-6186-1f49-deca0e85d9c1";
+const dashServiceUuid = 'af237777-879d-6186-1f49-deca0e85d9c1';
+const dashCommandCharacteristicUuid = 'af230002-879d-6186-1f49-deca0e85d9c1';
 
 export default class DashDriver {
     commandCharacteristic: any;

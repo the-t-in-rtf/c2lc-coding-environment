@@ -12,6 +12,7 @@
     - [Event Handling for React (Flow documentation)](https://flow.org/en/docs/react/events/)
     - [Ecma TC39 "Class field declarations for JavaScript" proposal](https://github.com/tc39/proposal-class-fields)
 - Provide dependencies to an object instance via constructor parameters
+- Prefer single quotes for string literals
 
 ### Naming
 

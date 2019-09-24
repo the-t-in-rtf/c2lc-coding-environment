@@ -11,6 +11,6 @@ export default class TextSyntax {
     }
 
     print(program: Program): string {
-        return program.join(" ");
+        return program.join(' ');
     }
 }
