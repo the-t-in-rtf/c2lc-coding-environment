@@ -147,6 +147,7 @@ export default class App extends React.Component<{}, AppState> {
                 <button onClick={this.handleClickRun}>Run</button>
                 {this.state.settings.dashSupport &&
                     <DeviceConnectControl
+                        buttonText='Connect to Dash'
                         onClickConnect={this.handleClickConnectDash}
                         connectionStatus={this.state.dashConnectionStatus} />
                 }
