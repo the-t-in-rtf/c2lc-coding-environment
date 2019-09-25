@@ -159,7 +159,6 @@ export default class App extends React.Component<{}, AppState> {
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 
-            // TODO: Show Dash connection status in the UI
             // TODO: Handle Dash disconnection
 
             if (this.state.dashConnectionStatus === 'connected') {
