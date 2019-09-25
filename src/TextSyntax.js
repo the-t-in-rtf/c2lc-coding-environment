@@ -1,6 +1,6 @@
 // @flow
 
-import type {Program} from './Interpreter';
+import type {Program} from './types';
 
 export default class TextSyntax {
     read(text: string): Program {
@@ -11,6 +11,6 @@ export default class TextSyntax {
     }
 
     print(program: Program): string {
-        return program.join(" ");
+        return program.join(' ');
     }
 }

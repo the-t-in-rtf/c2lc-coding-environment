@@ -31,7 +31,7 @@ export default class TurtleGraphics extends React.Component<{}, TurtleGraphicsSt
         }
     }
 
-    forward(distance: number): void {
+    forward(distance: number): Promise<void> {
         this.setState((state) => {
             const directionRadians = C2lcMath.degrees2radians(state.directionDegrees);
             const xOffset = Math.sin(directionRadians) * distance;
@@ -54,24 +54,30 @@ export default class TurtleGraphics extends React.Component<{}, TurtleGraphicsSt
                 path: state.path.concat([newPathSegment])
             }
         });
+
+        return Promise.resolve();
     }
 
-    turnLeft(amountDegrees: number): void {
+    turnLeft(amountDegrees: number): Promise<void> {
         this.setState((state) => {
             return {
                 directionDegrees: C2lcMath.wrap(0, 360,
                     state.directionDegrees - amountDegrees)
             };
         });
+
+        return Promise.resolve();
     }
 
-    turnRight(amountDegrees: number): void {
+    turnRight(amountDegrees: number): Promise<void> {
         this.setState((state) => {
             return {
                 directionDegrees: C2lcMath.wrap(0, 360,
                     state.directionDegrees + amountDegrees)
             };
         });
+
+        return Promise.resolve();
     }
 
     home(): void {
