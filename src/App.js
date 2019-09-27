@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import ClapDetector from './ClapDetector';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
@@ -133,6 +134,15 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
+    appendToProgram = (newAction: string) => {
+        this.setState((state) => {
+            return {
+                program: state.program.concat([newAction]),
+                programVer: state.programVer + 1
+            }
+        });
+    }
+
     render() {
         return (
             <div>
@@ -151,6 +161,9 @@ export default class App extends React.Component<{}, AppState> {
                         onClickConnect={this.handleClickConnectDash}
                         connectionStatus={this.state.dashConnectionStatus} />
                 }
+                <ClapDetector 
+                    onDetect={this.appendToProgram}
+                />
             </div>
         );
     }
