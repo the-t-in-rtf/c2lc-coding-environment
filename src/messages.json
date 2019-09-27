@@ -1,0 +1,18 @@
+{
+    "en": {
+        "App.run": "Run",
+        "App.connectToDash": "Connect to Dash",
+        "DeviceConnectControl.notConnected": "Not connected",
+        "DeviceConnectControl.connecting": "Connecting",
+        "DeviceConnectControl.connected": "Connected",
+        "ProgramTextEditor.programLabel": "Program:"
+    },
+    "fr": {
+    	"App.run": "Lancer",
+        "App.connectToDash": "Se connecter à Dash",
+        "DeviceConnectControl.notConnected": "Pas connecté",
+        "DeviceConnectControl.connecting": "Connexion en cours",
+        "DeviceConnectControl.connected": "Connecté",
+        "ProgramTextEditor.programLabel": "Logiciel:"
+    }
+}
