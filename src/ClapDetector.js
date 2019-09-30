@@ -14,7 +14,7 @@ type AppContext = {
 
 type ClapDetectorState = {
     contextAvailable: boolean,
-    inputDevices: Array<string>
+    audioInputDeviceIds: Array<string>
 }
 
 export default class ClapDetector extends React.Component<ClapDetectorProps, ClapDetectorState> {
@@ -29,104 +29,92 @@ export default class ClapDetector extends React.Component<ClapDetectorProps, Cla
 
         this.state = {
             contextAvailable: false,
-            inputDevices: [],
+            audioInputDeviceIds: [],
         };
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         if (this.appContext.mediaDevicesIsAvailable) {
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            console.log(devices);
-            let deviceIds = [];
-            for (let i=0, numDevices=devices.length; i<numDevices; i++) {
-                if (devices[i].kind === 'audioinput') deviceIds.push(devices[i].deviceId);
-            }
-            this.setState({
-                contextAvailable : true,
-                inputDevices : deviceIds
+            navigator.mediaDevices.enumerateDevices().then((devices) => {
+                let deviceIds = [];
+                for (let i=0, numDevices=devices.length; i<numDevices; i++) {
+                    if (devices[i].kind === 'audioinput') deviceIds.push(devices[i].deviceId);
+                }
+                this.setState({
+                    contextAvailable : true,
+                    audioInputDeviceIds : deviceIds  
+                });
+            }, (error) => {
+                console.log(error.name);
+                console.log(error.message);
             });
         }
-        this.handleAudioInput();
     }
 
-    handleAudioInput = async () => {
-        const defaultDevice = await navigator.mediaDevices.getUserMedia({audio : true});
-        const defaultInputDevice = this.appContext.mediaDevicesIsAvailable ? 
-            await navigator.mediaDevices.getUserMedia({audio : {deviceId : this.state.inputDevices[0]}}) :
-            defaultDevice;
-        const externalInputDevice = this.appContext.mediaDevicesIsAvailable ?
-            await navigator.mediaDevices.getUserMedia({audio : {deviceId : this.state.inputDevices[this.state.inputDevices.length-1]}}) :
-            defaultDevice;
+    componentDidUpdate(prevProps: {}, prevState: ClapDetectorState) {
+        if (this.state.audioInputDeviceIds !== prevState.audioInputDeviceIds) {
+            if (this.state.audioInputDeviceIds.length === 0) {
+                console.log('state not updated');
+            } else {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const context = new AudioContext();
 
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const context = new AudioContext();
-
-        const defaultStream = context.createMediaStreamSource(defaultInputDevice);
-        const externalStream = context.createMediaStreamSource(externalInputDevice);
-
-        const gainNode1 = context.createGain();
-        gainNode1.connect(context.destination);
-
-        const gainNode2 = context.createGain();
-        gainNode2.connect(context.destination);
-
-        const scriptProcessorAnalysisNode = context.createScriptProcessor(2048,2,1);
-        scriptProcessorAnalysisNode.connect(gainNode1);
-        scriptProcessorAnalysisNode.connect(gainNode2);
-
-        const analyserNode1 = context.createAnalyser();
-        analyserNode1.smoothingTimeConstant = 0;
-        analyserNode1.fftSize = 2048;
-
-        const analyserNode2 = context.createAnalyser();
-        analyserNode2.smoothingTimeConstant = 0;
-        analyserNode2.fftSize = 2048;
-
-        defaultStream.connect(analyserNode1);
-        externalStream.connect(analyserNode2);
-        analyserNode1.connect(scriptProcessorAnalysisNode);
-        analyserNode2.connect(scriptProcessorAnalysisNode);
-
-        const bufferLength = analyserNode1.frequencyBinCount;
-
-        const arrayFreqDomain1 = new Uint8Array(bufferLength);
-        const arrayTimeDomain1 = new Uint8Array(bufferLength);
-        const arrayFreqDomain2 = new Uint8Array(bufferLength);
-        const arrayTimeDomain2 = new Uint8Array(bufferLength);
-
-        scriptProcessorAnalysisNode.onaudioprocess = () => {
-            analyserNode1.getByteFrequencyData(arrayFreqDomain1);
-            analyserNode1.getByteTimeDomainData(arrayTimeDomain1);
-            analyserNode2.getByteFrequencyData(arrayFreqDomain2);
-            analyserNode2.getByteTimeDomainData(arrayTimeDomain2);
-
-            let similarity1 = this.getClapSimilarity(arrayTimeDomain1, arrayFreqDomain2, 5);
-            let similarity2 = this.getClapSimilarity(arrayTimeDomain2, arrayFreqDomain2, 5);
-
-            if(similarity1) console.log('from first mic ', similarity1);
-
-            if(similarity2) console.log('from second mic ', similarity2);
-
-            if (similarity1 && similarity1 >= 0.82) {
-                console.log('clapDetected');
-                this.props.onDetect('left');
-            } 
-
-            if (similarity2 && similarity2 >= 0.80) {
-                console.log('clapDetected');
-                this.props.onDetect('right');          
+                Promise.all([
+                    this.addAudioStreamNode(this.state.audioInputDeviceIds[0], context),
+                    this.addAudioStreamNode(this.state.audioInputDeviceIds[this.state.audioInputDeviceIds.length-1], context)
+                ]).then((analysers) => {
+                    const defaultInputAnalyser = analysers[0];
+                    const externalInputAnalyser = analysers[1];
+                    const scriptProcessorAnalysisNode = context.createScriptProcessor(2048,2,1);
+                    const audioGain = context.createGain();
+                    scriptProcessorAnalysisNode.connect(audioGain);
+                    audioGain.connect(context.destination);
+                    scriptProcessorAnalysisNode.onaudioprocess = () => {
+                        this.getClapSimilarity(defaultInputAnalyser, 5, 1);
+                        this.getClapSimilarity(externalInputAnalyser, 5, 2);
+                    }
+                });
             }
         }
     }
 
-    
-    getClapSimilarity(timeBuffer: Array<number>, freqBuffer: Array<number>, numRows: number): number {
-        let currentTimeValue = (timeBuffer[0] / 128) - 1.0;
+    addAudioStreamNode = async (deviceId: string, audioContext: Object): Object=> {
+        const audioInputDevice = await navigator.mediaDevices.getUserMedia({audio: {deviceId: this.state.audioInputDeviceIds[0]}});
+        const audioInputStream = audioContext.createMediaStreamSource(audioInputDevice);
+        const audioAnalyser = audioContext.createAnalyser();
+        audioAnalyser.smoothingTimeConstant = 0;
+        audioAnalyser.fftSize = 2048;
+        audioInputStream.connect(audioAnalyser);
+        const bufferLength = audioAnalyser.frequencyBinCount;
+        const arrayFreqDomain = new Uint8Array(bufferLength);
+        const arrayTimeDomain = new Uint8Array(bufferLength);
+        return ({ 
+            analyser : audioAnalyser,
+            freqBuffer : arrayFreqDomain,
+            timeBuffer : arrayTimeDomain
+        });
+    }
+
+    getClapSimilarity(analyserNode: Object, numRows: number, deviceId: number): void {
+        let timeDomainBuffer = analyserNode.analyser.getByteTimeDomainData(analyserNode.timeBuffer);
+        let freqDomainBuffer = analyserNode.analyser.getByteFrequencyData(analyserNode.freqBuffer);
+        let currentTimeValue = (analyserNode.timeBuffer[0] / 128) - 1.0;
+        let similarity = 0;
         if (Math.abs(currentTimeValue) !== 0.0078125 
-        && currentTimeValue !== 0 && Math.abs(currentTimeValue) !== 0.015625 
+        && currentTimeValue !== 0 && Math.abs(currentTimeValue) !== 0.015625
         && Math.abs(currentTimeValue) !== 0.0234375) {
-            let similarity = this.getNormalizedCorrelation(freqBuffer);
-            return similarity;
+            similarity = this.getNormalizedCorrelation(analyserNode.freqBuffer);
+        }
+        if (similarity > 0.87) {
+            console.log('is a clap');
+            switch (deviceId) {
+                case (1) : this.props.onDetect('left');
+                break;
+                case (2) : this.props.onDetect('right');
+                break;
+                case (3) : this.props.onDetect('forward');
+                break;
+            }
         }
     }
 
