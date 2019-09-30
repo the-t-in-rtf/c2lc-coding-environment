@@ -78,7 +78,7 @@ export default class ClapDetector extends React.Component<ClapDetectorProps, Cla
         }
     }
 
-    addAudioStreamNode = async (deviceId: string, audioContext: Object): Object=> {
+    addAudioStreamNode = async (deviceId: string, audioContext: any): any=> {
         const audioInputDevice = await navigator.mediaDevices.getUserMedia({audio: {deviceId: this.state.audioInputDeviceIds[0]}});
         const audioInputStream = audioContext.createMediaStreamSource(audioInputDevice);
         const audioAnalyser = audioContext.createAnalyser();
@@ -95,7 +95,7 @@ export default class ClapDetector extends React.Component<ClapDetectorProps, Cla
         });
     }
 
-    getClapSimilarity(analyserNode: Object, numRows: number, deviceId: number): void {
+    getClapSimilarity(analyserNode: any, numRows: number, deviceId: number): void {
         let timeDomainBuffer = analyserNode.analyser.getByteTimeDomainData(analyserNode.timeBuffer);
         let freqDomainBuffer = analyserNode.analyser.getByteFrequencyData(analyserNode.freqBuffer);
         let currentTimeValue = (analyserNode.timeBuffer[0] / 128) - 1.0;
