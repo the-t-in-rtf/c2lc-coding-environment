@@ -9,6 +9,7 @@ import Interpreter from './Interpreter';
 import ProgramTextEditor from './ProgramTextEditor';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
+import VoiceController from './VoiceController';
 import type {DeviceConnectionStatus, Program} from './types';
 import './App.css';
 
@@ -116,6 +117,12 @@ export default class App extends React.Component<{}, AppState> {
         this.interpreter.run(this.state.program);
     };
 
+    handleLiveRun = (newAction: string) => {
+        this.handleChangeProgram([]);
+        this.appendToProgram(newAction);
+        this.handleClickRun();
+    }
+
     handleClickConnectDash = () => {
         this.setState({
             dashConnectionStatus: 'connecting'
@@ -143,6 +150,15 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
+    removeLastActionFromProgram = () => {
+        this.setState((state) => {
+            return {
+                program: state.program.slice(0, state.program.length - 1),
+                programVer: state.programVer + 1
+            }
+        });
+    }
+
     render() {
         return (
             <div>
@@ -162,7 +178,15 @@ export default class App extends React.Component<{}, AppState> {
                         connectionStatus={this.state.dashConnectionStatus} />
                 }
                 <ClapDetector 
-                    onDetect={this.appendToProgram}
+                    onDetect={this.handleLiveRun}
+                />
+                <VoiceController
+                    voiceInput = { this.appendToProgram }
+                    run = { this.handleClickRun }
+                    cancel = { this.removeLastActionFromProgram }
+                    //home = { this.handleClickHome }
+                    //clear = { this.handleClickClear }
+                    //deleteAll = { this.voiceDeleteAll }
                 />
             </div>
         );
