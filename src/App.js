@@ -144,10 +144,11 @@ export default class App extends React.Component<{}, AppState> {
     appendToProgram = (newAction: string) => {
         this.setState((state) => {
             return {
-                program: state.program.concat([newAction]),
+                program: [newAction],
                 programVer: state.programVer + 1
             }
         });
+        this.handleClickRun();
     }
 
     removeLastActionFromProgram = () => {
@@ -177,9 +178,9 @@ export default class App extends React.Component<{}, AppState> {
                         onClickConnect={this.handleClickConnectDash}
                         connectionStatus={this.state.dashConnectionStatus} />
                 }
-                <ClapDetector 
+                {/* <ClapDetector 
                     onDetect={this.handleLiveRun}
-                />
+                /> */}
                 <VoiceController
                     voiceInput = { this.appendToProgram }
                     run = { this.handleClickRun }
