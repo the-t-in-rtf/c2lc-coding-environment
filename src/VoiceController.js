@@ -3,6 +3,8 @@
 import React from 'react';
 import { ReactMic } from 'react-mic';
 
+const soundex = require('soundex');
+
 type VoiceControllerProps = {
     voiceInput: (string) => void,
     run: () => void,
@@ -56,23 +58,33 @@ export default class VoiceController extends React.Component<VoiceControllerProp
 
     onSpeechRecognitionResult(event: any) {
         if (event.results != null) {
-            let speechResult = event.results[event.results.length-1][0].transcript.toLowerCase();
-            if (speechResult.includes('forward')) {
+            // let speechResult = event.results[event.results.length-1][0].transcript.toLowerCase();
+            // if (speechResult.includes('forward')) {
+            //     this.props.voiceInput('forward');
+            // } else if (speechResult.includes('left')) {
+            //     this.props.voiceInput('left');
+            // } else if (speechResult.includes('right')) {
+            //     this.props.voiceInput('right');
+            // } else if (speechResult.includes('run')) {
+            //     this.props.run();
+            // } else if (speechResult.includes('never mind') || speechResult.includes('delete') || speechResult.includes('cancel') || speechResult.includes('back')) {
+            //     this.props.cancel();
+            // } else if (speechResult.includes('home')) {
+            //     //this.props.home();
+            // } else if (speechResult.includes('clear')) {
+            //     //this.props.clear();
+            // } else if (speechResult.includes('reset')) {
+            //     //this.props.deleteAll();
+            // }
+            let speechResult = soundex(event.results[event.results.length-1][0].transcript.toLowerCase());
+            if ((speechResult >= 'F600' && speechResult <= 'F663') || (speechResult >= 'F300' && speechResult <= 'F360')) {
                 this.props.voiceInput('forward');
-            } else if (speechResult.includes('left')) {
-                this.props.voiceInput('left');
-            } else if (speechResult.includes('right')) {
+            } else if (speechResult >= 'O600' && speechResult <= 'O630') {
+                this.props.voiceInput('forward');
+            } else if (speechResult >= 'R200' && speechResult <= 'R230') {
                 this.props.voiceInput('right');
-            } else if (speechResult.includes('run')) {
-                this.props.run();
-            } else if (speechResult.includes('never mind') || speechResult.includes('delete') || speechResult.includes('cancel') || speechResult.includes('back')) {
-                this.props.cancel();
-            } else if (speechResult.includes('home')) {
-                //this.props.home();
-            } else if (speechResult.includes('clear')) {
-                //this.props.clear();
-            } else if (speechResult.includes('reset')) {
-                //this.props.deleteAll();
+            } else if (speechResult >= 'L100' && speechResult <= 'L130') {
+                this.props.voiceInput('left');
             }
         }
     };
