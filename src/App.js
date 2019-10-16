@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-import ClapDetector from './ClapDetector';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
@@ -178,9 +177,6 @@ export default class App extends React.Component<{}, AppState> {
                         onClickConnect={this.handleClickConnectDash}
                         connectionStatus={this.state.dashConnectionStatus} />
                 }
-                {/* <ClapDetector 
-                    onDetect={this.handleLiveRun}
-                /> */}
                 <VoiceController
                     voiceInput = { this.appendToProgram }
                     run = { this.handleClickRun }
