@@ -181,9 +181,6 @@ export default class App extends React.Component<{}, AppState> {
                     voiceInput = { this.appendToProgram }
                     run = { this.handleClickRun }
                     cancel = { this.removeLastActionFromProgram }
-                    //home = { this.handleClickHome }
-                    //clear = { this.handleClickClear }
-                    //deleteAll = { this.voiceDeleteAll }
                 />
             </div>
         );

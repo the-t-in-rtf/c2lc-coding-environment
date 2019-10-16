@@ -2,16 +2,13 @@
 
 import React from 'react';
 import { ReactMic } from 'react-mic';
-
-const soundex = require('soundex');
+import SoundexTable from './SoundexTable';
+import SpeechRecognitionWrapper from './SpeechRecognitionWrapper';
 
 type VoiceControllerProps = {
     voiceInput: (string) => void,
     run: () => void,
-    cancel: () => void,
-    home: () => void,
-    clear: () => void,
-    deleteAll: () => void
+    cancel: () => void
 };
 
 type VoiceControllerState = {
@@ -19,7 +16,7 @@ type VoiceControllerState = {
 };
 
 export default class VoiceController extends React.Component<VoiceControllerProps, VoiceControllerState> {
-    recognition: any;
+    speechRecognitionWrapper: SpeechRecognitionWrapper;
 
     constructor(props: VoiceControllerProps) {
         super(props);
@@ -28,65 +25,40 @@ export default class VoiceController extends React.Component<VoiceControllerProp
             speechRecognitionOn: false
         };
 
-        this.recognition = new window.webkitSpeechRecognition();
-        this.recognition.continuous = true;
-        this.recognition.lang = 'en-CA';
-        this.recognition.onresult = this.onSpeechRecognitionResult.bind(this);
+        // TODO: Move this out
+        const soundexTable = new SoundexTable([
+            { pattern: /F6../, word: 'forward' },
+            { pattern: /O6../, word: 'forward' },
+            { pattern: /L1../, word: 'left' },
+            { pattern: /L2../, word: 'left' },
+            { pattern: /L3../, word: 'left' },
+            { pattern: /L.3./, word: 'left' },
+            { pattern: /L..3/, word: 'left' },
+            { pattern: /R3../, word: 'right' },
+            { pattern: /R.3./, word: 'right' },
+            { pattern: /R..3/, word: 'right' }
+        ]);
+
+        // TODO: Move this out
+        this.speechRecognitionWrapper = new SpeechRecognitionWrapper(
+            soundexTable,
+            this.handleWord);
     }
 
-    startSpeechRecognition = () => {
-        this.setState((state) => {
-            if (!state.speechRecognitionOn) {
-                this.recognition.start();
-            }
-            return {
-                speechRecognitionOn: true
-            };
+    handleStartSpeechRecognition = () => {
+        this.setState({
+            speechRecognitionOn: true
         });
-    }
+    };
 
-    stopSpeechRecognition = () => {
-        this.setState((state) => {
-            if (state.speechRecognitionOn) {
-                this.recognition.stop();
-            }
-            return {
-                speechRecognitionOn: false
-            };
+    handleStopSpeechRecognition = () => {
+        this.setState({
+            speechRecognitionOn: false
         });
-    }
+    };
 
-    onSpeechRecognitionResult(event: any) {
-        if (event.results != null) {
-            // let speechResult = event.results[event.results.length-1][0].transcript.toLowerCase();
-            // if (speechResult.includes('forward')) {
-            //     this.props.voiceInput('forward');
-            // } else if (speechResult.includes('left')) {
-            //     this.props.voiceInput('left');
-            // } else if (speechResult.includes('right')) {
-            //     this.props.voiceInput('right');
-            // } else if (speechResult.includes('run')) {
-            //     this.props.run();
-            // } else if (speechResult.includes('never mind') || speechResult.includes('delete') || speechResult.includes('cancel') || speechResult.includes('back')) {
-            //     this.props.cancel();
-            // } else if (speechResult.includes('home')) {
-            //     //this.props.home();
-            // } else if (speechResult.includes('clear')) {
-            //     //this.props.clear();
-            // } else if (speechResult.includes('reset')) {
-            //     //this.props.deleteAll();
-            // }
-            let speechResult = soundex(event.results[event.results.length-1][0].transcript.toLowerCase());
-            if ((speechResult >= 'F600' && speechResult <= 'F663') || (speechResult >= 'F300' && speechResult <= 'F360')) {
-                this.props.voiceInput('forward');
-            } else if (speechResult >= 'O600' && speechResult <= 'O630') {
-                this.props.voiceInput('forward');
-            } else if (speechResult >= 'R200' && speechResult <= 'R230') {
-                this.props.voiceInput('right');
-            } else if (speechResult >= 'L100' && speechResult <= 'L130') {
-                this.props.voiceInput('left');
-            }
-        }
+    handleWord = (word: string) => {
+        this.props.voiceInput(word);
     };
 
     render() {
@@ -97,9 +69,19 @@ export default class VoiceController extends React.Component<VoiceControllerProp
                     className="sound-wave"
                     strokeColor="#000000"
                     backgroundColor="#FF4081" />
-                <button onClick={this.startSpeechRecognition} type="button">Start</button>
-                <button onClick={this.stopSpeechRecognition} type="button">Stop</button>
+                <button onClick={this.handleStartSpeechRecognition} type="button">Start</button>
+                <button onClick={this.handleStopSpeechRecognition} type="button">Stop</button>
             </div>
         )
+    }
+
+    componentDidUpdate(prevProps: {}, prevState: VoiceControllerState) {
+        if (this.state.speechRecognitionOn !== prevState.speechRecognitionOn) {
+            if (this.state.speechRecognitionOn) {
+                this.speechRecognitionWrapper.start();
+            } else {
+                this.speechRecognitionWrapper.stop();
+            }
+        }
     }
 }
