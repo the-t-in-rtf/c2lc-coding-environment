@@ -3,34 +3,36 @@
 import SoundexTable from './SoundexTable';
 
 export default class SpeechRecognitionWrapper {
-    onWord: { (string): void };
-    recognition: any;
+    speechRecognitionInstance: any;
     soundexTable: SoundexTable;
+    onWord: { (string): void };
     wordsSinceFinal: number;
 
-    constructor(soundexTable: SoundexTable, onWord: { (string): void }) {
+    constructor(speechRecognitionInstance: any, soundexTable: SoundexTable,
+            onWord: { (string): void }) {
+
+        this.speechRecognitionInstance = speechRecognitionInstance;
         this.soundexTable = soundexTable;
         this.onWord = onWord;
 
-        this.recognition = new window.webkitSpeechRecognition();
-        this.recognition.lang = 'en-CA';
-        this.recognition.continuous = true;
-        this.recognition.interimResults = true;
-        this.recognition.maxAlternatives = 1;
-        this.recognition.onresult = this.handleSpeechRecognitionResult;
+        this.speechRecognitionInstance.lang = 'en-CA';
+        this.speechRecognitionInstance.continuous = true;
+        this.speechRecognitionInstance.interimResults = true;
+        this.speechRecognitionInstance.maxAlternatives = 1;
+        this.speechRecognitionInstance.onresult = this.handleResult;
 
         this.wordsSinceFinal = 0;
     }
 
     start() {
-        this.recognition.start();
+        this.speechRecognitionInstance.start();
     }
 
     stop() {
-        this.recognition.stop();
+        this.speechRecognitionInstance.stop();
     }
 
-    handleSpeechRecognitionResult = (event: any) => {
+    handleResult = (event: any) => {
         //this.logSpeechRecognitionEvent(event);
         let words = [];
         let isFinal = false;
@@ -57,7 +59,7 @@ export default class SpeechRecognitionWrapper {
         if (isFinal) {
             this.wordsSinceFinal = 0;
         }
-    }
+    };
 
     logSpeechRecognitionEvent(event: any) {
         console.log('****');

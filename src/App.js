@@ -124,6 +124,7 @@ export default class App extends React.Component<{}, AppState> {
             ]);
 
             this.speechRecognitionWrapper = new SpeechRecognitionWrapper(
+                new window.webkitSpeechRecognition(),
                 soundexTable,
                 this.handleSpeechCommand);
         }
