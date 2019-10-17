@@ -5,7 +5,9 @@
         "DeviceConnectControl.notConnected": "Not connected",
         "DeviceConnectControl.connecting": "Connecting",
         "DeviceConnectControl.connected": "Connected",
-        "ProgramTextEditor.programLabel": "Program:"
+        "ProgramTextEditor.programLabel": "Program:",
+        "VoiceController.start": "Start",
+        "VoiceController.stop": "Stop"
     },
     "fr": {
     	"App.run": "Lancer",

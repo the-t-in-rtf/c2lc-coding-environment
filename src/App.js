@@ -7,6 +7,8 @@ import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
 import ProgramTextEditor from './ProgramTextEditor';
+import SoundexTable from './SoundexTable';
+import SpeechRecognitionWrapper from './SpeechRecognitionWrapper';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
 import VoiceController from './VoiceController';
@@ -20,7 +22,8 @@ type AppContext = {
 
 type AppSettings = {
     dashSupport: boolean,
-    language: string
+    language: string,
+    speechRecognitionOn: boolean
 }
 
 type AppState = {
@@ -34,6 +37,7 @@ export default class App extends React.Component<{}, AppState> {
     appContext: AppContext;
     dashDriver: DashDriver;
     interpreter: Interpreter;
+    speechRecognitionWrapper: SpeechRecognitionWrapper;
     syntax: TextSyntax;
     turtleGraphicsRef: { current: null | TurtleGraphics };
 
@@ -58,7 +62,8 @@ export default class App extends React.Component<{}, AppState> {
             programVer: 1,
             settings: {
                 dashSupport: this.appContext.bluetoothApiIsAvailable,
-                language: 'en'
+                language: 'en',
+                speechRecognitionOn: false
             },
             dashConnectionStatus: 'notConnected'
         };
@@ -101,6 +106,23 @@ export default class App extends React.Component<{}, AppState> {
         this.dashDriver = new DashDriver();
         this.syntax = new TextSyntax();
         this.turtleGraphicsRef = React.createRef<TurtleGraphics>();
+
+        const soundexTable = new SoundexTable([
+            { pattern: /F6../, word: 'forward' },
+            { pattern: /O6../, word: 'forward' },
+            { pattern: /L1../, word: 'left' },
+            { pattern: /L2../, word: 'left' },
+            { pattern: /L3../, word: 'left' },
+            { pattern: /L.3./, word: 'left' },
+            { pattern: /L..3/, word: 'left' },
+            { pattern: /R3../, word: 'right' },
+            { pattern: /R.3./, word: 'right' },
+            { pattern: /R..3/, word: 'right' }
+        ]);
+
+        this.speechRecognitionWrapper = new SpeechRecognitionWrapper(
+            soundexTable,
+            this.handleSpeechCommand);
     }
 
     setProgram(program: Program) {
@@ -152,18 +174,21 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
+    handleStartSpeechRecognition = () => {
+        this.setStateSettings({
+            speechRecognitionOn: true
+        });
+    };
+
+    handleStopSpeechRecognition = () => {
+        this.setStateSettings({
+            speechRecognitionOn: false
+        });
+    };
+
     handleSpeechCommand = (word: string) => {
         this.interpreter.doCommand(word);
-    }
-
-    removeLastActionFromProgram = () => {
-        this.setState((state) => {
-            return {
-                program: state.program.slice(0, state.program.length - 1),
-                programVer: state.programVer + 1
-            }
-        });
-    }
+    };
 
     render() {
         return (
@@ -196,9 +221,9 @@ export default class App extends React.Component<{}, AppState> {
                         </DeviceConnectControl>
                     }
                     <VoiceController
-                        voiceInput = { this.handleSpeechCommand }
-                        run = { this.handleClickRun }
-                        cancel = { this.removeLastActionFromProgram }
+                        speechRecognitionOn = { this.state.settings.speechRecognitionOn }
+                        onStartSpeechRecognition = { this.handleStartSpeechRecognition }
+                        onStopSpeechRecognition = { this.handleStopSpeechRecognition }
                     />
                 </div>
             </IntlProvider>
@@ -206,6 +231,7 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
+        // Dash Connection Status
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 
@@ -218,6 +244,15 @@ export default class App extends React.Component<{}, AppState> {
                     this.dashDriver.left.bind(this.dashDriver));
                 this.interpreter.addCommandHandler('right', 'dash',
                     this.dashDriver.right.bind(this.dashDriver));
+            }
+        }
+
+        // Speech Recognition
+        if (this.state.settings.speechRecognitionOn !== prevState.settings.speechRecognitionOn) {
+            if (this.state.settings.speechRecognitionOn) {
+                this.speechRecognitionWrapper.start();
+            } else {
+                this.speechRecognitionWrapper.stop();
             }
         }
     }

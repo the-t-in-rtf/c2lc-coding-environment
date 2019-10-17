@@ -15,7 +15,6 @@ export default class SoundexTable {
     }
 
     lookupWord(inputWord: string): ?string {
-        // TODO: Generalise number pronunciation
         const maybeNumberInput = parseInt(inputWord);
         if (maybeNumberInput || maybeNumberInput === 0) {
             switch(maybeNumberInput) {
