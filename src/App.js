@@ -17,7 +17,8 @@ import messages from './messages.json';
 import './App.css';
 
 type AppContext = {
-    bluetoothApiIsAvailable: boolean
+    bluetoothApiIsAvailable: boolean,
+    speechRecognitionApiIsAvailable: boolean
 };
 
 type AppSettings = {
@@ -45,7 +46,8 @@ export default class App extends React.Component<{}, AppState> {
         super(props);
 
         this.appContext = {
-            bluetoothApiIsAvailable: FeatureDetection.bluetoothApiIsAvailable()
+            bluetoothApiIsAvailable: FeatureDetection.bluetoothApiIsAvailable(),
+            speechRecognitionApiIsAvailable: FeatureDetection.speechRecognitionApiIsAvailable()
         };
 
         this.state = {
@@ -107,22 +109,24 @@ export default class App extends React.Component<{}, AppState> {
         this.syntax = new TextSyntax();
         this.turtleGraphicsRef = React.createRef<TurtleGraphics>();
 
-        const soundexTable = new SoundexTable([
-            { pattern: /F6../, word: 'forward' },
-            { pattern: /O6../, word: 'forward' },
-            { pattern: /L1../, word: 'left' },
-            { pattern: /L2../, word: 'left' },
-            { pattern: /L3../, word: 'left' },
-            { pattern: /L.3./, word: 'left' },
-            { pattern: /L..3/, word: 'left' },
-            { pattern: /R3../, word: 'right' },
-            { pattern: /R.3./, word: 'right' },
-            { pattern: /R..3/, word: 'right' }
-        ]);
+        if (this.appContext.speechRecognitionApiIsAvailable) {
+            const soundexTable = new SoundexTable([
+                { pattern: /F6../, word: 'forward' },
+                { pattern: /O6../, word: 'forward' },
+                { pattern: /L1../, word: 'left' },
+                { pattern: /L2../, word: 'left' },
+                { pattern: /L3../, word: 'left' },
+                { pattern: /L.3./, word: 'left' },
+                { pattern: /L..3/, word: 'left' },
+                { pattern: /R3../, word: 'right' },
+                { pattern: /R.3./, word: 'right' },
+                { pattern: /R..3/, word: 'right' }
+            ]);
 
-        this.speechRecognitionWrapper = new SpeechRecognitionWrapper(
-            soundexTable,
-            this.handleSpeechCommand);
+            this.speechRecognitionWrapper = new SpeechRecognitionWrapper(
+                soundexTable,
+                this.handleSpeechCommand);
+        }
     }
 
     setProgram(program: Program) {
@@ -220,11 +224,13 @@ export default class App extends React.Component<{}, AppState> {
                             <FormattedMessage id='App.connectToDash' />
                         </DeviceConnectControl>
                     }
-                    <VoiceController
-                        speechRecognitionOn = { this.state.settings.speechRecognitionOn }
-                        onStartSpeechRecognition = { this.handleStartSpeechRecognition }
-                        onStopSpeechRecognition = { this.handleStopSpeechRecognition }
-                    />
+                    {this.appContext.speechRecognitionApiIsAvailable &&
+                        <VoiceController
+                            speechRecognitionOn = { this.state.settings.speechRecognitionOn }
+                            onStartSpeechRecognition = { this.handleStartSpeechRecognition }
+                            onStopSpeechRecognition = { this.handleStopSpeechRecognition }
+                        />
+                    }
                 </div>
             </IntlProvider>
         );
