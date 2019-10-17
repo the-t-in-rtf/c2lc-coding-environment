@@ -1,22 +1,21 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
+import {FormattedMessage} from 'react-intl';
 import type {DeviceConnectionStatus} from './types';
 
 type DeviceConnectControlProps = {
-    buttonText: string,
+    children: React.Element<any>, // Button contents
     onClickConnect: () => void,
     connectionStatus: DeviceConnectionStatus
 };
-
-// TODO: Localize connection status message
 
 export default class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}> {
     render() {
         return (
             <div>
-                <button onClick={this.props.onClickConnect}>{this.props.buttonText}</button>
-                <span>{this.props.connectionStatus}</span>
+                <button onClick={this.props.onClickConnect}>{this.props.children}</button>
+                <FormattedMessage id={`DeviceConnectControl.${this.props.connectionStatus}`} />
             </div>
         );
     }

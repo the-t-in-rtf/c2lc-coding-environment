@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import {IntlProvider, FormattedMessage} from 'react-intl';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
@@ -10,6 +11,7 @@ import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
 import VoiceController from './VoiceController';
 import type {DeviceConnectionStatus, Program} from './types';
+import messages from './messages.json';
 import './App.css';
 
 type AppContext = {
@@ -17,7 +19,8 @@ type AppContext = {
 };
 
 type AppSettings = {
-    dashSupport: boolean
+    dashSupport: boolean,
+    language: string
 }
 
 type AppState = {
@@ -54,7 +57,8 @@ export default class App extends React.Component<{}, AppState> {
             ],
             programVer: 1,
             settings: {
-                dashSupport: this.appContext.bluetoothApiIsAvailable
+                dashSupport: this.appContext.bluetoothApiIsAvailable,
+                language: 'en'
             },
             dashConnectionStatus: 'notConnected'
         };
@@ -108,6 +112,20 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
+    setStateSettings(settings: $Shape<AppSettings>) {
+        this.setState((state) => {
+            return {
+                settings: Object.assign({}, state.settings, settings)
+            }
+        });
+    }
+
+    handleChangeLanguage = (event: SyntheticEvent<HTMLSelectElement>) => {
+        this.setStateSettings({
+            language: event.currentTarget.value
+        });
+    };
+
     handleChangeProgram = (program: Program) => {
         this.setProgram(program);
     };
@@ -149,28 +167,41 @@ export default class App extends React.Component<{}, AppState> {
 
     render() {
         return (
-            <div>
-                <ProgramTextEditor
-                    program={this.state.program}
-                    programVer={this.state.programVer}
-                    syntax={this.syntax}
-                    onChange={this.handleChangeProgram} />
-                <div className='App__turtle-graphics'>
-                    <TurtleGraphics ref={this.turtleGraphicsRef} />
+            <IntlProvider
+                    locale={this.state.settings.language}
+                    messages={messages[this.state.settings.language]}>
+                <div>
+                    <select
+                            value={this.state.settings.language}
+                            onChange={this.handleChangeLanguage}>
+                        <option value='en'>English</option>
+                        <option value='fr'>Français</option>
+                    </select>
+                    <ProgramTextEditor
+                        program={this.state.program}
+                        programVer={this.state.programVer}
+                        syntax={this.syntax}
+                        onChange={this.handleChangeProgram} />
+                    <div className='App__turtle-graphics'>
+                        <TurtleGraphics ref={this.turtleGraphicsRef} />
+                    </div>
+                    <button onClick={this.handleClickRun}>
+                        <FormattedMessage id='App.run' />
+                    </button>
+                    {this.state.settings.dashSupport &&
+                        <DeviceConnectControl
+                                onClickConnect={this.handleClickConnectDash}
+                                connectionStatus={this.state.dashConnectionStatus}>
+                            <FormattedMessage id='App.connectToDash' />
+                        </DeviceConnectControl>
+                    }
+                    <VoiceController
+                        voiceInput = { this.handleSpeechCommand }
+                        run = { this.handleClickRun }
+                        cancel = { this.removeLastActionFromProgram }
+                    />
                 </div>
-                <button onClick={this.handleClickRun}>Run</button>
-                {this.state.settings.dashSupport &&
-                    <DeviceConnectControl
-                        buttonText='Connect to Dash'
-                        onClickConnect={this.handleClickConnectDash}
-                        connectionStatus={this.state.dashConnectionStatus} />
-                }
-                <VoiceController
-                    voiceInput = { this.handleSpeechCommand }
-                    run = { this.handleClickRun }
-                    cancel = { this.removeLastActionFromProgram }
-                />
-            </div>
+            </IntlProvider>
         );
     }
 

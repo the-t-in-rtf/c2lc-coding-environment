@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import {FormattedMessage} from 'react-intl';
 import TextSyntax from './TextSyntax';
 import * as Utils from './Utils';
 import type {Program} from './types';
@@ -66,7 +67,9 @@ export default class ProgramTextEditor extends React.Component<ProgramTextEditor
     render() {
         return (
             <div>
-                <label htmlFor={this.textareaId}>Program:</label>
+                <label htmlFor={this.textareaId}>
+                    <FormattedMessage id='ProgramTextEditor.programLabel' />
+                </label>
                 <textarea
                     id={this.textareaId}
                     value={this.state.text}
