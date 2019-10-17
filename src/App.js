@@ -23,15 +23,15 @@ type AppContext = {
 
 type AppSettings = {
     dashSupport: boolean,
-    language: string,
-    speechRecognitionOn: boolean
+    language: string
 }
 
 type AppState = {
     program: Program,
     programVer: number,
     settings: AppSettings,
-    dashConnectionStatus: DeviceConnectionStatus
+    dashConnectionStatus: DeviceConnectionStatus,
+    speechRecognitionOn: boolean
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -64,10 +64,10 @@ export default class App extends React.Component<{}, AppState> {
             programVer: 1,
             settings: {
                 dashSupport: this.appContext.bluetoothApiIsAvailable,
-                language: 'en',
-                speechRecognitionOn: false
+                language: 'en'
             },
-            dashConnectionStatus: 'notConnected'
+            dashConnectionStatus: 'notConnected',
+            speechRecognitionOn: false
         };
 
         this.interpreter = new Interpreter();
@@ -179,13 +179,13 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleStartSpeechRecognition = () => {
-        this.setStateSettings({
+        this.setState({
             speechRecognitionOn: true
         });
     };
 
     handleStopSpeechRecognition = () => {
-        this.setStateSettings({
+        this.setState({
             speechRecognitionOn: false
         });
     };
@@ -226,7 +226,7 @@ export default class App extends React.Component<{}, AppState> {
                     }
                     {this.appContext.speechRecognitionApiIsAvailable &&
                         <VoiceController
-                            speechRecognitionOn = { this.state.settings.speechRecognitionOn }
+                            speechRecognitionOn = { this.state.speechRecognitionOn }
                             onStartSpeechRecognition = { this.handleStartSpeechRecognition }
                             onStopSpeechRecognition = { this.handleStopSpeechRecognition }
                         />
@@ -254,8 +254,8 @@ export default class App extends React.Component<{}, AppState> {
         }
 
         // Speech Recognition
-        if (this.state.settings.speechRecognitionOn !== prevState.settings.speechRecognitionOn) {
-            if (this.state.settings.speechRecognitionOn) {
+        if (this.state.speechRecognitionOn !== prevState.speechRecognitionOn) {
+            if (this.state.speechRecognitionOn) {
                 this.speechRecognitionWrapper.start();
             } else {
                 this.speechRecognitionWrapper.stop();
