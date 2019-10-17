@@ -66,24 +66,27 @@ export default class Interpreter {
                 // We're at the end, nothing to do
                 resolve();
             } else {
-                const command = this.program[this.programCounter];
-                const handlers = this.lookUpCommandHandlers(command);
-                if (handlers.length === 0) {
-                    reject(new Error(`Unknown command: ${command}`));
-                } else {
-                    // When the command handlers have completed,
-                    // increment the programCounter and resolve the step Promise
-                    this.callCommandHandlers(handlers).then(() => {
-                        this.programCounter = this.programCounter + 1;
-                        resolve();
-                    }, (error) => {
-                        console.log(error.name);
-                        console.log(error.message);
-                        reject(error);
-                    });
-                }
+                this.doCommand(this.program[this.programCounter]).then(() => {
+                    // When the command has completed, increment
+                    // the programCounter and resolve the step Promise
+                    this.programCounter = this.programCounter + 1;
+                    resolve();
+                }, (error) => {
+                    console.log(error.name);
+                    console.log(error.message);
+                    reject(error);
+                });
             }
         });
+    }
+
+    doCommand(command: string): Promise<any> {
+        const handlers = this.lookUpCommandHandlers(command);
+        if (handlers.length === 0) {
+            return Promise.reject(new Error(`Unknown command: ${command}`));
+        } else {
+            return this.callCommandHandlers(handlers);
+        }
     }
 
     callCommandHandlers(handlers: Array<CommandHandler>): Promise<any> {

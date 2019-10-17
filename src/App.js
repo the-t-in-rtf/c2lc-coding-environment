@@ -116,12 +116,6 @@ export default class App extends React.Component<{}, AppState> {
         this.interpreter.run(this.state.program);
     };
 
-    handleLiveRun = (newAction: string) => {
-        this.handleChangeProgram([]);
-        this.appendToProgram(newAction);
-        this.handleClickRun();
-    }
-
     handleClickConnectDash = () => {
         this.setState({
             dashConnectionStatus: 'connecting'
@@ -140,14 +134,8 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
-    appendToProgram = (newAction: string) => {
-        this.setState((state) => {
-            return {
-                program: [newAction],
-                programVer: state.programVer + 1
-            }
-        });
-        this.handleClickRun();
+    handleSpeechCommand = (word: string) => {
+        this.interpreter.doCommand(word);
     }
 
     removeLastActionFromProgram = () => {
@@ -178,7 +166,7 @@ export default class App extends React.Component<{}, AppState> {
                         connectionStatus={this.state.dashConnectionStatus} />
                 }
                 <VoiceController
-                    voiceInput = { this.appendToProgram }
+                    voiceInput = { this.handleSpeechCommand }
                     run = { this.handleClickRun }
                     cancel = { this.removeLastActionFromProgram }
                 />
