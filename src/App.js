@@ -8,10 +8,10 @@ import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
 import ProgramTextEditor from './ProgramTextEditor';
 import SoundexTable from './SoundexTable';
-import SpeechRecognitionWrapper from './SpeechRecognitionWrapper';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
 import VoiceController from './VoiceController';
+import WebSpeechInput from './WebSpeechInput';
 import type {DeviceConnectionStatus, Program} from './types';
 import messages from './messages.json';
 import './App.css';
@@ -38,9 +38,9 @@ export default class App extends React.Component<{}, AppState> {
     appContext: AppContext;
     dashDriver: DashDriver;
     interpreter: Interpreter;
-    speechRecognitionWrapper: SpeechRecognitionWrapper;
     syntax: TextSyntax;
     turtleGraphicsRef: { current: null | TurtleGraphics };
+    webSpeechInput: WebSpeechInput;
 
     constructor(props: {}) {
         super(props);
@@ -123,8 +123,7 @@ export default class App extends React.Component<{}, AppState> {
                 { pattern: /R..3/, word: 'right' }
             ]);
 
-            this.speechRecognitionWrapper = new SpeechRecognitionWrapper(
-                new window.webkitSpeechRecognition(),
+            this.webSpeechInput = new WebSpeechInput(
                 soundexTable,
                 this.handleSpeechCommand);
         }
@@ -257,9 +256,9 @@ export default class App extends React.Component<{}, AppState> {
         // Speech Recognition
         if (this.state.speechRecognitionOn !== prevState.speechRecognitionOn) {
             if (this.state.speechRecognitionOn) {
-                this.speechRecognitionWrapper.start();
+                this.webSpeechInput.start();
             } else {
-                this.speechRecognitionWrapper.stop();
+                this.webSpeechInput.stop();
             }
         }
     }

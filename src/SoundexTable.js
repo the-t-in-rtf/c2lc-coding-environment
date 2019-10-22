@@ -18,29 +18,41 @@ export default class SoundexTable {
         const maybeNumberInput = parseInt(inputWord);
         if (maybeNumberInput || maybeNumberInput === 0) {
             switch(maybeNumberInput) {
-                case 0: inputWord = 'zero';
-                        break;
-                case 1: inputWord = 'one';
-                        break;
-                case 2: inputWord = 'two';
-                        break;
-                case 3: inputWord = 'three';
-                        break;
-                case 4: inputWord = 'four';
-                        break;
-                case 5: inputWord = 'five';
-                        break;
-                case 6: inputWord = 'six';
-                        break;
-                case 7: inputWord = 'seven';
-                        break;
-                case 8: inputWord = 'eight';
-                        break;
-                case 9: inputWord = 'nine';
-                        break;
-                case 10: inputWord = 'ten';
-                        break;
-                default: break;
+                case 0:
+                    inputWord = 'zero';
+                    break;
+                case 1:
+                    inputWord = 'one';
+                    break;
+                case 2:
+                    inputWord = 'two';
+                    break;
+                case 3:
+                    inputWord = 'three';
+                    break;
+                case 4:
+                    inputWord = 'four';
+                    break;
+                case 5:
+                    inputWord = 'five';
+                    break;
+                case 6:
+                    inputWord = 'six';
+                    break;
+                case 7:
+                    inputWord = 'seven';
+                    break;
+                case 8:
+                    inputWord = 'eight';
+                    break;
+                case 9:
+                    inputWord = 'nine';
+                    break;
+                case 10:
+                    inputWord = 'ten';
+                    break;
+                default:
+                    break;
             }
         }
         const afterSoundex = soundex(inputWord);
