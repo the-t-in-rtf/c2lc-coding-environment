@@ -2,12 +2,12 @@
     "en": {
         "App.run": "Run",
         "App.connectToDash": "Connect to Dash",
+        "App.startSpeechRecognition": "Start Speech",
+        "App.stopSpeechRecognition": "Stop Speech",
         "DeviceConnectControl.notConnected": "Not connected",
         "DeviceConnectControl.connecting": "Connecting",
         "DeviceConnectControl.connected": "Connected",
-        "ProgramTextEditor.programLabel": "Program:",
-        "VoiceController.start": "Start",
-        "VoiceController.stop": "Stop"
+        "ProgramTextEditor.programLabel": "Program:"
     },
     "fr": {
     	"App.run": "Lancer",

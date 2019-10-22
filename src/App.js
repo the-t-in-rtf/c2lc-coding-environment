@@ -6,11 +6,11 @@ import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
+import MicMonitor from './MicMonitor';
 import ProgramTextEditor from './ProgramTextEditor';
 import SoundexTable from './SoundexTable';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
-import VoiceController from './VoiceController';
 import WebSpeechInput from './WebSpeechInput';
 import type {DeviceConnectionStatus, Program} from './types';
 import messages from './messages.json';
@@ -225,11 +225,17 @@ export default class App extends React.Component<{}, AppState> {
                         </DeviceConnectControl>
                     }
                     {this.appContext.speechRecognitionApiIsAvailable &&
-                        <VoiceController
-                            speechRecognitionOn = { this.state.speechRecognitionOn }
-                            onStartSpeechRecognition = { this.handleStartSpeechRecognition }
-                            onStopSpeechRecognition = { this.handleStopSpeechRecognition }
-                        />
+                        <div>
+                            <button onClick={this.handleStartSpeechRecognition}>
+                                <FormattedMessage id='App.startSpeechRecognition' />
+                            </button>
+                            <button onClick={this.handleStopSpeechRecognition}>
+                                <FormattedMessage id='App.stopSpeechRecognition' />
+                            </button>
+                            <MicMonitor
+                                enabled = {this.state.speechRecognitionOn}
+                            />
+                        </div>
                     }
                 </div>
             </IntlProvider>
