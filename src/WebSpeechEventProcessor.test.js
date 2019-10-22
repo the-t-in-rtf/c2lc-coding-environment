@@ -57,7 +57,7 @@ test('Two final words', () => {
 test('Multiple events', () => {
     const processor = new WebSpeechEventProcessor(soundexTable);
 
-    // First event: single non-final word
+    // First event: first, non-final word
     const words1 = processor.processEvent({
         resultIndex: 0,
         results: [
@@ -70,7 +70,7 @@ test('Multiple events', () => {
     expect(words1.length).toBe(1);
     expect(words1[0]).toBe('forward');
 
-    // Second event: finalized word
+    // Second event: finalize our first word
     // We expect no processed word here, as we have already seen the word
     const words2 = processor.processEvent({
         resultIndex: 0,
@@ -85,7 +85,7 @@ test('Multiple events', () => {
     });
     expect(words2.length).toBe(0);
 
-    // Third event: add a new word
+    // Third event: add a second word
     const words3 = processor.processEvent({
         resultIndex: 1,
         results: [
@@ -101,4 +101,31 @@ test('Multiple events', () => {
     });
     expect(words3.length).toBe(1);
     expect(words3[0]).toBe('right');
+
+    // Fourth event: finalize the second word
+    const words4 = processor.processEvent({
+        resultIndex: 0,
+        results: [
+            Object.assign(
+                // The word has changed in its finalization, but we still
+                // ignore it as we returned it last time in its interim form
+                [ { transcript: 'lft' } ],
+                ({ isFinal: true }: any)
+            )
+        ]
+    });
+    expect(words4.length).toBe(0);
+
+    // Fifth event: now a third word, finalized, without interim
+    const words5 = processor.processEvent({
+        resultIndex: 0,
+        results: [
+            Object.assign(
+                [ { transcript: 'frard' } ],
+                ({ isFinal: true }: any)
+            )
+        ]
+    });
+    expect(words5.length).toBe(1);
+    expect(words5[0]).toBe('forward');
 });
