@@ -232,9 +232,11 @@ export default class App extends React.Component<{}, AppState> {
                             <button onClick={this.handleStopSpeechRecognition}>
                                 <FormattedMessage id='App.stopSpeechRecognition' />
                             </button>
-                            <MicMonitor
-                                enabled = {this.state.speechRecognitionOn}
-                            />
+                            <div>
+                                <MicMonitor
+                                    enabled = {this.state.speechRecognitionOn}
+                                />
+                            </div>
                         </div>
                     }
                 </div>
