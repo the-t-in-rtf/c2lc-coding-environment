@@ -10,8 +10,11 @@ import ProgramTextEditor from './ProgramTextEditor';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
 import type {DeviceConnectionStatus, Program} from './types';
+import { Col, Container, Dropdown, Form, Row } from 'react-bootstrap';
 import messages from './messages.json';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+
 
 type AppContext = {
     bluetoothApiIsAvailable: boolean
@@ -59,7 +62,8 @@ export default class App extends React.Component<{}, AppState> {
                 dashSupport: this.appContext.bluetoothApiIsAvailable,
                 language: 'en'
             },
-            dashConnectionStatus: 'notConnected'
+            dashConnectionStatus: 'notConnected',
+            checkboxState: 'Not Checked'
         };
 
         this.interpreter = new Interpreter();
@@ -151,38 +155,85 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
+    handleOnChange = (event: any) => {
+        console.log(event);
+    }
+
     render() {
         return (
+            <Container>
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
-                <div>
-                    <select
-                            value={this.state.settings.language}
-                            onChange={this.handleChangeLanguage}>
-                        <option value='en'>English</option>
-                        <option value='fr'>Français</option>
-                    </select>
-                    <ProgramTextEditor
-                        program={this.state.program}
-                        programVer={this.state.programVer}
-                        syntax={this.syntax}
-                        onChange={this.handleChangeProgram} />
-                    <div className='App__turtle-graphics'>
-                        <TurtleGraphics ref={this.turtleGraphicsRef} />
-                    </div>
-                    <button onClick={this.handleClickRun}>
-                        <FormattedMessage id='App.run' />
-                    </button>
-                    {this.state.settings.dashSupport &&
-                        <DeviceConnectControl
-                                onClickConnect={this.handleClickConnectDash}
-                                connectionStatus={this.state.dashConnectionStatus}>
-                            <FormattedMessage id='App.connectToDash' />
-                        </DeviceConnectControl>
-                    }
-                </div>
+                    <Row className='justify-content-center'>
+                        <Col className='rm-3' md='auto'>
+                            <Row>
+                                <Dropdown>
+                                    <Dropdown.Toggle>
+                                        Change Mode
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item>Text</Dropdown.Item>
+                                        <Dropdown.Item>Symbolic</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </Row>
+                            <Row>
+                                <ProgramTextEditor
+                                    program={this.state.program}
+                                    programVer={this.state.programVer}
+                                    syntax={this.syntax}
+                                    onChange={this.handleChangeProgram} />
+                            </Row>
+                        </Col>
+                        <Col md='auto'>
+                            <Row>
+                                {this.state.settings.dashSupport &&
+                                    <DeviceConnectControl
+                                            onClickConnect={this.handleClickConnectDash}
+                                            connectionStatus={this.state.dashConnectionStatus}>
+                                        <FormattedMessage id='App.connectToDash' />
+                                    </DeviceConnectControl>
+                                }
+                            </Row>
+                            <Row>
+                                <div className='App__turtle-graphics'>
+                                    <TurtleGraphics ref={this.turtleGraphicsRef} />
+                                </div>
+                            </Row>
+                            <Row>
+                                <button onClick={this.handleClickRun}>
+                                    <FormattedMessage id='App.run' />
+                                </button>
+                            </Row>
+                        </Col>
+                    </Row>
+                   <Row className='justify-content-center'>
+                        <Col md='auto'>
+                            <p>Command blocks: forward right left ----------------------------------------------------------------</p>
+                        </Col>
+                    </Row>
+                    <Row className='justify-content-center'>
+                        <Col md='auto'>
+                            <Form.Check 
+                                type='switch'
+                                id='custom-switch'
+                                label='Speech Recognition'
+                            />
+                        </Col>
+                    </Row>
+                    <Row className='justify-content-center'>
+                        <Col className='align-content-flex-start' md='auto'>
+                            <select
+                                    value={this.state.settings.language}
+                                    onChange={this.handleChangeLanguage}>
+                                <option value='en'>English</option>
+                                <option value='fr'>Français</option>
+                            </select>
+                        </Col>
+                    </Row>
             </IntlProvider>
+            </Container>
         );
     }
 
