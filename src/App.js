@@ -10,10 +10,11 @@ import ProgramTextEditor from './ProgramTextEditor';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
 import type {DeviceConnectionStatus, Program} from './types';
-import { Col, Container, Dropdown, Form, Row } from 'react-bootstrap';
+import { Col, Container, Dropdown, Form, Image, Row } from 'react-bootstrap';
 import messages from './messages.json';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px.svg';
 
 
 type AppContext = {
@@ -202,8 +203,8 @@ export default class App extends React.Component<{}, AppState> {
                                 </div>
                             </Row>
                             <Row>
-                                <button onClick={this.handleClickRun}>
-                                    <FormattedMessage id='App.run' />
+                                <button onClick={this.handleClickRun} aria-label='Run the program'>
+                                    <Image src={playIcon} />
                                 </button>
                             </Row>
                         </Col>
