@@ -4,4 +4,8 @@ function bluetoothApiIsAvailable(): boolean {
     return !!((navigator: any).bluetooth);
 }
 
-export { bluetoothApiIsAvailable };
+function speechRecognitionApiIsAvailable(): boolean {
+    return !!((window: any).webkitSpeechRecognition);
+}
+
+export { bluetoothApiIsAvailable, speechRecognitionApiIsAvailable };

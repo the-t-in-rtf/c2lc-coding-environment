@@ -7,8 +7,11 @@ import DeviceConnectControl from './DeviceConnectControl';
 import EditorContainer from './EditorContainer';
 import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
+import MicMonitor from './MicMonitor';
+import SoundexTable from './SoundexTable';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
+import WebSpeechInput from './WebSpeechInput';
 import type {DeviceConnectionStatus, Program} from './types';
 import { Col, Container, Dropdown, Form, Image, Row } from 'react-bootstrap';
 import messages from './messages.json';
@@ -18,7 +21,8 @@ import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px
 
 
 type AppContext = {
-    bluetoothApiIsAvailable: boolean
+    bluetoothApiIsAvailable: boolean,
+    speechRecognitionApiIsAvailable: boolean
 };
 
 type AppSettings = {
@@ -32,6 +36,7 @@ type AppState = {
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
     mode: string;
+    speechRecognitionOn: boolean
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -40,12 +45,14 @@ export default class App extends React.Component<{}, AppState> {
     interpreter: Interpreter;
     syntax: TextSyntax;
     turtleGraphicsRef: { current: null | TurtleGraphics };
+    webSpeechInput: WebSpeechInput;
 
     constructor(props: {}) {
         super(props);
 
         this.appContext = {
-            bluetoothApiIsAvailable: FeatureDetection.bluetoothApiIsAvailable()
+            bluetoothApiIsAvailable: FeatureDetection.bluetoothApiIsAvailable(),
+            speechRecognitionApiIsAvailable: FeatureDetection.speechRecognitionApiIsAvailable()
         };
 
         this.state = {
@@ -65,7 +72,8 @@ export default class App extends React.Component<{}, AppState> {
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
-            mode: 'text'
+            mode: 'text',
+            speechRecognitionOn: false
         };
 
         this.interpreter = new Interpreter();
@@ -106,6 +114,25 @@ export default class App extends React.Component<{}, AppState> {
         this.dashDriver = new DashDriver();
         this.syntax = new TextSyntax();
         this.turtleGraphicsRef = React.createRef<TurtleGraphics>();
+
+        if (this.appContext.speechRecognitionApiIsAvailable) {
+            const soundexTable = new SoundexTable([
+                { pattern: /F6../, word: 'forward' },
+                { pattern: /O6../, word: 'forward' },
+                { pattern: /L1../, word: 'left' },
+                { pattern: /L2../, word: 'left' },
+                { pattern: /L3../, word: 'left' },
+                { pattern: /L.3./, word: 'left' },
+                { pattern: /L..3/, word: 'left' },
+                { pattern: /R3../, word: 'right' },
+                { pattern: /R.3./, word: 'right' },
+                { pattern: /R..3/, word: 'right' }
+            ]);
+
+            this.webSpeechInput = new WebSpeechInput(
+                soundexTable,
+                this.handleSpeechCommand);
+        }
     }
 
     setProgram(program: Program) {
@@ -163,6 +190,21 @@ export default class App extends React.Component<{}, AppState> {
             mode
         })
     }
+    handleStartSpeechRecognition = () => {
+        this.setState({
+            speechRecognitionOn: true
+        });
+    };
+
+    handleStopSpeechRecognition = () => {
+        this.setState({
+            speechRecognitionOn: false
+        });
+    };
+
+    handleSpeechCommand = (word: string) => {
+        this.interpreter.doCommand(word);
+    };
 
     render() {
         return (
@@ -243,12 +285,28 @@ export default class App extends React.Component<{}, AppState> {
                             </select>
                         </Col>
                     </Row>
+                    {this.appContext.speechRecognitionApiIsAvailable &&
+                        <div>
+                            <button onClick={this.handleStartSpeechRecognition}>
+                                <FormattedMessage id='App.startSpeechRecognition' />
+                            </button>
+                            <button onClick={this.handleStopSpeechRecognition}>
+                                <FormattedMessage id='App.stopSpeechRecognition' />
+                            </button>
+                            <div>
+                                <MicMonitor
+                                    enabled = {this.state.speechRecognitionOn}
+                                />
+                            </div>
+                        </div>
+                    }
             </IntlProvider>
             </Container>
         );
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
+        // Dash Connection Status
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 
@@ -261,6 +319,15 @@ export default class App extends React.Component<{}, AppState> {
                     this.dashDriver.left.bind(this.dashDriver));
                 this.interpreter.addCommandHandler('right', 'dash',
                     this.dashDriver.right.bind(this.dashDriver));
+            }
+        }
+
+        // Speech Recognition
+        if (this.state.speechRecognitionOn !== prevState.speechRecognitionOn) {
+            if (this.state.speechRecognitionOn) {
+                this.webSpeechInput.start();
+            } else {
+                this.webSpeechInput.stop();
             }
         }
     }
