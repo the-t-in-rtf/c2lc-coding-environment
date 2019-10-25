@@ -2,7 +2,7 @@
 
 import { Button, Col, Container, Image, Row } from 'react-bootstrap';
 import type {Program} from './types';
-import * as React from 'react';
+import React from 'react';
 import arrowLeft from 'material-design-icons/navigation/svg/production/ic_arrow_back_48px.svg';
 import arrowRight from 'material-design-icons/navigation/svg/production/ic_arrow_forward_48px.svg';
 import arrowUp from 'material-design-icons/navigation/svg/production/ic_arrow_upward_48px.svg';
@@ -20,13 +20,14 @@ type ProgramBlockEditorState = {
 };
 
 export default class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
-
+    counter: number;
     constructor(props: ProgramBlockEditorProps) {
         super(props);
         this.state = {
             programVer: props.programVer,
             program: props.program
         }
+        this.counter = 0;
     }
 
 
@@ -35,10 +36,12 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
             <Container>
                     <Col>
                         {this.state.program.map(item => {
+                            this.counter++;
                             switch(item) {
-                                case 'forward': return <Row className='justify-content-center'><Button><Image src={arrowUp} /></Button></Row>;
-                                case 'left': return <Row className='justify-content-center'><Button><Image src={arrowLeft} /></Button></Row>;
-                                case 'right': return <Row className='justify-content-center'><Button><Image src={arrowRight} /></Button></Row>;
+                                case 'forward': return <Row key={this.counter} className='justify-content-center'><Button><Image src={arrowUp} /></Button></Row>;
+                                case 'left': return <Row key={this.counter} className='justify-content-center'><Button><Image src={arrowLeft} /></Button></Row>;
+                                case 'right': return <Row key={this.counter} className='justify-content-center'><Button><Image src={arrowRight} /></Button></Row>;
+                                default: return;
                             }
                         })}
                     </Col>
