@@ -4,9 +4,9 @@ import React from 'react';
 import {IntlProvider, FormattedMessage} from 'react-intl';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
+import EditorContainer from './EditorContainer';
 import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
-import ProgramTextEditor from './ProgramTextEditor';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
 import type {DeviceConnectionStatus, Program} from './types';
@@ -30,7 +30,8 @@ type AppState = {
     program: Program,
     programVer: number,
     settings: AppSettings,
-    dashConnectionStatus: DeviceConnectionStatus
+    dashConnectionStatus: DeviceConnectionStatus,
+    mode: string;
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -64,7 +65,7 @@ export default class App extends React.Component<{}, AppState> {
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
-            checkboxState: 'Not Checked'
+            mode: 'text'
         };
 
         this.interpreter = new Interpreter();
@@ -156,8 +157,11 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
-    handleOnChange = (event: any) => {
-        console.log(event);
+    handleModeChange = (event: any) => {
+        let mode = event.target.name === 'text' ? 'text' : 'symbolic';
+        this.setState({   
+            mode
+        })
     }
 
     render() {
@@ -173,17 +177,23 @@ export default class App extends React.Component<{}, AppState> {
                                     <Dropdown.Toggle>
                                         Change Mode
                                     </Dropdown.Toggle>
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item>Text</Dropdown.Item>
-                                        <Dropdown.Item>Symbolic</Dropdown.Item>
+                                    <Dropdown.Menu onClick={this.handleModeChange}>
+                                        <Dropdown.Item name='text'>Text</Dropdown.Item>
+                                        <Dropdown.Item name='symbolic'>Symbolic</Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
                             </Row>
                             <Row>
-                                <ProgramTextEditor
+                                {/* <ProgramTextEditor
                                     program={this.state.program}
                                     programVer={this.state.programVer}
                                     syntax={this.syntax}
+                                    onChange={this.handleChangeProgram} /> */}
+                                <EditorContainer 
+                                    program={this.state.program}
+                                    programVer={this.state.programVer}
+                                    syntax={this.syntax}
+                                    mode={this.state.mode}
                                     onChange={this.handleChangeProgram} />
                             </Row>
                         </Col>
