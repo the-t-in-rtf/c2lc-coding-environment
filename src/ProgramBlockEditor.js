@@ -14,20 +14,10 @@ type ProgramBlockEditorProps = {
     onChange: (Program) => void
 };
 
-type ProgramBlockEditorState = {
-    programVer: number,
-    program: Array<string>
-};
-
-export default class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
+export default class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     counter: number;
     constructor(props: ProgramBlockEditorProps) {
         super(props);
-        this.state = {
-            programVer: props.programVer,
-            program: props.program
-        }
-        this.counter = 0;
     }
 
 
@@ -35,12 +25,11 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
         return (
             <Container>
                     <Col>
-                        {this.state.program.map(item => {
-                            this.counter++;
+                        {this.props.program.map((item, programStepNumber)=> {
                             switch(item) {
-                                case 'forward': return <Row key={this.counter} className='justify-content-center'><Button><Image src={arrowUp} /></Button></Row>;
-                                case 'left': return <Row key={this.counter} className='justify-content-center'><Button><Image src={arrowLeft} /></Button></Row>;
-                                case 'right': return <Row key={this.counter} className='justify-content-center'><Button><Image src={arrowRight} /></Button></Row>;
+                                case 'forward': return <Row key={`${programStepNumber}-forward`} className='justify-content-center'><Button><Image src={arrowUp} /></Button></Row>;
+                                case 'left': return <Row key={`${programStepNumber}-left`} className='justify-content-center'><Button><Image src={arrowLeft} /></Button></Row>;
+                                case 'right': return <Row key={`${programStepNumber}-right`} className='justify-content-center'><Button><Image src={arrowRight} /></Button></Row>;
                                 default: return;
                             }
                         })}
