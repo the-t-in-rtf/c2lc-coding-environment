@@ -1,6 +1,6 @@
 // @flow
 
-import { Button, Col, Container, Image, Row, Tabs, Tab } from 'react-bootstrap';
+import { Button, Col, Image, Row, Tabs, Tab } from 'react-bootstrap';
 import type {Program} from './types';
 import React from 'react';
 import arrowLeft from 'material-design-icons/navigation/svg/production/ic_arrow_back_48px.svg';
@@ -8,7 +8,6 @@ import arrowRight from 'material-design-icons/navigation/svg/production/ic_arrow
 import arrowUp from 'material-design-icons/navigation/svg/production/ic_arrow_upward_48px.svg';
 import soundEffectIcon from 'material-design-icons/av/svg/production/ic_volume_up_48px.svg';
 import loopIcon from 'material-design-icons/av/svg/production/ic_loop_48px.svg';
-import emptyProgramIcon from 'material-design-icons/toggle/svg/production/ic_check_box_outline_blank_48px.svg';
 
 const iconTable = {
     movements_0 : arrowUp,
@@ -23,7 +22,8 @@ const iconTable = {
 type CommandPaletteProps = {
     program: Program,
     programVer: number,
-    onChange: (string) => void
+    onChange: (string) => void,
+    selectedCommand: (string) => void
 };
 
 type CommandPaletteState = {
@@ -50,6 +50,9 @@ export default class CommandPalette extends React.Component<CommandPaletteProps,
         let previousStates = {};
         if (this.state.activeState[stateName]) {
             this.props.onChange(stateName);
+            this.props.selectedCommand('none');
+        } else {
+            this.props.selectedCommand(stateName);
         }
         for (const state of Object.keys(this.state.activeState)) {
             if (state !== stateName) {
@@ -67,7 +70,7 @@ export default class CommandPalette extends React.Component<CommandPaletteProps,
         this.setState({
             programType : type
         });
-    } 
+    }
 
     componentDidUpdate(prevProps: {}, prevState: CommandPaletteState) {
         if (this.state.programType !== prevState.programType) {
