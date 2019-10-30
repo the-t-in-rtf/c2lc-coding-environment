@@ -213,17 +213,6 @@ export default class App extends React.Component<{}, AppState> {
         this.interpreter.doCommand(word);
     };
 
-    handleSpeechLiveCommand = (word: string) => {
-        this.setState((state) => {
-            return {
-                program: [word],
-                programVer: state.programVer + 1
-            }
-        });
-        this.interpreter.doCommand(word);
-        this.handleClickRun();
-    }
-
     handleAppendToProgram = (command: string) => {
         this.setState((state) => {
             return {
