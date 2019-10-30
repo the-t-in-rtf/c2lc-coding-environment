@@ -166,6 +166,8 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
+        this.turtleGraphicsRef.current.clear();
+        this.turtleGraphicsRef.current.home();
         this.interpreter.run(this.state.program);
     };
 
@@ -333,7 +335,6 @@ export default class App extends React.Component<{}, AppState> {
                                 onChange={this.handleAppendToProgram}
                                 selectedCommand={this.handleCommandFromCommandPalette}
                             />
-                            {/* <p>Command blocks: ---------------------------------------------------------------------------------------</p> */}
                         </Col>
                     </Row>
                     <Row className='justify-content-center'>
@@ -356,21 +357,6 @@ export default class App extends React.Component<{}, AppState> {
                                     enabled = {this.state.speechRecognitionOn}
                                 />
                             </div>
-                            {/* {this.appContext.speechRecognitionApiIsAvailable &&
-                                <div>
-                                    <button onClick={this.handleStartSpeechRecognition}>
-                                        <FormattedMessage id='App.startSpeechRecognition' />
-                                    </button>
-                                    <button onClick={this.handleStopSpeechRecognition}>
-                                        <FormattedMessage id='App.stopSpeechRecognition' />
-                                    </button>
-                                    <div>
-                                        <MicMonitor
-                                            enabled = {this.state.speechRecognitionOn}
-                                        />
-                                    </div>
-                                </div>
-                            } */}
                         </Col>
                     </Row>
                     <Row className='justify-content-center'>
