@@ -13,7 +13,11 @@ type EditorContainerProps = {
     programVer: number,
     syntax: TextSyntax,
     onChange: (Program) => void,
-    mode: string
+    addEmptyProgramBlock: (number) => void,
+    deleteProgramBlock: (number) => void,
+    changeProgramBlock: (number, string) => void,
+    mode: string,
+    selectedCommand: string
 };
 
 export default class EditorContainer extends React.Component<EditorContainerProps, {}> {
@@ -36,7 +40,12 @@ export default class EditorContainer extends React.Component<EditorContainerProp
                     <ProgramBlockEditor
                         program={this.props.program}
                         programVer={this.props.programVer}
-                        onChange={this.props.onChange} /> 
+                        onChange={this.props.onChange} 
+                        addEmptyProgramBlock={this.props.addEmptyProgramBlock}
+                        deleteProgramBlock={this.props.deleteProgramBlock}
+                        changeProgramBlock={this.props.changeProgramBlock}
+                        selectedCommand={this.props.selectedCommand}
+                        /> 
                 )}
             </Container>
         );
