@@ -26,8 +26,11 @@ type AppContext = {
     speechRecognitionApiIsAvailable: boolean
 };
 
+type EditorMode = 'block' | 'text';
+
 type AppSettings = {
     dashSupport: boolean,
+    editorMode: EditorMode,
     language: string
 }
 
@@ -36,7 +39,6 @@ type AppState = {
     programVer: number,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
-    mode: string,
     speechRecognitionOn: boolean,
     selectedCommand: string
 };
@@ -71,10 +73,10 @@ export default class App extends React.Component<{}, AppState> {
             programVer: 1,
             settings: {
                 dashSupport: this.appContext.bluetoothApiIsAvailable,
+                editorMode: 'text',
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
-            mode: 'text',
             speechRecognitionOn: false,
             selectedCommand: 'none'
         };
@@ -191,9 +193,9 @@ export default class App extends React.Component<{}, AppState> {
 
     handleModeChange = (event: any) => {
         let mode = event.target.name === 'text' ? 'text' : 'symbolic';
-        this.setState({   
-            mode
-        })
+        this.setStateSettings({
+            editorMode : mode
+        });
     }
     handleStartSpeechRecognition = () => {
         this.setState({
@@ -296,7 +298,7 @@ export default class App extends React.Component<{}, AppState> {
                                     program={this.state.program}
                                     programVer={this.state.programVer}
                                     syntax={this.syntax}
-                                    mode={this.state.mode}
+                                    mode={this.state.settings.editorMode}
                                     onChange={this.handleChangeProgram} 
                                     addEmptyProgramBlock={this.handleAddEmptyProgramBlock}
                                     deleteProgramBlock={this.handleDeleteProgramBlock}
@@ -329,7 +331,7 @@ export default class App extends React.Component<{}, AppState> {
                     </Row>
                    <Row className='justify-content-center'>
                         <Col md='auto'>
-                            <CommandPalette 
+                            <CommandPalette
                                 program={this.state.program}
                                 programVer={this.state.programVer}
                                 onChange={this.handleAppendToProgram}
