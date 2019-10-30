@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {IntlProvider, FormattedMessage} from 'react-intl';
+import CommandPalette from './CommandPalette';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import EditorContainer from './EditorContainer';
@@ -35,8 +36,9 @@ type AppState = {
     programVer: number,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
-    mode: string;
-    speechRecognitionOn: boolean
+    mode: string,
+    speechRecognitionOn: boolean,
+    selectedCommand: string
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -73,7 +75,8 @@ export default class App extends React.Component<{}, AppState> {
             },
             dashConnectionStatus: 'notConnected',
             mode: 'text',
-            speechRecognitionOn: false
+            speechRecognitionOn: false,
+            selectedCommand: 'none'
         };
 
         this.interpreter = new Interpreter();
@@ -206,6 +209,67 @@ export default class App extends React.Component<{}, AppState> {
         this.interpreter.doCommand(word);
     };
 
+    handleSpeechLiveCommand = (word: string) => {
+        this.setState((state) => {
+            return {
+                program: [word],
+                programVer: state.programVer + 1
+            }
+        });
+        this.interpreter.doCommand(word);
+        this.handleClickRun();
+    }
+
+    handleAppendToProgram = (command: string) => {
+        this.setState((state) => {
+            return {
+                program: this.state.program.concat([command]),
+                programVer: state.programVer + 1
+            }
+        });
+    };
+
+    handleDeleteProgramBlock = (index: number) => {
+        let currentProgram = this.state.program;
+        currentProgram.splice(index, 1);
+        this.setState((state) => {
+            return {
+                program: currentProgram,
+                programVer: state.programVer + 1
+            }
+        });
+    };
+
+    handleAddEmptyProgramBlock = (index: number) => {
+        let currentProgram = this.state.program;
+        currentProgram.splice(index+1, 0, 'none');
+        this.setState((state) => {
+            return {
+                program: currentProgram,
+                programVer: state.programVer + 1
+            }
+        });
+    };
+
+    handleChangeProgramBlock = (index: number, command: string) => {
+        let currentProgram = this.state.program;
+        currentProgram.splice(index, 1, command);
+        this.setState((state) => {
+            return {
+                program: currentProgram,
+                programVer: state.programVer + 1 
+            }
+        });
+    };
+
+    handleCommandFromCommandPalette = (command: string) => {
+        this.setState((state) => {
+            return {
+                selectedCommand: command
+            }
+        });
+    };
+
     render() {
         return (
             <Container>
@@ -226,17 +290,17 @@ export default class App extends React.Component<{}, AppState> {
                                 </Dropdown>
                             </Row>
                             <Row>
-                                {/* <ProgramTextEditor
-                                    program={this.state.program}
-                                    programVer={this.state.programVer}
-                                    syntax={this.syntax}
-                                    onChange={this.handleChangeProgram} /> */}
                                 <EditorContainer 
                                     program={this.state.program}
                                     programVer={this.state.programVer}
                                     syntax={this.syntax}
                                     mode={this.state.mode}
-                                    onChange={this.handleChangeProgram} />
+                                    onChange={this.handleChangeProgram} 
+                                    addEmptyProgramBlock={this.handleAddEmptyProgramBlock}
+                                    deleteProgramBlock={this.handleDeleteProgramBlock}
+                                    changeProgramBlock={this.handleChangeProgramBlock}
+                                    selectedCommand={this.state.selectedCommand}
+                                    />
                             </Row>
                         </Col>
                         <Col md='auto'>
@@ -255,7 +319,7 @@ export default class App extends React.Component<{}, AppState> {
                                 </div>
                             </Row>
                             <Row>
-                                <button onClick={this.handleClickRun} aria-label='Run the program'>
+                                <button onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
                                     <Image src={playIcon} />
                                 </button>
                             </Row>
@@ -263,7 +327,13 @@ export default class App extends React.Component<{}, AppState> {
                     </Row>
                    <Row className='justify-content-center'>
                         <Col md='auto'>
-                            <p>Command blocks: forward right left ----------------------------------------------------------------</p>
+                            <CommandPalette 
+                                program={this.state.program}
+                                programVer={this.state.programVer}
+                                onChange={this.handleAppendToProgram}
+                                selectedCommand={this.handleCommandFromCommandPalette}
+                            />
+                            {/* <p>Command blocks: ---------------------------------------------------------------------------------------</p> */}
                         </Col>
                     </Row>
                     <Row className='justify-content-center'>
@@ -272,7 +342,35 @@ export default class App extends React.Component<{}, AppState> {
                                 type='switch'
                                 id='custom-switch'
                                 label='Speech Recognition'
+                                disabled={!this.appContext.speechRecognitionApiIsAvailable}
+                                checked={this.state.speechRecognitionOn}
+                                //onClick={this.state.speechRecognitionOn ? this.handleStopSpeechRecognition : this.handleStartSpeechRecognition }
+                                onChange={() => {
+                                    this.setState({
+                                        speechRecognitionOn : !this.state.speechRecognitionOn
+                                    })
+                                }}
                             />
+                             <div>
+                                <MicMonitor
+                                    enabled = {this.state.speechRecognitionOn}
+                                />
+                            </div>
+                            {/* {this.appContext.speechRecognitionApiIsAvailable &&
+                                <div>
+                                    <button onClick={this.handleStartSpeechRecognition}>
+                                        <FormattedMessage id='App.startSpeechRecognition' />
+                                    </button>
+                                    <button onClick={this.handleStopSpeechRecognition}>
+                                        <FormattedMessage id='App.stopSpeechRecognition' />
+                                    </button>
+                                    <div>
+                                        <MicMonitor
+                                            enabled = {this.state.speechRecognitionOn}
+                                        />
+                                    </div>
+                                </div>
+                            } */}
                         </Col>
                     </Row>
                     <Row className='justify-content-center'>
@@ -285,21 +383,6 @@ export default class App extends React.Component<{}, AppState> {
                             </select>
                         </Col>
                     </Row>
-                    {this.appContext.speechRecognitionApiIsAvailable &&
-                        <div>
-                            <button onClick={this.handleStartSpeechRecognition}>
-                                <FormattedMessage id='App.startSpeechRecognition' />
-                            </button>
-                            <button onClick={this.handleStopSpeechRecognition}>
-                                <FormattedMessage id='App.stopSpeechRecognition' />
-                            </button>
-                            <div>
-                                <MicMonitor
-                                    enabled = {this.state.speechRecognitionOn}
-                                />
-                            </div>
-                        </div>
-                    }
             </IntlProvider>
             </Container>
         );
