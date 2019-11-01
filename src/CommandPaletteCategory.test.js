@@ -1,7 +1,7 @@
 import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
 import { shallow, configure } from 'enzyme';
-import { Container } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import CommandPaletteCategory from './CommandPaletteCategory';
 import CommandPaletteCommand from './CommandPaletteCommand';
 
@@ -15,7 +15,7 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
             <CommandPaletteCommand commandName='right'/>
         </CommandPaletteCategory>
     );
-    const commands = wrapper.find(Container);
-    const commandsChildren = commands.getElement().props.children.props.children;
+    const commands = wrapper.find(Row);
+    const commandsChildren = commands.getElement().props.children;
     expect(commandsChildren).toHaveLength(3);
 });
