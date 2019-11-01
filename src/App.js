@@ -2,7 +2,10 @@
 
 import React from 'react';
 import {IntlProvider, FormattedMessage} from 'react-intl';
+import { Col, Container, Dropdown, Form, Image, Row } from 'react-bootstrap';
 import CommandPalette from './CommandPalette';
+import CommandPaletteCategory from './CommandPaletteCategory';
+import CommandPaletteCommand from './CommandPaletteCommand';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import EditorContainer from './EditorContainer';
@@ -13,20 +16,21 @@ import SoundexTable from './SoundexTable';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
 import WebSpeechInput from './WebSpeechInput';
-import type {DeviceConnectionStatus, Program} from './types';
-import { Col, Container, Dropdown, Form, Image, Row } from 'react-bootstrap';
+import type {DeviceConnectionStatus, Program, EditorMode} from './types';
 import messages from './messages.json';
+import arrowLeft from 'material-design-icons/navigation/svg/production/ic_arrow_back_48px.svg';
+import arrowRight from 'material-design-icons/navigation/svg/production/ic_arrow_forward_48px.svg';
+import arrowUp from 'material-design-icons/navigation/svg/production/ic_arrow_upward_48px.svg';
+import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px.svg';
+
 
 
 type AppContext = {
     bluetoothApiIsAvailable: boolean,
     speechRecognitionApiIsAvailable: boolean
 };
-
-type EditorMode = 'block' | 'text';
 
 type AppSettings = {
     dashSupport: boolean,
@@ -40,7 +44,7 @@ type AppState = {
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
     speechRecognitionOn: boolean,
-    selectedCommand: string
+    selectedCommandName: string
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -78,7 +82,7 @@ export default class App extends React.Component<{}, AppState> {
             },
             dashConnectionStatus: 'notConnected',
             speechRecognitionOn: false,
-            selectedCommand: 'none'
+            selectedCommandName: 'none'
         };
 
         this.interpreter = new Interpreter();
@@ -168,8 +172,13 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
-        this.turtleGraphicsRef.current.clear();
-        this.turtleGraphicsRef.current.home();
+        // TODO: Why does doing both clear and home in the same block fail Flow type checking?
+        if (this.turtleGraphicsRef.current !== null) {
+            this.turtleGraphicsRef.current.clear();
+        }
+        if (this.turtleGraphicsRef.current !== null) {
+            this.turtleGraphicsRef.current.home();
+        }
         this.interpreter.run(this.state.program);
     };
 
@@ -192,26 +201,21 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleModeChange = (event: any) => {
-        let mode = event.target.name === 'text' ? 'text' : 'symbolic';
+        let mode = event.target.name === 'text' ? 'text' : 'block';
         this.setStateSettings({
             editorMode : mode
         });
     }
-    handleStartSpeechRecognition = () => {
-        this.setState({
-            speechRecognitionOn: true
-        });
-    };
-
-    handleStopSpeechRecognition = () => {
-        this.setState({
-            speechRecognitionOn: false
-        });
-    };
 
     handleSpeechCommand = (word: string) => {
         this.interpreter.doCommand(word);
     };
+
+    handleToggleSpeech = (event: any) => {
+        this.setState({
+            speechRecognitionOn : event.target.checked
+        })
+    }
 
     handleAppendToProgram = (command: string) => {
         this.setState((state) => {
@@ -256,10 +260,8 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleCommandFromCommandPalette = (command: string) => {
-        this.setState((state) => {
-            return {
-                selectedCommand: command
-            }
+        this.setState({
+            selectedCommandName: command
         });
     };
 
@@ -278,7 +280,7 @@ export default class App extends React.Component<{}, AppState> {
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu onClick={this.handleModeChange}>
                                         <Dropdown.Item name='text'>Text</Dropdown.Item>
-                                        <Dropdown.Item name='symbolic'>Symbolic</Dropdown.Item>
+                                        <Dropdown.Item name='block'>Block</Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
                             </Row>
@@ -292,7 +294,7 @@ export default class App extends React.Component<{}, AppState> {
                                     addEmptyProgramBlock={this.handleAddEmptyProgramBlock}
                                     deleteProgramBlock={this.handleDeleteProgramBlock}
                                     changeProgramBlock={this.handleChangeProgramBlock}
-                                    selectedCommand={this.state.selectedCommand}
+                                    selectedCommand={this.state.selectedCommandName}
                                     />
                             </Row>
                         </Col>
@@ -318,14 +320,15 @@ export default class App extends React.Component<{}, AppState> {
                             </Row>
                         </Col>
                     </Row>
-                   <Row className='justify-content-center'>
+                    <Row className='justify-content-center'>
                         <Col md='auto'>
-                            <CommandPalette
-                                program={this.state.program}
-                                programVer={this.state.programVer}
-                                onChange={this.handleAppendToProgram}
-                                selectedCommand={this.handleCommandFromCommandPalette}
-                            />
+                        <CommandPalette id='commandPalette' defaultActiveKey='movements' >
+                            <CommandPaletteCategory eventKey='movements' title='Movements'>
+                                <CommandPaletteCommand commandName='forward' icon={arrowUp} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
+                                <CommandPaletteCommand commandName='left' icon={arrowLeft} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
+                                <CommandPaletteCommand commandName='right' icon={arrowRight} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
+                            </CommandPaletteCategory>
+                        </CommandPalette>
                         </Col>
                     </Row>
                     <Row className='justify-content-center'>
@@ -336,12 +339,7 @@ export default class App extends React.Component<{}, AppState> {
                                 label='Speech Recognition'
                                 disabled={!this.appContext.speechRecognitionApiIsAvailable}
                                 checked={this.state.speechRecognitionOn}
-                                //onClick={this.state.speechRecognitionOn ? this.handleStopSpeechRecognition : this.handleStartSpeechRecognition }
-                                onChange={() => {
-                                    this.setState({
-                                        speechRecognitionOn : !this.state.speechRecognitionOn
-                                    })
-                                }}
+                                onChange={this.handleToggleSpeech}
                             />
                              <div>
                                 <MicMonitor
