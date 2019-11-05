@@ -8,15 +8,21 @@ import CommandPaletteCommand from './CommandPaletteCommand';
 configure({ adapter: new Adapter()});
 
 test('number of commands rendered by CommandPaletteCategory should be equal to the number of CommandPaletteCommand', () => {
-    const twoCommandsWrapper = shallow(
+    const emptyCommandsWrapper = shallow(
         <CommandPaletteCategory>
-            <CommandPaletteCommand commandName='forward'/>
-            <CommandPaletteCommand commandName='left'/>
         </CommandPaletteCategory>
     );
-    let commands = twoCommandsWrapper.find(Row);
-    let commandsChildren = commands.getElement().props.children;
-    expect(commandsChildren).toHaveLength(2);
+
+    let commands = emptyCommandsWrapper.find(CommandPaletteCommand);
+    expect(commands).toHaveLength(0);
+
+    const oneCommandsWrapper = shallow(
+        <CommandPaletteCategory>
+            <CommandPaletteCommand commandName='forward'/>
+        </CommandPaletteCategory>
+    );
+    commands = oneCommandsWrapper.find(CommandPaletteCommand);
+    expect(commands).toHaveLength(1);
 
     const threeCommandsWrapper = shallow(
         <CommandPaletteCategory>
@@ -26,19 +32,6 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
         </CommandPaletteCategory>
     );
     
-    commands = threeCommandsWrapper.find(Row);
-    commandsChildren = commands.getElement().props.children;
-    expect(commandsChildren).toHaveLength(3);
-
-    const fourCommandsWrapper = shallow(
-        <CommandPaletteCategory>
-            <CommandPaletteCommand commandName='forward' />
-            <CommandPaletteCommand commandName='left' />
-            <CommandPaletteCommand commandName='right' />
-            <CommandPaletteCommand commandName='none' />
-        </CommandPaletteCategory>
-    );
-    commands = fourCommandsWrapper.find(Row);
-    commandsChildren = commands.getElement().props.children;
-    expect(commandsChildren).toHaveLength(4);
+    commands = threeCommandsWrapper.find(CommandPaletteCommand);
+    expect(commands).toHaveLength(3);
 });
