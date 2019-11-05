@@ -6,7 +6,7 @@ import TextSyntax from './TextSyntax';
 
 configure({ adapter: new Adapter()});
 
-test('number of tabs rendered by CommandPalette component should be equal to number of categories', () => {
+test('testing text input from ProgramTextEditor component', () => {
     const mockFn = jest.fn();
     const programTextEditorWrapper = shallow(
         <ProgramTextEditor 
@@ -23,5 +23,5 @@ test('number of tabs rendered by CommandPalette component should be equal to num
     const textChangeEvent = {currentTarget: { value: 'forward left forward left' }};
     getTextEditor().simulate('change', textChangeEvent);
     programTextEditorWrapper.update();
-    expect(getTextEditor().props().value).toBe(programTextEditorWrapper.instance().state.text);
+    expect(programTextEditorWrapper.instance().state.text).toBe(getTextEditor().props().value);
 });
