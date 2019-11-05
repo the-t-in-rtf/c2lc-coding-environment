@@ -8,34 +8,39 @@ import CommandPaletteCommand from './CommandPaletteCommand';
 configure({ adapter: new Adapter()});
 
 test('onChange property of CommandPaletteCommand component should change state of App component, as well as variant of itself', () => {
-    const appWrapper = shallow(<App />);
-    // maybe no need to create mockFn? if there's way to access the function directly from App
-    const mockFn = jest.fn(command => {
-        appWrapper.setState({selectedCommandName : command});        
-    });
+    const mockChangeHandler = jest.fn();
     const commandPaletteCommandWrapper = shallow(
         <CommandPaletteCommand 
             commandName='forward' 
-            selectedCommandName={appWrapper.state().selectedCommandName} 
-            onChange={mockFn}/>
+            selectedCommandName='none'
+            onChange={mockChangeHandler}/>
     );
-    const commandButton = commandPaletteCommandWrapper.find(Button);
+
     const getVariantValue = () => (commandPaletteCommandWrapper.find(Button).getElement().props.variant);
+
     // before a command is selected, initial state of selectedCommandName of App should be none and variant of the command button should be set to light
-    expect(appWrapper.state().selectedCommandName).toBe('none');
     expect(getVariantValue()).toBe('light');
+
+    const commandButton = commandPaletteCommandWrapper.find(Button);
 
     // after a command is selected, state of selectedCommandName of App should be set to the command name and variant of the command button should be set to outline-primary
     commandButton.simulate('click');
-    commandPaletteCommandWrapper.setProps({selectedCommandName: appWrapper.state().selectedCommandName});
+    expect(mockChangeHandler.mock.calls.length).toBe(1);
+    expect(mockChangeHandler.mock.calls[0][0]).toBe('forward');
+    commandPaletteCommandWrapper.setProps({selectedCommandName: 'forward'});
     commandPaletteCommandWrapper.update();
-    expect(appWrapper.state().selectedCommandName).toBe('forward');
     expect(getVariantValue()).toBe('outline-primary');
     
     // after a command is selected again, state of selectedCommandName of App should reset to none and variant of the command button to light
     commandButton.simulate('click');
-    commandPaletteCommandWrapper.setProps({selectedCommandName: appWrapper.state().selectedCommandName});
+    expect(mockChangeHandler.mock.calls.length).toBe(2);
+    expect(mockChangeHandler.mock.calls[1][0]).toBe('none');
+    commandPaletteCommandWrapper.setProps({selectedCommandName: 'none'});
     commandPaletteCommandWrapper.update();
-    expect(appWrapper.state().selectedCommandName).toBe('none');
+    expect(getVariantValue()).toBe('light');
+
+    // when some other command is clicked 
+    commandPaletteCommandWrapper.setProps({selectedCommandName: 'left'});
+    commandPaletteCommandWrapper.update();
     expect(getVariantValue()).toBe('light');
 });
