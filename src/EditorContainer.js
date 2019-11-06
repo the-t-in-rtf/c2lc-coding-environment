@@ -7,17 +7,13 @@ import TextSyntax from './TextSyntax';
 import { Container } from 'react-bootstrap';
 import type {EditorMode, Program} from './types';
 
-
 type EditorContainerProps = {
     program: Program,
     programVer: number,
     syntax: TextSyntax,
-    onChange: (Program) => void,
-    addEmptyProgramBlock: (number) => void,
-    deleteProgramBlock: (number) => void,
-    changeProgramBlock: (number, string) => void,
     mode: EditorMode,
-    selectedCommand: string
+    selectedCommand: string,
+    onChange: (Program) => void
 };
 
 export default class EditorContainer extends React.Component<EditorContainerProps, {}> {
@@ -30,24 +26,17 @@ export default class EditorContainer extends React.Component<EditorContainerProp
         return (
             <Container>
                 {this.props.mode === 'text' ? (
-                    <ProgramTextEditor 
+                    <ProgramTextEditor
                         program={this.props.program}
                         programVer={this.props.programVer}
                         syntax={this.props.syntax}
-                        onChange={this.props.onChange} /> 
+                        onChange={this.props.onChange} />
                  ) : (
                      //ProgramBlockEditor doesn't have TextSyntax
                     <ProgramBlockEditor
                         program={this.props.program}
-                        programVer={this.props.programVer}
                         selectedCommand={this.props.selectedCommand}
-                        onChange={this.props.onChange} 
-                        // move to ProgramBlockEditor 
-                        addEmptyProgramBlock={this.props.addEmptyProgramBlock}
-                        deleteProgramBlock={this.props.deleteProgramBlock}
-                        changeProgramBlock={this.props.changeProgramBlock}
-                        ///
-                        /> 
+                        onChange={this.props.onChange} />
                 )}
             </Container>
         );
