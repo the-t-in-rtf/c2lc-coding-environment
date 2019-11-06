@@ -9,17 +9,16 @@ configure({ adapter: new Adapter()});
 test('testing text input from ProgramTextEditor component', () => {
     const mockFn = jest.fn();
     const programTextEditorWrapper = shallow(
-        <ProgramTextEditor 
-            program={['forward', 'left', 'forward']} 
-            programVer={1}
+        <ProgramTextEditor
+            program={['forward', 'left', 'forward']}
             syntax={new TextSyntax()}
             onChange={mockFn}/>);
     const getTextEditor = () => (programTextEditorWrapper.find('#texteditor-0'));
 
-    // value of program text area should reflect current state for program    
+    // value of program text area should reflect current state for program
     expect(getTextEditor().props().value).toBe(programTextEditorWrapper.instance().props.program.join(' '));
 
-    // text state should change according to the value of the text field 
+    // text state should change according to the value of the text field
     const textChangeEvent = {currentTarget: { value: 'forward left forward left' }};
     getTextEditor().simulate('change', textChangeEvent);
     programTextEditorWrapper.update();
