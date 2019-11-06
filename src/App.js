@@ -40,7 +40,6 @@ type AppSettings = {
 
 type AppState = {
     program: Program,
-    programVer: number,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
     speechRecognitionOn: boolean,
@@ -74,7 +73,6 @@ export default class App extends React.Component<{}, AppState> {
                 'forward',
                 'left'
             ],
-            programVer: 1,
             settings: {
                 dashSupport: this.appContext.bluetoothApiIsAvailable,
                 editorMode: 'text',
@@ -147,8 +145,7 @@ export default class App extends React.Component<{}, AppState> {
     setProgram(program: Program) {
         this.setState((state) => {
             return {
-                program: program,
-                programVer: state.programVer + 1
+                program: program
             }
         });
     }
@@ -220,8 +217,7 @@ export default class App extends React.Component<{}, AppState> {
     handleAppendToProgram = (command: string) => {
         this.setState((state) => {
             return {
-                program: this.state.program.concat([command]),
-                programVer: state.programVer + 1
+                program: this.state.program.concat([command])
             }
         });
     };
@@ -231,8 +227,7 @@ export default class App extends React.Component<{}, AppState> {
         currentProgram.splice(index, 1);
         this.setState((state) => {
             return {
-                program: currentProgram,
-                programVer: state.programVer + 1
+                program: currentProgram
             }
         });
     };
@@ -242,8 +237,7 @@ export default class App extends React.Component<{}, AppState> {
         currentProgram.splice(index+1, 0, 'none');
         this.setState((state) => {
             return {
-                program: currentProgram,
-                programVer: state.programVer + 1
+                program: currentProgram
             }
         });
     };
@@ -253,8 +247,7 @@ export default class App extends React.Component<{}, AppState> {
         currentProgram.splice(index, 1, command);
         this.setState((state) => {
             return {
-                program: currentProgram,
-                programVer: state.programVer + 1 
+                program: currentProgram
             }
         });
     };
@@ -285,12 +278,11 @@ export default class App extends React.Component<{}, AppState> {
                                 </Dropdown>
                             </Row>
                             <Row>
-                                <EditorContainer 
+                                <EditorContainer
                                     program={this.state.program}
-                                    programVer={this.state.programVer}
                                     syntax={this.syntax}
                                     mode={this.state.settings.editorMode}
-                                    onChange={this.handleChangeProgram} 
+                                    onChange={this.handleChangeProgram}
                                     addEmptyProgramBlock={this.handleAddEmptyProgramBlock}
                                     deleteProgramBlock={this.handleDeleteProgramBlock}
                                     changeProgramBlock={this.handleChangeProgramBlock}
@@ -333,7 +325,7 @@ export default class App extends React.Component<{}, AppState> {
                     </Row>
                     <Row className='justify-content-center'>
                         <Col md='auto'>
-                            <Form.Check 
+                            <Form.Check
                                 type='switch'
                                 id='custom-switch'
                                 label='Speech Recognition'

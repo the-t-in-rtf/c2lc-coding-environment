@@ -29,26 +29,19 @@ export default class EditorContainer extends React.Component<EditorContainerProp
     render() {
         return (
             <Container>
-                {this.props.mode === 'text' ? (
                     <ProgramTextEditor 
                         program={this.props.program}
-                        programVer={this.props.programVer}
                         syntax={this.props.syntax}
                         onChange={this.props.onChange} /> 
-                 ) : (
-                     //ProgramBlockEditor doesn't have TextSyntax
                     <ProgramBlockEditor
                         program={this.props.program}
-                        programVer={this.props.programVer}
                         selectedCommand={this.props.selectedCommand}
                         onChange={this.props.onChange} 
                         // move to ProgramBlockEditor 
                         addEmptyProgramBlock={this.props.addEmptyProgramBlock}
                         deleteProgramBlock={this.props.deleteProgramBlock}
                         changeProgramBlock={this.props.changeProgramBlock}
-                        ///
-                        /> 
-                )}
+                    /> 
             </Container>
         );
     }
