@@ -10,7 +10,6 @@ import type {EditorMode, Program} from './types';
 
 type EditorContainerProps = {
     program: Program,
-    programVer: number,
     syntax: TextSyntax,
     onChange: (Program) => void,
     addEmptyProgramBlock: (number) => void,
@@ -21,27 +20,25 @@ type EditorContainerProps = {
 };
 
 export default class EditorContainer extends React.Component<EditorContainerProps, {}> {
-
-    constructor(props: EditorContainerProps) {
-        super(props);
-    }
-
     render() {
         return (
             <Container>
-                    <ProgramTextEditor 
+                {this.props.mode === 'text' ? (
+                    <ProgramTextEditor
                         program={this.props.program}
                         syntax={this.props.syntax}
-                        onChange={this.props.onChange} /> 
+                        onChange={this.props.onChange} />
+                ) : (
                     <ProgramBlockEditor
                         program={this.props.program}
                         selectedCommand={this.props.selectedCommand}
-                        onChange={this.props.onChange} 
-                        // move to ProgramBlockEditor 
+                        onChange={this.props.onChange}
+                        // move to ProgramBlockEditor
                         addEmptyProgramBlock={this.props.addEmptyProgramBlock}
                         deleteProgramBlock={this.props.deleteProgramBlock}
                         changeProgramBlock={this.props.changeProgramBlock}
-                    /> 
+                    />
+                )}
             </Container>
         );
     }
