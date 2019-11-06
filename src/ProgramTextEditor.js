@@ -13,7 +13,7 @@ type ProgramTextEditorProps = {
 };
 
 type ProgramTextEditorState = {
-    programVer: number,
+    program: string,
     text: string
 };
 
