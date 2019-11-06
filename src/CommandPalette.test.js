@@ -8,14 +8,20 @@ import CommandPaletteCategory from './CommandPaletteCategory';
 configure({ adapter: new Adapter()});
 
 test('number of tabs rendered by CommandPalette component should be equal to number of categories', () => {
-    const twoCategoryWrapper = shallow(
+    const emptyCategoryWrapper = shallow(
+        <CommandPalette defaultActiveKey='movements'>
+        </CommandPalette>
+    )
+    let tabs = emptyCategoryWrapper.find(CommandPaletteCategory);
+    expect(tabs).toHaveLength(0);
+
+    const oneCategoryWrapper = shallow(
         <CommandPalette defaultActiveKey='movements'>
             <CommandPaletteCategory eventKey='movements' title='Movements'/>
-            <CommandPaletteCategory eventKey='sounds' title='Sounds'/>
         </CommandPalette>
     );
-    let tabs = twoCategoryWrapper.find(CommandPaletteCategory);
-    expect(tabs).toHaveLength(2);
+    tabs = oneCategoryWrapper.find(CommandPaletteCategory);
+    expect(tabs).toHaveLength(1);
 
     const threeCategoryWrapper = shallow(
         <CommandPalette defaultActiveKey='movements'>
