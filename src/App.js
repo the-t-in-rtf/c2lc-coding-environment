@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {IntlProvider, FormattedMessage} from 'react-intl';
+import { injectIntl, IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Dropdown, Form, Image, Row } from 'react-bootstrap';
 import CommandPalette from './CommandPalette';
 import CommandPaletteCategory from './CommandPaletteCategory';
@@ -25,7 +25,7 @@ import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-
+const localizeProperties = (fn) => React.createElement(injectIntl(({ intl }) => fn(intl)));
 
 type AppContext = {
     bluetoothApiIsAvailable: boolean,
@@ -254,7 +254,7 @@ export default class App extends React.Component<{}, AppState> {
         this.setState((state) => {
             return {
                 program: currentProgram,
-                programVer: state.programVer + 1 
+                programVer: state.programVer + 1
             }
         });
     };
@@ -276,21 +276,25 @@ export default class App extends React.Component<{}, AppState> {
                             <Row>
                                 <Dropdown>
                                     <Dropdown.Toggle>
-                                        Change Mode
+                                        <FormattedMessage id='App.changeMode' />
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu onClick={this.handleModeChange}>
-                                        <Dropdown.Item name='text'>Text</Dropdown.Item>
-                                        <Dropdown.Item name='block'>Block</Dropdown.Item>
+                                        <Dropdown.Item name='text'>
+                                            <FormattedMessage id='App.textMode' />
+                                        </Dropdown.Item>
+                                        <Dropdown.Item name='block'>
+                                            <FormattedMessage id='App.blockMode' />
+                                        </Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
                             </Row>
                             <Row>
-                                <EditorContainer 
+                                <EditorContainer
                                     program={this.state.program}
                                     programVer={this.state.programVer}
                                     syntax={this.syntax}
                                     mode={this.state.settings.editorMode}
-                                    onChange={this.handleChangeProgram} 
+                                    onChange={this.handleChangeProgram}
                                     addEmptyProgramBlock={this.handleAddEmptyProgramBlock}
                                     deleteProgramBlock={this.handleDeleteProgramBlock}
                                     changeProgramBlock={this.handleChangeProgramBlock}
@@ -322,25 +326,31 @@ export default class App extends React.Component<{}, AppState> {
                     </Row>
                     <Row className='justify-content-center'>
                         <Col md='auto'>
-                        <CommandPalette id='commandPalette' defaultActiveKey='movements' >
-                            <CommandPaletteCategory eventKey='movements' title='Movements'>
-                                <CommandPaletteCommand commandName='forward' icon={arrowUp} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
-                                <CommandPaletteCommand commandName='left' icon={arrowLeft} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
-                                <CommandPaletteCommand commandName='right' icon={arrowRight} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
-                            </CommandPaletteCategory>
-                        </CommandPalette>
+                            {localizeProperties((intl) =>
+                                <CommandPalette id='commandPalette' defaultActiveKey='movements' >
+                                    <CommandPaletteCategory eventKey='movements' title={(intl.formatMessage({ id: 'CommandPalette.movementsTitle' }))}>
+                                        <CommandPaletteCommand commandName='forward' icon={arrowUp} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand commandName='left' icon={arrowLeft} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand commandName='right' icon={arrowRight} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
+                                    </CommandPaletteCategory>
+                                    <CommandPaletteCategory eventKey='sounds' title={(intl.formatMessage({ id: 'CommandPalette.soundsTitle' }))}>
+                                    </CommandPaletteCategory>
+                                </CommandPalette>
+                            )}
                         </Col>
                     </Row>
                     <Row className='justify-content-center'>
                         <Col md='auto'>
-                            <Form.Check 
-                                type='switch'
-                                id='custom-switch'
-                                label='Speech Recognition'
-                                disabled={!this.appContext.speechRecognitionApiIsAvailable}
-                                checked={this.state.speechRecognitionOn}
-                                onChange={this.handleToggleSpeech}
-                            />
+                            {localizeProperties((intl) =>
+                                <Form.Check
+                                    type='switch'
+                                    id='custom-switch'
+                                    label={(intl.formatMessage({ id: 'App.speechRecognition'}))}
+                                    disabled={!this.appContext.speechRecognitionApiIsAvailable}
+                                    checked={this.state.speechRecognitionOn}
+                                    onChange={this.handleToggleSpeech}
+                                />
+                            )}
                              <div>
                                 <MicMonitor
                                     enabled = {this.state.speechRecognitionOn}
