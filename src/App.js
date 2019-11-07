@@ -172,7 +172,6 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
-        // TODO: Why does doing both clear and home in the same block fail Flow type checking?
         if (this.turtleGraphicsRef.current !== null) {
             this.turtleGraphicsRef.current.clear();
         }
@@ -205,7 +204,7 @@ export default class App extends React.Component<{}, AppState> {
         this.setStateSettings({
             editorMode : mode
         });
-    }
+    };
 
     handleSpeechCommand = (word: string) => {
         this.interpreter.doCommand(word);
@@ -215,45 +214,12 @@ export default class App extends React.Component<{}, AppState> {
         this.setState({
             speechRecognitionOn : event.target.checked
         })
-    }
+    };
 
     handleAppendToProgram = (command: string) => {
         this.setState((state) => {
             return {
                 program: this.state.program.concat([command]),
-                programVer: state.programVer + 1
-            }
-        });
-    };
-
-    handleDeleteProgramBlock = (index: number) => {
-        let currentProgram = this.state.program;
-        currentProgram.splice(index, 1);
-        this.setState((state) => {
-            return {
-                program: currentProgram,
-                programVer: state.programVer + 1
-            }
-        });
-    };
-
-    handleAddEmptyProgramBlock = (index: number) => {
-        let currentProgram = this.state.program;
-        currentProgram.splice(index+1, 0, 'none');
-        this.setState((state) => {
-            return {
-                program: currentProgram,
-                programVer: state.programVer + 1
-            }
-        });
-    };
-
-    handleChangeProgramBlock = (index: number, command: string) => {
-        let currentProgram = this.state.program;
-        currentProgram.splice(index, 1, command);
-        this.setState((state) => {
-            return {
-                program: currentProgram,
                 programVer: state.programVer + 1
             }
         });
@@ -294,11 +260,8 @@ export default class App extends React.Component<{}, AppState> {
                                     programVer={this.state.programVer}
                                     syntax={this.syntax}
                                     mode={this.state.settings.editorMode}
-                                    onChange={this.handleChangeProgram}
-                                    addEmptyProgramBlock={this.handleAddEmptyProgramBlock}
-                                    deleteProgramBlock={this.handleDeleteProgramBlock}
-                                    changeProgramBlock={this.handleChangeProgramBlock}
                                     selectedCommand={this.state.selectedCommandName}
+                                    onChange={this.handleChangeProgram}
                                     />
                             </Row>
                         </Col>
