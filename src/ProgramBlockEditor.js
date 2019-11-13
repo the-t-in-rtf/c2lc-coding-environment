@@ -20,7 +20,7 @@ type ProgramBlockEditorProps = {
 
 export default class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     toggleAction(action: 'add' | 'delete') {
-        if (this.props.selectedAction !== null
+        if (this.props.selectedAction
                 && this.props.selectedAction.type === 'editorAction'
                 && this.props.selectedAction.action === action) {
             this.props.onSelectAction(null);
@@ -33,7 +33,7 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
     };
 
     actionIsSelected(action: string) {
-        return (this.props.selectedAction !== null
+        return (this.props.selectedAction
             && this.props.selectedAction.type === 'editorAction'
             && this.props.selectedAction.action === action);
     }
@@ -55,7 +55,7 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
     };
 
     handleClickStep = (index: number) => {
-        if (this.props.selectedAction !== null && this.props.selectedAction.type === 'editorAction') {
+        if (this.props.selectedAction && this.props.selectedAction.type === 'editorAction') {
             if (this.props.selectedAction.action === 'add') {
                 this.props.onChange(ProgramUtils.insert(this.props.program,
                     index, 'none', 'none'));
@@ -64,7 +64,7 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                 this.props.onChange(ProgramUtils.deleteStep(this.props.program, index));
                 this.props.onSelectAction(null);
             }
-        } else if (this.props.selectedAction !== null && this.props.selectedAction.type === 'command'){
+        } else if (this.props.selectedAction && this.props.selectedAction.type === 'command'){
             this.props.onChange(ProgramUtils.overwrite(this.props.program,
                     index, this.props.selectedAction.commandName, 'none'));
             this.props.onSelectAction(null);
