@@ -16,7 +16,7 @@ import SoundexTable from './SoundexTable';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
 import WebSpeechInput from './WebSpeechInput';
-import type {DeviceConnectionStatus, Program, EditorMode} from './types';
+import type {DeviceConnectionStatus, EditorMode, Program, SelectedAction} from './types';
 import messages from './messages.json';
 import arrowLeft from 'material-design-icons/navigation/svg/production/ic_arrow_back_48px.svg';
 import arrowRight from 'material-design-icons/navigation/svg/production/ic_arrow_forward_48px.svg';
@@ -44,7 +44,7 @@ type AppState = {
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
     speechRecognitionOn: boolean,
-    selectedCommandName: string
+    selectedAction: SelectedAction
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -82,7 +82,7 @@ export default class App extends React.Component<{}, AppState> {
             },
             dashConnectionStatus: 'notConnected',
             speechRecognitionOn: false,
-            selectedCommandName: 'none'
+            selectedAction: null
         };
 
         this.interpreter = new Interpreter();
@@ -161,6 +161,15 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
+    getSelectedCommandName() {
+        if (this.state.selectedAction !== null
+                && this.state.selectedAction.type === 'command') {
+            return this.state.selectedAction.commandName;
+        } else {
+            return null;
+        }
+    }
+
     handleChangeLanguage = (event: SyntheticEvent<HTMLSelectElement>) => {
         this.setStateSettings({
             language: event.currentTarget.value
@@ -225,11 +234,26 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
-    handleCommandFromCommandPalette = (command: string) => {
-        this.setState({
-            selectedCommandName: command
-        });
+    handleCommandFromCommandPalette = (command: ?string) => {
+        if (command) {
+            this.setState({
+                selectedAction: {
+                    type: 'command',
+                    commandName: command
+                }
+            });
+        } else {
+            this.setState({
+                selectedAction: null
+            });
+        }
     };
+
+    handleSelectAction = (action: SelectedAction) => {
+        this.setState({
+            selectedAction: action
+        });
+    }
 
     render() {
         return (
@@ -260,7 +284,8 @@ export default class App extends React.Component<{}, AppState> {
                                     programVer={this.state.programVer}
                                     syntax={this.syntax}
                                     mode={this.state.settings.editorMode}
-                                    selectedCommand={this.state.selectedCommandName}
+                                    selectedAction={this.state.selectedAction}
+                                    onSelectAction={this.handleSelectAction}
                                     onChange={this.handleChangeProgram}
                                     />
                             </Row>
@@ -292,9 +317,9 @@ export default class App extends React.Component<{}, AppState> {
                             {localizeProperties((intl) =>
                                 <CommandPalette id='commandPalette' defaultActiveKey='movements' >
                                     <CommandPaletteCategory eventKey='movements' title={(intl.formatMessage({ id: 'CommandPalette.movementsTitle' }))}>
-                                        <CommandPaletteCommand commandName='forward' icon={arrowUp} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
-                                        <CommandPaletteCommand commandName='left' icon={arrowLeft} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
-                                        <CommandPaletteCommand commandName='right' icon={arrowRight} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand commandName='forward' icon={arrowUp} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand commandName='left' icon={arrowLeft} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand commandName='right' icon={arrowRight} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
                                     </CommandPaletteCategory>
                                     <CommandPaletteCategory eventKey='sounds' title={(intl.formatMessage({ id: 'CommandPalette.soundsTitle' }))}>
                                     </CommandPaletteCategory>

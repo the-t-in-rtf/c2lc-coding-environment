@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Container, Row, Tab } from 'react-bootstrap';
 
 type CommandPaletteCategoryProps = {
-    children: React.Node,
+    children?: React.Node,
     eventKey: string,
     title: string
 };

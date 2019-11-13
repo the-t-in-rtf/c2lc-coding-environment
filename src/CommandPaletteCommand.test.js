@@ -10,9 +10,9 @@ configure({ adapter: new Adapter()});
 test('onChange property of CommandPaletteCommand component should change its variant according to selectedCommandName', () => {
     const mockChangeHandler = jest.fn();
     const commandPaletteCommandWrapper = shallow(
-        <CommandPaletteCommand 
-            commandName='forward' 
-            selectedCommandName='none'
+        <CommandPaletteCommand
+            commandName='forward'
+            selectedCommandName={null}
             onChange={mockChangeHandler}/>
     );
 
@@ -30,16 +30,16 @@ test('onChange property of CommandPaletteCommand component should change its var
     commandPaletteCommandWrapper.setProps({selectedCommandName: 'forward'});
     commandPaletteCommandWrapper.update();
     expect(getVariantValue()).toBe('outline-primary');
-    
+
     // after the same command is selected, variant of the command button should be reset to light
     commandButton.simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(2);
-    expect(mockChangeHandler.mock.calls[1][0]).toBe('none');
-    commandPaletteCommandWrapper.setProps({selectedCommandName: 'none'});
+    expect(mockChangeHandler.mock.calls[1][0]).toBe(null);
+    commandPaletteCommandWrapper.setProps({selectedCommandName: null});
     commandPaletteCommandWrapper.update();
     expect(getVariantValue()).toBe('light');
 
-    // when another command is clicked, variant of the command button should be unchanged  
+    // when another command is clicked, variant of the command button should be unchanged
     commandPaletteCommandWrapper.setProps({selectedCommandName: 'left'});
     commandPaletteCommandWrapper.update();
     expect(getVariantValue()).toBe('light');

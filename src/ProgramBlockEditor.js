@@ -2,7 +2,7 @@
 
 import { Button, Col, Container, Image, Row } from 'react-bootstrap';
 import * as ProgramUtils from './ProgramUtils';
-import type {Program} from './types';
+import type {Program, SelectedAction} from './types';
 import React from 'react';
 import arrowLeft from 'material-design-icons/navigation/svg/production/ic_arrow_back_48px.svg';
 import arrowRight from 'material-design-icons/navigation/svg/production/ic_arrow_forward_48px.svg';
@@ -13,52 +13,61 @@ import emptyBlockIcon from 'material-design-icons/toggle/svg/production/ic_check
 
 type ProgramBlockEditorProps = {
     program: Program,
-    selectedCommand: string,
+    selectedAction: SelectedAction,
+    onSelectAction: (selectedAction: SelectedAction) => void,
     onChange: (Program) => void
 };
 
-type ProgramBlockEditorState = {
-    addBlockActive: boolean,
-    deleteBlockActive: boolean
-}
-
-export default class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
-    counter: number;
-    constructor(props: ProgramBlockEditorProps) {
-        super(props);
-        this.state = {
-            addBlockActive: false,
-            deleteBlockActive: false
+export default class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
+    toggleAction(action: 'add' | 'delete') {
+        if (this.props.selectedAction !== null
+                && this.props.selectedAction.type === 'editorAction'
+                && this.props.selectedAction.action === action) {
+            this.props.onSelectAction(null);
+        } else {
+            this.props.onSelectAction({
+                type: 'editorAction',
+                action: action
+            });
         }
+    };
+
+    actionIsSelected(action: string) {
+        return (this.props.selectedAction !== null
+            && this.props.selectedAction.type === 'editorAction'
+            && this.props.selectedAction.action === action);
+    }
+
+    addIsSelected() {
+        return this.actionIsSelected('add');
+    }
+
+    deleteIsSelected() {
+        return this.actionIsSelected('delete');
     }
 
     handleClickAdd = () => {
-        this.setState((state) => {
-            return {
-                addBlockActive: !this.state.addBlockActive,
-                deleteBlockActive: false
-            }
-        });
+        this.toggleAction('add');
     };
 
     handleClickDelete = () => {
-        this.setState((state) => {
-            return {
-                addBlockActive: false,
-                deleteBlockActive: !this.state.deleteBlockActive
-            }
-        });
+        this.toggleAction('delete');
     };
 
     handleClickStep = (index: number) => {
-        if (this.state.addBlockActive) {
-            this.props.onChange(ProgramUtils.insert(this.props.program,
-                index, 'none', 'none'));
-        } else if (this.state.deleteBlockActive) {
-            this.props.onChange(ProgramUtils.deleteStep(this.props.program, index));
-        } else if (!this.state.addBlockActive && !this.state.deleteBlockActive) {
+        if (this.props.selectedAction !== null && this.props.selectedAction.type === 'editorAction') {
+            if (this.props.selectedAction.action === 'add') {
+                this.props.onChange(ProgramUtils.insert(this.props.program,
+                    index, 'none', 'none'));
+                this.props.onSelectAction(null);
+            } else if (this.props.selectedAction.action === 'delete') {
+                this.props.onChange(ProgramUtils.deleteStep(this.props.program, index));
+                this.props.onSelectAction(null);
+            }
+        } else if (this.props.selectedAction !== null && this.props.selectedAction.type === 'command'){
             this.props.onChange(ProgramUtils.overwrite(this.props.program,
-                index, this.props.selectedCommand, 'none'));
+                    index, this.props.selectedAction.commandName, 'none'));
+            this.props.onSelectAction(null);
         }
     };
 
@@ -69,8 +78,8 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                     <Col>
                         <Button
                             key='addButton'
-                            aria-label={this.state.addBlockActive ? 'deactivate add a program to the sequence mode' : 'activate add a program to the sequence mode'}
-                            variant={this.state.addBlockActive ? 'outline-primary' : 'light'}
+                            aria-label={this.addIsSelected() ? 'deactivate add a program to the sequence mode' : 'activate add a program to the sequence mode'}
+                            variant={this.addIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickAdd}>
                             <Image src={addIcon} />
                         </Button>
@@ -78,8 +87,8 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                     <Col>
                         <Button
                             key='deleteButton'
-                            aria-label={this.state.deleteBlockActive ? 'deactivate delete a program from the sequence mode' : 'activate delete a program from the sequence mode'}
-                            variant={this.state.deleteBlockActive ? 'outline-primary' : 'light'}
+                            aria-label={this.deleteIsSelected() ? 'deactivate delete a program from the sequence mode' : 'activate delete a program from the sequence mode'}
+                            variant={this.deleteIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickDelete}>
                             <Image src={deleteIcon} />
                         </Button>
@@ -94,7 +103,7 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                                         key={`${programStepNumber}-forward`}
                                         className='justify-content-center'>
                                         <Button
-                                            aria-label={this.state.addBlockActive ? `Forward button. Press to add an empty command block after this` : this.state.deleteBlockActive ? `Forward button. Press to delete this command` : 'Forward button'}
+                                            aria-label={this.addIsSelected() ? `Forward button. Press to add an empty command block after this` : this.deleteIsSelected() ? `Forward button. Press to delete this command` : 'Forward button'}
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={arrowUp} />
                                         </Button>
@@ -104,7 +113,7 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                                         key={`${programStepNumber}-left`}
                                         className='justify-content-center'>
                                         <Button
-                                            aria-label={this.state.addBlockActive ? `Left button. Press to add an empty command block after this` : this.state.deleteBlockActive ? `Left button. Press to delete this command` : 'Left button'}
+                                            aria-label={this.addIsSelected() ? `Left button. Press to add an empty command block after this` : this.deleteIsSelected() ? `Left button. Press to delete this command` : 'Left button'}
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={arrowLeft} />
                                         </Button>
@@ -114,7 +123,7 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                                         key={`${programStepNumber}-right`}
                                         className='justify-content-center'>
                                         <Button
-                                            aria-label={this.state.addBlockActive ? `Right button. Press to add an empty command block after this` : this.state.deleteBlockActive ? `Right button. Press to delete this command` : 'Right button'}
+                                            aria-label={this.addIsSelected() ? `Right button. Press to add an empty command block after this` : this.deleteIsSelected() ? `Right button. Press to delete this command` : 'Right button'}
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={arrowRight} />
                                         </Button>
@@ -124,12 +133,12 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                                         key={`${programStepNumber}-none`}
                                         className='justify-content-center'>
                                         <Button
-                                            aria-label={this.state.addBlockActive ? `Empty blcok button. Press to add an empty command block after this` : this.state.deleteBlockActive ? `Empty block button. Press to delete this command` : 'Empty block button'}
+                                            aria-label={this.addIsSelected() ? `Empty blcok button. Press to add an empty command block after this` : this.deleteIsSelected() ? `Empty block button. Press to delete this command` : 'Empty block button'}
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={emptyBlockIcon} />
                                         </Button>
                                     </Row>);
-                                default: return;
+                                default: return <Row key={`${programStepNumber}-unknown`}/>;
                             }
                         })}
                     </Col>
