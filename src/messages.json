@@ -8,9 +8,18 @@
         "App.textMode": "Text",
         "CommandPalette.movementsTitle": "Movements",
         "CommandPalette.soundsTitle": "Sounds",
+        "CommandPaletteCommand.forward": "Forward",
+        "CommandPaletteCommand.left": "Left",
+        "CommandPaletteCommand.right": "Right",
         "DeviceConnectControl.notConnected": "Not connected",
         "DeviceConnectControl.connecting": "Connecting",
         "DeviceConnectControl.connected": "Connected",
+        "ProgramBlockEditor.commandForward": "Forward, position {index} of current program",
+        "ProgramBlockEditor.commandLeft": "Left, position {index} of current program",
+        "ProgramBlockEditor.commandNone": "Empty block, position {index} of current program",
+        "ProgramBlockEditor.commandRight": "Right, position {index} of current program",
+        "ProgramBlockEditor.commandOnAdd": "Press to add an empty command block before this",
+        "ProgramBlockEditor.commandOnDelete": "Press to delete this command",
         "ProgramTextEditor.programLabel": "Program:"
     },
     "fr": {
@@ -22,9 +31,18 @@
         "App.textMode": "Text in French",
         "CommandPalette.movementsTitle": "Movements in French",
         "CommandPalette.soundsTitle": "Sounds in French",
+        "CommandPaletteCommand.forward": "Forward in French",
+        "CommandPaletteCommand.left": "Left in French",
+        "CommandPaletteCommand.right": "Right in French",
         "DeviceConnectControl.notConnected": "Pas connecté",
         "DeviceConnectControl.connecting": "Connexion en cours",
         "DeviceConnectControl.connected": "Connecté",
+        "ProgramBlockEditor.commandForward": "Forward, position {index} of current program in French",
+        "ProgramBlockEditor.commandLeft": "Left, position {index} of current program in French",
+        "ProgramBlockEditor.commandNone": "Empty block, position {index} of current program in French",
+        "ProgramBlockEditor.commandRight": "Right, position {index} of current program in French",
+        "ProgramBlockEditor.commandOnAdd": "Press to add an empty command block before this in French",
+        "ProgramBlockEditor.commandOnDelete": "Press to delete this command in French",
         "ProgramTextEditor.programLabel": "Logiciel:"
     }
 }

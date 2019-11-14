@@ -1,6 +1,7 @@
 // @flow
 
 import { Button, Col, Image, Row } from 'react-bootstrap';
+import {injectIntl} from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
 import React from 'react';
@@ -19,7 +20,7 @@ type ProgramBlockEditorProps = {
     onChange: (Program) => void
 };
 
-export default class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
+class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     toggleAction(action: 'add' | 'delete') {
         if (this.props.selectedAction
                 && this.props.selectedAction.type === 'editorAction'
@@ -80,7 +81,8 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                         <Button
                             key='addButton'
                             className='ProgramBlockEditor__editor-action-button'
-                            aria-label={this.addIsSelected() ? 'deactivate add a program to the sequence mode' : 'activate add a program to the sequence mode'}
+                            aria-pressed={this.addIsSelected() ? 'true' : 'false'}
+                            aria-label={'add a command to the program'}
                             variant={this.addIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickAdd}>
                             <Image src={addIcon} />
@@ -88,7 +90,8 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                         <Button
                             key='deleteButton'
                             className='ProgramBlockEditor__editor-action-button'
-                            aria-label={this.deleteIsSelected() ? 'deactivate delete a program from the sequence mode' : 'activate delete a program from the sequence mode'}
+                            aria-pressed={this.deleteIsSelected() ? 'true' : 'false'}
+                            aria-label={'delete a command from the program'}
                             variant={this.deleteIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickDelete}>
                             <Image src={deleteIcon} />
@@ -104,7 +107,13 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                                         <Button
                                             key={`${programStepNumber}-forward`}
                                             className='ProgramBlockEditor__program-block'
-                                            aria-label={this.addIsSelected() ? `Forward button. Press to add an empty command block after this` : this.deleteIsSelected() ? `Forward button. Press to delete this command` : 'Forward button'}
+                                            aria-label={
+                                                this.addIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                                                this.deleteIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
+                                            }
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={arrowUp} />
                                         </Button>
@@ -114,7 +123,13 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                                         <Button
                                             key={`${programStepNumber}-left`}
                                             className='ProgramBlockEditor__program-block'
-                                            aria-label={this.addIsSelected() ? `Left button. Press to add an empty command block after this` : this.deleteIsSelected() ? `Left button. Press to delete this command` : 'Left button'}
+                                            aria-label={
+                                                this.addIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                                                this.deleteIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})
+                                            }
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={arrowLeft} />
                                         </Button>
@@ -124,7 +139,13 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                                         <Button
                                             key={`${programStepNumber}-right`}
                                             className='ProgramBlockEditor__program-block'
-                                            aria-label={this.addIsSelected() ? `Right button. Press to add an empty command block after this` : this.deleteIsSelected() ? `Right button. Press to delete this command` : 'Right button'}
+                                            aria-label={
+                                                this.addIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                                                this.deleteIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})
+                                            }
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={arrowRight} />
                                         </Button>
@@ -134,7 +155,13 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                                         <Button
                                             key={`${programStepNumber}-none`}
                                             className='ProgramBlockEditor__program-block'
-                                            aria-label={this.addIsSelected() ? `Empty blcok button. Press to add an empty command block after this` : this.deleteIsSelected() ? `Empty block button. Press to delete this command` : 'Empty block button'}
+                                            aria-label={
+                                                this.addIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                                                this.deleteIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})
+                                            }
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={emptyBlockIcon} />
                                         </Button>
@@ -151,3 +178,5 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
         );
     }
 }
+
+export default injectIntl(ProgramBlockEditor);
