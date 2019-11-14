@@ -1,0 +1,12 @@
+.ProgramBlockEditor__editor-actions {
+    text-align: right;
+}
+
+.ProgramBlockEditor__editor-action-button {
+    margin-left: 1rem;
+}
+
+button.ProgramBlockEditor__program-block {
+    display: block;
+    margin-bottom: 0.5rem;
+}

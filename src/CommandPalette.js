@@ -19,7 +19,7 @@ export default class CommandPalette extends React.Component<CommandPaletteProps,
                             <Nav.Item>
                                 <Nav.Link eventKey={category.props.eventKey}>{category.props.title}</Nav.Link>
                             </Nav.Item>
-                        )
+                        );
                     })}
                 </Nav>
                 <Tab.Content>

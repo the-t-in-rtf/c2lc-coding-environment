@@ -77,7 +77,7 @@ export default class App extends React.Component<{}, AppState> {
             programVer: 1,
             settings: {
                 dashSupport: this.appContext.bluetoothApiIsAvailable,
-                editorMode: 'text',
+                editorMode: 'block',
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
@@ -253,67 +253,77 @@ export default class App extends React.Component<{}, AppState> {
         this.setState({
             selectedAction: action
         });
-    }
+    };
 
     render() {
         return (
-            <Container>
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
-                    <Row className='justify-content-center'>
-                        <Col className='rm-3' md='auto'>
+                <Container>
+                    <Row>
+                        <Col>
                             <Row>
-                                <Dropdown>
-                                    <Dropdown.Toggle>
-                                        <FormattedMessage id='App.changeMode' />
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu onClick={this.handleModeChange}>
-                                        <Dropdown.Item name='text'>
-                                            <FormattedMessage id='App.textMode' />
-                                        </Dropdown.Item>
-                                        <Dropdown.Item name='block'>
-                                            <FormattedMessage id='App.blockMode' />
-                                        </Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown>
+                                <Col>
+                                    <Dropdown>
+                                        <Dropdown.Toggle>
+                                            <FormattedMessage id='App.changeMode' />
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu onClick={this.handleModeChange}>
+                                            <Dropdown.Item name='text'>
+                                                <FormattedMessage id='App.textMode' />
+                                            </Dropdown.Item>
+                                            <Dropdown.Item name='block'>
+                                                <FormattedMessage id='App.blockMode' />
+                                            </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </Col>
                             </Row>
                             <Row>
-                                <EditorContainer
-                                    program={this.state.program}
-                                    programVer={this.state.programVer}
-                                    syntax={this.syntax}
-                                    mode={this.state.settings.editorMode}
-                                    selectedAction={this.state.selectedAction}
-                                    onSelectAction={this.handleSelectAction}
-                                    onChange={this.handleChangeProgram}
-                                    />
+                                <Col>
+                                    <EditorContainer
+                                        program={this.state.program}
+                                        programVer={this.state.programVer}
+                                        syntax={this.syntax}
+                                        mode={this.state.settings.editorMode}
+                                        selectedAction={this.state.selectedAction}
+                                        onSelectAction={this.handleSelectAction}
+                                        onChange={this.handleChangeProgram}
+                                        />
+                                </Col>
                             </Row>
                         </Col>
-                        <Col md='auto'>
+                        <Col>
+                            {this.state.settings.dashSupport &&
+                                <Row>
+                                    <Col>
+                                        <DeviceConnectControl
+                                                onClickConnect={this.handleClickConnectDash}
+                                                connectionStatus={this.state.dashConnectionStatus}>
+                                            <FormattedMessage id='App.connectToDash' />
+                                        </DeviceConnectControl>
+                                    </Col>
+                                </Row>
+                            }
                             <Row>
-                                {this.state.settings.dashSupport &&
-                                    <DeviceConnectControl
-                                            onClickConnect={this.handleClickConnectDash}
-                                            connectionStatus={this.state.dashConnectionStatus}>
-                                        <FormattedMessage id='App.connectToDash' />
-                                    </DeviceConnectControl>
-                                }
+                                <Col>
+                                    <div className='App__turtle-graphics'>
+                                        <TurtleGraphics ref={this.turtleGraphicsRef} />
+                                    </div>
+                                </Col>
                             </Row>
                             <Row>
-                                <div className='App__turtle-graphics'>
-                                    <TurtleGraphics ref={this.turtleGraphicsRef} />
-                                </div>
-                            </Row>
-                            <Row>
-                                <button onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
-                                    <Image src={playIcon} />
-                                </button>
+                                <Col>
+                                    <button onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
+                                        <Image src={playIcon} />
+                                    </button>
+                                </Col>
                             </Row>
                         </Col>
                     </Row>
-                    <Row className='justify-content-center'>
-                        <Col md='auto'>
+                    <Row>
+                        <Col>
                             {localizeProperties((intl) =>
                                 <CommandPalette id='commandPalette' defaultActiveKey='movements' >
                                     <CommandPaletteCategory eventKey='movements' title={(intl.formatMessage({ id: 'CommandPalette.movementsTitle' }))}>
@@ -327,8 +337,8 @@ export default class App extends React.Component<{}, AppState> {
                             )}
                         </Col>
                     </Row>
-                    <Row className='justify-content-center'>
-                        <Col md='auto'>
+                    <Row>
+                        <Col>
                             {localizeProperties((intl) =>
                                 <Form.Check
                                     type='switch'
@@ -346,8 +356,8 @@ export default class App extends React.Component<{}, AppState> {
                             </div>
                         </Col>
                     </Row>
-                    <Row className='justify-content-center'>
-                        <Col className='align-content-flex-start' md='auto'>
+                    <Row>
+                        <Col>
                             <select
                                     value={this.state.settings.language}
                                     onChange={this.handleChangeLanguage}>
@@ -356,8 +366,8 @@ export default class App extends React.Component<{}, AppState> {
                             </select>
                         </Col>
                     </Row>
+                </Container>
             </IntlProvider>
-            </Container>
         );
     }
 

@@ -1,7 +1,8 @@
 // @flow
 
 import React from 'react';
-import { Button, Col, Image } from 'react-bootstrap';
+import { Button, Image } from 'react-bootstrap';
+import './CommandPaletteCommand.css';
 
 type CommandPaletteCommandProps = {
     commandName: string,
@@ -15,18 +16,17 @@ export default class CommandPaletteCommand extends React.Component<CommandPalett
         this.props.onChange(
             this.props.commandName === this.props.selectedCommandName ? null : this.props.commandName
         );
-    }
+    };
 
     render() {
         return (
-            <Col>
-                <Button
-                    variant={this.props.commandName === this.props.selectedCommandName ? 'outline-primary' : 'light'}
-                    //aria-label={this.state.selected ? `${} activated` : `${item} inactive`}
-                    onClick={this.handleClick}>
-                    <Image src={this.props.icon}/>
-                </Button>
-            </Col>
-        )
+            <Button
+                className='CommandPaletteCommand__command-button'
+                variant={this.props.commandName === this.props.selectedCommandName ? 'outline-primary' : 'light'}
+                //aria-label={this.state.selected ? `${} activated` : `${item} inactive`}
+                onClick={this.handleClick}>
+                <Image src={this.props.icon}/>
+            </Button>
+        );
     }
 }
