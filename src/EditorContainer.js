@@ -4,7 +4,6 @@ import ProgramBlockEditor from './ProgramBlockEditor';
 import ProgramTextEditor from './ProgramTextEditor';
 import React from 'react';
 import TextSyntax from './TextSyntax';
-import { Container } from 'react-bootstrap';
 import type {EditorMode, Program, SelectedAction} from './types';
 
 type EditorContainerProps = {
@@ -20,7 +19,7 @@ type EditorContainerProps = {
 export default class EditorContainer extends React.Component<EditorContainerProps, {}> {
     render() {
         return (
-            <Container>
+            <div style={{width: '100%'}}>
                 {this.props.mode === 'text' ? (
                     <ProgramTextEditor
                         program={this.props.program}
@@ -28,14 +27,13 @@ export default class EditorContainer extends React.Component<EditorContainerProp
                         syntax={this.props.syntax}
                         onChange={this.props.onChange} />
                  ) : (
-                     //ProgramBlockEditor doesn't have TextSyntax
                     <ProgramBlockEditor
                         program={this.props.program}
                         selectedAction={this.props.selectedAction}
                         onSelectAction={this.props.onSelectAction}
                         onChange={this.props.onChange} />
                 )}
-            </Container>
+            </div>
         );
     }
 }

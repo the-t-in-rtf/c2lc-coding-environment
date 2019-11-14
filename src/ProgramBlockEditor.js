@@ -1,6 +1,7 @@
 // @flow
 
-import { Button, Col, Container, Image, Row } from 'react-bootstrap';
+import { Button, Col, Image, Row } from 'react-bootstrap';
+import {injectIntl} from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
 import React from 'react';
@@ -10,6 +11,7 @@ import arrowUp from 'material-design-icons/navigation/svg/production/ic_arrow_up
 import addIcon from 'material-design-icons/content/svg/production/ic_add_24px.svg';
 import deleteIcon from 'material-design-icons/content/svg/production/ic_clear_24px.svg';
 import emptyBlockIcon from 'material-design-icons/toggle/svg/production/ic_check_box_outline_blank_48px.svg';
+import './ProgramBlockEditor.css';
 
 type ProgramBlockEditorProps = {
     program: Program,
@@ -18,7 +20,7 @@ type ProgramBlockEditorProps = {
     onChange: (Program) => void
 };
 
-export default class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
+class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     toggleAction(action: 'add' | 'delete') {
         if (this.props.selectedAction
                 && this.props.selectedAction.type === 'editorAction'
@@ -73,21 +75,21 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
 
     render() {
         return (
-            <Container>
-                <Row className='justify-content-end'>
-                    <Col>
+            <div>
+                <Row>
+                    <Col className='ProgramBlockEditor__editor-actions'>
                         <Button
                             key='addButton'
+                            className='ProgramBlockEditor__editor-action-button'
                             aria-pressed={this.addIsSelected() ? 'true' : 'false'}
                             aria-label={'add a command to the program'}
                             variant={this.addIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickAdd}>
                             <Image src={addIcon} />
                         </Button>
-                    </Col>
-                    <Col>
                         <Button
                             key='deleteButton'
+                            className='ProgramBlockEditor__editor-action-button'
                             aria-pressed={this.deleteIsSelected() ? 'true' : 'false'}
                             aria-label={'delete a command from the program'}
                             variant={this.deleteIsSelected() ? 'outline-primary' : 'light'}
@@ -100,52 +102,81 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                     <Col>
                         {this.props.program.map((item, programStepNumber)=> {
                             switch(item) {
-                                case 'forward': return (
-                                    <Row
-                                        key={`${programStepNumber}-forward`}
-                                        className='justify-content-center'>
+                                case 'forward':
+                                    return (
                                         <Button
-                                            aria-label={this.addIsSelected() ? `Forward, position ${programStepNumber+1} of current program. Press to add an empty command block before this` : this.deleteIsSelected() ? `Forward, position ${programStepNumber+1} of current program. Press to delete this command` : `Forward, position ${programStepNumber+1} of current program`}
+                                            key={`${programStepNumber}-forward`}
+                                            className='ProgramBlockEditor__program-block'
+                                            aria-label={
+                                                this.addIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                                                this.deleteIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
+                                            }
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={arrowUp} />
                                         </Button>
-                                    </Row>);
-                                case 'left': return (
-                                    <Row
-                                        key={`${programStepNumber}-left`}
-                                        className='justify-content-center'>
+                                    );
+                                case 'left':
+                                    return (
                                         <Button
-                                            aria-label={this.addIsSelected() ? `Left, position ${programStepNumber+1} of current program. Press to add an empty command block before this` : this.deleteIsSelected() ? `Left, position ${programStepNumber+1} of current program. Press to delete this command` : `Left, position ${programStepNumber+1} of current program`}
+                                            key={`${programStepNumber}-left`}
+                                            className='ProgramBlockEditor__program-block'
+                                            aria-label={
+                                                this.addIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                                                this.deleteIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})
+                                            }
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={arrowLeft} />
                                         </Button>
-                                    </Row>);
-                                case 'right': return (
-                                    <Row
-                                        key={`${programStepNumber}-right`}
-                                        className='justify-content-center'>
+                                    );
+                                case 'right':
+                                    return (
                                         <Button
-                                            aria-label={this.addIsSelected() ? `Right, position ${programStepNumber+1} of current program. Press to add an empty command block before this` : this.deleteIsSelected() ? `Right, position ${programStepNumber+1} of current program. Press to delete this command` : `Right, position ${programStepNumber+1} of current program`}
+                                            key={`${programStepNumber}-right`}
+                                            className='ProgramBlockEditor__program-block'
+                                            aria-label={
+                                                this.addIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                                                this.deleteIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})
+                                            }
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={arrowRight} />
                                         </Button>
-                                    </Row>);
-                                case 'none': return (
-                                    <Row
-                                        key={`${programStepNumber}-none`}
-                                        className='justify-content-center'>
+                                    );
+                                case 'none':
+                                    return (
                                         <Button
-                                            aria-label={this.addIsSelected() ? `Empty blcok, position ${programStepNumber+1} of current program. Press to add an empty command block before this` : this.deleteIsSelected() ? `Empty block, position ${programStepNumber+1} of current program. Press to delete this command` : `Empty block, position ${programStepNumber+1} of current program`}
+                                            key={`${programStepNumber}-none`}
+                                            className='ProgramBlockEditor__program-block'
+                                            aria-label={
+                                                this.addIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                                                this.deleteIsSelected() ?
+                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})
+                                            }
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={emptyBlockIcon} />
                                         </Button>
-                                    </Row>);
-                                default: return <Row key={`${programStepNumber}-unknown`}/>;
+                                    );
+                                default:
+                                    return (
+                                        <div key={`${programStepNumber}-unknown`}/>
+                                    );
                             }
                         })}
                     </Col>
                 </Row>
-            </Container>
+            </div>
         );
     }
 }
+
+export default injectIntl(ProgramBlockEditor);
