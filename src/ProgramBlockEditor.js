@@ -78,7 +78,8 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                     <Col>
                         <Button
                             key='addButton'
-                            aria-label={this.addIsSelected() ? 'deactivate add a program to the sequence mode' : 'activate add a program to the sequence mode'}
+                            aria-pressed={this.addIsSelected() ? 'true' : 'false'}
+                            aria-label={'add a command to the program'}
                             variant={this.addIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickAdd}>
                             <Image src={addIcon} />
@@ -87,7 +88,8 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                     <Col>
                         <Button
                             key='deleteButton'
-                            aria-label={this.deleteIsSelected() ? 'deactivate delete a program from the sequence mode' : 'activate delete a program from the sequence mode'}
+                            aria-pressed={this.deleteIsSelected() ? 'true' : 'false'}
+                            aria-label={'delete a command from the program'}
                             variant={this.deleteIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickDelete}>
                             <Image src={deleteIcon} />
@@ -103,7 +105,7 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                                         key={`${programStepNumber}-forward`}
                                         className='justify-content-center'>
                                         <Button
-                                            aria-label={this.addIsSelected() ? `Forward button. Press to add an empty command block after this` : this.deleteIsSelected() ? `Forward button. Press to delete this command` : 'Forward button'}
+                                            aria-label={this.addIsSelected() ? `Forward, position ${programStepNumber+1} of current program. Press to add an empty command block before this` : this.deleteIsSelected() ? `Forward, position ${programStepNumber+1} of current program. Press to delete this command` : `Forward, position ${programStepNumber+1} of current program`}
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={arrowUp} />
                                         </Button>
@@ -113,7 +115,7 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                                         key={`${programStepNumber}-left`}
                                         className='justify-content-center'>
                                         <Button
-                                            aria-label={this.addIsSelected() ? `Left button. Press to add an empty command block after this` : this.deleteIsSelected() ? `Left button. Press to delete this command` : 'Left button'}
+                                            aria-label={this.addIsSelected() ? `Left, position ${programStepNumber+1} of current program. Press to add an empty command block before this` : this.deleteIsSelected() ? `Left, position ${programStepNumber+1} of current program. Press to delete this command` : `Left, position ${programStepNumber+1} of current program`}
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={arrowLeft} />
                                         </Button>
@@ -123,7 +125,7 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                                         key={`${programStepNumber}-right`}
                                         className='justify-content-center'>
                                         <Button
-                                            aria-label={this.addIsSelected() ? `Right button. Press to add an empty command block after this` : this.deleteIsSelected() ? `Right button. Press to delete this command` : 'Right button'}
+                                            aria-label={this.addIsSelected() ? `Right, position ${programStepNumber+1} of current program. Press to add an empty command block before this` : this.deleteIsSelected() ? `Right, position ${programStepNumber+1} of current program. Press to delete this command` : `Right, position ${programStepNumber+1} of current program`}
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={arrowRight} />
                                         </Button>
@@ -133,7 +135,7 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
                                         key={`${programStepNumber}-none`}
                                         className='justify-content-center'>
                                         <Button
-                                            aria-label={this.addIsSelected() ? `Empty blcok button. Press to add an empty command block after this` : this.deleteIsSelected() ? `Empty block button. Press to delete this command` : 'Empty block button'}
+                                            aria-label={this.addIsSelected() ? `Empty blcok, position ${programStepNumber+1} of current program. Press to add an empty command block before this` : this.deleteIsSelected() ? `Empty block, position ${programStepNumber+1} of current program. Press to delete this command` : `Empty block, position ${programStepNumber+1} of current program`}
                                             onClick={()=>{this.handleClickStep(programStepNumber)}}>
                                             <Image src={emptyBlockIcon} />
                                         </Button>
