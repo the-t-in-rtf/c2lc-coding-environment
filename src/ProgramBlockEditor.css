@@ -1,3 +1,9 @@
+.ProgramBlockEditor__container {
+    border: 0.1rem solid #555;
+    border-radius: 4%;
+    padding: 1rem;
+}
+
 .ProgramBlockEditor__editor-actions {
     text-align: right;
 }

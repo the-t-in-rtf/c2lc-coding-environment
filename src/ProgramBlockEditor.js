@@ -74,7 +74,7 @@ export default class ProgramBlockEditor extends React.Component<ProgramBlockEdit
 
     render() {
         return (
-            <div>
+            <div className='ProgramBlockEditor__container'>
                 <Row>
                     <Col className='ProgramBlockEditor__editor-actions'>
                         <Button

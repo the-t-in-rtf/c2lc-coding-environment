@@ -1,4 +1,17 @@
-.App__turtle-graphics {
-    width: 24rem;
-    height: 24rem;
+.App__mode-and-robots-section {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
 }
+
+.App__editor-and-graphics-section {
+    margin-bottom: 1.5rem;
+}
+
+.App__command-palette {
+    margin-bottom: 1.5rem;
+}
+
+.App__interpreter-controls {
+    margin-top: 1rem;
+}
+

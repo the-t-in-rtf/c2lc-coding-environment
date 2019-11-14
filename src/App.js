@@ -261,68 +261,56 @@ export default class App extends React.Component<{}, AppState> {
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
                 <Container>
-                    <Row>
+                    <Row className='App__mode-and-robots-section'>
                         <Col>
-                            <Row>
-                                <Col>
-                                    <Dropdown>
-                                        <Dropdown.Toggle>
-                                            <FormattedMessage id='App.changeMode' />
-                                        </Dropdown.Toggle>
-                                        <Dropdown.Menu onClick={this.handleModeChange}>
-                                            <Dropdown.Item name='text'>
-                                                <FormattedMessage id='App.textMode' />
-                                            </Dropdown.Item>
-                                            <Dropdown.Item name='block'>
-                                                <FormattedMessage id='App.blockMode' />
-                                            </Dropdown.Item>
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <EditorContainer
-                                        program={this.state.program}
-                                        programVer={this.state.programVer}
-                                        syntax={this.syntax}
-                                        mode={this.state.settings.editorMode}
-                                        selectedAction={this.state.selectedAction}
-                                        onSelectAction={this.handleSelectAction}
-                                        onChange={this.handleChangeProgram}
-                                        />
-                                </Col>
-                            </Row>
+                            <Dropdown>
+                                <Dropdown.Toggle>
+                                    <FormattedMessage id='App.changeMode' />
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu onClick={this.handleModeChange}>
+                                    <Dropdown.Item name='text'>
+                                        <FormattedMessage id='App.textMode' />
+                                    </Dropdown.Item>
+                                    <Dropdown.Item name='block'>
+                                        <FormattedMessage id='App.blockMode' />
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
                         </Col>
                         <Col>
                             {this.state.settings.dashSupport &&
-                                <Row>
-                                    <Col>
-                                        <DeviceConnectControl
-                                                onClickConnect={this.handleClickConnectDash}
-                                                connectionStatus={this.state.dashConnectionStatus}>
-                                            <FormattedMessage id='App.connectToDash' />
-                                        </DeviceConnectControl>
-                                    </Col>
-                                </Row>
+                                <DeviceConnectControl
+                                        onClickConnect={this.handleClickConnectDash}
+                                        connectionStatus={this.state.dashConnectionStatus}>
+                                    <FormattedMessage id='App.connectToDash' />
+                                </DeviceConnectControl>
                             }
-                            <Row>
-                                <Col>
-                                    <div className='App__turtle-graphics'>
-                                        <TurtleGraphics ref={this.turtleGraphicsRef} />
-                                    </div>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <button onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
-                                        <Image src={playIcon} />
-                                    </button>
-                                </Col>
-                            </Row>
                         </Col>
                     </Row>
-                    <Row>
+                    <Row className='App__editor-and-graphics-section'>
+                        <Col>
+                            <EditorContainer
+                                program={this.state.program}
+                                programVer={this.state.programVer}
+                                syntax={this.syntax}
+                                mode={this.state.settings.editorMode}
+                                selectedAction={this.state.selectedAction}
+                                onSelectAction={this.handleSelectAction}
+                                onChange={this.handleChangeProgram}
+                                />
+                        </Col>
+                        <Col>
+                            <div>
+                                <TurtleGraphics ref={this.turtleGraphicsRef} />
+                            </div>
+                            <div className='App__interpreter-controls'>
+                                <button onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
+                                    <Image src={playIcon} />
+                                </button>
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row className='App__command-palette'>
                         <Col>
                             {localizeProperties((intl) =>
                                 <CommandPalette id='commandPalette' defaultActiveKey='movements' >
