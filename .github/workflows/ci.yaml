@@ -3,14 +3,17 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  checks:
-    name: Checks
+  build:
+    name: Build
 
     runs-on: ubuntu-18.04
 
     strategy:
       matrix:
         node-version: [10.x, 12.x]
+
+    env:
+      CI: true
 
     steps:
       - uses: actions/checkout@v1
@@ -28,8 +31,8 @@ jobs:
       - name: NPM install (ci)
         run: npm ci
       - name: Build
-        run: CI=true npm run build
+        run: npm run build
       - name: Flow
         run: npx flow
       - name: Test
-        run: CI=true npm test
+        run: npm test
