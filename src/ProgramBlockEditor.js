@@ -14,6 +14,7 @@ import emptyBlockIcon from 'material-design-icons/toggle/svg/production/ic_check
 import './ProgramBlockEditor.css';
 
 type ProgramBlockEditorProps = {
+    intl: any,
     program: Program,
     selectedAction: SelectedAction,
     onSelectAction: (selectedAction: SelectedAction) => void,
@@ -82,7 +83,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             key='addButton'
                             className='ProgramBlockEditor__editor-action-button'
                             aria-pressed={this.addIsSelected() ? 'true' : 'false'}
-                            aria-label={'add a command to the program'}
+                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.add'})}
                             variant={this.addIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickAdd}>
                             <Image src={addIcon} />
@@ -91,7 +92,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             key='deleteButton'
                             className='ProgramBlockEditor__editor-action-button'
                             aria-pressed={this.deleteIsSelected() ? 'true' : 'false'}
-                            aria-label={'delete a command from the program'}
+                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
                             variant={this.deleteIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickDelete}>
                             <Image src={deleteIcon} />
