@@ -2,7 +2,9 @@
 
 import type {Program} from './types';
 
+/* eslint-disable no-use-before-define */
 export type CommandHandler = { (Interpreter): Promise<void> };
+/* eslint-enable no-use-before-define */
 
 // TODO: I don't think that Interpreter having memory is quite the right
 //       factoring. But this will evolve. Maybe something like a parameterized
