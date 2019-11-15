@@ -1,0 +1,33 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  checks:
+    name: Checks
+
+    runs-on: ubuntu-18.04
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Versions
+        run: |
+          node --version
+          npm --version
+      - name: NPM install (ci)
+        run: npm ci
+      - name: Build
+        run: CI=true npm run build
+      - name: Flow
+        run: npx flow
+      - name: Test
+        run: CI=true npm test
