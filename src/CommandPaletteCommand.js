@@ -8,6 +8,7 @@ import './CommandPaletteCommand.css';
 type CommandPaletteCommandProps = {
     commandName: string,
     icon: any,
+    intl: any,
     selectedCommandName: ?string,
     onChange: (commandName: ?string) => void
 };
