@@ -28,6 +28,7 @@ export default class EditorContainer extends React.Component<EditorContainerProp
                         onChange={this.props.onChange} />
                  ) : (
                     <ProgramBlockEditor
+                        minVisibleSteps={6}
                         program={this.props.program}
                         selectedAction={this.props.selectedAction}
                         onSelectAction={this.props.onSelectAction}
