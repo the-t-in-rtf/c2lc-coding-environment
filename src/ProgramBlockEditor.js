@@ -15,6 +15,7 @@ import './ProgramBlockEditor.css';
 
 type ProgramBlockEditorProps = {
     intl: any,
+    minVisibleSteps: number,
     program: Program,
     selectedAction: SelectedAction,
     onSelectAction: (selectedAction: SelectedAction) => void,
@@ -57,14 +58,18 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         this.toggleAction('delete');
     };
 
-    handleClickStep = (index: number) => {
+    handleClickStep = (e: SyntheticEvent<HTMLButtonElement>) => {
+        const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
+
         if (this.props.selectedAction && this.props.selectedAction.type === 'editorAction') {
             if (this.props.selectedAction.action === 'add') {
                 this.props.onChange(ProgramUtils.insert(this.props.program,
                     index, 'none', 'none'));
                 this.props.onSelectAction(null);
             } else if (this.props.selectedAction.action === 'delete') {
-                this.props.onChange(ProgramUtils.deleteStep(this.props.program, index));
+                this.props.onChange(ProgramUtils.trimEnd(
+                    ProgramUtils.deleteStep(this.props.program, index),
+                    'none'));
                 this.props.onSelectAction(null);
             }
         } else if (this.props.selectedAction && this.props.selectedAction.type === 'command'){
@@ -74,9 +79,103 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         }
     };
 
+    makeProgramBlock(programStepNumber: number, command: string) {
+        switch(command) {
+            case 'forward':
+                return (
+                    <Button
+                        key={`${programStepNumber}-forward`}
+                        data-stepnumber={programStepNumber}
+                        className='ProgramBlockEditor__program-block'
+                        aria-label={
+                            this.addIsSelected() ?
+                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                            this.deleteIsSelected() ?
+                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                            this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
+                        }
+                        onClick={this.handleClickStep}>
+                        <Image src={arrowUp} />
+                    </Button>
+                );
+            case 'left':
+                return (
+                    <Button
+                        key={`${programStepNumber}-left`}
+                        data-stepnumber={programStepNumber}
+                        className='ProgramBlockEditor__program-block'
+                        aria-label={
+                            this.addIsSelected() ?
+                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                            this.deleteIsSelected() ?
+                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                            this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})
+                        }
+                        onClick={this.handleClickStep}>
+                        <Image src={arrowLeft} />
+                    </Button>
+                );
+            case 'right':
+                return (
+                    <Button
+                        key={`${programStepNumber}-right`}
+                        data-stepnumber={programStepNumber}
+                        className='ProgramBlockEditor__program-block'
+                        aria-label={
+                            this.addIsSelected() ?
+                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                            this.deleteIsSelected() ?
+                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                            this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})
+                        }
+                        onClick={this.handleClickStep}>
+                        <Image src={arrowRight} />
+                    </Button>
+                );
+            case 'none':
+                return (
+                    <Button
+                        key={`${programStepNumber}-none`}
+                        data-stepnumber={programStepNumber}
+                        className='ProgramBlockEditor__program-block'
+                        aria-label={
+                            this.addIsSelected() ?
+                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                            this.deleteIsSelected() ?
+                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                            this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})
+                        }
+                        onClick={this.handleClickStep}>
+                        <Image src={emptyBlockIcon} />
+                    </Button>
+                );
+            default:
+                return (
+                    <div key={`${programStepNumber}-unknown`}/>
+                );
+        }
+    }
+
     render() {
+        var noneAtEnd = this.props.program[this.props.program.length - 1] === 'none';
+
+        const programBlocks = this.props.program.map((command, stepNumber) => {
+            return this.makeProgramBlock(stepNumber, command);
+        });
+
+        // Ensure that we have at least props.minVisibleSteps
+        for (var i = this.props.program.length; i < this.props.minVisibleSteps; i++) {
+            programBlocks.push(this.makeProgramBlock(i, 'none'));
+            noneAtEnd = true;
+        }
+
+        // Ensure that the last block is 'none'
+        if (!noneAtEnd) {
+            programBlocks.push(this.makeProgramBlock(programBlocks.length, 'none'));
+        }
+
         return (
-            <div>
+            <div className='ProgramBlockEditor__container'>
                 <Row>
                     <Col className='ProgramBlockEditor__editor-actions'>
                         <Button
@@ -101,78 +200,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                 </Row>
                 <Row>
                     <Col>
-                        {this.props.program.map((item, programStepNumber)=> {
-                            switch(item) {
-                                case 'forward':
-                                    return (
-                                        <Button
-                                            key={`${programStepNumber}-forward`}
-                                            className='ProgramBlockEditor__program-block'
-                                            aria-label={
-                                                this.addIsSelected() ?
-                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                                                this.deleteIsSelected() ?
-                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
-                                            }
-                                            onClick={()=>{this.handleClickStep(programStepNumber)}}>
-                                            <Image src={arrowUp} />
-                                        </Button>
-                                    );
-                                case 'left':
-                                    return (
-                                        <Button
-                                            key={`${programStepNumber}-left`}
-                                            className='ProgramBlockEditor__program-block'
-                                            aria-label={
-                                                this.addIsSelected() ?
-                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                                                this.deleteIsSelected() ?
-                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})
-                                            }
-                                            onClick={()=>{this.handleClickStep(programStepNumber)}}>
-                                            <Image src={arrowLeft} />
-                                        </Button>
-                                    );
-                                case 'right':
-                                    return (
-                                        <Button
-                                            key={`${programStepNumber}-right`}
-                                            className='ProgramBlockEditor__program-block'
-                                            aria-label={
-                                                this.addIsSelected() ?
-                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                                                this.deleteIsSelected() ?
-                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})
-                                            }
-                                            onClick={()=>{this.handleClickStep(programStepNumber)}}>
-                                            <Image src={arrowRight} />
-                                        </Button>
-                                    );
-                                case 'none':
-                                    return (
-                                        <Button
-                                            key={`${programStepNumber}-none`}
-                                            className='ProgramBlockEditor__program-block'
-                                            aria-label={
-                                                this.addIsSelected() ?
-                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                                                this.deleteIsSelected() ?
-                                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})
-                                            }
-                                            onClick={()=>{this.handleClickStep(programStepNumber)}}>
-                                            <Image src={emptyBlockIcon} />
-                                        </Button>
-                                    );
-                                default:
-                                    return (
-                                        <div key={`${programStepNumber}-unknown`}/>
-                                    );
-                            }
-                        })}
+                        {programBlocks}
                     </Col>
                 </Row>
             </div>
