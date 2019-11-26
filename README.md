@@ -1,10 +1,21 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Coding to Learn and Create (C2LC) Interface
 
-## Available Scripts
+C2LC Interface is a web user interface to connect to different coding robots to control them.<br>
+Currently, the interface can only support Dash, but we are planning to expand available robots.
 
-In the project directory, you can run:
+## Installation
 
-### `npm start`
+Running this project requires [npm and Node.js](https://www.npmjs.com/get-npm); once you download or fork the source code, run npm install to get all required dependencies.
+
+```bash
+npm install
+```
+
+## Start the application
+
+```bash
+npm start
+```
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -12,57 +23,31 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### `npm test`
+## Test
+
+```bash
+npm run test
+```
 
 Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+We are using [Enzyme](https://airbnb.io/enzyme/) as our testing framework.
 
-### `npm run build`
+## Static Type Check
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npx flow
+```
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+We are using flow as static type checker. <br>
+Learn more about [flow](https://flow.org/)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Contributing
 
-### `npm run eject`
+Any contribution are welcome, we require you to fork from the [main repo](https://github.com/codelearncreate/c2lc-coding-environment) and follow branch name convention of C2LC-#. You can check open tasks/tickets on [fluid](https://issues.fluidproject.org/projects/C2LC/issues)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Please note that making this project accessible is our first priority. Here's a guide line from [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Before sumbiting pull requests, make sure [flow](https://flow.org/) and test cases are passing from the CI pipeline.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## License
+[BDS-3](https://github.com/codelearncreate/c2lc-coding-environment/blob/master/LICENSE.txt)
