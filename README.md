@@ -1,7 +1,7 @@
 # Coding to Learn and Create (C2LC) Interface
 
 C2LC Interface is a web user interface to connect to different coding robots to control them.<br>
-Currently, the interface can only support Dash, but we are planning to expand available robots.
+Currently, the interface can only support [Dash](https://www.makewonder.com/robots/dash/), but we are planning to expand available robots.
 
 ## Installation
 
@@ -39,15 +39,15 @@ npx flow
 ```
 
 We are using flow as static type checker. <br>
-Learn more about [flow](https://flow.org/)
+Learn more about [flow](https://flow.org/).
 
 ## Contributing
 
-Any contribution are welcome, we require you to fork from the [main repo](https://github.com/codelearncreate/c2lc-coding-environment) and follow branch name convention of C2LC-#. You can check open tasks/tickets on [fluid](https://issues.fluidproject.org/projects/C2LC/issues)
+Any contributions are welcome, we require you to fork from the [main repo](https://github.com/codelearncreate/c2lc-coding-environment) and follow branch name convention of C2LC-#. You can check open tasks/tickets on [fluid](https://issues.fluidproject.org/projects/C2LC/issues). Also, commit messages should include branch number and start with a singular present tense like: 'C2LC-30: Update README'.
 
-Please note that making this project accessible is our first priority. Here's a guide line from [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/)
+Please note that making this project accessible is our first priority. Here's a guideline from [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/).
 
-Before sumbiting pull requests, make sure [flow](https://flow.org/) and test cases are passing from the CI pipeline.
+Before sumbiting pull requests, please make sure flow and test cases are passing.
 
 ## License
 [BDS-3](https://github.com/codelearncreate/c2lc-coding-environment/blob/master/LICENSE.txt)
