@@ -119,6 +119,13 @@ export default class App extends React.Component<{}, AppState> {
                 }
             }
         );
+        this.interpreter.addCommandHandler(
+            'none',
+            'noneHandler',
+            () => {
+                return Promise.resolve();
+            }
+        );
 
         this.dashDriver = new DashDriver();
         this.syntax = new TextSyntax();
