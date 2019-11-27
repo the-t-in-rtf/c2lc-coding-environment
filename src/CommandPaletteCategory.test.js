@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
 import { configure, shallow } from 'enzyme';
@@ -9,7 +11,7 @@ configure({ adapter: new Adapter()});
 
 test('number of commands rendered by CommandPaletteCategory should be equal to the number of CommandPaletteCommand', () => {
     const emptyCommandsWrapper = shallow(
-        <CommandPaletteCategory>
+        <CommandPaletteCategory eventKey='movements' title='Movements'>
         </CommandPaletteCategory>
     );
 
@@ -17,7 +19,7 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
     expect(commands).toHaveLength(0);
 
     const oneCommandsWrapper = shallow(
-        <CommandPaletteCategory>
+        <CommandPaletteCategory eventKey='movements' title='Movements'>
             <CommandPaletteCommand commandName='forward'/>
         </CommandPaletteCategory>
     );
@@ -25,13 +27,13 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
     expect(commands).toHaveLength(1);
 
     const threeCommandsWrapper = shallow(
-        <CommandPaletteCategory>
+        <CommandPaletteCategory eventKey='movements' title='Movements'>
             <CommandPaletteCommand commandName='forward'/>
             <CommandPaletteCommand commandName='left'/>
             <CommandPaletteCommand commandName='right'/>
         </CommandPaletteCategory>
     );
-    
+
     commands = threeCommandsWrapper.find(CommandPaletteCommand);
     expect(commands).toHaveLength(3);
 });
