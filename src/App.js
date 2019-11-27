@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import {IntlProvider, FormattedMessage} from 'react-intl';
+import { injectIntl, IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Dropdown, Form, Image, Row } from 'react-bootstrap';
 import CommandPalette from './CommandPalette';
 import CommandPaletteCategory from './CommandPaletteCategory';
@@ -16,7 +16,7 @@ import SoundexTable from './SoundexTable';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
 import WebSpeechInput from './WebSpeechInput';
-import type {DeviceConnectionStatus, Program, EditorMode} from './types';
+import type {DeviceConnectionStatus, EditorMode, Program, SelectedAction} from './types';
 import messages from './messages.json';
 import arrowLeft from 'material-design-icons/navigation/svg/production/ic_arrow_back_48px.svg';
 import arrowRight from 'material-design-icons/navigation/svg/production/ic_arrow_forward_48px.svg';
@@ -25,7 +25,7 @@ import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-
+const localizeProperties = (fn) => React.createElement(injectIntl(({ intl }) => fn(intl)));
 
 type AppContext = {
     bluetoothApiIsAvailable: boolean,
@@ -43,7 +43,7 @@ type AppState = {
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
     speechRecognitionOn: boolean,
-    selectedCommandName: string
+    selectedAction: SelectedAction
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -75,12 +75,12 @@ export default class App extends React.Component<{}, AppState> {
             ],
             settings: {
                 dashSupport: this.appContext.bluetoothApiIsAvailable,
-                editorMode: 'text',
+                editorMode: 'block',
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
             speechRecognitionOn: false,
-            selectedCommandName: 'none'
+            selectedAction: null
         };
 
         this.interpreter = new Interpreter();
@@ -115,6 +115,13 @@ export default class App extends React.Component<{}, AppState> {
                 } else {
                     return Promise.reject();
                 }
+            }
+        );
+        this.interpreter.addCommandHandler(
+            'none',
+            'noneHandler',
+            () => {
+                return Promise.resolve();
             }
         );
 
@@ -158,6 +165,15 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
+    getSelectedCommandName() {
+        if (this.state.selectedAction !== null
+                && this.state.selectedAction.type === 'command') {
+            return this.state.selectedAction.commandName;
+        } else {
+            return null;
+        }
+    }
+
     handleChangeLanguage = (event: SyntheticEvent<HTMLSelectElement>) => {
         this.setStateSettings({
             language: event.currentTarget.value
@@ -169,7 +185,6 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
-        // TODO: Why does doing both clear and home in the same block fail Flow type checking?
         if (this.turtleGraphicsRef.current !== null) {
             this.turtleGraphicsRef.current.clear();
         }
@@ -202,7 +217,7 @@ export default class App extends React.Component<{}, AppState> {
         this.setStateSettings({
             editorMode : mode
         });
-    }
+    };
 
     handleSpeechCommand = (word: string) => {
         this.interpreter.doCommand(word);
@@ -212,7 +227,7 @@ export default class App extends React.Component<{}, AppState> {
         this.setState({
             speechRecognitionOn : event.target.checked
         })
-    }
+    };
 
     handleAppendToProgram = (command: string) => {
         this.setState((state) => {
@@ -222,117 +237,108 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
-    handleDeleteProgramBlock = (index: number) => {
-        let currentProgram = this.state.program;
-        currentProgram.splice(index, 1);
-        this.setState((state) => {
-            return {
-                program: currentProgram
-            }
-        });
+    handleCommandFromCommandPalette = (command: ?string) => {
+        if (command) {
+            this.setState({
+                selectedAction: {
+                    type: 'command',
+                    commandName: command
+                }
+            });
+        } else {
+            this.setState({
+                selectedAction: null
+            });
+        }
     };
 
-    handleAddEmptyProgramBlock = (index: number) => {
-        let currentProgram = this.state.program;
-        currentProgram.splice(index+1, 0, 'none');
-        this.setState((state) => {
-            return {
-                program: currentProgram
-            }
-        });
-    };
-
-    handleChangeProgramBlock = (index: number, command: string) => {
-        let currentProgram = this.state.program;
-        currentProgram.splice(index, 1, command);
-        this.setState((state) => {
-            return {
-                program: currentProgram
-            }
-        });
-    };
-
-    handleCommandFromCommandPalette = (command: string) => {
+    handleSelectAction = (action: SelectedAction) => {
         this.setState({
-            selectedCommandName: command
+            selectedAction: action
         });
     };
 
     render() {
         return (
-            <Container>
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
-                    <Row className='justify-content-center'>
-                        <Col className='rm-3' md='auto'>
-                            <Row>
-                                <Dropdown>
-                                    <Dropdown.Toggle>
-                                        Change Mode
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu onClick={this.handleModeChange}>
-                                        <Dropdown.Item name='text'>Text</Dropdown.Item>
-                                        <Dropdown.Item name='block'>Block</Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown>
-                            </Row>
-                            <Row>
-                                <EditorContainer
-                                    program={this.state.program}
-                                    syntax={this.syntax}
-                                    mode={this.state.settings.editorMode}
-                                    onChange={this.handleChangeProgram}
-                                    addEmptyProgramBlock={this.handleAddEmptyProgramBlock}
-                                    deleteProgramBlock={this.handleDeleteProgramBlock}
-                                    changeProgramBlock={this.handleChangeProgramBlock}
-                                    selectedCommand={this.state.selectedCommandName}
-                                    />
-                            </Row>
+                <Container>
+                    <Row className='App__mode-and-robots-section'>
+                        <Col>
+                            <Dropdown>
+                                <Dropdown.Toggle>
+                                    <FormattedMessage id='App.changeMode' />
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu onClick={this.handleModeChange}>
+                                    <Dropdown.Item name='text'>
+                                        <FormattedMessage id='App.textMode' />
+                                    </Dropdown.Item>
+                                    <Dropdown.Item name='block'>
+                                        <FormattedMessage id='App.blockMode' />
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
                         </Col>
-                        <Col md='auto'>
-                            <Row>
-                                {this.state.settings.dashSupport &&
-                                    <DeviceConnectControl
-                                            onClickConnect={this.handleClickConnectDash}
-                                            connectionStatus={this.state.dashConnectionStatus}>
-                                        <FormattedMessage id='App.connectToDash' />
-                                    </DeviceConnectControl>
-                                }
-                            </Row>
-                            <Row>
-                                <div className='App__turtle-graphics'>
-                                    <TurtleGraphics ref={this.turtleGraphicsRef} />
-                                </div>
-                            </Row>
-                            <Row>
+                        <Col>
+                            {this.state.settings.dashSupport &&
+                                <DeviceConnectControl
+                                        onClickConnect={this.handleClickConnectDash}
+                                        connectionStatus={this.state.dashConnectionStatus}>
+                                    <FormattedMessage id='App.connectToDash' />
+                                </DeviceConnectControl>
+                            }
+                        </Col>
+                    </Row>
+                    <Row className='App__editor-and-graphics-section'>
+                        <Col>
+                            <EditorContainer
+                                program={this.state.program}
+                                syntax={this.syntax}
+                                mode={this.state.settings.editorMode}
+                                selectedAction={this.state.selectedAction}
+                                onSelectAction={this.handleSelectAction}
+                                onChange={this.handleChangeProgram}
+                                />
+                        </Col>
+                        <Col>
+                            <div>
+                                <TurtleGraphics ref={this.turtleGraphicsRef} />
+                            </div>
+                            <div className='App__interpreter-controls'>
                                 <button onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
                                     <Image src={playIcon} />
                                 </button>
-                            </Row>
+                            </div>
                         </Col>
                     </Row>
-                    <Row className='justify-content-center'>
-                        <Col md='auto'>
-                        <CommandPalette id='commandPalette' defaultActiveKey='movements' >
-                            <CommandPaletteCategory eventKey='movements' title='Movements'>
-                                <CommandPaletteCommand commandName='forward' icon={arrowUp} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
-                                <CommandPaletteCommand commandName='left' icon={arrowLeft} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
-                                <CommandPaletteCommand commandName='right' icon={arrowRight} selectedCommandName={this.state.selectedCommandName} onChange={this.handleCommandFromCommandPalette}/>
-                            </CommandPaletteCategory>
-                        </CommandPalette>
+                    <Row className='App__command-palette'>
+                        <Col>
+                            {localizeProperties((intl) =>
+                                <CommandPalette id='commandPalette' defaultActiveKey='movements' >
+                                    <CommandPaletteCategory eventKey='movements' title={(intl.formatMessage({ id: 'CommandPalette.movementsTitle' }))}>
+                                        <CommandPaletteCommand commandName='forward' icon={arrowUp} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand commandName='left' icon={arrowLeft} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand commandName='right' icon={arrowRight} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                                    </CommandPaletteCategory>
+                                    <CommandPaletteCategory eventKey='sounds' title={(intl.formatMessage({ id: 'CommandPalette.soundsTitle' }))}>
+                                    </CommandPaletteCategory>
+                                </CommandPalette>
+                            )}
                         </Col>
                     </Row>
-                    <Row className='justify-content-center'>
-                        <Col md='auto'>
-                            <Form.Check
-                                type='switch'
-                                id='custom-switch'
-                                label='Speech Recognition'
-                                disabled={!this.appContext.speechRecognitionApiIsAvailable}
-                                checked={this.state.speechRecognitionOn}
-                                onChange={this.handleToggleSpeech}
-                            />
+                    <Row>
+                        <Col>
+                            {localizeProperties((intl) =>
+                                <Form.Check
+                                    type='switch'
+                                    id='custom-switch'
+                                    label={(intl.formatMessage({ id: 'App.speechRecognition'}))}
+                                    disabled={!this.appContext.speechRecognitionApiIsAvailable}
+                                    checked={this.state.speechRecognitionOn}
+                                    onChange={this.handleToggleSpeech}
+                                />
+                            )}
                              <div>
                                 <MicMonitor
                                     enabled = {this.state.speechRecognitionOn}
@@ -340,8 +346,8 @@ export default class App extends React.Component<{}, AppState> {
                             </div>
                         </Col>
                     </Row>
-                    <Row className='justify-content-center'>
-                        <Col className='align-content-flex-start' md='auto'>
+                    <Row>
+                        <Col>
                             <select
                                     value={this.state.settings.language}
                                     onChange={this.handleChangeLanguage}>
@@ -350,8 +356,8 @@ export default class App extends React.Component<{}, AppState> {
                             </select>
                         </Col>
                     </Row>
+                </Container>
             </IntlProvider>
-            </Container>
         );
     }
 

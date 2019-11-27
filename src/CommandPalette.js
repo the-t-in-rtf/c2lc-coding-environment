@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Nav, Tab } from 'react-bootstrap';
 
 type CommandPaletteProps = {
-    children: React.Node,
+    children?: React.Node,
     defaultActiveKey: string,
     id: string
 };
@@ -19,7 +19,7 @@ export default class CommandPalette extends React.Component<CommandPaletteProps,
                             <Nav.Item>
                                 <Nav.Link eventKey={category.props.eventKey}>{category.props.title}</Nav.Link>
                             </Nav.Item>
-                        )
+                        );
                     })}
                 </Nav>
                 <Tab.Content>
