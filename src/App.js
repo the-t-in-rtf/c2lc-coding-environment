@@ -1,20 +1,31 @@
 // @flow
 
 import React from 'react';
-import {IntlProvider, FormattedMessage} from 'react-intl';
+import { injectIntl, IntlProvider, FormattedMessage } from 'react-intl';
+import { Col, Container, Dropdown, Form, Image, Row } from 'react-bootstrap';
+import CommandPalette from './CommandPalette';
+import CommandPaletteCategory from './CommandPaletteCategory';
+import CommandPaletteCommand from './CommandPaletteCommand';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
+import EditorContainer from './EditorContainer';
 import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
 import MicMonitor from './MicMonitor';
-import ProgramTextEditor from './ProgramTextEditor';
 import SoundexTable from './SoundexTable';
 import TextSyntax from './TextSyntax';
 import TurtleGraphics from './TurtleGraphics';
 import WebSpeechInput from './WebSpeechInput';
-import type {DeviceConnectionStatus, Program} from './types';
+import type {DeviceConnectionStatus, EditorMode, Program, SelectedAction} from './types';
 import messages from './messages.json';
+import arrowLeft from 'material-design-icons/navigation/svg/production/ic_arrow_back_48px.svg';
+import arrowRight from 'material-design-icons/navigation/svg/production/ic_arrow_forward_48px.svg';
+import arrowUp from 'material-design-icons/navigation/svg/production/ic_arrow_upward_48px.svg';
+import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px.svg';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+
+const localizeProperties = (fn) => React.createElement(injectIntl(({ intl }) => fn(intl)));
 
 type AppContext = {
     bluetoothApiIsAvailable: boolean,
@@ -23,6 +34,7 @@ type AppContext = {
 
 type AppSettings = {
     dashSupport: boolean,
+    editorMode: EditorMode,
     language: string
 }
 
@@ -31,7 +43,8 @@ type AppState = {
     programVer: number,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
-    speechRecognitionOn: boolean
+    speechRecognitionOn: boolean,
+    selectedAction: SelectedAction
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -64,10 +77,12 @@ export default class App extends React.Component<{}, AppState> {
             programVer: 1,
             settings: {
                 dashSupport: this.appContext.bluetoothApiIsAvailable,
+                editorMode: 'block',
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
-            speechRecognitionOn: false
+            speechRecognitionOn: false,
+            selectedAction: null
         };
 
         this.interpreter = new Interpreter();
@@ -102,6 +117,13 @@ export default class App extends React.Component<{}, AppState> {
                 } else {
                     return Promise.reject();
                 }
+            }
+        );
+        this.interpreter.addCommandHandler(
+            'none',
+            'noneHandler',
+            () => {
+                return Promise.resolve();
             }
         );
 
@@ -146,6 +168,15 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
+    getSelectedCommandName() {
+        if (this.state.selectedAction !== null
+                && this.state.selectedAction.type === 'command') {
+            return this.state.selectedAction.commandName;
+        } else {
+            return null;
+        }
+    }
+
     handleChangeLanguage = (event: SyntheticEvent<HTMLSelectElement>) => {
         this.setStateSettings({
             language: event.currentTarget.value
@@ -157,6 +188,12 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
+        if (this.turtleGraphicsRef.current !== null) {
+            this.turtleGraphicsRef.current.clear();
+        }
+        if (this.turtleGraphicsRef.current !== null) {
+            this.turtleGraphicsRef.current.home();
+        }
         this.interpreter.run(this.state.program);
     };
 
@@ -178,15 +215,10 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
-    handleStartSpeechRecognition = () => {
-        this.setState({
-            speechRecognitionOn: true
-        });
-    };
-
-    handleStopSpeechRecognition = () => {
-        this.setState({
-            speechRecognitionOn: false
+    handleModeChange = (event: any) => {
+        let mode = event.target.name === 'text' ? 'text' : 'block';
+        this.setStateSettings({
+            editorMode : mode
         });
     };
 
@@ -194,52 +226,142 @@ export default class App extends React.Component<{}, AppState> {
         this.interpreter.doCommand(word);
     };
 
+    handleToggleSpeech = (event: any) => {
+        this.setState({
+            speechRecognitionOn : event.target.checked
+        })
+    };
+
+    handleAppendToProgram = (command: string) => {
+        this.setState((state) => {
+            return {
+                program: this.state.program.concat([command]),
+                programVer: state.programVer + 1
+            }
+        });
+    };
+
+    handleCommandFromCommandPalette = (command: ?string) => {
+        if (command) {
+            this.setState({
+                selectedAction: {
+                    type: 'command',
+                    commandName: command
+                }
+            });
+        } else {
+            this.setState({
+                selectedAction: null
+            });
+        }
+    };
+
+    handleSelectAction = (action: SelectedAction) => {
+        this.setState({
+            selectedAction: action
+        });
+    };
+
     render() {
         return (
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
-                <div>
-                    <select
-                            value={this.state.settings.language}
-                            onChange={this.handleChangeLanguage}>
-                        <option value='en'>English</option>
-                        <option value='fr'>Français</option>
-                    </select>
-                    <ProgramTextEditor
-                        program={this.state.program}
-                        programVer={this.state.programVer}
-                        syntax={this.syntax}
-                        onChange={this.handleChangeProgram} />
-                    <div className='App__turtle-graphics'>
-                        <TurtleGraphics ref={this.turtleGraphicsRef} />
-                    </div>
-                    <button onClick={this.handleClickRun}>
-                        <FormattedMessage id='App.run' />
-                    </button>
-                    {this.state.settings.dashSupport &&
-                        <DeviceConnectControl
-                                onClickConnect={this.handleClickConnectDash}
-                                connectionStatus={this.state.dashConnectionStatus}>
-                            <FormattedMessage id='App.connectToDash' />
-                        </DeviceConnectControl>
-                    }
-                    {this.appContext.speechRecognitionApiIsAvailable &&
-                        <div>
-                            <button onClick={this.handleStartSpeechRecognition}>
-                                <FormattedMessage id='App.startSpeechRecognition' />
-                            </button>
-                            <button onClick={this.handleStopSpeechRecognition}>
-                                <FormattedMessage id='App.stopSpeechRecognition' />
-                            </button>
+                <Container>
+                    <Row className='App__mode-and-robots-section'>
+                        <Col>
+                            <Dropdown>
+                                <Dropdown.Toggle>
+                                    <FormattedMessage id='App.changeMode' />
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu onClick={this.handleModeChange}>
+                                    <Dropdown.Item name='text'>
+                                        <FormattedMessage id='App.textMode' />
+                                    </Dropdown.Item>
+                                    <Dropdown.Item name='block'>
+                                        <FormattedMessage id='App.blockMode' />
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </Col>
+                        <Col>
+                            {this.state.settings.dashSupport &&
+                                <DeviceConnectControl
+                                        onClickConnect={this.handleClickConnectDash}
+                                        connectionStatus={this.state.dashConnectionStatus}>
+                                    <FormattedMessage id='App.connectToDash' />
+                                </DeviceConnectControl>
+                            }
+                        </Col>
+                    </Row>
+                    <Row className='App__editor-and-graphics-section'>
+                        <Col>
+                            <EditorContainer
+                                program={this.state.program}
+                                programVer={this.state.programVer}
+                                syntax={this.syntax}
+                                mode={this.state.settings.editorMode}
+                                selectedAction={this.state.selectedAction}
+                                onSelectAction={this.handleSelectAction}
+                                onChange={this.handleChangeProgram}
+                                />
+                        </Col>
+                        <Col>
                             <div>
+                                <TurtleGraphics ref={this.turtleGraphicsRef} />
+                            </div>
+                            <div className='App__interpreter-controls'>
+                                <button onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
+                                    <Image src={playIcon} />
+                                </button>
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row className='App__command-palette'>
+                        <Col>
+                            {localizeProperties((intl) =>
+                                <CommandPalette id='commandPalette' defaultActiveKey='movements' >
+                                    <CommandPaletteCategory eventKey='movements' title={(intl.formatMessage({ id: 'CommandPalette.movementsTitle' }))}>
+                                        <CommandPaletteCommand commandName='forward' icon={arrowUp} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand commandName='left' icon={arrowLeft} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand commandName='right' icon={arrowRight} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                                    </CommandPaletteCategory>
+                                    <CommandPaletteCategory eventKey='sounds' title={(intl.formatMessage({ id: 'CommandPalette.soundsTitle' }))}>
+                                    </CommandPaletteCategory>
+                                </CommandPalette>
+                            )}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            {localizeProperties((intl) =>
+                                <Form.Check
+                                    type='switch'
+                                    id='custom-switch'
+                                    label={(intl.formatMessage({ id: 'App.speechRecognition'}))}
+                                    disabled={!this.appContext.speechRecognitionApiIsAvailable}
+                                    checked={this.state.speechRecognitionOn}
+                                    onChange={this.handleToggleSpeech}
+                                />
+                            )}
+                             <div>
                                 <MicMonitor
                                     enabled = {this.state.speechRecognitionOn}
                                 />
                             </div>
-                        </div>
-                    }
-                </div>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <select
+                                    value={this.state.settings.language}
+                                    onChange={this.handleChangeLanguage}>
+                                <option value='en'>English</option>
+                                <option value='fr'>Français</option>
+                            </select>
+                        </Col>
+                    </Row>
+                </Container>
             </IntlProvider>
         );
     }

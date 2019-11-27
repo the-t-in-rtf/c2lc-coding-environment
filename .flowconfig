@@ -8,4 +8,6 @@
 
 [options]
 
+module.name_mapper.extension='svg' -> '<PROJECT_ROOT>/SVGModule.js.flow'
+
 [strict]
