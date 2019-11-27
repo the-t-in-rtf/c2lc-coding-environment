@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Nav, Tab } from 'react-bootstrap';
 
 type CommandPaletteProps = {
-    children: React.Node,
+    children?: React.Node,
     defaultActiveKey: string,
     id: string
 };
