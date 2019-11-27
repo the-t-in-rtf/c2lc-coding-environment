@@ -47,7 +47,7 @@ Any contributions are welcome, we require you to fork from the [main repo](https
 
 Please note that making this project accessible is our first priority. Here's a guideline from [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/).
 
-Before sumbiting pull requests, please make sure flow and test cases are passing.
+Before submitting pull requests, please make sure flow and test cases are passing.
 
 ## License
-[BDS-3](https://github.com/codelearncreate/c2lc-coding-environment/blob/master/LICENSE.txt)
+[BSD-3](https://github.com/codelearncreate/c2lc-coding-environment/blob/master/LICENSE.txt)
