@@ -8,7 +8,6 @@ import type {EditorMode, Program, SelectedAction} from './types';
 
 type EditorContainerProps = {
     program: Program,
-    programVer: number,
     syntax: TextSyntax,
     mode: EditorMode,
     selectedAction: SelectedAction,
@@ -23,7 +22,6 @@ export default class EditorContainer extends React.Component<EditorContainerProp
                 {this.props.mode === 'text' ? (
                     <ProgramTextEditor
                         program={this.props.program}
-                        programVer={this.props.programVer}
                         syntax={this.props.syntax}
                         onChange={this.props.onChange} />
                  ) : (

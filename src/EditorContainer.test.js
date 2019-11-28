@@ -18,7 +18,6 @@ test('check if ProgramTextEditor component is rendering when EditorContainer has
     const wrapper =
         shallow(<EditorContainer
                     program={[]}
-                    programVer={0}
                     syntax={new TextSyntax()}
                     mode='text'
                     selectedAction={null}
@@ -33,7 +32,6 @@ test('check if ProgramBlockEditor component is rendering when EditorContainer ha
     const wrapper =
         shallow(<EditorContainer
                     program={[]}
-                    programVer={0}
                     syntax={new TextSyntax()}
                     mode='block'
                     selectedAction={null}

@@ -13,7 +13,6 @@ test('testing text input from ProgramTextEditor component', () => {
     const wrapper = shallow(
         <ProgramTextEditor
             program={['forward', 'left', 'forward']}
-            programVer={1}
             syntax={new TextSyntax()}
             onChange={mockChangeHandler}/>);
     const getTextEditor = () => (wrapper.find('#texteditor-0'));

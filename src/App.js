@@ -40,7 +40,6 @@ type AppSettings = {
 
 type AppState = {
     program: Program,
-    programVer: number,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
     speechRecognitionOn: boolean,
@@ -74,7 +73,6 @@ export default class App extends React.Component<{}, AppState> {
                 'forward',
                 'left'
             ],
-            programVer: 1,
             settings: {
                 dashSupport: this.appContext.bluetoothApiIsAvailable,
                 editorMode: 'block',
@@ -151,15 +149,6 @@ export default class App extends React.Component<{}, AppState> {
         }
     }
 
-    setProgram(program: Program) {
-        this.setState((state) => {
-            return {
-                program: program,
-                programVer: state.programVer + 1
-            }
-        });
-    }
-
     setStateSettings(settings: $Shape<AppSettings>) {
         this.setState((state) => {
             return {
@@ -184,7 +173,9 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleChangeProgram = (program: Program) => {
-        this.setProgram(program);
+        this.setState({
+            program: program
+        });
     };
 
     handleClickRun = () => {
@@ -235,8 +226,7 @@ export default class App extends React.Component<{}, AppState> {
     handleAppendToProgram = (command: string) => {
         this.setState((state) => {
             return {
-                program: this.state.program.concat([command]),
-                programVer: state.programVer + 1
+                program: this.state.program.concat([command])
             }
         });
     };
@@ -298,7 +288,6 @@ export default class App extends React.Component<{}, AppState> {
                         <Col>
                             <EditorContainer
                                 program={this.state.program}
-                                programVer={this.state.programVer}
                                 syntax={this.syntax}
                                 mode={this.state.settings.editorMode}
                                 selectedAction={this.state.selectedAction}

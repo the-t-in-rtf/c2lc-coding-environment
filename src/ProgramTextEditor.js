@@ -8,13 +8,12 @@ import type {Program} from './types';
 
 type ProgramTextEditorProps = {
     program: Program,
-    programVer: number,
     syntax: TextSyntax,
     onChange: (Program) => void
 };
 
 type ProgramTextEditorState = {
-    programVer: number,
+    programPropAsText: string,
     text: string
 };
 
@@ -31,17 +30,20 @@ export default class ProgramTextEditor extends React.Component<ProgramTextEditor
     constructor(props: ProgramTextEditorProps) {
         super(props);
         this.textareaId = Utils.generateId('texteditor');
+        const programText = props.syntax.print(props.program);
         this.state = {
-            programVer: props.programVer,
-            text: props.syntax.print(props.program)
+            programPropAsText: programText,
+            text: programText
         };
     }
 
     static getDerivedStateFromProps(props: ProgramTextEditorProps, state: ProgramTextEditorState) {
-        if (props.programVer !== state.programVer) {
+        // Update this component's text if the program prop has been changed
+        if (props.syntax.print(props.program) !== state.programPropAsText) {
+            const programText = props.syntax.print(props.program);
             return {
-                programVer: props.programVer,
-                text: props.syntax.print(props.program)
+                programPropAsText: programText,
+                text: programText
             };
         } else {
             return null;
@@ -78,4 +80,5 @@ export default class ProgramTextEditor extends React.Component<ProgramTextEditor
             </div>
         );
     }
+
 }
