@@ -149,14 +149,6 @@ export default class App extends React.Component<{}, AppState> {
         }
     }
 
-    setProgram(program: Program) {
-        this.setState((state) => {
-            return {
-                program: program
-            }
-        });
-    }
-
     setStateSettings(settings: $Shape<AppSettings>) {
         this.setState((state) => {
             return {
@@ -181,7 +173,9 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleChangeProgram = (program: Program) => {
-        this.setProgram(program);
+        this.setState({
+            program: program
+        });
     };
 
     handleClickRun = () => {
