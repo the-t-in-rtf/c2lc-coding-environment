@@ -27,8 +27,7 @@ type AppContext = {
 };
 
 type AppSettings = {
-    language: string,
-    dashSupport: boolean
+    language: string
 }
 
 type AppState = {
@@ -62,8 +61,7 @@ export default class App extends React.Component<{}, AppState> {
                 'left'
             ],
             settings: {
-                language: 'en',
-                dashSupport: this.appContext.bluetoothApiIsAvailable
+                language: 'en'
             },
             dashConnectionStatus: 'notConnected',
             selectedAction: null
@@ -72,7 +70,23 @@ export default class App extends React.Component<{}, AppState> {
         this.interpreter = new Interpreter();
 
         this.dashDriver = new DashDriver();
+
+        this.interpreter.addCommandHandler(
+            'none',
+            'noneHandler',
+            () => {
+                return Promise.resolve();
+            }
+        );
     }
+
+    setStateSettings(settings: $Shape<AppSettings>) {
+        this.setState((state) => {
+            return {
+                settings: Object.assign({}, state.settings, settings)
+            }
+        });
+    };
 
     getSelectedCommandName() {
         if (this.state.selectedAction !== null
@@ -81,7 +95,7 @@ export default class App extends React.Component<{}, AppState> {
         } else {
             return null;
         }
-    }
+    };
 
     handleChangeProgram = (program: Program) => {
         this.setState({
@@ -90,9 +104,7 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
-        if (this.state.dashConnectionStatus === 'connected') {
-            this.interpreter.run(this.state.program);
-        }
+        this.interpreter.run(this.state.program);
     };
 
     handleClickConnectDash = () => {
@@ -142,13 +154,11 @@ export default class App extends React.Component<{}, AppState> {
                 <Container>
                     <Row className='App__mode-and-robots-section'>
                         <Col>
-                            {this.state.settings.dashSupport &&
-                                <DeviceConnectControl
-                                        onClickConnect={this.handleClickConnectDash}
-                                        connectionStatus={this.state.dashConnectionStatus}>
-                                    <FormattedMessage id='App.connectToDash' />
-                                </DeviceConnectControl>
-                            }
+                            <DeviceConnectControl
+                                    onClickConnect={this.handleClickConnectDash}
+                                    connectionStatus={this.state.dashConnectionStatus}>
+                                <FormattedMessage id='App.connectToDash' />
+                            </DeviceConnectControl>
                         </Col>
                     </Row>
                     <Row className='App__program-block-editor'>
@@ -163,7 +173,7 @@ export default class App extends React.Component<{}, AppState> {
                         </Col>
                         <Col>
                             <div className='App__interpreter-controls'>
-                                <button onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
+                                <button disabled={this.state.dashConnectionStatus !== 'connected'}onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
                                     <Image src={playIcon} />
                                 </button>
                             </div>
