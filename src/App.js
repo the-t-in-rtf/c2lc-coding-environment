@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { injectIntl, IntlProvider, FormattedMessage } from 'react-intl';
-import { Col, Container, Dropdown, Form, Image, Row } from 'react-bootstrap';
+import { Col, Container, Image, Row } from 'react-bootstrap';
 import CommandPalette from './CommandPalette';
 import CommandPaletteCategory from './CommandPaletteCategory';
 import CommandPaletteCommand from './CommandPaletteCommand';
