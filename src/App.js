@@ -13,7 +13,8 @@ import Interpreter from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import type {DeviceConnectionStatus, Program, SelectedAction} from './types';
 import messages from './messages.json';
-import arrowLeft from 'material-design-icons/navigation/svg/production/ic_arrow_back_48px.svg';
+import { ReactComponent as arrowLeft } from './left.svg';
+import { ReactComponent as ArrowRight } from './right.svg';
 import arrowRight from 'material-design-icons/navigation/svg/production/ic_arrow_forward_48px.svg';
 import arrowUp from 'material-design-icons/navigation/svg/production/ic_arrow_upward_48px.svg';
 import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px.svg';
@@ -194,6 +195,7 @@ export default class App extends React.Component<{}, AppState> {
                             )}
                         </Col>
                     </Row>
+                    <arrowLeft />
                 </Container>
             </IntlProvider>
         );
