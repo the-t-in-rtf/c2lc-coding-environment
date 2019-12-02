@@ -1,12 +1,13 @@
 // @flow
 
 import React from 'react';
-import { Button, Image } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import {injectIntl} from 'react-intl';
 import './CommandPaletteCommand.css';
 
 type CommandPaletteCommandProps = {
     commandName: string,
+    backgroundColor: string,
     icon: any,
     intl: any,
     selectedCommandName: ?string,
@@ -22,14 +23,23 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
 
     render() {
         return (
-            <Button
-                className='CommandPaletteCommand__command-button'
-                variant={this.props.commandName === this.props.selectedCommandName ? 'outline-primary' : 'light'}
-                aria-label={this.props.intl.formatMessage({ id: `CommandPaletteCommand.${this.props.commandName}`})}
-                aria-pressed={this.props.commandName === this.props.selectedCommandName ? 'true' : 'false'}
-                onClick={this.handleClick}>
-                <Image src={this.props.icon}/>
-            </Button>
+            <>
+                <style type="text/css">
+                    {`
+                    .CommandPaletteCommand__command-button.${this.props.commandName} {
+                        background-color: ${this.props.backgroundColor};
+                    }
+                    `}
+                </style>
+                <Button
+                    className={`CommandPaletteCommand__command-button ${this.props.commandName}`}
+                    variant={this.props.commandName === this.props.selectedCommandName ? 'outline-primary' : 'light'}
+                    aria-label={this.props.intl.formatMessage({ id: `CommandPaletteCommand.${this.props.commandName}`})}
+                    aria-pressed={this.props.commandName === this.props.selectedCommandName ? 'true' : 'false'}
+                    onClick={this.handleClick}>
+                    {this.props.icon}
+                </Button>
+            </>
         )
     }
 }
