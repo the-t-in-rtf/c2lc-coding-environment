@@ -2,21 +2,16 @@
 
 import React from 'react';
 import { injectIntl, IntlProvider, FormattedMessage } from 'react-intl';
-import { Col, Container, Dropdown, Form, Image, Row } from 'react-bootstrap';
+import { Col, Container, Image, Row } from 'react-bootstrap';
 import CommandPalette from './CommandPalette';
 import CommandPaletteCategory from './CommandPaletteCategory';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
-import EditorContainer from './EditorContainer';
 import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
-import MicMonitor from './MicMonitor';
-import SoundexTable from './SoundexTable';
-import TextSyntax from './TextSyntax';
-import TurtleGraphics from './TurtleGraphics';
-import WebSpeechInput from './WebSpeechInput';
-import type {DeviceConnectionStatus, EditorMode, Program, SelectedAction} from './types';
+import ProgramBlockEditor from './ProgramBlockEditor';
+import type {DeviceConnectionStatus, Program, SelectedAction} from './types';
 import messages from './messages.json';
 import arrowLeft from 'material-design-icons/navigation/svg/production/ic_arrow_back_48px.svg';
 import arrowRight from 'material-design-icons/navigation/svg/production/ic_arrow_forward_48px.svg';
@@ -28,21 +23,17 @@ import './App.css';
 const localizeProperties = (fn) => React.createElement(injectIntl(({ intl }) => fn(intl)));
 
 type AppContext = {
-    bluetoothApiIsAvailable: boolean,
-    speechRecognitionApiIsAvailable: boolean
+    bluetoothApiIsAvailable: boolean
 };
 
 type AppSettings = {
-    dashSupport: boolean,
-    editorMode: EditorMode,
     language: string
-}
+};
 
 type AppState = {
     program: Program,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
-    speechRecognitionOn: boolean,
     selectedAction: SelectedAction
 };
 
@@ -50,16 +41,12 @@ export default class App extends React.Component<{}, AppState> {
     appContext: AppContext;
     dashDriver: DashDriver;
     interpreter: Interpreter;
-    syntax: TextSyntax;
-    turtleGraphicsRef: { current: null | TurtleGraphics };
-    webSpeechInput: WebSpeechInput;
 
     constructor(props: {}) {
         super(props);
 
         this.appContext = {
-            bluetoothApiIsAvailable: FeatureDetection.bluetoothApiIsAvailable(),
-            speechRecognitionApiIsAvailable: FeatureDetection.speechRecognitionApiIsAvailable()
+            bluetoothApiIsAvailable: FeatureDetection.bluetoothApiIsAvailable()
         };
 
         this.state = {
@@ -74,49 +61,14 @@ export default class App extends React.Component<{}, AppState> {
                 'left'
             ],
             settings: {
-                dashSupport: this.appContext.bluetoothApiIsAvailable,
-                editorMode: 'block',
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
-            speechRecognitionOn: false,
             selectedAction: null
         };
 
         this.interpreter = new Interpreter();
-        this.interpreter.addCommandHandler(
-            'forward',
-            'turtleGraphics',
-            () => {
-                if (this.turtleGraphicsRef.current !== null) {
-                    return this.turtleGraphicsRef.current.forward(40);
-                } else {
-                    return Promise.reject();
-                }
-            }
-        );
-        this.interpreter.addCommandHandler(
-            'left',
-            'turtleGraphics',
-            () => {
-                if (this.turtleGraphicsRef.current !== null) {
-                    return this.turtleGraphicsRef.current.turnLeft(90);
-                } else {
-                    return Promise.reject();
-                }
-            }
-        );
-        this.interpreter.addCommandHandler(
-            'right',
-            'turtleGraphics',
-            () => {
-                if (this.turtleGraphicsRef.current !== null) {
-                    return this.turtleGraphicsRef.current.turnRight(90);
-                } else {
-                    return Promise.reject();
-                }
-            }
-        );
+
         this.interpreter.addCommandHandler(
             'none',
             'noneHandler',
@@ -126,27 +78,6 @@ export default class App extends React.Component<{}, AppState> {
         );
 
         this.dashDriver = new DashDriver();
-        this.syntax = new TextSyntax();
-        this.turtleGraphicsRef = React.createRef<TurtleGraphics>();
-
-        if (this.appContext.speechRecognitionApiIsAvailable) {
-            const soundexTable = new SoundexTable([
-                { pattern: /F6../, word: 'forward' },
-                { pattern: /O6../, word: 'forward' },
-                { pattern: /L1../, word: 'left' },
-                { pattern: /L2../, word: 'left' },
-                { pattern: /L3../, word: 'left' },
-                { pattern: /L.3./, word: 'left' },
-                { pattern: /L..3/, word: 'left' },
-                { pattern: /R3../, word: 'right' },
-                { pattern: /R.3./, word: 'right' },
-                { pattern: /R..3/, word: 'right' }
-            ]);
-
-            this.webSpeechInput = new WebSpeechInput(
-                soundexTable,
-                this.handleSpeechCommand);
-        }
     }
 
     setStateSettings(settings: $Shape<AppSettings>) {
@@ -166,12 +97,6 @@ export default class App extends React.Component<{}, AppState> {
         }
     }
 
-    handleChangeLanguage = (event: SyntheticEvent<HTMLSelectElement>) => {
-        this.setStateSettings({
-            language: event.currentTarget.value
-        });
-    };
-
     handleChangeProgram = (program: Program) => {
         this.setState({
             program: program
@@ -179,12 +104,6 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
-        if (this.turtleGraphicsRef.current !== null) {
-            this.turtleGraphicsRef.current.clear();
-        }
-        if (this.turtleGraphicsRef.current !== null) {
-            this.turtleGraphicsRef.current.home();
-        }
         this.interpreter.run(this.state.program);
     };
 
@@ -203,31 +122,6 @@ export default class App extends React.Component<{}, AppState> {
             this.setState({
                 dashConnectionStatus: 'notConnected'
             });
-        });
-    };
-
-    handleModeChange = (event: any) => {
-        let mode = event.target.name === 'text' ? 'text' : 'block';
-        this.setStateSettings({
-            editorMode : mode
-        });
-    };
-
-    handleSpeechCommand = (word: string) => {
-        this.interpreter.doCommand(word);
-    };
-
-    handleToggleSpeech = (event: any) => {
-        this.setState({
-            speechRecognitionOn : event.target.checked
-        })
-    };
-
-    handleAppendToProgram = (command: string) => {
-        this.setState((state) => {
-            return {
-                program: this.state.program.concat([command])
-            }
         });
     };
 
@@ -260,47 +154,29 @@ export default class App extends React.Component<{}, AppState> {
                 <Container>
                     <Row className='App__mode-and-robots-section'>
                         <Col>
-                            <Dropdown>
-                                <Dropdown.Toggle>
-                                    <FormattedMessage id='App.changeMode' />
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu onClick={this.handleModeChange}>
-                                    <Dropdown.Item name='text'>
-                                        <FormattedMessage id='App.textMode' />
-                                    </Dropdown.Item>
-                                    <Dropdown.Item name='block'>
-                                        <FormattedMessage id='App.blockMode' />
-                                    </Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </Col>
-                        <Col>
-                            {this.state.settings.dashSupport &&
-                                <DeviceConnectControl
-                                        onClickConnect={this.handleClickConnectDash}
-                                        connectionStatus={this.state.dashConnectionStatus}>
-                                    <FormattedMessage id='App.connectToDash' />
-                                </DeviceConnectControl>
-                            }
+                            <DeviceConnectControl
+                                    onClickConnect={this.handleClickConnectDash}
+                                    connectionStatus={this.state.dashConnectionStatus}>
+                                <FormattedMessage id='App.connectToDash' />
+                            </DeviceConnectControl>
                         </Col>
                     </Row>
-                    <Row className='App__editor-and-graphics-section'>
+                    <Row className='App__program-block-editor'>
                         <Col>
-                            <EditorContainer
+                            <ProgramBlockEditor
+                                minVisibleSteps={6}
                                 program={this.state.program}
-                                syntax={this.syntax}
-                                mode={this.state.settings.editorMode}
                                 selectedAction={this.state.selectedAction}
                                 onSelectAction={this.handleSelectAction}
                                 onChange={this.handleChangeProgram}
-                                />
+                            />
                         </Col>
                         <Col>
-                            <div>
-                                <TurtleGraphics ref={this.turtleGraphicsRef} />
-                            </div>
                             <div className='App__interpreter-controls'>
-                                <button onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
+                                <button
+                                    disabled={this.state.dashConnectionStatus !== 'connected'}
+                                    onClick={this.handleClickRun}
+                                    aria-label={`Run current program ${this.state.program.join(' ')}`}>
                                     <Image src={playIcon} />
                                 </button>
                             </div>
@@ -319,35 +195,6 @@ export default class App extends React.Component<{}, AppState> {
                                     </CommandPaletteCategory>
                                 </CommandPalette>
                             )}
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            {localizeProperties((intl) =>
-                                <Form.Check
-                                    type='switch'
-                                    id='custom-switch'
-                                    label={(intl.formatMessage({ id: 'App.speechRecognition'}))}
-                                    disabled={!this.appContext.speechRecognitionApiIsAvailable}
-                                    checked={this.state.speechRecognitionOn}
-                                    onChange={this.handleToggleSpeech}
-                                />
-                            )}
-                             <div>
-                                <MicMonitor
-                                    enabled = {this.state.speechRecognitionOn}
-                                />
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <select
-                                    value={this.state.settings.language}
-                                    onChange={this.handleChangeLanguage}>
-                                <option value='en'>English</option>
-                                <option value='fr'>Français</option>
-                            </select>
                         </Col>
                     </Row>
                 </Container>
@@ -369,15 +216,6 @@ export default class App extends React.Component<{}, AppState> {
                     this.dashDriver.left.bind(this.dashDriver));
                 this.interpreter.addCommandHandler('right', 'dash',
                     this.dashDriver.right.bind(this.dashDriver));
-            }
-        }
-
-        // Speech Recognition
-        if (this.state.speechRecognitionOn !== prevState.speechRecognitionOn) {
-            if (this.state.speechRecognitionOn) {
-                this.webSpeechInput.start();
-            } else {
-                this.webSpeechInput.stop();
             }
         }
     }
