@@ -34,15 +34,15 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
-      - name: Archive artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: build
-          path: build
       - name: Flow
         run: npx flow
       - name: Test
         run: npm test
+      - name: Archive build artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ format('build-{0}', matrix.node-version) }}
+          path: build
   deploy:
     name: Deploy
     needs: build
@@ -54,7 +54,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/download-artifact@v1
         with:
-          name: build
+          name: build-10.x
       - uses: w9jds/firebase-action@v1.1.0
         with:
           args: deploy
