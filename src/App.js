@@ -28,7 +28,7 @@ type AppContext = {
 
 type AppSettings = {
     language: string
-}
+};
 
 type AppState = {
     program: Program,
@@ -69,8 +69,6 @@ export default class App extends React.Component<{}, AppState> {
 
         this.interpreter = new Interpreter();
 
-        this.dashDriver = new DashDriver();
-
         this.interpreter.addCommandHandler(
             'none',
             'noneHandler',
@@ -78,6 +76,8 @@ export default class App extends React.Component<{}, AppState> {
                 return Promise.resolve();
             }
         );
+
+        this.dashDriver = new DashDriver();
     }
 
     setStateSettings(settings: $Shape<AppSettings>) {
@@ -86,7 +86,7 @@ export default class App extends React.Component<{}, AppState> {
                 settings: Object.assign({}, state.settings, settings)
             }
         });
-    };
+    }
 
     getSelectedCommandName() {
         if (this.state.selectedAction !== null
@@ -95,7 +95,7 @@ export default class App extends React.Component<{}, AppState> {
         } else {
             return null;
         }
-    };
+    }
 
     handleChangeProgram = (program: Program) => {
         this.setState({
@@ -173,7 +173,10 @@ export default class App extends React.Component<{}, AppState> {
                         </Col>
                         <Col>
                             <div className='App__interpreter-controls'>
-                                <button disabled={this.state.dashConnectionStatus !== 'connected'}onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
+                                <button
+                                    disabled={this.state.dashConnectionStatus !== 'connected'}
+                                    onClick={this.handleClickRun}
+                                    aria-label={`Run current program ${this.state.program.join(' ')}`}>
                                     <Image src={playIcon} />
                                 </button>
                             </div>
