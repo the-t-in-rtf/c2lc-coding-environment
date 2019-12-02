@@ -13,14 +13,13 @@ import Interpreter from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import type {DeviceConnectionStatus, Program, SelectedAction} from './types';
 import messages from './messages.json';
-import { ReactComponent as arrowLeft } from './left.svg';
-import { ReactComponent as ArrowRight } from './right.svg';
-import { ReactComponent as Rotation } from './3d_rotation-24px.svg';
-import arrowRight from 'material-design-icons/navigation/svg/production/ic_arrow_forward_48px.svg';
-import arrowUp from 'material-design-icons/navigation/svg/production/ic_arrow_upward_48px.svg';
 import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import { ReactComponent as ArrowForward } from './Forward.svg';
+import { ReactComponent as ArrowLeft } from './Left.svg';
+import { ReactComponent as ArrowRight } from './Right.svg';
+
 
 const localizeProperties = (fn) => React.createElement(injectIntl(({ intl }) => fn(intl)));
 
@@ -186,9 +185,9 @@ export default class App extends React.Component<{}, AppState> {
                             {localizeProperties((intl) =>
                                 <CommandPalette id='commandPalette' defaultActiveKey='movements' >
                                     <CommandPaletteCategory eventKey='movements' title={(intl.formatMessage({ id: 'CommandPalette.movementsTitle' }))}>
-                                        <CommandPaletteCommand commandName='forward' icon={arrowUp} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
-                                        <CommandPaletteCommand commandName='left' icon={arrowLeft} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
-                                        <CommandPaletteCommand commandName='right' icon={arrowRight} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand commandName='forward' backgroundColor='#54BCE7' icon={React.createElement(ArrowForward,{className:'App__block-arrow-forward-svg'})} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand commandName='right' backgroundColor='#E7DB6E' icon={React.createElement(ArrowRight,{className:'App__block-arrow-right-svg'})} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand commandName='left' backgroundColor='#E1604B' icon={React.createElement(ArrowLeft,{className:'App__block-arrow-left-svg'})} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
                                     </CommandPaletteCategory>
                                     <CommandPaletteCategory eventKey='sounds' title={(intl.formatMessage({ id: 'CommandPalette.soundsTitle' }))}>
                                     </CommandPaletteCategory>
@@ -196,9 +195,6 @@ export default class App extends React.Component<{}, AppState> {
                             )}
                         </Col>
                     </Row>
-                    <arrowLeft />
-                    <ArrowRight />
-                    <Rotation />
                 </Container>
             </IntlProvider>
         );
