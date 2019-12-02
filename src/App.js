@@ -155,6 +155,7 @@ export default class App extends React.Component<{}, AppState> {
                     <Row className='App__mode-and-robots-section'>
                         <Col>
                             <DeviceConnectControl
+                                    bluetoothApiIsAvailable={this.appContext.bluetoothApiIsAvailable}
                                     onClickConnect={this.handleClickConnectDash}
                                     connectionStatus={this.state.dashConnectionStatus}>
                                 <FormattedMessage id='App.connectToDash' />

@@ -6,6 +6,7 @@ import type {DeviceConnectionStatus} from './types';
 
 type DeviceConnectControlProps = {
     children: React.Element<any>, // Button contents
+    bluetoothApiIsAvailable: boolean,
     onClickConnect: () => void,
     connectionStatus: DeviceConnectionStatus
 };
@@ -14,7 +15,7 @@ export default class DeviceConnectControl extends React.Component<DeviceConnectC
     render() {
         return (
             <div>
-                <button onClick={this.props.onClickConnect}>{this.props.children}</button>
+                <button disabled={!this.props.bluetoothApiIsAvailable} onClick={this.props.onClickConnect}>{this.props.children}</button>
                 <FormattedMessage id={`DeviceConnectControl.${this.props.connectionStatus}`} />
             </div>
         );
