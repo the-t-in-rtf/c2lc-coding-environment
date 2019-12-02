@@ -21,3 +21,20 @@ button.ProgramBlockEditor__program-block {
     stroke: #888;
     fill: #888;
 }
+
+.ProgramBlockEditor__program-sequence {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.ProgramBlockEditor__start-indicator {
+    padding-top: 1rem;
+    text-align: center;
+    background-color: #000;
+    color: #fff;
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    margin-bottom: 0.5rem;
+}

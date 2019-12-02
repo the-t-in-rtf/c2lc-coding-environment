@@ -200,7 +200,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col className='ProgramBlockEditor__program-sequence'>
+                        <div className='ProgramBlockEditor__start-indicator'>
+                            Start
+                        </div>
                         {programBlocks}
                     </Col>
                 </Row>
