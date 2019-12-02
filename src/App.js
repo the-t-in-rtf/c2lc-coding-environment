@@ -16,9 +16,9 @@ import messages from './messages.json';
 import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { ReactComponent as ArrowForward } from './Forward.svg';
-import { ReactComponent as ArrowLeft } from './Left.svg';
-import { ReactComponent as ArrowRight } from './Right.svg';
+import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
+import { ReactComponent as ArrowLeft } from './svg/ArrowLeft.svg';
+import { ReactComponent as ArrowRight } from './svg/ArrowRight.svg';
 
 
 const localizeProperties = (fn) => React.createElement(injectIntl(({ intl }) => fn(intl)));
