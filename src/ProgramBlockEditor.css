@@ -13,6 +13,8 @@
 }
 
 button.ProgramBlockEditor__program-block {
+    width: 110px;
+    height: 70px;
     display: block;
     margin-bottom: 0.5rem;
 }
@@ -20,4 +22,16 @@ button.ProgramBlockEditor__program-block {
 .ProgramBlockEditor__empty-block-svg {
     stroke: #888;
     fill: #888;
+}
+
+button.Forward {
+    background-color: #54BCE7;
+}
+
+button.Left {
+    background-color: #E1604B;
+}
+
+button.Right {
+    background-color: #E7DB6E;
 }
