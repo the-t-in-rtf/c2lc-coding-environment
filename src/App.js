@@ -3,8 +3,6 @@
 import React from 'react';
 import { injectIntl, IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Image, Row } from 'react-bootstrap';
-import CommandPalette from './CommandPalette';
-import CommandPaletteCategory from './CommandPaletteCategory';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
@@ -19,8 +17,6 @@ import arrowUp from 'material-design-icons/navigation/svg/production/ic_arrow_up
 import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-
-const localizeProperties = (fn) => React.createElement(injectIntl(({ intl }) => fn(intl)));
 
 type AppContext = {
     bluetoothApiIsAvailable: boolean
@@ -162,37 +158,30 @@ export default class App extends React.Component<{}, AppState> {
                             </DeviceConnectControl>
                         </Col>
                     </Row>
-                    <Row className='App__program-block-editor'>
-                        <Col>
-                            <ProgramBlockEditor
-                                minVisibleSteps={6}
-                                program={this.state.program}
-                                selectedAction={this.state.selectedAction}
-                                onSelectAction={this.handleSelectAction}
-                                onChange={this.handleChangeProgram}
-                            />
+                    <Row>
+                        <Col className='App__command-palette'>
+                            <FormattedMessage id='CommandPalette.movementsTitle' />
+                            <CommandPaletteCommand commandName='forward' icon={arrowUp} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                            <CommandPaletteCommand commandName='left' icon={arrowLeft} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                            <CommandPaletteCommand commandName='right' icon={arrowRight} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
                         </Col>
-                        <Col>
-                            <div className='App__interpreter-controls'>
-                                <button disabled={this.state.dashConnectionStatus !== 'connected'}onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
-                                    <Image src={playIcon} />
-                                </button>
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row className='App__command-palette'>
-                        <Col>
-                            {localizeProperties((intl) =>
-                                <CommandPalette id='commandPalette' defaultActiveKey='movements' >
-                                    <CommandPaletteCategory eventKey='movements' title={(intl.formatMessage({ id: 'CommandPalette.movementsTitle' }))}>
-                                        <CommandPaletteCommand commandName='forward' icon={arrowUp} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
-                                        <CommandPaletteCommand commandName='left' icon={arrowLeft} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
-                                        <CommandPaletteCommand commandName='right' icon={arrowRight} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
-                                    </CommandPaletteCategory>
-                                    <CommandPaletteCategory eventKey='sounds' title={(intl.formatMessage({ id: 'CommandPalette.soundsTitle' }))}>
-                                    </CommandPaletteCategory>
-                                </CommandPalette>
-                            )}
+                        <Col className='App__program-block-editor'>
+                            <Col>
+                                <ProgramBlockEditor
+                                    minVisibleSteps={6}
+                                    program={this.state.program}
+                                    selectedAction={this.state.selectedAction}
+                                    onSelectAction={this.handleSelectAction}
+                                    onChange={this.handleChangeProgram}
+                                />
+                            </Col>
+                            <Col>
+                                <div className='App__interpreter-controls'>
+                                    <button disabled={this.state.dashConnectionStatus !== 'connected'}onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
+                                        <Image src={playIcon} />
+                                    </button>
+                                </div>
+                            </Col>
                         </Col>
                     </Row>
                 </Container>
