@@ -55,6 +55,7 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: build-10.x
+          path: build
       - uses: w9jds/firebase-action@v1.1.0
         with:
           args: deploy
