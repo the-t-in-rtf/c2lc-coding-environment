@@ -16,19 +16,16 @@
 }
 
 .App__block-arrow-forward-svg {
-    background-color: #54BCE7 important;
     width: 48px;
     height: 48px;
 }
 
 .App__block-arrow-left-svg {
-    background-color: #E1604B important;
     width: 48px;
     height: 48px;
 }
 
 .App__block-arrow-right-svg {
-    background-color: #E7DB6E important;
     width: 48px;
     height: 48px;
 }
