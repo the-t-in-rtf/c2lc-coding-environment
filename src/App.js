@@ -111,7 +111,7 @@ export default class App extends React.Component<{}, AppState> {
         this.setState({
             dashConnectionStatus: 'connecting'
         });
-        this.dashDriver.connect().then(() => {
+        this.dashDriver.connect(this.handleDashDisconnect).then(() => {
             this.setState({
                 dashConnectionStatus: 'connected'
             });
@@ -140,6 +140,12 @@ export default class App extends React.Component<{}, AppState> {
         }
     };
 
+    handleDashDisconnect = () => {
+        this.setState({
+            dashConnectionStatus : 'notConnected'
+        });
+    }
+
     handleSelectAction = (action: SelectedAction) => {
         this.setState({
             selectedAction: action
@@ -153,13 +159,13 @@ export default class App extends React.Component<{}, AppState> {
                     messages={messages[this.state.settings.language]}>
                 <Container>
                     <Row className='App__mode-and-robots-section'>
-                        <Col>
+                        <Row>
                             <DeviceConnectControl
                                     onClickConnect={this.handleClickConnectDash}
                                     connectionStatus={this.state.dashConnectionStatus}>
                                 <FormattedMessage id='App.connectToDash' />
                             </DeviceConnectControl>
-                        </Col>
+                        </Row>
                     </Row>
                     <Row className='App__program-block-editor'>
                         <Col>
@@ -203,7 +209,6 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
-        // Dash Connection Status
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 
