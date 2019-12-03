@@ -173,7 +173,10 @@ export default class App extends React.Component<{}, AppState> {
                         </Col>
                         <Col>
                             <div className='App__interpreter-controls'>
-                                <button disabled={this.state.dashConnectionStatus !== 'connected'}onClick={this.handleClickRun} aria-label={`Run current program ${this.state.program.join(' ')}`}>
+                                <button
+                                    disabled={this.state.dashConnectionStatus !== 'connected'}
+                                    onClick={this.handleClickRun}
+                                    aria-label={`Run current program ${this.state.program.join(' ')}`}>
                                     <Image src={playIcon} />
                                 </button>
                             </div>
