@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { injectIntl, IntlProvider, FormattedMessage } from 'react-intl';
+import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Image, Row } from 'react-bootstrap';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashDriver from './DashDriver';
