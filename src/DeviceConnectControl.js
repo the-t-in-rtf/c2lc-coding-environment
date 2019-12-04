@@ -19,14 +19,31 @@ class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}
     render() {
         return (
             <div>
-                <button onClick={this.props.onClickConnect}>{this.props.children}</button>
-                {this.props.connectionStatus === 'connected' ? <Image src={connected} alt={this.props.intl.formatMessage({id:'DeviceConnectControl.connected'})} className='DeviceConnectControl__dash-status-svg' /> :
+                <button
+                    className='DeviceConnectControl__connect-button'
+                    onClick={this.props.onClickConnect}>
+                    {this.props.children}
+                </button>
+                {this.props.connectionStatus === 'connected' ?
+                    <Image
+                        src={connected}
+                        alt={this.props.intl.formatMessage({id:'DeviceConnectControl.connected'})}
+                        className='DeviceConnectControl__dash-status-svg' /> :
                     this.props.connectionStatus === 'connecting' ?
                         <>
-                            <Spinner className='DeviceConnectControl__dash-status-svg' animation='border' role='status' size='sm'/>
-                            <span className="sr-only"><FormattedMessage id={'DeviceConnectControl.connecting'} /></span>
+                            <Spinner
+                                className='DeviceConnectControl__dash-status-svg'
+                                animation='border'
+                                role='status'
+                                size='sm'/>
+                            <span className="sr-only">
+                                <FormattedMessage id={'DeviceConnectControl.connecting'} />
+                            </span>
                         </> :
-                        <Image src={notConnected} alt={this.props.intl.formatMessage({id:'DeviceConnectControl.notConnected'})} className='DeviceConnectControl__dash-status-svg' />}
+                        <Image
+                            src={notConnected}
+                            alt={this.props.intl.formatMessage({id:'DeviceConnectControl.notConnected'})}
+                            className='DeviceConnectControl__dash-status-svg' />}
             </div>
         );
     }
