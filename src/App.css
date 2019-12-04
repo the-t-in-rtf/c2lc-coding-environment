@@ -15,3 +15,7 @@
     margin-top: 1rem;
 }
 
+.App__warning-bluetoothAPI {
+    background-color: #E7DB6E;
+    border: 1px solid #F1F1F1;
+}

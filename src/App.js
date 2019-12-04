@@ -17,6 +17,7 @@ import arrowLeft from 'material-design-icons/navigation/svg/production/ic_arrow_
 import arrowRight from 'material-design-icons/navigation/svg/production/ic_arrow_forward_48px.svg';
 import arrowUp from 'material-design-icons/navigation/svg/production/ic_arrow_upward_48px.svg';
 import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px.svg';
+import errorIcon from './svg/Error.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -153,6 +154,15 @@ export default class App extends React.Component<{}, AppState> {
                     messages={messages[this.state.settings.language]}>
                 <Container>
                     <Row className='App__mode-and-robots-section'>
+                        {!this.appContext.bluetoothApiIsAvailable ? (
+                            <Row className='App__warning-bluetoothAPI'>
+                                <Image src={errorIcon} />
+                                <FormattedMessage id='App.warning.bluetoothAPI' />
+                            </Row>
+                            ) : (
+                            <>
+                            </>
+                        )}
                         <Col>
                             <DeviceConnectControl
                                     onClickConnect={this.handleClickConnectDash}
