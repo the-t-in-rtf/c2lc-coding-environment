@@ -7,7 +7,6 @@ import './CommandPaletteCommand.css';
 
 type CommandPaletteCommandProps = {
     commandName: string,
-    backgroundColor: string,
     icon: any,
     intl: any,
     selectedCommandName: ?string,
