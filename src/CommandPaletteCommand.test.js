@@ -10,53 +10,82 @@ import CommandPaletteCommand from './CommandPaletteCommand';
 
 configure({ adapter: new Adapter()});
 
-test('onChange property of CommandPaletteCommand component should change its variant according to selectedCommandName', () => {
-    const mockChangeHandler = jest.fn();
-    const intl = createIntl({
-        locale: 'en',
-        defaultLocale: 'en',
-        messages: {
-            'CommandPaletteCommand.forward' : 'forward'
-        }
-    });
+function hasPressedClass(wrapper) {
+    return wrapper.find(Button).hasClass('command-block--pressed');
+}
 
-    const commandPaletteCommandWrapper = shallow(
+function getAriaPressedValue(wrapper) {
+    return wrapper.find(Button).getElement().props['aria-pressed'];
+}
+
+const intl = createIntl({
+    locale: 'en',
+    defaultLocale: 'en',
+    messages: {
+        'CommandPaletteCommand.forward' : 'forward'
+    }
+});
+
+test('Pressed state is false when selecedCommandName is null', () => {
+    const wrapper = shallow(
+        <CommandPaletteCommand.WrappedComponent
+            intl={intl}
+            commandName='forward'
+            selectedCommandName={null}
+            onChange={() => {}}/>
+    );
+    expect(hasPressedClass(wrapper)).toBe(false);
+    expect(getAriaPressedValue(wrapper)).toBe(false);
+});
+
+test('Pressed state is false when selecedCommandName is another command', () => {
+    const wrapper = shallow(
+        <CommandPaletteCommand.WrappedComponent
+            intl={intl}
+            commandName='forward'
+            selectedCommandName='left'
+            onChange={() => {}}/>
+    );
+    expect(hasPressedClass(wrapper)).toBe(false);
+    expect(getAriaPressedValue(wrapper)).toBe(false);
+});
+
+test('Pressed state is true when selecedCommandName is this command', () => {
+    const wrapper = shallow(
+        <CommandPaletteCommand.WrappedComponent
+            intl={intl}
+            commandName='forward'
+            selectedCommandName='forward'
+            onChange={() => {}}/>
+    );
+    expect(hasPressedClass(wrapper)).toBe(true);
+    expect(getAriaPressedValue(wrapper)).toBe(true);
+});
+
+test('Clicking the button toggles selectedCommandName', () => {
+    const mockChangeHandler = jest.fn();
+
+    const wrapper = shallow(
         <CommandPaletteCommand.WrappedComponent
             intl={intl}
             commandName='forward'
             selectedCommandName={null}
             onChange={mockChangeHandler}/>
-    )
+    );
 
-    const getVariantValue = () => (commandPaletteCommandWrapper.find(Button).getElement().props.variant);
-    const getAriaPressedValue = () => (commandPaletteCommandWrapper.find(Button).getElement().props['aria-pressed']);
-    // before a command is selected, initial command button's variant should be set to light and aria-pressed value should be false
-    expect(getVariantValue()).toBe('light');
-    expect(getAriaPressedValue()).toBe('false');
+    const button = wrapper.find(Button);
 
-    const commandButton = commandPaletteCommandWrapper.find(Button);
-
-    // after a command is selected, variant of the command button should be set to outline-primary and aria-pressed value should be true
-    commandButton.simulate('click');
+    // Initially the command is not selected
+    button.simulate('click');
+    // Verify that onChange is called with the commandName
     expect(mockChangeHandler.mock.calls.length).toBe(1);
     expect(mockChangeHandler.mock.calls[0][0]).toBe('forward');
-    commandPaletteCommandWrapper.setProps({selectedCommandName: 'forward'});
-    commandPaletteCommandWrapper.update();
-    expect(getVariantValue()).toBe('outline-primary');
-    expect(getAriaPressedValue()).toBe('true');
-
-    // after the same command is selected, variant of the command button should be reset to light
-    commandButton.simulate('click');
+    // Update the selectedCommandName
+    wrapper.setProps({selectedCommandName: 'forward'});
+    wrapper.update();
+    // Click again
+    button.simulate('click');
+    // And verify that the command is toggled off
     expect(mockChangeHandler.mock.calls.length).toBe(2);
     expect(mockChangeHandler.mock.calls[1][0]).toBe(null);
-    commandPaletteCommandWrapper.setProps({selectedCommandName: null});
-    commandPaletteCommandWrapper.update();
-    expect(getVariantValue()).toBe('light');
-    expect(getAriaPressedValue()).toBe('false');
-
-    // when another command is clicked, variant and aria-pressed of the command button should be unchanged
-    //commandPaletteCommandWrapper.setProps({selectedCommandName: 'left'});
-    commandPaletteCommandWrapper.update();
-    expect(getVariantValue()).toBe('light');
-    expect(getAriaPressedValue()).toBe('false');
 });

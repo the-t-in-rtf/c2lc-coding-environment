@@ -11,3 +11,27 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+button.btn {
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+button.command-block {
+    width: 7rem;
+    height: 4.5rem;
+    border-radius: 0.75rem;
+}
+
+button.command-block--pressed,
+button.command-block--pressed:hover {
+    border: 2px dashed #000000;
+}
+
+button.btn-command-block--none {
+    border: 1px solid #C4C4C4;
+}
+
+.command-block-svg {
+    width: 3rem;
+    height: 3rem;
+}
