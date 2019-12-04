@@ -124,6 +124,12 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
+    handleDashDisconnect = () => {
+        this.setState({
+            dashConnectionStatus : 'notConnected'
+        });
+    };
+
     handleCommandFromCommandPalette = (command: ?string) => {
         if (command) {
             this.setState({
@@ -138,12 +144,6 @@ export default class App extends React.Component<{}, AppState> {
             });
         }
     };
-
-    handleDashDisconnect = () => {
-        this.setState({
-            dashConnectionStatus : 'notConnected'
-        });
-    }
 
     handleSelectAction = (action: SelectedAction) => {
         this.setState({

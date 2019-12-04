@@ -58,7 +58,9 @@ class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}
                     onClick={this.props.onClickConnect}>
                     {this.props.children}
                 </Button>
-                {this.connectionStatusIcon()}
+                <span className='DeviceConnectControl__status-icon-container'>
+                    {this.connectionStatusIcon()}
+                </span>
             </div>
         );
     }

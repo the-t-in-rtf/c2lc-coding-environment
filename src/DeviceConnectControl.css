@@ -1,5 +1,9 @@
+.DeviceConnectControl__status-icon-container {
+    background-color: #F1F1F1;
+    padding: 1rem 0.5rem;
+}
+
 .DeviceConnectControl__status-icon {
-    margin-left: 0.5rem;
     width: 0.9rem;
     height: 0.9rem;
 }
