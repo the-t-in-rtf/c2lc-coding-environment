@@ -1,3 +1,7 @@
+html {
+    font-size: 18px;
+}
+
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
@@ -5,12 +9,19 @@ body {
 
 button.btn {
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 0.6rem;
+}
+
+button.btn-primary,
+button.btn-primary:hover {
+    border: 2px solid #000000;
+    font-weight: bold;
+    padding: 1.15rem 1.25rem;
 }
 
 button.command-block {
-    width: 7rem;
-    height: 4.5rem;
-    border-radius: 0.75rem;
+    width: 6.25rem;
+    height: 4rem;
 }
 
 button.command-block--pressed,
@@ -23,6 +34,6 @@ button.btn-command-block--none {
 }
 
 .command-block-svg {
-    width: 3rem;
-    height: 3rem;
+    width: 2.75rem;
+    height: 2.75rem;
 }

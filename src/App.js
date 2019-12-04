@@ -158,13 +158,13 @@ export default class App extends React.Component<{}, AppState> {
                     messages={messages[this.state.settings.language]}>
                 <Container>
                     <Row className='App__mode-and-robots-section'>
-                        <Row>
+                        <Col>
                             <DeviceConnectControl
                                     onClickConnect={this.handleClickConnectDash}
                                     connectionStatus={this.state.dashConnectionStatus}>
                                 <FormattedMessage id='App.connectToDash' />
                             </DeviceConnectControl>
-                        </Row>
+                        </Col>
                     </Row>
                     <Row className='App__program-block-editor'>
                         <Col>
