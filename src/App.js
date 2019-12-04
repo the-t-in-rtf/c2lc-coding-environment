@@ -157,7 +157,7 @@ export default class App extends React.Component<{}, AppState> {
                         {!this.appContext.bluetoothApiIsAvailable ? (
                             <Row className='App__warning-bluetoothAPI'>
                                 {localizeProperties((intl) =>
-                                    <span role='image' aria-label={(intl.formatMessage({ id: 'App.warning'}))}>
+                                    <span role='img' aria-label={(intl.formatMessage({ id: 'App.warning'}))}>
                                         <ErrorIcon className='App__warning-svg' />
                                     </span>
                                 )}
