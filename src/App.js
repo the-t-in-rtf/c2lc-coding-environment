@@ -6,6 +6,7 @@ import { Col, Container, Image, Row } from 'react-bootstrap';
 import CommandPalette from './CommandPalette';
 import CommandPaletteCategory from './CommandPaletteCategory';
 import CommandPaletteCommand from './CommandPaletteCommand';
+import ConnectionErrorModal from './ConnectionErrorModal';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
@@ -64,6 +65,7 @@ export default class App extends React.Component<{}, AppState> {
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
+            showError: false,
             selectedAction: null
         };
 
@@ -109,7 +111,8 @@ export default class App extends React.Component<{}, AppState> {
 
     handleClickConnectDash = () => {
         this.setState({
-            dashConnectionStatus: 'connecting'
+            dashConnectionStatus: 'connecting',
+            showError: false
         });
         this.dashDriver.connect().then(() => {
             this.setState({
@@ -120,7 +123,8 @@ export default class App extends React.Component<{}, AppState> {
             console.log(error.name);
             console.log(error.message);
             this.setState({
-                dashConnectionStatus: 'notConnected'
+                dashConnectionStatus: 'notConnected',
+                showError: true
             });
         });
     };
@@ -143,6 +147,12 @@ export default class App extends React.Component<{}, AppState> {
     handleSelectAction = (action: SelectedAction) => {
         this.setState({
             selectedAction: action
+        });
+    };
+
+    handleCancelConnection = () => {
+        this.setState({
+            showError: false
         });
     };
 
@@ -194,6 +204,7 @@ export default class App extends React.Component<{}, AppState> {
                             )}
                         </Col>
                     </Row>
+                    <ConnectionErrorModal show={this.state.showError} onCancel={this.handleCancelConnection} onRetry={this.handleClickConnectDash}/>
                 </Container>
             </IntlProvider>
         );
