@@ -6,6 +6,7 @@
         "App.run": "Run",
         "App.speechRecognition": "Speech Recognition",
         "App.textMode": "Text",
+        "App.warning": "There's an issue with the current browser",
         "App.warning.bluetoothAPI": "You can only connect to Dash in a Chrome browser. We are working on fixing this issue.",
         "CommandPalette.movementsTitle": "Movements",
         "CommandPalette.soundsTitle": "Sounds",
