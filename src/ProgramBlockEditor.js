@@ -5,9 +5,9 @@ import {injectIntl} from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
 import React from 'react';
-import { ReactComponent as ArrowLeft } from './svg/ArrowLeft.svg';
-import { ReactComponent as ArrowRight } from './svg/ArrowRight.svg';
-import { ReactComponent as ArrowUp } from './svg/ArrowForward.svg';
+import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
+import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
+import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
 import { ReactComponent as AddIcon } from 'material-design-icons/content/svg/production/ic_add_24px.svg';
 import { ReactComponent as DeleteIcon } from 'material-design-icons/content/svg/production/ic_clear_24px.svg';
 import './ProgramBlockEditor.css';
@@ -95,7 +95,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
                         }
                         onClick={this.handleClickStep}>
-                        <ArrowUp className='command-block-svg'/>
+                        <ArrowForward className='command-block-svg'/>
                     </Button>
                 );
             case 'left':
@@ -113,7 +113,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})
                         }
                         onClick={this.handleClickStep}>
-                        <ArrowLeft className='command-block-svg'/>
+                        <ArrowTurnLeft className='command-block-svg'/>
                     </Button>
                 );
             case 'right':
@@ -131,7 +131,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})
                         }
                         onClick={this.handleClickStep}>
-                        <ArrowRight className='command-block-svg'/>
+                        <ArrowTurnRight className='command-block-svg'/>
                     </Button>
                 );
             case 'none':

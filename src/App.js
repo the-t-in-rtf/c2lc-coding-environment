@@ -16,8 +16,8 @@ import messages from './messages.json';
 import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px.svg';
 import './App.css';
 import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
-import { ReactComponent as ArrowLeft } from './svg/ArrowLeft.svg';
-import { ReactComponent as ArrowRight } from './svg/ArrowRight.svg';
+import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
+import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
 
 const localizeProperties = (fn) => React.createElement(injectIntl(({ intl }) => fn(intl)));
 
@@ -194,7 +194,7 @@ export default class App extends React.Component<{}, AppState> {
                                         <CommandPaletteCommand
                                             commandName='right'
                                             icon={React.createElement(
-                                                ArrowRight,
+                                                ArrowTurnRight,
                                                 {className:'command-block-svg'}
                                             )}
                                             selectedCommandName={this.getSelectedCommandName()}
@@ -202,7 +202,7 @@ export default class App extends React.Component<{}, AppState> {
                                         <CommandPaletteCommand
                                             commandName='left'
                                             icon={React.createElement(
-                                                ArrowLeft,
+                                                ArrowTurnLeft,
                                                 {className:'command-block-svg'}
                                             )}
                                             selectedCommandName={this.getSelectedCommandName()}
