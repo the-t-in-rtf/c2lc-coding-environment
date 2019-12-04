@@ -35,6 +35,7 @@ type AppState = {
     program: Program,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
+    showError: boolean,
     selectedAction: SelectedAction
 };
 
