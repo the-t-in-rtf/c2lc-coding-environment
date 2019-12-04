@@ -13,12 +13,11 @@ import Interpreter from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import type {DeviceConnectionStatus, Program, SelectedAction} from './types';
 import messages from './messages.json';
-import arrowLeft from 'material-design-icons/navigation/svg/production/ic_arrow_back_48px.svg';
-import arrowRight from 'material-design-icons/navigation/svg/production/ic_arrow_forward_48px.svg';
-import arrowUp from 'material-design-icons/navigation/svg/production/ic_arrow_upward_48px.svg';
 import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px.svg';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
+import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
+import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
 
 const localizeProperties = (fn) => React.createElement(injectIntl(({ intl }) => fn(intl)));
 
@@ -28,7 +27,7 @@ type AppContext = {
 
 type AppSettings = {
     language: string
-}
+};
 
 type AppState = {
     program: Program,
@@ -69,8 +68,6 @@ export default class App extends React.Component<{}, AppState> {
 
         this.interpreter = new Interpreter();
 
-        this.dashDriver = new DashDriver();
-
         this.interpreter.addCommandHandler(
             'none',
             'noneHandler',
@@ -78,6 +75,8 @@ export default class App extends React.Component<{}, AppState> {
                 return Promise.resolve();
             }
         );
+
+        this.dashDriver = new DashDriver();
     }
 
     setStateSettings(settings: $Shape<AppSettings>) {
@@ -86,7 +85,7 @@ export default class App extends React.Component<{}, AppState> {
                 settings: Object.assign({}, state.settings, settings)
             }
         });
-    };
+    }
 
     getSelectedCommandName() {
         if (this.state.selectedAction !== null
@@ -95,7 +94,7 @@ export default class App extends React.Component<{}, AppState> {
         } else {
             return null;
         }
-    };
+    }
 
     handleChangeProgram = (program: Program) => {
         this.setState({
@@ -193,9 +192,30 @@ export default class App extends React.Component<{}, AppState> {
                             {localizeProperties((intl) =>
                                 <CommandPalette id='commandPalette' defaultActiveKey='movements' >
                                     <CommandPaletteCategory eventKey='movements' title={(intl.formatMessage({ id: 'CommandPalette.movementsTitle' }))}>
-                                        <CommandPaletteCommand commandName='forward' icon={arrowUp} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
-                                        <CommandPaletteCommand commandName='left' icon={arrowLeft} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
-                                        <CommandPaletteCommand commandName='right' icon={arrowRight} selectedCommandName={this.getSelectedCommandName()} onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand
+                                            commandName='forward'
+                                            icon={React.createElement(
+                                                ArrowForward,
+                                                {className:'command-block-svg'}
+                                            )}
+                                            selectedCommandName={this.getSelectedCommandName()}
+                                            onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand
+                                            commandName='right'
+                                            icon={React.createElement(
+                                                ArrowTurnRight,
+                                                {className:'command-block-svg'}
+                                            )}
+                                            selectedCommandName={this.getSelectedCommandName()}
+                                            onChange={this.handleCommandFromCommandPalette}/>
+                                        <CommandPaletteCommand
+                                            commandName='left'
+                                            icon={React.createElement(
+                                                ArrowTurnLeft,
+                                                {className:'command-block-svg'}
+                                            )}
+                                            selectedCommandName={this.getSelectedCommandName()}
+                                            onChange={this.handleCommandFromCommandPalette}/>
                                     </CommandPaletteCategory>
                                     <CommandPaletteCategory eventKey='sounds' title={(intl.formatMessage({ id: 'CommandPalette.soundsTitle' }))}>
                                     </CommandPaletteCategory>
