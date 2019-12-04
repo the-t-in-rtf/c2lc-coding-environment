@@ -85,7 +85,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     <Button
                         key={`${programStepNumber}-forward`}
                         data-stepnumber={programStepNumber}
-                        className='ProgramBlockEditor__program-block Forward'
+                        className='ProgramBlockEditor__program-block command-block'
+                        variant='command-block--forward'
                         aria-label={
                             this.addIsSelected() ?
                             `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
@@ -94,7 +95,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
                         }
                         onClick={this.handleClickStep}>
-                        <ArrowUp height='48px' width='48px'/>
+                        <ArrowUp className='command-block-svg'/>
                     </Button>
                 );
             case 'left':
@@ -102,7 +103,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     <Button
                         key={`${programStepNumber}-left`}
                         data-stepnumber={programStepNumber}
-                        className='ProgramBlockEditor__program-block Left'
+                        className='ProgramBlockEditor__program-block command-block'
+                        variant='command-block--left'
                         aria-label={
                             this.addIsSelected() ?
                             `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
@@ -111,32 +113,34 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})
                         }
                         onClick={this.handleClickStep}>
-                        <ArrowLeft height='48px' width='48px'/>
+                        <ArrowLeft className='command-block-svg'/>
                     </Button>
                 );
             case 'right':
                 return (
-                <Button
-                    key={`${programStepNumber}-right`}
-                    data-stepnumber={programStepNumber}
-                    className='ProgramBlockEditor__program-block Right'
-                    aria-label={
-                        this.addIsSelected() ?
-                        `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                        this.deleteIsSelected() ?
-                        `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                        this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})
-                    }
-                    onClick={this.handleClickStep}>
-                    <ArrowRight height='48px' width='48px'/>
-                </Button>
+                    <Button
+                        key={`${programStepNumber}-right`}
+                        data-stepnumber={programStepNumber}
+                        className='ProgramBlockEditor__program-block command-block'
+                        variant='command-block--right'
+                        aria-label={
+                            this.addIsSelected() ?
+                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                            this.deleteIsSelected() ?
+                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                            this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})
+                        }
+                        onClick={this.handleClickStep}>
+                        <ArrowRight className='command-block-svg'/>
+                    </Button>
                 );
             case 'none':
                 return (
                     <Button
                         key={`${programStepNumber}-none`}
                         data-stepnumber={programStepNumber}
-                        className='ProgramBlockEditor__program-block'
+                        className='ProgramBlockEditor__program-block command-block'
+                        variant='command-block--none'
                         aria-label={
                             this.addIsSelected() ?
                             `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
@@ -144,7 +148,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
                             this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})
                         }
-                        variant='light'
                         onClick={this.handleClickStep}>
                     </Button>
                 );

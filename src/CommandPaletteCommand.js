@@ -22,24 +22,23 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
     };
 
     render() {
+        const pressed = this.props.commandName === this.props.selectedCommandName;
+        let classNames = [
+            'CommandPaletteCommand__command-button',
+            'command-block'
+        ];
+        if (pressed) {
+            classNames.push('command-block--pressed');
+        }
         return (
-            <>
-                <style type="text/css">
-                    {`
-                    .CommandPaletteCommand__command-button.${this.props.commandName} {
-                        background-color: ${this.props.backgroundColor};
-                    }
-                    `}
-                </style>
-                <Button
-                    className={`CommandPaletteCommand__command-button ${this.props.commandName}`}
-                    variant={this.props.commandName === this.props.selectedCommandName ? 'outline-primary' : 'light'}
-                    aria-label={this.props.intl.formatMessage({ id: `CommandPaletteCommand.${this.props.commandName}`})}
-                    aria-pressed={this.props.commandName === this.props.selectedCommandName ? 'true' : 'false'}
-                    onClick={this.handleClick}>
-                    {this.props.icon}
-                </Button>
-            </>
+            <Button
+                className={classNames.join(' ')}
+                variant={`command-block--${this.props.commandName}`}
+                aria-label={this.props.intl.formatMessage({ id: `CommandPaletteCommand.${this.props.commandName}`})}
+                aria-pressed={pressed}
+                onClick={this.handleClick}>
+                {this.props.icon}
+            </Button>
         )
     }
 }

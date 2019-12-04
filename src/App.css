@@ -14,18 +14,3 @@
 .App__interpreter-controls {
     margin-top: 1rem;
 }
-
-.App__block-arrow-forward-svg {
-    width: 48px;
-    height: 48px;
-}
-
-.App__block-arrow-left-svg {
-    width: 48px;
-    height: 48px;
-}
-
-.App__block-arrow-right-svg {
-    width: 48px;
-    height: 48px;
-}
