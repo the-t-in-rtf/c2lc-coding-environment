@@ -1,3 +1,11 @@
+.DeviceConnectControl__connect-button {
+    width: 180px;
+    height: 70px;
+    background: #FFFFFF;
+    border: 2px solid #000000;
+    border-radius: 10px;
+}
+
 .DeviceConnectControl__dash-status-svg {
     margin-left: 0.5rem;
     width: 12px;
