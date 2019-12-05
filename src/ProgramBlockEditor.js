@@ -201,7 +201,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col className='ProgramBlockEditor__program-sequence'>
                         {programBlocks}
                     </Col>
                 </Row>
