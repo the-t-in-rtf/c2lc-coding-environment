@@ -7,6 +7,7 @@
         "enzyme": "3.10.0",
         "enzyme-adapter-react-16": "1.15.1",
         "material-design-icons": "3.0.1",
+        "node-sass": "4.13.0",
         "react": "16.9.0",
         "react-bootstrap": "1.0.0-beta.14",
         "react-dom": "16.9.0",
