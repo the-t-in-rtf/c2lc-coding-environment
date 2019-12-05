@@ -16,8 +16,3 @@ button.ProgramBlockEditor__program-block {
     display: block;
     margin-bottom: 0.5rem;
 }
-
-.ProgramBlockEditor__empty-block-svg {
-    stroke: #888;
-    fill: #888;
-}
