@@ -1,6 +1,9 @@
 .App__mode-and-robots-section {
     margin-top: 1rem;
     margin-bottom: 1.5rem;
+    margin-right: 3.3rem;
+    display: flex;
+    flex-direction: row-reverse;
 }
 
 .App__editor-and-graphics-section {
@@ -8,6 +11,7 @@
 }
 
 .App__command-palette {
+    height: 22.9rem;
     background-color: #F1F1F1;
     max-width: 20%;
     display: flex;
@@ -15,7 +19,8 @@
     align-items: center;
     justify-content: space-around;
     margin-bottom: 1.5rem;
-    font-weight:bold;
+    font-weight: bold;
+    margin-right: 1rem;
 }
 
 .App__interpreter-controls {
