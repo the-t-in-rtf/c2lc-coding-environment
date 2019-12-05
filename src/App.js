@@ -1,10 +1,8 @@
 // @flow
 
 import React from 'react';
-import { injectIntl, IntlProvider, FormattedMessage } from 'react-intl';
-import { Col, Container, Image, Row } from 'react-bootstrap';
-import CommandPalette from './CommandPalette';
-import CommandPaletteCategory from './CommandPaletteCategory';
+import { IntlProvider, FormattedMessage } from 'react-intl';
+import { Col, Container, Row } from 'react-bootstrap';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
@@ -13,13 +11,10 @@ import Interpreter from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import type {DeviceConnectionStatus, Program, SelectedAction} from './types';
 import messages from './messages.json';
-import playIcon from 'material-design-icons/av/svg/production/ic_play_arrow_48px.svg';
 import './App.css';
 import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
 import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
 import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
-
-const localizeProperties = (fn) => React.createElement(injectIntl(({ intl }) => fn(intl)));
 
 type AppContext = {
     bluetoothApiIsAvailable: boolean
@@ -158,15 +153,41 @@ export default class App extends React.Component<{}, AppState> {
                     messages={messages[this.state.settings.language]}>
                 <Container>
                     <Row className='App__mode-and-robots-section'>
-                        <Col>
-                            <DeviceConnectControl
-                                    onClickConnect={this.handleClickConnectDash}
-                                    connectionStatus={this.state.dashConnectionStatus}>
-                                <FormattedMessage id='App.connectToDash' />
-                            </DeviceConnectControl>
-                        </Col>
+                        <DeviceConnectControl
+                                bluetoothApiIsAvailable={this.appContext.bluetoothApiIsAvailable}
+                                onClickConnect={this.handleClickConnectDash}
+                                connectionStatus={this.state.dashConnectionStatus}>
+                            <FormattedMessage id='App.connectToDash' />
+                        </DeviceConnectControl>
                     </Row>
                     <Row className='App__program-block-editor'>
+                        <Col className='App__command-palette'>
+                            <FormattedMessage id='CommandPalette.movementsTitle' />
+                            <CommandPaletteCommand
+                                commandName='forward'
+                                icon={React.createElement(
+                                    ArrowForward,
+                                    {className:'command-block-svg'}
+                                )}
+                                selectedCommandName={this.getSelectedCommandName()}
+                                onChange={this.handleCommandFromCommandPalette}/>
+                            <CommandPaletteCommand
+                                commandName='right'
+                                icon={React.createElement(
+                                    ArrowTurnRight,
+                                    {className:'command-block-svg'}
+                                )}
+                                selectedCommandName={this.getSelectedCommandName()}
+                                onChange={this.handleCommandFromCommandPalette}/>
+                            <CommandPaletteCommand
+                                commandName='left'
+                                icon={React.createElement(
+                                    ArrowTurnLeft,
+                                    {className:'command-block-svg'}
+                                )}
+                                selectedCommandName={this.getSelectedCommandName()}
+                                onChange={this.handleCommandFromCommandPalette}/>
+                        </Col>
                         <Col>
                             <ProgramBlockEditor
                                 minVisibleSteps={6}
@@ -176,7 +197,7 @@ export default class App extends React.Component<{}, AppState> {
                                 onChange={this.handleChangeProgram}
                             />
                         </Col>
-                        <Col>
+                        {/* <Col>
                             <div className='App__interpreter-controls'>
                                 <button
                                     disabled={this.state.dashConnectionStatus !== 'connected'}
@@ -185,43 +206,7 @@ export default class App extends React.Component<{}, AppState> {
                                     <Image src={playIcon} />
                                 </button>
                             </div>
-                        </Col>
-                    </Row>
-                    <Row className='App__command-palette'>
-                        <Col>
-                            {localizeProperties((intl) =>
-                                <CommandPalette id='commandPalette' defaultActiveKey='movements' >
-                                    <CommandPaletteCategory eventKey='movements' title={(intl.formatMessage({ id: 'CommandPalette.movementsTitle' }))}>
-                                        <CommandPaletteCommand
-                                            commandName='forward'
-                                            icon={React.createElement(
-                                                ArrowForward,
-                                                {className:'command-block-svg'}
-                                            )}
-                                            selectedCommandName={this.getSelectedCommandName()}
-                                            onChange={this.handleCommandFromCommandPalette}/>
-                                        <CommandPaletteCommand
-                                            commandName='right'
-                                            icon={React.createElement(
-                                                ArrowTurnRight,
-                                                {className:'command-block-svg'}
-                                            )}
-                                            selectedCommandName={this.getSelectedCommandName()}
-                                            onChange={this.handleCommandFromCommandPalette}/>
-                                        <CommandPaletteCommand
-                                            commandName='left'
-                                            icon={React.createElement(
-                                                ArrowTurnLeft,
-                                                {className:'command-block-svg'}
-                                            )}
-                                            selectedCommandName={this.getSelectedCommandName()}
-                                            onChange={this.handleCommandFromCommandPalette}/>
-                                    </CommandPaletteCategory>
-                                    <CommandPaletteCategory eventKey='sounds' title={(intl.formatMessage({ id: 'CommandPalette.soundsTitle' }))}>
-                                    </CommandPaletteCategory>
-                                </CommandPalette>
-                            )}
-                        </Col>
+                        </Col> */}
                     </Row>
                 </Container>
             </IntlProvider>

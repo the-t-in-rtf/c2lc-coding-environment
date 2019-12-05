@@ -11,6 +11,7 @@ import './DeviceConnectControl.css'
 type DeviceConnectControlProps = {
     intl: any,
     children: React.Element<any>, // Button contents
+    bluetoothApiIsAvailable: boolean,
     onClickConnect: () => void,
     connectionStatus: DeviceConnectionStatus
 };
