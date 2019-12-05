@@ -54,8 +54,9 @@ class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}
 
     render() {
         return (
-            <div>
+            <div className='DeviceConnectControl'>
                 <Button
+                    className='DeviceConnectControl__button'
                     disabled={!this.props.bluetoothApiIsAvailable}
                     onClick={this.props.onClickConnect}>
                     {this.props.children}
