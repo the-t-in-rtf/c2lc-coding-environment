@@ -24,8 +24,8 @@ button.btn-primary:hover {
 }
 
 button.command-block {
-    width: 6.25rem;
-    height: 4rem;
+    min-width: 6.25rem;
+    min-height: 4rem;
 }
 
 button.command-block--pressed,
