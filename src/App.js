@@ -110,7 +110,7 @@ export default class App extends React.Component<{}, AppState> {
         this.setState({
             dashConnectionStatus: 'connecting'
         });
-        this.dashDriver.connect().then(() => {
+        this.dashDriver.connect(this.handleDashDisconnect).then(() => {
             this.setState({
                 dashConnectionStatus: 'connected'
             });
@@ -121,6 +121,12 @@ export default class App extends React.Component<{}, AppState> {
             this.setState({
                 dashConnectionStatus: 'notConnected'
             });
+        });
+    };
+
+    handleDashDisconnect = () => {
+        this.setState({
+            dashConnectionStatus : 'notConnected'
         });
     };
 
@@ -223,7 +229,6 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
-        // Dash Connection Status
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 
