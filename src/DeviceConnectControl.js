@@ -1,22 +1,70 @@
 // @flow
 
 import * as React from 'react';
-import {FormattedMessage} from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import { Button, Spinner } from 'react-bootstrap';
 import type {DeviceConnectionStatus} from './types';
+import { ReactComponent as StatusConnectedIcon } from './svg/Status_Connected.svg';
+import { ReactComponent as StatusNotConnectedIcon } from './svg/Status_NotConnected.svg';
+import './DeviceConnectControl.css'
 
 type DeviceConnectControlProps = {
+    intl: any,
     children: React.Element<any>, // Button contents
     onClickConnect: () => void,
     connectionStatus: DeviceConnectionStatus
 };
 
-export default class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}> {
+class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}> {
+    connectionStatusIcon() {
+        switch (this.props.connectionStatus) {
+            case 'connected':
+                return (
+                    <span
+                        role='img'
+                        aria-label={this.props.intl.formatMessage({id:'DeviceConnectControl.connected'})}>
+                        <StatusConnectedIcon className='DeviceConnectControl__status-icon'/>
+                    </span>
+                );
+            case 'connecting':
+                return (
+                    <Spinner
+                        animation='border'
+                        role='status'
+                        className='DeviceConnectControl__status-icon'>
+                        <span className="sr-only">
+                            <FormattedMessage id={'DeviceConnectControl.connecting'} />
+                        </span>
+                    </Spinner>
+                );
+            case 'notConnected':
+                return (
+                    <span
+                        role='img'
+                        aria-label={this.props.intl.formatMessage({id:'DeviceConnectControl.notConnected'})}>
+                        <StatusNotConnectedIcon className='DeviceConnectControl__status-icon' />
+                    </span>
+                );
+            default:
+                return null;
+        }
+
+    }
+
     render() {
         return (
-            <div>
-                <button onClick={this.props.onClickConnect}>{this.props.children}</button>
-                <FormattedMessage id={`DeviceConnectControl.${this.props.connectionStatus}`} />
+            <div className='DeviceConnectControl'>
+                <Button
+                    className='DeviceConnectControl__button'
+                    onClick={this.props.onClickConnect}>
+                    {this.props.children}
+                </Button>
+                <span className='DeviceConnectControl__status-icon-container'>
+                    {this.connectionStatusIcon()}
+                </span>
             </div>
         );
     }
 }
+
+export default injectIntl(DeviceConnectControl);
