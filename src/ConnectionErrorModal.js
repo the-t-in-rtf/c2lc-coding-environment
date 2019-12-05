@@ -1,18 +1,19 @@
 // @flow
 
 import React from 'react';
-import { Button, Col, Image, Modal, Row } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
-import errorIcon from './svg/Error.svg';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import { ReactComponent as ErrorIcon } from './svg/Error.svg';
 import './ConnectionErrorModal.css';
 
 type ConnectionErrorModalProps = {
+    intl: any,
     show: boolean,
     onCancel: () => void,
     onRetry: () => void
 };
 
-export default class ConnectionErrorModal extends React.Component<ConnectionErrorModalProps, {}> {
+class ConnectionErrorModal extends React.Component<ConnectionErrorModalProps, {}> {
     render() {
         return (
             <Modal
@@ -25,7 +26,9 @@ export default class ConnectionErrorModal extends React.Component<ConnectionErro
                 <Modal.Body>
                     <Col>
                         <Row>
-                            <Image className='ConnectionErrorModal-error-svg' src={errorIcon} />
+                            <span role='img' aria-label={this.props.intl.formatMessage({id:'ConnectionErrorModal.error'})} >
+                                <ErrorIcon className='ConnectionErrorModal-error-svg' />
+                            </span>
                             <FormattedMessage id='ConnectionErrorModal.title' />
                         </Row>
                         <Row>
@@ -58,3 +61,5 @@ export default class ConnectionErrorModal extends React.Component<ConnectionErro
         );
     }
 }
+
+export default injectIntl(ConnectionErrorModal);

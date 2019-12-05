@@ -12,6 +12,7 @@
         "CommandPaletteCommand.left": "Left",
         "CommandPaletteCommand.right": "Right",
         "ConnectionErrorModal.cancelButton": "Cancel connection",
+        "ConnectionErrorModal.error": "Connection Error",
         "ConnectionErrorModal.firstMessage": "Make sure your device's bluetooth is turned on",
         "ConnectionErrorModal.retryButton": "Try again",
         "ConnectionErrorModal.secondMessage": "Make sure Dash is turned on and it's near your device",
