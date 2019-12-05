@@ -53,8 +53,9 @@ class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}
 
     render() {
         return (
-            <div>
+            <div className='DeviceConnectControl'>
                 <Button
+                    className='DeviceConnectControl__button'
                     onClick={this.props.onClickConnect}>
                     {this.props.children}
                 </Button>
