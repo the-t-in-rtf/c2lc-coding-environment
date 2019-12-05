@@ -181,7 +181,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             <div className='ProgramBlockEditor__container'>
                 <Row className='ProgramBlockEditor__header'>
                     <Col className='ProgramBlockEditor__title'>
-                        <FormattedMessage id='ProgramTextEditor.programLabel' />
+                        <FormattedMessage id='ProgramBlockEditor.programLabel' />
                     </Col>
                     <Col className='ProgramBlockEditor__editor-actions'>
                         <Button

@@ -22,7 +22,7 @@
         "ProgramBlockEditor.commandOnDelete": "Press to delete this command",
         "ProgramBlockEditor.editorAction.add": "add a command to the program",
         "ProgramBlockEditor.editorAction.delete": "delete a command from the program",
-        "ProgramTextEditor.programLabel": "Program:"
+        "ProgramBlockEditor.programLabel": "Program"
     },
     "fr": {
         "App.blockMode": "Block in French",
