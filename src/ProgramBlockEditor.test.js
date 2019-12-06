@@ -4,7 +4,7 @@ import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
 import { configure, mount, shallow } from 'enzyme';
 import { Button } from 'react-bootstrap';
-import { createIntl } from 'react-intl';
+import { createIntl, IntlProvider } from 'react-intl';
 import App from './App';
 import messages from './messages.json';
 import ProgramBlockEditor from './ProgramBlockEditor';
@@ -13,7 +13,7 @@ configure({ adapter: new Adapter()});
 
 function getProgramBlocks(programBlockEditorWrapper) {
     return programBlockEditorWrapper.find(Button)
-        .not('.ProgramBlockEditor__editor-action-button');
+        .filter('.ProgramBlockEditor__program-block');
 }
 
 function getProgramBlockAtPosition(programBlockEditorWrapper, index: number) {
@@ -136,20 +136,22 @@ test('onSelect property of ProgramBlockEditor component should change action but
 test('blocks', () => {
     const mockChangeHandler = jest.fn();
     const mockSelectHandler = jest.fn();
-    const intl = createIntl({
-        locale: 'en',
-        defaultLocale: 'en',
-        messages: messages.en
-    });
 
     const wrapper = mount(
-        <ProgramBlockEditor.WrappedComponent
-            intl={intl}
+        <ProgramBlockEditor
             minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
             onSelectAction={mockSelectHandler}
-            onChange={mockChangeHandler} />
+            onChange={mockChangeHandler} />,
+        {
+            wrappingComponent: IntlProvider,
+            wrappingComponentProps: {
+                locale: 'en',
+                defaultLocale: 'en',
+                messages: messages.en
+            }
+        }
     );
 
     // number of blocks getting rendered should be equal to minVisibleSteps
