@@ -53,8 +53,12 @@ class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}
     }
 
     render() {
+        let classNames = ['DeviceConnectControl'];
+        if (this.props.disabled) {
+            classNames.push('DeviceConnectControl--disabled')
+        }
         return (
-            <div className='DeviceConnectControl'>
+            <div className={classNames.join(' ')}>
                 <Button
                     className='DeviceConnectControl__button'
                     disabled={this.props.disabled}
