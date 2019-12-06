@@ -41,3 +41,13 @@ button.btn-command-block--none {
     width: 2.75rem;
     height: 2.75rem;
 }
+
+.modal {
+    height: 50%;
+    margin-top: 13rem;
+}
+
+.modal-content {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}

@@ -1,4 +1,5 @@
 .ConnectionErrorModal-container {
+    height: 0;
     width: 650px;
     background-color: #FFFFFF;
     border-radius: 0.75rem;

@@ -21,8 +21,7 @@ class ConnectionErrorModal extends React.Component<ConnectionErrorModalProps, {}
                 onHide={this.props.onCancel}
                 size='lg'
                 aria-labelledby="contained-modal-title-vcenter"
-                dialogClassName="ConnectionErrorModal-container"
-                centered>
+                dialogClassName="ConnectionErrorModal-container">
                 <Modal.Body>
                     <Col>
                         <Row>
