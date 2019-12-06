@@ -211,7 +211,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                 </Row>
                 <Row className='ProgramBlockEditor__footer'>
                     <Button className='ProgramBlockEditor__run-block'>
-                        <PlayIcon />
+                        <PlayIcon className='play-svg' />
                     </Button>
                 </Row>
             </div>
