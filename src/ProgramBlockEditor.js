@@ -18,6 +18,8 @@ type ProgramBlockEditorProps = {
     minVisibleSteps: number,
     program: Program,
     selectedAction: SelectedAction,
+    runButtonDisabled: string,
+    onClickRunButton: () => void,
     onSelectAction: (selectedAction: SelectedAction) => void,
     onChange: (Program) => void
 };
@@ -213,7 +215,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                 </Row>
                 <Row className='ProgramBlockEditor__footer'>
                     <Col>
-                        <Button className='ProgramBlockEditor__run-button'>
+                        <Button
+                            className='ProgramBlockEditor__run-button'
+                            disabled={this.props.runButtonDisabled !== 'connected'}
+                            onClick={this.props.onClickRunButton}
+                        >
                             <PlayIcon className='ProgramBlockEditor__play-svg' />
                         </Button>
                     </Col>
