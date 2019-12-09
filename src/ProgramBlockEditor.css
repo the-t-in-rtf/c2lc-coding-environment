@@ -11,6 +11,19 @@ button.btn.ProgramBlockEditor__editor-action-button {
     height: 2.8rem;
     width: 2.8rem;
     border-radius: 50%;
+    background-color: #FFF;
+}
+
+button.btn.ProgramBlockEditor__editor-action-button--active {
+    margin-left: 1rem;
+    height: 2.8rem;
+    width: 2.8rem;
+    border-radius: 50%;
+    background-color: #000;
+}
+
+.ProgramBlockEditor__editor-action-button--active > svg > line {
+    stroke: #FFF !important;
 }
 
 .ProgramBlockEditor__footer {
@@ -57,7 +70,6 @@ button.btn.ProgramBlockEditor__run-block {
     width: 2.8rem;
     border-radius: 50%;
 }
-
 
 .play-svg {
     padding-left: 0.3rem;

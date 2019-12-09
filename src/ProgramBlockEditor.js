@@ -186,21 +186,31 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     <Col className='ProgramBlockEditor__editor-actions'>
                         <Button
                             key='addButton'
-                            className='ProgramBlockEditor__editor-action-button'
+                            className={this.addIsSelected() ?
+                                        'ProgramBlockEditor__editor-action-button--active' :
+                                        'ProgramBlockEditor__editor-action-button'}
                             aria-pressed={this.addIsSelected() ? 'true' : 'false'}
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.add'})}
                             variant={this.addIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickAdd}>
-                            <AddIcon />
+                            <AddIcon
+                                className={this.addIsSelected() ?
+                                            'ProgramBlockEditor__editor-action-button--active' :
+                                            'ProgramBlockEditor__editor-action-button'}/>
                         </Button>
                         <Button
                             key='deleteButton'
-                            className='ProgramBlockEditor__editor-action-button'
+                            className={this.deleteIsSelected() ?
+                                        'ProgramBlockEditor__editor-action-button--active' :
+                                        'ProgramBlockEditor__editor-action-button'}
                             aria-pressed={this.deleteIsSelected() ? 'true' : 'false'}
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
                             variant={this.deleteIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickDelete}>
-                            <DeleteIcon />
+                            <DeleteIcon
+                                className={this.deleteIsSelected() ?
+                                            'ProgramBlockEditor__editor-action-button-svg--active' :
+                                            'ProgramBlockEditor__editor-action-button-svg'}/>
                         </Button>
                     </Col>
                 </Row>
