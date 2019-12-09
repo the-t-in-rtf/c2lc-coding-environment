@@ -1,6 +1,6 @@
 // @flow
 
-import { Button, Col, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
@@ -178,41 +178,33 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         }
 
         return (
-            <div className='ProgramBlockEditor__container'>
+            <Container className='ProgramBlockEditor__container'>
                 <Row className='ProgramBlockEditor__header'>
                     <Col className='ProgramBlockEditor__title'>
                         <FormattedMessage id='ProgramBlockEditor.programLabel' />
                     </Col>
-                    <Col className='ProgramBlockEditor__editor-actions'>
+                    <div className='ProgramBlockEditor__editor-actions'>
                         <Button
                             key='addButton'
                             className={this.addIsSelected() ?
-                                        'ProgramBlockEditor__editor-action-button editor-action-button--active' :
+                                        'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
                                         'ProgramBlockEditor__editor-action-button'}
                             aria-pressed={this.addIsSelected() ? 'true' : 'false'}
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.add'})}
-                            variant={this.addIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickAdd}>
-                            <AddIcon
-                                className={this.addIsSelected() ?
-                                            'ProgramBlockEditor__editor-action-button-svg--active' :
-                                            'ProgramBlockEditor__editor-action-button-svg'}/>
+                            <AddIcon className='ProgramBlockEditor__editor-action-button-svg'/>
                         </Button>
                         <Button
                             key='deleteButton'
                             className={this.deleteIsSelected() ?
-                                        'ProgramBlockEditor__editor-action-button editor-action-button--active' :
+                                        'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
                                         'ProgramBlockEditor__editor-action-button'}
                             aria-pressed={this.deleteIsSelected() ? 'true' : 'false'}
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
-                            variant={this.deleteIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickDelete}>
-                            <DeleteIcon
-                                className={this.deleteIsSelected() ?
-                                            'ProgramBlockEditor__editor-action-button-svg--active' :
-                                            'ProgramBlockEditor__editor-action-button-svg'}/>
+                            <DeleteIcon className='ProgramBlockEditor__editor-action-button-svg'/>
                         </Button>
-                    </Col>
+                    </div>
                 </Row>
                 <Row>
                     <Col className='ProgramBlockEditor__program-sequence'>
@@ -220,11 +212,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     </Col>
                 </Row>
                 <Row className='ProgramBlockEditor__footer'>
-                    <Button className='ProgramBlockEditor__run-block'>
-                        <PlayIcon className='play-svg' />
-                    </Button>
+                    <Col>
+                        <Button className='ProgramBlockEditor__run-button'>
+                            <PlayIcon className='ProgramBlockEditor__play-svg' />
+                        </Button>
+                    </Col>
                 </Row>
-            </div>
+            </Container>
         );
     }
 }
