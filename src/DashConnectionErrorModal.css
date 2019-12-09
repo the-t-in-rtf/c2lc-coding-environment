@@ -1,18 +1,18 @@
-.ConnectionErrorModal-container {
+.DashConnectionErrorModal-container {
     height: 0;
     width: 650px;
     background-color: #FFFFFF;
     border-radius: 0.75rem;
 }
 
-.ConnectionErrorModal-error-svg {
+.DashConnectionErrorModal-error-svg {
     width: 1.5rem;
     height: 1.5rem;
     margin-right: 0.5rem;
     margin-bottom: 1rem;
 }
 
-.ConnectionErrorModal__option-button {
+.DashConnectionErrorModal__option-button {
     margin: auto;
     width: 7rem;;
     height: 4.5rem;

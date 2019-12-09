@@ -4,16 +4,16 @@ import React from 'react';
 import { Button, Col, Modal, Row } from 'react-bootstrap';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { ReactComponent as ErrorIcon } from './svg/Error.svg';
-import './ConnectionErrorModal.css';
+import './DashConnectionErrorModal.css';
 
-type ConnectionErrorModalProps = {
+type DashConnectionErrorModalProps = {
     intl: any,
     show: boolean,
     onCancel: () => void,
     onRetry: () => void
 };
 
-class ConnectionErrorModal extends React.Component<ConnectionErrorModalProps, {}> {
+class DashConnectionErrorModal extends React.Component<DashConnectionErrorModalProps, {}> {
     render() {
         return (
             <Modal
@@ -21,37 +21,37 @@ class ConnectionErrorModal extends React.Component<ConnectionErrorModalProps, {}
                 onHide={this.props.onCancel}
                 size='lg'
                 aria-labelledby="contained-modal-title-vcenter"
-                dialogClassName="ConnectionErrorModal-container">
+                dialogClassName="DashConnectionErrorModal-container">
                 <Modal.Body>
                     <Col>
                         <Row>
-                            <span role='img' aria-label={this.props.intl.formatMessage({id:'ConnectionErrorModal.error'})} >
-                                <ErrorIcon className='ConnectionErrorModal-error-svg' />
+                            <span role='img' aria-label={this.props.intl.formatMessage({id:'DashConnectionErrorModal.error'})} >
+                                <ErrorIcon className='DashConnectionErrorModal-error-svg' />
                             </span>
-                            <FormattedMessage id='ConnectionErrorModal.title' />
+                            <FormattedMessage id='DashConnectionErrorModal.title' />
                         </Row>
                         <Row>
                             <ul>
                                 <li>
-                                    <FormattedMessage id='ConnectionErrorModal.firstMessage' />
+                                    <FormattedMessage id='DashConnectionErrorModal.firstMessage' />
                                 </li>
                                 <li>
-                                    <FormattedMessage id='ConnectionErrorModal.secondMessage' />
+                                    <FormattedMessage id='DashConnectionErrorModal.secondMessage' />
                                 </li>
                             </ul>
                         </Row>
-                        <Row className='ConnectionErrorModal__option-buttons'>
+                        <Row className='DashConnectionErrorModal__option-buttons'>
                             <Button
-                                className='ConnectionErrorModal__option-button'
+                                className='DashConnectionErrorModal__option-button'
                                 variant='light'
                                 onClick={this.props.onCancel}>
-                                <FormattedMessage id='ConnectionErrorModal.cancelButton' />
+                                <FormattedMessage id='DashConnectionErrorModal.cancelButton' />
                             </Button>
                             <Button
-                                className='ConnectionErrorModal__option-button'
+                                className='DashConnectionErrorModal__option-button'
                                 variant='light'
                                 onClick={this.props.onRetry}>
-                                <FormattedMessage id='ConnectionErrorModal.retryButton' />
+                                <FormattedMessage id='DashConnectionErrorModal.retryButton' />
                             </Button>
                         </Row>
                     </Col>
@@ -61,4 +61,4 @@ class ConnectionErrorModal extends React.Component<ConnectionErrorModalProps, {}
     }
 }
 
-export default injectIntl(ConnectionErrorModal);
+export default injectIntl(DashConnectionErrorModal);

@@ -6,7 +6,7 @@ import { Col, Container, Image, Row } from 'react-bootstrap';
 import CommandPalette from './CommandPalette';
 import CommandPaletteCategory from './CommandPaletteCategory';
 import CommandPaletteCommand from './CommandPaletteCommand';
-import ConnectionErrorModal from './ConnectionErrorModal';
+import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
@@ -34,7 +34,7 @@ type AppState = {
     program: Program,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
-    showError: boolean,
+    showDashConnectionError: boolean,
     selectedAction: SelectedAction
 };
 
@@ -65,7 +65,7 @@ export default class App extends React.Component<{}, AppState> {
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
-            showError: false,
+            showDashConnectionError: false,
             selectedAction: null
         };
 
@@ -112,7 +112,7 @@ export default class App extends React.Component<{}, AppState> {
     handleClickConnectDash = () => {
         this.setState({
             dashConnectionStatus: 'connecting',
-            showError: false
+            showDashConnectionError: false
         });
         this.dashDriver.connect(this.handleDashDisconnect).then(() => {
             this.setState({
@@ -124,7 +124,7 @@ export default class App extends React.Component<{}, AppState> {
             console.log(error.message);
             this.setState({
                 dashConnectionStatus: 'notConnected',
-                showError: true
+                showDashConnectionError: true
             });
         });
     };
@@ -158,7 +158,7 @@ export default class App extends React.Component<{}, AppState> {
 
     handleCancelConnection = () => {
         this.setState({
-            showError: false
+            showDashConnectionError: false
         });
     };
 
@@ -234,7 +234,7 @@ export default class App extends React.Component<{}, AppState> {
                             )}
                         </Col>
                     </Row>
-                    <ConnectionErrorModal show={this.state.showError} onCancel={this.handleCancelConnection} onRetry={this.handleClickConnectDash}/>
+                    <DashConnectionErrorModal show={this.state.showDashConnectionError} onCancel={this.handleCancelConnection} onRetry={this.handleClickConnectDash}/>
                 </Container>
             </IntlProvider>
         );
