@@ -187,7 +187,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                         <Button
                             key='addButton'
                             className={this.addIsSelected() ?
-                                        'ProgramBlockEditor__editor-action-button--active' :
+                                        'ProgramBlockEditor__editor-action-button editor-action-button--active' :
                                         'ProgramBlockEditor__editor-action-button'}
                             aria-pressed={this.addIsSelected() ? 'true' : 'false'}
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.add'})}
@@ -195,13 +195,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             onClick={this.handleClickAdd}>
                             <AddIcon
                                 className={this.addIsSelected() ?
-                                            'ProgramBlockEditor__editor-action-button--active' :
-                                            'ProgramBlockEditor__editor-action-button'}/>
+                                            'ProgramBlockEditor__editor-action-button-svg--active' :
+                                            'ProgramBlockEditor__editor-action-button-svg'}/>
                         </Button>
                         <Button
                             key='deleteButton'
                             className={this.deleteIsSelected() ?
-                                        'ProgramBlockEditor__editor-action-button--active' :
+                                        'ProgramBlockEditor__editor-action-button editor-action-button--active' :
                                         'ProgramBlockEditor__editor-action-button'}
                             aria-pressed={this.deleteIsSelected() ? 'true' : 'false'}
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}

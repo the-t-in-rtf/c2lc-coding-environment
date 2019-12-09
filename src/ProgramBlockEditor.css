@@ -14,15 +14,15 @@ button.btn.ProgramBlockEditor__editor-action-button {
     background-color: #FFF;
 }
 
-button.btn.ProgramBlockEditor__editor-action-button--active {
-    margin-left: 1rem;
-    height: 2.8rem;
-    width: 2.8rem;
-    border-radius: 50%;
+button.btn.editor-action-button--active {
     background-color: #000;
 }
 
-.ProgramBlockEditor__editor-action-button--active > svg > line {
+.ProgramBlockEditor__editor-action-button-svg > line {
+    stroke: #000 !important;
+}
+
+.ProgramBlockEditor__editor-action-button-svg--active > line {
     stroke: #FFF !important;
 }
 
