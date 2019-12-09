@@ -6,14 +6,14 @@ import { Button, Spinner } from 'react-bootstrap';
 import type {DeviceConnectionStatus} from './types';
 import { ReactComponent as StatusConnectedIcon } from './svg/Status_Connected.svg';
 import { ReactComponent as StatusNotConnectedIcon } from './svg/Status_NotConnected.svg';
-import './DeviceConnectControl.css'
+import './DeviceConnectControl.css';
 
 type DeviceConnectControlProps = {
     intl: any,
     children: React.Element<any>, // Button contents
-    bluetoothApiIsAvailable: boolean,
-    onClickConnect: () => void,
-    connectionStatus: DeviceConnectionStatus
+    disabled: boolean,
+    connectionStatus: DeviceConnectionStatus,
+    onClickConnect: () => void
 };
 
 class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}> {
@@ -53,10 +53,15 @@ class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}
     }
 
     render() {
+        let classNames = ['DeviceConnectControl'];
+        if (this.props.disabled) {
+            classNames.push('DeviceConnectControl--disabled')
+        }
         return (
-            <div className='DeviceConnectControl'>
+            <div className={classNames.join(' ')}>
                 <Button
                     className='DeviceConnectControl__button'
+                    disabled={this.props.disabled}
                     onClick={this.props.onClickConnect}>
                     {this.props.children}
                 </Button>
