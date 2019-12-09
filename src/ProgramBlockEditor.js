@@ -202,7 +202,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                 <Row>
                     <Col className='ProgramBlockEditor__program-sequence'>
                         <div className='ProgramBlockEditor__start-indicator'>
-                            Start
+                            {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
                         </div>
                         {programBlocks}
                     </Col>
