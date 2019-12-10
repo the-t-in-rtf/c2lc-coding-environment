@@ -28,7 +28,8 @@ type AppState = {
     program: Program,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
-    selectedAction: SelectedAction
+    selectedAction: SelectedAction,
+    activeProgramStepNum: number
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -58,7 +59,8 @@ export default class App extends React.Component<{}, AppState> {
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
-            selectedAction: null
+            selectedAction: null,
+            activeProgramStepNum: -1
         };
 
         this.interpreter = new Interpreter();
@@ -98,7 +100,7 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
-        this.interpreter.run(this.state.program);
+        this.interpreter.run(this.state.program, this.handleStepChange);
     };
 
     handleClickConnectDash = () => {
@@ -145,6 +147,12 @@ export default class App extends React.Component<{}, AppState> {
             selectedAction: action
         });
     };
+
+    handleStepChange = (activeStep: number) => {
+        this.setState({
+            activeProgramStepNum: activeStep
+        });
+    }
 
     render() {
         return (
@@ -202,6 +210,7 @@ export default class App extends React.Component<{}, AppState> {
                         </Col>
                         <Col md={8} lg={9}>
                             <ProgramBlockEditor
+                                activeProgramStepNum={this.state.activeProgramStepNum}
                                 minVisibleSteps={6}
                                 program={this.state.program}
                                 selectedAction={this.state.selectedAction}
