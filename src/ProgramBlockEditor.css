@@ -10,6 +10,8 @@
 .ProgramBlockEditor__title {
     text-align: center;
     font-weight: bold;
+    font-size: inherit;
+    margin: 0;
 }
 
 .ProgramBlockEditor__editor-actions {
