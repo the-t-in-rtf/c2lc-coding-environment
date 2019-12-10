@@ -218,7 +218,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                         <Button
                             aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
                             className='ProgramBlockEditor__run-button'
-                            disabled={this.props.runButtonDisabled !== 'connected'}
+                            disabled={this.props.runButtonDisabled}
                             onClick={this.props.onClickRunButton}
                         >
                             <PlayIcon className='ProgramBlockEditor__play-svg' />
