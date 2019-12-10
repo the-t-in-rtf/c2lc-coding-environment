@@ -61,6 +61,10 @@ button.ProgramBlockEditor__program-block {
     margin-right: 1.4rem;
 }
 
+button.ProgramBlockEditor__program-block--active {
+    box-shadow: 0 0 0 0.2rem chartreuse;
+}
+
 .ProgramBlockEditor__footer {
     padding-top: 1rem;
     padding-bottom: 1rem;
