@@ -21,7 +21,7 @@ test('check if ProgramTextEditor component is rendering when EditorContainer has
                     syntax={new TextSyntax()}
                     mode='text'
                     selectedAction={null}
-                    runButtonDisabled='connected'
+                    runButtonDisabled={false}
                     onClickRunButton={() => {}}
                     onSelectAction={mockSelectHandler}
                     onChange={mockChangeHandler}/>);
@@ -37,7 +37,7 @@ test('check if ProgramBlockEditor component is rendering when EditorContainer ha
                     syntax={new TextSyntax()}
                     mode='block'
                     selectedAction={null}
-                    runButtonDisabled='connected'
+                    runButtonDisabled={false}
                     onClickRunButton={() => {}}
                     onSelectAction={mockSelectHandler}
                     onChange={mockChangeHandler}/>);

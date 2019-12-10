@@ -18,7 +18,7 @@ type ProgramBlockEditorProps = {
     minVisibleSteps: number,
     program: Program,
     selectedAction: SelectedAction,
-    runButtonDisabled: string,
+    runButtonDisabled: boolean,
     onClickRunButton: () => void,
     onSelectAction: (selectedAction: SelectedAction) => void,
     onChange: (Program) => void
@@ -216,6 +216,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                 <Row className='ProgramBlockEditor__footer'>
                     <Col>
                         <Button
+                            aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
                             className='ProgramBlockEditor__run-button'
                             disabled={this.props.runButtonDisabled !== 'connected'}
                             onClick={this.props.onClickRunButton}

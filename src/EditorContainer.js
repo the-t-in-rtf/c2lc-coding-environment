@@ -10,7 +10,7 @@ type EditorContainerProps = {
     program: Program,
     syntax: TextSyntax,
     mode: EditorMode,
-    runButtonDisabled: string,
+    runButtonDisabled: boolean,
     onClickRunButton: () => void,
     selectedAction: SelectedAction,
     onSelectAction: (action: SelectedAction) => void,

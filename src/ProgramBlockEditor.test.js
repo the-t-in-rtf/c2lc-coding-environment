@@ -154,7 +154,7 @@ test('blocks', () => {
             minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
-            runButtonDisabled='connected'
+            runButtonDisabled={false}
             onClickRunButton={()=>{}}
             onSelectAction={mockSelectHandler}
             onChange={mockChangeHandler} />,
