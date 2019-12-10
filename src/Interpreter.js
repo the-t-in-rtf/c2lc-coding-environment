@@ -39,20 +39,21 @@ export default class Interpreter {
         this.programCounter = 0;
     }
 
-    run(program: Program): void {
+    run(program: Program, onStepChange: (number) => void): void {
         this.program = program;
         this.programCounter = 0;
         this.isRunning = true;
-        this.continueRun();
+        this.continueRun(onStepChange);
     }
 
-    continueRun(): void {
+    continueRun(onStepChange: (number) => void): void {
         if (this.isRunning) {
             if (this.atEnd()) {
                 this.isRunning = false;
             } else {
+                onStepChange(this.programCounter);
                 this.step().then(() => {
-                    this.continueRun();
+                    this.continueRun(onStepChange);
                 });
             }
         }
