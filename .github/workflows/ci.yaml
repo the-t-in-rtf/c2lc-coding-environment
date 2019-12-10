@@ -38,3 +38,26 @@ jobs:
         run: npx flow
       - name: Test
         run: npm test
+      - name: Archive build artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ format('build-{0}', matrix.node-version) }}
+          path: build
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-18.04
+    if: (github.repository == 'codelearncreate/c2lc-coding-environment') && (github.ref == 'refs/heads/dev-0.1') && (github.event_name == 'push')
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - uses: actions/download-artifact@v1
+        with:
+          name: build-10.x
+          path: build
+      - uses: w9jds/firebase-action@v1.1.0
+        with:
+          args: deploy
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
