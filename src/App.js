@@ -45,16 +45,7 @@ export default class App extends React.Component<{}, AppState> {
         };
 
         this.state = {
-            program: [
-                'forward',
-                'left',
-                'forward',
-                'left',
-                'forward',
-                'left',
-                'forward',
-                'left'
-            ],
+            program: [],
             settings: {
                 language: 'en'
             },

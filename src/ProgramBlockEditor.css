@@ -25,7 +25,7 @@ button.btn.ProgramBlockEditor__editor-action-button {
     border: 1px solid #FFF;
     border-radius: 50%;
     background-color: #FFF;
-    padding: 0.5rem;
+    padding: 0.6rem;
 }
 
 button.btn.ProgramBlockEditor__editor-action-button:not(:focus) {
@@ -39,6 +39,7 @@ button.btn.ProgramBlockEditor__editor-action-button--pressed {
 .ProgramBlockEditor__editor-action-button-svg {
     width: 1.5rem;
     height: 1.5rem;
+    display: block;
 }
 
 .ProgramBlockEditor__editor-action-button svg {
@@ -84,4 +85,5 @@ button.btn.ProgramBlockEditor__run-button:not(:focus) {
 .ProgramBlockEditor__play-svg {
     width: 1.6rem;
     height: 1.6rem;
+    display: block;
 }
