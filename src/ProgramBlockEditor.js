@@ -182,8 +182,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         return (
             <Container className='ProgramBlockEditor__container'>
                 <Row className='ProgramBlockEditor__header'>
-                    <Col className='ProgramBlockEditor__title'>
-                        <FormattedMessage id='ProgramBlockEditor.programLabel' />
+                    <Col>
+                        <h2 className='ProgramBlockEditor__title'>
+                            <FormattedMessage id='ProgramBlockEditor.programLabel' />
+                        </h2>
                     </Col>
                     <div className='ProgramBlockEditor__editor-actions'>
                         <Button
