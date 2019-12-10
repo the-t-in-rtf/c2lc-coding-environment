@@ -28,6 +28,7 @@ export default class EditorContainer extends React.Component<EditorContainerProp
                         onChange={this.props.onChange} />
                  ) : (
                     <ProgramBlockEditor
+                        activeProgramStepNum={-1}
                         minVisibleSteps={6}
                         program={this.props.program}
                         runButtonDisabled={this.props.runButtonDisabled}
