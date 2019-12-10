@@ -15,6 +15,7 @@ import './ProgramBlockEditor.css';
 
 type ProgramBlockEditorProps = {
     intl: any,
+    activeProgramStepNum: number,
     minVisibleSteps: number,
     program: Program,
     selectedAction: SelectedAction,
@@ -82,13 +83,21 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     };
 
     makeProgramBlock(programStepNumber: number, command: string) {
+        const active = this.props.activeProgramStepNum === programStepNumber;
+        let classNames = [
+            'ProgramBlockEditor__program-block',
+            'command-block'
+        ];
+        if (active) {
+            classNames.push('ProgramBlockEditor__program-block--active');
+        }
         switch(command) {
             case 'forward':
                 return (
                     <Button
                         key={`${programStepNumber}-forward`}
                         data-stepnumber={programStepNumber}
-                        className='ProgramBlockEditor__program-block command-block'
+                        className={classNames.join(' ')}
                         variant='command-block--forward'
                         aria-label={
                             this.addIsSelected() ?
@@ -106,7 +115,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     <Button
                         key={`${programStepNumber}-left`}
                         data-stepnumber={programStepNumber}
-                        className='ProgramBlockEditor__program-block command-block'
+                        className={classNames.join(' ')}
                         variant='command-block--left'
                         aria-label={
                             this.addIsSelected() ?
@@ -124,7 +133,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     <Button
                         key={`${programStepNumber}-right`}
                         data-stepnumber={programStepNumber}
-                        className='ProgramBlockEditor__program-block command-block'
+                        className={classNames.join(' ')}
                         variant='command-block--right'
                         aria-label={
                             this.addIsSelected() ?
@@ -142,7 +151,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     <Button
                         key={`${programStepNumber}-none`}
                         data-stepnumber={programStepNumber}
-                        className='ProgramBlockEditor__program-block command-block'
+                        className={classNames.join(' ')}
                         variant='command-block--none'
                         aria-label={
                             this.addIsSelected() ?
