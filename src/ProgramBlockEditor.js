@@ -1,15 +1,16 @@
 // @flow
 
-import { Button, Col, Row } from 'react-bootstrap';
-import {injectIntl} from 'react-intl';
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
 import React from 'react';
 import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
 import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
 import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
-import { ReactComponent as AddIcon } from 'material-design-icons/content/svg/production/ic_add_24px.svg';
-import { ReactComponent as DeleteIcon } from 'material-design-icons/content/svg/production/ic_clear_24px.svg';
+import { ReactComponent as AddIcon } from './svg/Add.svg';
+import { ReactComponent as DeleteIcon } from './svg/Delete.svg';
+import { ReactComponent as PlayIcon } from './svg/Play.svg';
 import './ProgramBlockEditor.css';
 
 type ProgramBlockEditorProps = {
@@ -17,6 +18,8 @@ type ProgramBlockEditorProps = {
     minVisibleSteps: number,
     program: Program,
     selectedAction: SelectedAction,
+    runButtonDisabled: boolean,
+    onClickRunButton: () => void,
     onSelectAction: (selectedAction: SelectedAction) => void,
     onChange: (Program) => void
 };
@@ -177,35 +180,52 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         }
 
         return (
-            <div className='ProgramBlockEditor__container'>
-                <Row>
-                    <Col className='ProgramBlockEditor__editor-actions'>
+            <Container className='ProgramBlockEditor__container'>
+                <Row className='ProgramBlockEditor__header'>
+                    <Col className='ProgramBlockEditor__title'>
+                        <FormattedMessage id='ProgramBlockEditor.programLabel' />
+                    </Col>
+                    <div className='ProgramBlockEditor__editor-actions'>
                         <Button
                             key='addButton'
-                            className='ProgramBlockEditor__editor-action-button'
+                            className={this.addIsSelected() ?
+                                        'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
+                                        'ProgramBlockEditor__editor-action-button'}
                             aria-pressed={this.addIsSelected() ? 'true' : 'false'}
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.add'})}
-                            variant={this.addIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickAdd}>
-                            <AddIcon/>
+                            <AddIcon className='ProgramBlockEditor__editor-action-button-svg'/>
                         </Button>
                         <Button
                             key='deleteButton'
-                            className='ProgramBlockEditor__editor-action-button'
+                            className={this.deleteIsSelected() ?
+                                        'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
+                                        'ProgramBlockEditor__editor-action-button'}
                             aria-pressed={this.deleteIsSelected() ? 'true' : 'false'}
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
-                            variant={this.deleteIsSelected() ? 'outline-primary' : 'light'}
                             onClick={this.handleClickDelete}>
-                            <DeleteIcon/>
+                            <DeleteIcon className='ProgramBlockEditor__editor-action-button-svg'/>
                         </Button>
-                    </Col>
+                    </div>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col className='ProgramBlockEditor__program-sequence'>
                         {programBlocks}
                     </Col>
                 </Row>
-            </div>
+                <Row className='ProgramBlockEditor__footer'>
+                    <Col>
+                        <Button
+                            aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
+                            className='ProgramBlockEditor__run-button'
+                            disabled={this.props.runButtonDisabled}
+                            onClick={this.props.onClickRunButton}
+                        >
+                            <PlayIcon className='ProgramBlockEditor__play-svg' />
+                        </Button>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }

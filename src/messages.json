@@ -14,6 +14,7 @@
         "DeviceConnectControl.notConnected": "Not connected",
         "DeviceConnectControl.connecting": "Connecting",
         "DeviceConnectControl.connected": "Connected",
+        "PlayButton.run": "Run current program",
         "ProgramBlockEditor.commandForward": "Forward, position {index} of current program",
         "ProgramBlockEditor.commandLeft": "Left, position {index} of current program",
         "ProgramBlockEditor.commandNone": "Empty block, position {index} of current program",
@@ -22,7 +23,7 @@
         "ProgramBlockEditor.commandOnDelete": "Press to delete this command",
         "ProgramBlockEditor.editorAction.add": "add a command to the program",
         "ProgramBlockEditor.editorAction.delete": "delete a command from the program",
-        "ProgramTextEditor.programLabel": "Program:"
+        "ProgramBlockEditor.programLabel": "Program"
     },
     "fr": {
         "App.blockMode": "Block in French",
