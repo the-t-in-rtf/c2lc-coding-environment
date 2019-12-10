@@ -2,8 +2,7 @@
 
 import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
-import { shallow, mount, configure } from 'enzyme';
-import { Col, Button } from 'react-bootstrap';
+import { shallow, configure } from 'enzyme';
 import { createIntl } from 'react-intl';
 import type {DeviceConnectionStatus} from './types';
 import messages from './messages.json';
@@ -57,7 +56,7 @@ test('Checking icon and aria-label for notConnected status', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
-            disabled={true}
+            disabled={false}
             connectionStatus='notConnected'
             onClickConnect={() => {}}/>
     );
@@ -70,7 +69,7 @@ test('Checking icon and aria-label for connected status', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
-            disabled={true}
+            disabled={false}
             connectionStatus='connected'
             onClickConnect={() => {}}/>
     );
@@ -83,7 +82,7 @@ test('Checking icon and aria-label for connecting status', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
-            disabled={true}
+            disabled={false}
             connectionStatus='connecting'
             onClickConnect={() => {}}/>
     );
