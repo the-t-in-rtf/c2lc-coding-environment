@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { Button, Spinner } from 'react-bootstrap';
 import type {DeviceConnectionStatus} from './types';
 import { ReactComponent as StatusConnectedIcon } from './svg/Status_Connected.svg';
@@ -34,7 +34,7 @@ class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}
                         role='status'
                         className='DeviceConnectControl__status-icon'>
                         <span className="sr-only">
-                            <FormattedMessage id={'DeviceConnectControl.connecting'} />
+                            {this.props.intl.formatMessage({id:'DeviceConnectControl.connecting'})}
                         </span>
                     </Spinner>
                 );
