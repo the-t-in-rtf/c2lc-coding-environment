@@ -49,6 +49,7 @@ export default class Interpreter {
     continueRun(onStepChange: (number) => void): void {
         if (this.isRunning) {
             if (this.atEnd()) {
+                onStepChange(-1);
                 this.isRunning = false;
             } else {
                 onStepChange(this.programCounter);
