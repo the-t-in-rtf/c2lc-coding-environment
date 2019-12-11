@@ -8,6 +8,7 @@ import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
+import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import type {DeviceConnectionStatus, Program, SelectedAction} from './types';
 import messages from './messages.json';
@@ -29,7 +30,8 @@ type AppState = {
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
     selectedAction: SelectedAction,
-    activeProgramStepNum: number
+    activeProgramStepNum: number,
+    interpreterIsRunning: boolean
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -51,10 +53,11 @@ export default class App extends React.Component<{}, AppState> {
             },
             dashConnectionStatus: 'notConnected',
             selectedAction: null,
-            activeProgramStepNum: -1
+            activeProgramStepNum: -1,
+            interpreterIsRunning: false
         };
 
-        this.interpreter = new Interpreter();
+        this.interpreter = new Interpreter(this.handleRunningStateChange);
 
         this.interpreter.addCommandHandler(
             'none',
@@ -91,7 +94,7 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
-        this.interpreter.run(this.state.program, this.handleStepChange);
+        this.interpreter.run(this.state.program);
     };
 
     handleClickConnectDash = () => {
@@ -139,9 +142,10 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
-    handleStepChange = (activeStep: number) => {
+    handleRunningStateChange = ( interpreterRunningState : InterpreterRunningState) => {
         this.setState({
-            activeProgramStepNum: activeStep
+            activeProgramStepNum: interpreterRunningState.activeStep,
+            interpreterIsRunning: interpreterRunningState.isRunning
         });
     }
 
