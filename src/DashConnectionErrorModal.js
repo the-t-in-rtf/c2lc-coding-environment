@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { Button, Col, Modal, Row } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { ReactComponent as ErrorIcon } from './svg/Error.svg';
 import './DashConnectionErrorModal.css';
