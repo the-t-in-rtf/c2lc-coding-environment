@@ -31,7 +31,8 @@ type AppState = {
     dashConnectionStatus: DeviceConnectionStatus,
     selectedAction: SelectedAction,
     activeProgramStepNum: number,
-    interpreterIsRunning: boolean
+    interpreterIsRunning: boolean,
+    intervalBetweenCommands: number
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -54,7 +55,8 @@ export default class App extends React.Component<{}, AppState> {
             dashConnectionStatus: 'notConnected',
             selectedAction: null,
             activeProgramStepNum: -1,
-            interpreterIsRunning: false
+            interpreterIsRunning: false,
+            intervalBetweenCommands: 1900
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -67,7 +69,7 @@ export default class App extends React.Component<{}, AppState> {
             }
         );
 
-        this.dashDriver = new DashDriver();
+        this.dashDriver = new DashDriver(this.state.intervalBetweenCommands);
     }
 
     setStateSettings(settings: $Shape<AppSettings>) {
@@ -234,6 +236,17 @@ export default class App extends React.Component<{}, AppState> {
                     this.dashDriver.left.bind(this.dashDriver));
                 this.interpreter.addCommandHandler('right', 'dash',
                     this.dashDriver.right.bind(this.dashDriver));
+                this.interpreter.addCommandHandler(
+                    'none',
+                    'noneHandler',
+                    () => {
+                        return new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                                resolve();
+                            }, this.state.intervalBetweenCommands);
+                        });
+                    }
+                );
             }
         }
     }
