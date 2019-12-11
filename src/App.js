@@ -115,6 +115,12 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
+    handleCancelDashConnection = () => {
+        this.setState({
+            showDashConnectionError: false
+        });
+    };
+
     handleDashDisconnect = () => {
         this.setState({
             dashConnectionStatus : 'notConnected'
@@ -139,12 +145,6 @@ export default class App extends React.Component<{}, AppState> {
     handleSelectAction = (action: SelectedAction) => {
         this.setState({
             selectedAction: action
-        });
-    };
-
-    handleCancelConnection = () => {
-        this.setState({
-            showDashConnectionError: false
         });
     };
 
@@ -225,8 +225,11 @@ export default class App extends React.Component<{}, AppState> {
                             />
                         </Col>
                     </Row>
-                    <DashConnectionErrorModal show={this.state.showDashConnectionError} onCancel={this.handleCancelConnection} onRetry={this.handleClickConnectDash}/>
                 </Container>
+                <DashConnectionErrorModal
+                    show={this.state.showDashConnectionError}
+                    onCancel={this.handleCancelDashConnection}
+                    onRetry={this.handleClickConnectDash}/>
             </IntlProvider>
         );
     }
