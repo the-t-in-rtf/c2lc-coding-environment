@@ -4,6 +4,7 @@ import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
 import CommandPaletteCommand from './CommandPaletteCommand';
+import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
@@ -28,6 +29,7 @@ type AppState = {
     program: Program,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
+    showDashConnectionError: boolean,
     selectedAction: SelectedAction
 };
 
@@ -49,6 +51,7 @@ export default class App extends React.Component<{}, AppState> {
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
+            showDashConnectionError: false,
             selectedAction: null
         };
 
@@ -94,7 +97,8 @@ export default class App extends React.Component<{}, AppState> {
 
     handleClickConnectDash = () => {
         this.setState({
-            dashConnectionStatus: 'connecting'
+            dashConnectionStatus: 'connecting',
+            showDashConnectionError: false
         });
         this.dashDriver.connect(this.handleDashDisconnect).then(() => {
             this.setState({
@@ -105,8 +109,15 @@ export default class App extends React.Component<{}, AppState> {
             console.log(error.name);
             console.log(error.message);
             this.setState({
-                dashConnectionStatus: 'notConnected'
+                dashConnectionStatus: 'notConnected',
+                showDashConnectionError: true
             });
+        });
+    };
+
+    handleCancelDashConnection = () => {
+        this.setState({
+            showDashConnectionError: false
         });
     };
 
@@ -215,6 +226,10 @@ export default class App extends React.Component<{}, AppState> {
                         </Col>
                     </Row>
                 </Container>
+                <DashConnectionErrorModal
+                    show={this.state.showDashConnectionError}
+                    onCancel={this.handleCancelDashConnection}
+                    onRetry={this.handleClickConnectDash}/>
             </IntlProvider>
         );
     }
