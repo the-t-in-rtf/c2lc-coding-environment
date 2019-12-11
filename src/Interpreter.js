@@ -6,6 +6,7 @@ import type {Program} from './types';
 export type CommandHandler = { (Interpreter): Promise<void> };
 /* eslint-enable no-use-before-define */
 
+export type InterpreterRunningState = { isRunning: boolean, activeStep: number }
 // TODO: I don't think that Interpreter having memory is quite the right
 //       factoring. But this will evolve. Maybe something like a parameterized
 //       Project<T> that contains program and memory.
@@ -16,13 +17,15 @@ export default class Interpreter {
     programCounter: number;
     memory: { [string]: any };
     isRunning: boolean;
+    onRunningStateChange: (InterpreterRunningState) => void;
 
-    constructor() {
+    constructor(onRunningStateChange: (InterpreterRunningState) => void) {
         this.commands = {};
         this.program = [];
         this.programCounter = 0;
         this.memory = {};
         this.isRunning = false;
+        this.onRunningStateChange = onRunningStateChange;
     }
 
     addCommandHandler(command: string, namespace: string, handler: CommandHandler) {
@@ -39,22 +42,22 @@ export default class Interpreter {
         this.programCounter = 0;
     }
 
-    run(program: Program, onStepChange: (number) => void): void {
+    run(program: Program): void {
         this.program = program;
         this.programCounter = 0;
         this.isRunning = true;
-        this.continueRun(onStepChange);
+        this.continueRun();
     }
 
-    continueRun(onStepChange: (number) => void): void {
+    continueRun(): void {
         if (this.isRunning) {
             if (this.atEnd()) {
-                onStepChange(-1);
                 this.isRunning = false;
+                this.onRunningStateChange({isRunning: this.isRunning, activeStep: -1});
             } else {
-                onStepChange(this.programCounter);
+                this.onRunningStateChange({isRunning: this.isRunning, activeStep: this.programCounter});
                 this.step().then(() => {
-                    this.continueRun(onStepChange);
+                    this.continueRun();
                 });
             }
         }
