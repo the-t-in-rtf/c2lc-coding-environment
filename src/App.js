@@ -153,7 +153,7 @@ export default class App extends React.Component<{}, AppState> {
                         </Row>
                     </Container>
                 </div>
-                <Container>
+                <Container className='mb-5'>
                     <Row className='App__robot-connection-section'>
                         <Col>
                             <DeviceConnectControl
@@ -164,8 +164,8 @@ export default class App extends React.Component<{}, AppState> {
                             </DeviceConnectControl>
                         </Col>
                     </Row>
-                    <Row className='App__program-section'>
-                        <Col md={4} lg={3}>
+                    <Row className='App__program-section' noGutters={true}>
+                        <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
                             <div className='App__command-palette'>
                                 <h2 className='App__command-palette-heading'>
                                     <FormattedMessage id='CommandPalette.movementsTitle' />

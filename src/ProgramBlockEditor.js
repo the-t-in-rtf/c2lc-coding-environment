@@ -183,8 +183,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             <Container className='ProgramBlockEditor__container'>
                 <Row className='ProgramBlockEditor__header'>
                     <Col>
-                        <h2 className='ProgramBlockEditor__title'>
-                            <FormattedMessage id='ProgramBlockEditor.programLabel' />
+                        <h2 className='ProgramBlockEditor__heading'>
+                            <FormattedMessage id='ProgramBlockEditor.programHeading' />
                         </h2>
                     </Col>
                     <div className='ProgramBlockEditor__editor-actions'>
@@ -211,11 +211,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     </div>
                 </Row>
                 <Row>
-                    <Col className='ProgramBlockEditor__program-sequence'>
-                        <div className='ProgramBlockEditor__start-indicator'>
-                            {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
+                    <Col className='ProgramBlockEditor__program-sequence-scroll-container'>
+                        <div className='ProgramBlockEditor__program-sequence'>
+                            <div className='ProgramBlockEditor__start-indicator'>
+                                {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
+                            </div>
+                            {programBlocks}
                         </div>
-                        {programBlocks}
                     </Col>
                 </Row>
                 <Row className='ProgramBlockEditor__footer'>

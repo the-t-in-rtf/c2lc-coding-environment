@@ -4,10 +4,10 @@
 }
 
 .ProgramBlockEditor__header {
-    min-height: 3.5rem;
+    min-height: 3rem;
 }
 
-.ProgramBlockEditor__title {
+.ProgramBlockEditor__heading {
     text-align: center;
     font-weight: bold;
     font-size: inherit;
@@ -18,12 +18,11 @@
     position: absolute;
     right: 0;
     top: 0;
-    padding-right: 15px;
 }
 
 button.btn.ProgramBlockEditor__editor-action-button {
     margin-top: 0.5rem;
-    margin-right: 1.15rem;
+    margin-right: 1.3rem;
     border: 1px solid #FFF;
     border-radius: 50%;
     background-color: #FFF;
@@ -52,12 +51,34 @@ button.ProgramBlockEditor__editor-action-button--pressed svg {
     stroke: #FFF;
 }
 
-.ProgramBlockEditor__program-sequence {
+.ProgramBlockEditor__program-sequence-scroll-container {
     border: 0.1rem solid #8F8F8F;
     background: #FFF;
-    padding: 5rem 1rem;
-    white-space: nowrap;
-    overflow: scroll;
+    padding: 0;
+    overflow-x: scroll;
+}
+
+.ProgramBlockEditor__program-sequence {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 14rem;
+    padding-left: 1.4rem;
+    float: left;
+}
+
+.ProgramBlockEditor__start-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-right:1.4rem;
+    background-color: #000;
+    color: #fff;
+    min-width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
 }
 
 button.ProgramBlockEditor__program-block {
@@ -84,21 +105,4 @@ button.btn.ProgramBlockEditor__run-button:not(:focus) {
     width: 1.6rem;
     height: 1.6rem;
     display: block;
-}
-
-.ProgramBlockEditor__program-sequence {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-
-.ProgramBlockEditor__start-indicator {
-    padding-top: 1rem;
-    text-align: center;
-    background-color: #000;
-    color: #fff;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 50%;
-    margin-bottom: 0.5rem;
 }
