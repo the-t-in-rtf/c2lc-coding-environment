@@ -5,6 +5,11 @@ const dashCommandCharacteristicUuid = 'af230002-879d-6186-1f49-deca0e85d9c1';
 
 export default class DashDriver {
     commandCharacteristic: any;
+    interval: number;
+
+    constructor(intervalBetweenCommands: number) {
+        this.interval = intervalBetweenCommands
+    }
 
     connect(onDisconnected: () => void): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -40,21 +45,21 @@ export default class DashDriver {
     forward(): Promise<void> {
         return this.sendCommand(
             [0x23, 0xC8, 0x00, 0x00, 0x03, 0xE8, 0x00, 0x00, 0x80],
-            1900
+            this.interval
         );
     }
 
     left(): Promise<void> {
         return this.sendCommand(
             [0x23, 0x00, 0x00, 0x9D, 0x03, 0xE8, 0x00, 0x00, 0x80],
-            1900
+            this.interval
         );
     }
 
     right(): Promise<void> {
         return this.sendCommand(
             [0x23, 0x00, 0x00, 0x63, 0x03, 0xE8, 0xC0, 0xC0, 0x80],
-            1900
+            this.interval
         );
     }
 }
