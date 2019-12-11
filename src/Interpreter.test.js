@@ -15,13 +15,13 @@ function makeIncrement(varName: string): CommandHandler {
 }
 
 test('New Interpreter has an empty program', () => {
-    const interpreter = new Interpreter();
+    const interpreter = new Interpreter(()=>{});
     expect(interpreter.program.length).toBe(0);
     expect(interpreter.programCounter).toBe(0);
 });
 
 test('Stepping an empty program leaves the program counter at 0', (done) => {
-    const interpreter = new Interpreter();
+    const interpreter = new Interpreter(()=>{});
     expect(interpreter.programCounter).toBe(0);
     interpreter.step().then(() => {
         expect(interpreter.programCounter).toBe(0);
@@ -30,7 +30,7 @@ test('Stepping an empty program leaves the program counter at 0', (done) => {
 });
 
 test('Step a program with 1 command', (done) => {
-    const interpreter = new Interpreter();
+    const interpreter = new Interpreter(()=>{});
     interpreter.addCommandHandler('increment-x', 'test', makeIncrement('x'));
     interpreter.setProgram(['increment-x']);
     interpreter.memory.x = 10;
@@ -50,7 +50,7 @@ test('Step a program with 1 command', (done) => {
 });
 
 test('Step a program with 2 commands', (done) => {
-    const interpreter = new Interpreter();
+    const interpreter = new Interpreter(()=>{});
     interpreter.addCommandHandler('increment-x', 'test', makeIncrement('x'));
     interpreter.setProgram(['increment-x', 'increment-x']);
     interpreter.memory.x = 10;
@@ -74,7 +74,7 @@ test('Step a program with 2 commands', (done) => {
 });
 
 test('Step a program with 2 handlers for the same command', (done) => {
-    const interpreter = new Interpreter();
+    const interpreter = new Interpreter(()=>{});
     interpreter.addCommandHandler('increment', 'x', makeIncrement('x'));
     interpreter.addCommandHandler('increment', 'y', makeIncrement('y'));
     interpreter.setProgram(['increment']);
@@ -93,14 +93,14 @@ test('Step a program with 2 handlers for the same command', (done) => {
 });
 
 test('Stepping a program with an unknown command rejects with Error', () => {
-    const interpreter = new Interpreter();
+    const interpreter = new Interpreter(()=>{});
     interpreter.setProgram(['unknown-command']);
 
     return expect(interpreter.step()).rejects.toThrow('Unknown command: unknown-command');
 });
 
 test('Do a command without a program', (done) => {
-    const interpreter = new Interpreter();
+    const interpreter = new Interpreter(()=>{});
     interpreter.addCommandHandler('increment-x', 'test', makeIncrement('x'));
     interpreter.setProgram([]);
     interpreter.memory.x = 10;
@@ -115,7 +115,7 @@ test('Do a command without a program', (done) => {
 });
 
 test('Do a command with a program', (done) => {
-    const interpreter = new Interpreter();
+    const interpreter = new Interpreter(()=>{});
     interpreter.addCommandHandler('increment-x', 'test', makeIncrement('x'));
     interpreter.addCommandHandler('increment-y', 'test', makeIncrement('y'));
     interpreter.setProgram(['increment-y']);
@@ -141,6 +141,6 @@ test('Do a command with a program', (done) => {
 });
 
 test('Doing an unknown command rejects with Error', () => {
-    const interpreter = new Interpreter();
+    const interpreter = new Interpreter(()=>{});
     return expect(interpreter.doCommand('unknown-command')).rejects.toThrow('Unknown command: unknown-command');
 });
