@@ -142,6 +142,17 @@ export default class App extends React.Component<{}, AppState> {
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
+                <div className='App__heading-section'>
+                    <Container>
+                        <Row>
+                            <Col>
+                                <h1 className='App__app-heading'>
+                                    <FormattedMessage id='App.appHeading'/>
+                                </h1>
+                            </Col>
+                        </Row>
+                    </Container>
+                </div>
                 <Container>
                     <Row className='App__robot-connection-section'>
                         <Col>
@@ -156,9 +167,9 @@ export default class App extends React.Component<{}, AppState> {
                     <Row className='App__program-section'>
                         <Col md={4} lg={3}>
                             <div className='App__command-palette'>
-                                <div className='App__command-palette-heading'>
+                                <h2 className='App__command-palette-heading'>
                                     <FormattedMessage id='CommandPalette.movementsTitle' />
-                                </div>
+                                </h2>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
                                         commandName='forward'

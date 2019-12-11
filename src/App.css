@@ -1,3 +1,14 @@
+.App__heading-section {
+    background: #000;
+    color: #FFF;
+}
+
+.App__app-heading {
+    font-weight: normal;
+    font-size: 1.3rem;
+    margin: 1rem 0;
+}
+
 .App__robot-connection-section {
     margin-top: 1.5rem;
     text-align: right;
@@ -16,7 +27,8 @@
 
 .App__command-palette-heading {
     font-weight: bold;
-    margin-bottom: 2rem;
+    font-size: inherit;
+    margin: 0 0 2rem 0;
 }
 
 .App__command-palette-command {
