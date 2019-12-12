@@ -1,9 +1,9 @@
-# Coding to Learn and Create (C2LC) Interface
+# Coding to Learn and Create Inclusive Coding Environment
 
-C2LC Interface is a web user interface to connect to different coding robots to control them.<br>
-Currently, the interface can only support [Dash](https://www.makewonder.com/robots/dash/), but we are planning to expand available robots.
+Coding to Learn and Create Inclusive Coding Environment is a web user interface to connect to different coding robots to control them.<br>
+Currently, the Inclusive Coding Environment supports the [Dash](https://www.makewonder.com/robots/dash/) robot. We'll be adding support for new robots in upcoming releases.
 
-## Installation
+## Installation for Developers
 
 Running this project requires [npm and Node.js](https://www.npmjs.com/get-npm); once you download or fork the source code, run npm install to get all required dependencies.
 
