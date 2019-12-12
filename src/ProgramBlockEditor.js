@@ -15,7 +15,7 @@ import './ProgramBlockEditor.css';
 
 type ProgramBlockEditorProps = {
     intl: any,
-    activeProgramStepNum: number,
+    activeProgramStepNum: ?number,
     minVisibleSteps: number,
     program: Program,
     selectedAction: SelectedAction,
@@ -95,6 +95,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'forward':
                 return (
                     <Button
+                        ref={active ? r => (this.commandBlock = r) : null}
                         key={`${programStepNumber}-forward`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -113,6 +114,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'left':
                 return (
                     <Button
+                        ref={active ? r => (this.commandBlock = r) : null}
                         key={`${programStepNumber}-left`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -131,6 +133,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'right':
                 return (
                     <Button
+                        ref={active ? r => (this.commandBlock = r) : null}
                         key={`${programStepNumber}-right`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -149,6 +152,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'none':
                 return (
                     <Button
+                        ref={active ? r => (this.commandBlock = r) : null}
                         key={`${programStepNumber}-none`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -218,7 +222,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     </div>
                 </Row>
                 <Row>
-                    <Col className='ProgramBlockEditor__program-sequence'>
+                    <Col ref={r => (this.programSequenceWindow = r)} className='ProgramBlockEditor__program-sequence'>
                         {programBlocks}
                     </Col>
                 </Row>
@@ -236,6 +240,14 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                 </Row>
             </Container>
         );
+    }
+
+    componentDidUpdate() {
+        const parent = this.programSequenceWindow;
+        if (this.commandBlock != null) {
+            if (parent.scrollWidth - parent.clientWidth - parent.scrollLeft < parent.clientWidth)
+            this.commandBlock.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' })
+        }
     }
 }
 
