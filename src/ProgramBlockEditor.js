@@ -243,9 +243,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     }
 
     componentDidUpdate() {
-        const parent = this.programSequenceWindow;
         if (this.commandBlock != null) {
-            if (parent.scrollWidth - parent.clientWidth - parent.scrollLeft < parent.clientWidth)
             this.commandBlock.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' })
         }
     }
