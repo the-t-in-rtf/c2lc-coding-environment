@@ -151,7 +151,7 @@ test('blocks', () => {
 
     const wrapper = mount(
         <ProgramBlockEditor
-            activeProgramStepNum={-1}
+            activeProgramStepNum={null}
             minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
