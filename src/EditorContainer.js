@@ -8,9 +8,10 @@ import type {EditorMode, Program, SelectedAction} from './types';
 
 type EditorContainerProps = {
     program: Program,
-    programVer: number,
     syntax: TextSyntax,
     mode: EditorMode,
+    runButtonDisabled: boolean,
+    onClickRunButton: () => void,
     selectedAction: SelectedAction,
     onSelectAction: (action: SelectedAction) => void,
     onChange: (Program) => void
@@ -23,13 +24,14 @@ export default class EditorContainer extends React.Component<EditorContainerProp
                 {this.props.mode === 'text' ? (
                     <ProgramTextEditor
                         program={this.props.program}
-                        programVer={this.props.programVer}
                         syntax={this.props.syntax}
                         onChange={this.props.onChange} />
                  ) : (
                     <ProgramBlockEditor
                         minVisibleSteps={6}
                         program={this.props.program}
+                        runButtonDisabled={this.props.runButtonDisabled}
+                        onClickRunButton={this.props.onClickRunButton}
                         selectedAction={this.props.selectedAction}
                         onSelectAction={this.props.onSelectAction}
                         onChange={this.props.onChange} />

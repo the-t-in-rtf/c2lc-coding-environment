@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
 import { shallow, configure } from 'enzyme';
@@ -11,7 +13,6 @@ test('testing text input from ProgramTextEditor component', () => {
     const wrapper = shallow(
         <ProgramTextEditor
             program={['forward', 'left', 'forward']}
-            programVer={1}
             syntax={new TextSyntax()}
             onChange={mockChangeHandler}/>);
     const getTextEditor = () => (wrapper.find('#texteditor-0'));
