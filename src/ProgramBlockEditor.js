@@ -26,6 +26,9 @@ type ProgramBlockEditorProps = {
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
+    commandBlock: Button
+    programSequenceWindow: Col
+
     toggleAction(action: 'add' | 'delete') {
         if (this.props.selectedAction
                 && this.props.selectedAction.type === 'editorAction'
@@ -195,8 +198,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         return (
             <Container className='ProgramBlockEditor__container'>
                 <Row className='ProgramBlockEditor__header'>
-                    <Col className='ProgramBlockEditor__title'>
-                        <FormattedMessage id='ProgramBlockEditor.programLabel' />
+                    <Col>
+                        <h2 className='ProgramBlockEditor__heading'>
+                            <FormattedMessage id='ProgramBlockEditor.programHeading' />
+                        </h2>
                     </Col>
                     <div className='ProgramBlockEditor__editor-actions'>
                         <Button
@@ -222,8 +227,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     </div>
                 </Row>
                 <Row>
-                    <Col ref={r => (this.programSequenceWindow = r)} className='ProgramBlockEditor__program-sequence'>
-                        {programBlocks}
+                    <Col ref={r => (this.programSequenceWindow = r)} className='ProgramBlockEditor__program-sequence-scroll-container'>
+                        <div className='ProgramBlockEditor__program-sequence'>
+                            <div className='ProgramBlockEditor__start-indicator'>
+                                {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
+                            </div>
+                            {programBlocks}
+                        </div>
                     </Col>
                 </Row>
                 <Row className='ProgramBlockEditor__footer'>

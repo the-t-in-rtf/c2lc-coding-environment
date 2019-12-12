@@ -4,6 +4,7 @@ import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
 import CommandPaletteCommand from './CommandPaletteCommand';
+import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
@@ -29,9 +30,10 @@ type AppState = {
     program: Program,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
-    selectedAction: SelectedAction,
     activeProgramStepNum: ?number,
-    interpreterIsRunning: boolean
+    interpreterIsRunning: boolean,
+    showDashConnectionError: boolean,
+    selectedAction: SelectedAction
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -52,9 +54,10 @@ export default class App extends React.Component<{}, AppState> {
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
-            selectedAction: null,
             activeProgramStepNum: null,
-            interpreterIsRunning: false
+            interpreterIsRunning: false,
+            showDashConnectionError: false,
+            selectedAction: null
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -99,7 +102,8 @@ export default class App extends React.Component<{}, AppState> {
 
     handleClickConnectDash = () => {
         this.setState({
-            dashConnectionStatus: 'connecting'
+            dashConnectionStatus: 'connecting',
+            showDashConnectionError: false
         });
         this.dashDriver.connect(this.handleDashDisconnect).then(() => {
             this.setState({
@@ -110,8 +114,15 @@ export default class App extends React.Component<{}, AppState> {
             console.log(error.name);
             console.log(error.message);
             this.setState({
-                dashConnectionStatus: 'notConnected'
+                dashConnectionStatus: 'notConnected',
+                showDashConnectionError: true
             });
+        });
+    };
+
+    handleCancelDashConnection = () => {
+        this.setState({
+            showDashConnectionError: false
         });
     };
 
@@ -154,7 +165,18 @@ export default class App extends React.Component<{}, AppState> {
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
-                <Container>
+                <div className='App__heading-section'>
+                    <Container>
+                        <Row>
+                            <Col>
+                                <h1 className='App__app-heading'>
+                                    <FormattedMessage id='App.appHeading'/>
+                                </h1>
+                            </Col>
+                        </Row>
+                    </Container>
+                </div>
+                <Container className='mb-5'>
                     <Row className='App__robot-connection-section'>
                         <Col>
                             <DeviceConnectControl
@@ -165,12 +187,12 @@ export default class App extends React.Component<{}, AppState> {
                             </DeviceConnectControl>
                         </Col>
                     </Row>
-                    <Row className='App__program-section'>
-                        <Col md={4} lg={3}>
+                    <Row className='App__program-section' noGutters={true}>
+                        <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
                             <div className='App__command-palette'>
-                                <div className='App__command-palette-heading'>
+                                <h2 className='App__command-palette-heading'>
                                     <FormattedMessage id='CommandPalette.movementsTitle' />
-                                </div>
+                                </h2>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
                                         commandName='forward'
@@ -217,6 +239,10 @@ export default class App extends React.Component<{}, AppState> {
                         </Col>
                     </Row>
                 </Container>
+                <DashConnectionErrorModal
+                    show={this.state.showDashConnectionError}
+                    onCancel={this.handleCancelDashConnection}
+                    onRetry={this.handleClickConnectDash}/>
             </IntlProvider>
         );
     }
