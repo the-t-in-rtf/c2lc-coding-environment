@@ -1,6 +1,11 @@
 # Coding to Learn and Create Inclusive Coding Environment
 
-Coding to Learn and Create Inclusive Coding Environment is a web user interface to connect to different coding robots to control them.<br>
+The Inclusive Coding Environment is a new educational coding tool designed for learners with disabilities. Learners can create code sequences that control the movement of a Bluetooth-connected robot. The Environment can be used with a mouse, touchscreen, or keyboard, and supports assistive technologies such as screen readers. It is a web application that works in the Chrome browser.<br>
+
+![C2LC-Env](./C2LC-env.png)
+
+[Live Environment](https://c2lc-dev.web.app/)
+
 Currently, the Inclusive Coding Environment supports the [Dash](https://www.makewonder.com/robots/dash/) robot. We'll be adding support for new robots in upcoming releases.
 
 ## Installation for Developers
