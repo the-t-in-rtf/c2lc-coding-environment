@@ -22,13 +22,12 @@ npm install
 npm start
 ```
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Runs the app in the development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-## Test
+## Testing
 
 ```bash
 npm run test
@@ -48,11 +47,12 @@ Learn more about [flow](https://flow.org/).
 
 ## Contributing
 
-Any contributions are welcome, we require you to fork from the [main repo](https://github.com/codelearncreate/c2lc-coding-environment) and follow branch name convention of C2LC-#. You can check open tasks/tickets on [fluid](https://issues.fluidproject.org/projects/C2LC/issues). Also, commit messages should include branch number and start with a singular present tense like: 'C2LC-30: Update README'.
+Contributions are welcome! To get started, fork the main repository. In general, we try to always create an [issue](https://issues.fluidproject.org/projects/C2LC/issues) and a branch for each new change. Branches should be named after the issue number that they address (e.g. C2LC-#). Each commit message should begin with the issue number, and use singular present tense. For example, 'C2LC-30: Update the README to include more information about how to contribute."
 
-Please note that making this project accessible is our first priority. Here's a guideline from [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/).
+Accessibility is an important part of our project. If you have any questions about accessibility, please feel free to ask questions. The [W3C's WCAG guidelines](https://www.w3.org/WAI/standards-guidelines/wcag/) are a good place to start learning about accessibility on the web.
 
-Before submitting pull requests, please make sure flow and test cases are passing.
+Before submitting pull requests, please make sure all static type checks and test cases are passing.
 
 ## License
-[BSD-3](https://github.com/codelearncreate/c2lc-coding-environment/blob/master/LICENSE.txt)
+The Inclusive Coding Environment is open source software, distributed under the [BSD-3](https://github.com/codelearncreate/c2lc-coding-environment/blob/master/LICENSE.txt) license.
+
