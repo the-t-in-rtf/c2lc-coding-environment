@@ -231,7 +231,9 @@ export default class App extends React.Component<{}, AppState> {
                                 minVisibleSteps={6}
                                 program={this.state.program}
                                 selectedAction={this.state.selectedAction}
-                                runButtonDisabled={this.state.dashConnectionStatus !== 'connected'}
+                                runButtonDisabled={
+                                    this.state.dashConnectionStatus !== 'connected' ||
+                                    this.state.interpreterIsRunning}
                                 onClickRunButton={this.handleClickRun}
                                 onSelectAction={this.handleSelectAction}
                                 onChange={this.handleChangeProgram}
