@@ -30,7 +30,7 @@ type AppState = {
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
     selectedAction: SelectedAction,
-    activeProgramStepNum: number,
+    activeProgramStepNum: ?number,
     interpreterIsRunning: boolean
 };
 
@@ -53,7 +53,7 @@ export default class App extends React.Component<{}, AppState> {
             },
             dashConnectionStatus: 'notConnected',
             selectedAction: null,
-            activeProgramStepNum: -1,
+            activeProgramStepNum: null,
             interpreterIsRunning: false
         };
 
@@ -225,8 +225,6 @@ export default class App extends React.Component<{}, AppState> {
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 
-            // TODO: Handle Dash disconnection
-
             if (this.state.dashConnectionStatus === 'connected') {
                 this.interpreter.addCommandHandler('forward', 'dash',
                     this.dashDriver.forward.bind(this.dashDriver));
@@ -234,6 +232,12 @@ export default class App extends React.Component<{}, AppState> {
                     this.dashDriver.left.bind(this.dashDriver));
                 this.interpreter.addCommandHandler('right', 'dash',
                     this.dashDriver.right.bind(this.dashDriver));
+            } else if (this.state.dashConnectionStatus === 'notConnected') {
+                // TODO: Remove Dash handlers
+
+                if (this.state.interpreterIsRunning) {
+                    this.interpreter.stop();
+                }
             }
         }
     }
