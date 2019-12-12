@@ -205,6 +205,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     </Col>
                     <div className='ProgramBlockEditor__editor-actions'>
                         <Button
+                            disabled={this.props.activeProgramStepNum !== null}
                             key='addButton'
                             className={this.addIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
@@ -215,6 +216,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             <AddIcon className='ProgramBlockEditor__editor-action-button-svg'/>
                         </Button>
                         <Button
+                            disabled={this.props.activeProgramStepNum !== null}
                             key='deleteButton'
                             className={this.deleteIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
