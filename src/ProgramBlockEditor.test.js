@@ -234,3 +234,40 @@ test('blocks', () => {
     expect(mockSelectHandler.mock.calls.length).toBe(6);
     expect(mockSelectHandler.mock.calls[5][0]).toBeNull();
 })
+
+
+test('Whenever active program step number updates, auto scroll to the step', () => {
+    const mockScrollInto = jest.fn();
+
+    window.HTMLElement.prototype.scrollIntoView = mockScrollInto;
+
+    const wrapper = mount(
+        <ProgramBlockEditor
+            activeProgramStepNum={0}
+            minVisibleSteps={6}
+            program={['forward', 'left', 'forward', 'left']}
+            selectedAction={null}
+            runButtonDisabled={false}
+            onClickRunButton={()=>{}}
+            onSelectAction={()=>{}}
+            onChange={()=>{}} />,
+        {
+            wrappingComponent: IntlProvider,
+            wrappingComponentProps: {
+                locale: 'en',
+                defaultLocale: 'en',
+                messages: messages.en
+            }
+        }
+    );
+
+    wrapper.setProps({ activeProgramStepNum: 1 });
+    expect(mockScrollInto.mock.calls.length).toBe(1);
+    expect(mockScrollInto.mock.calls[0][0]).toStrictEqual({ behavior: 'smooth', block: 'start', inline: 'start' });
+
+    wrapper.setProps({ activeProgramStepNum: 2});
+
+    expect(mockScrollInto.mock.calls.length).toBe(2);
+    expect(mockScrollInto.mock.calls[1][0]).toStrictEqual({ behavior: 'smooth', block: 'start', inline: 'start'});
+
+});
