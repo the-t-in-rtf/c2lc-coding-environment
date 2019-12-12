@@ -2,6 +2,7 @@
 
 import Interpreter from './Interpreter';
 import type {CommandHandler} from './Interpreter';
+import type {InterpreterRunningState} from './Interpreter';
 
 function makeIncrement(varName: string): CommandHandler {
     return (interpreter) => {
@@ -143,4 +144,56 @@ test('Do a command with a program', (done) => {
 test('Doing an unknown command rejects with Error', () => {
     const interpreter = new Interpreter(()=>{});
     return expect(interpreter.doCommand('unknown-command')).rejects.toThrow('Unknown command: unknown-command');
+});
+
+test('Use the callback function on continueRun', () => {
+    const mockStateChangeHandler = jest.fn();
+    const interpreter = new Interpreter(mockStateChangeHandler);
+    interpreter.addCommandHandler('step1', 'test', (interpreter) => {
+        return new Promise((resolve, reject) => {
+            expect(mockStateChangeHandler.mock.calls.length).toBe(1);
+            expect(mockStateChangeHandler.mock.calls[0][0]).toStrictEqual({'isRunning': true, 'activeStep': 0});
+            resolve();
+        });
+    });
+    interpreter.addCommandHandler('step2', 'test', (interpreter) => {
+        return new Promise((resolve, reject) => {
+            expect(mockStateChangeHandler.mock.calls.length).toBe(2);
+            expect(mockStateChangeHandler.mock.calls[1][0]).toStrictEqual({'isRunning': true, 'activeStep': 1});
+            resolve();
+        });
+    });
+    interpreter.run(['step1', 'step2']).then(() => {
+        expect(mockStateChangeHandler.mock.calls.length).toBe(3);
+        expect(mockStateChangeHandler.mock.calls[0][0]).toStrictEqual({'isRunning': true, 'activeStep': 0});
+        expect(mockStateChangeHandler.mock.calls[1][0]).toStrictEqual({'isRunning': true, 'activeStep': 1});
+        expect(mockStateChangeHandler.mock.calls[2][0]).toStrictEqual({'isRunning': false, 'activeStep': null});
+    });
+});
+
+
+test('Do not continue through program if stop is called', () => {
+    const mockStateChangeHandler = jest.fn();
+    const interpreter = new Interpreter(mockStateChangeHandler);
+    interpreter.addCommandHandler('step1', 'test', (interpreter) => {
+        return new Promise((resolve, reject) => {
+            expect(mockStateChangeHandler.mock.calls.length).toBe(1);
+            expect(mockStateChangeHandler.mock.calls[0][0]).toStrictEqual({'isRunning': true, 'activeStep': 0});
+            // call stop
+            interpreter.stop();
+            resolve();
+        });
+    });
+    interpreter.addCommandHandler('step2', 'test', (interpreter) => {
+        return new Promise((resolve, reject) => {
+            expect(mockStateChangeHandler.mock.calls.length).toBe(2);
+            expect(mockStateChangeHandler.mock.calls[1][0]).toStrictEqual({'isRunning': true, 'activeStep': 1});
+            resolve();
+        });
+    });
+    interpreter.run(['step1', 'step2']).then(() => {
+        expect(mockStateChangeHandler.mock.calls.length).toBe(2);
+        expect(mockStateChangeHandler.mock.calls[0][0]).toStrictEqual({'isRunning': true, 'activeStep': 0});
+        expect(mockStateChangeHandler.mock.calls[1][0]).toStrictEqual({'isRunning': false, 'activeStep': null});
+    });
 });
