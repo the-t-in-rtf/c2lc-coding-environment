@@ -11,18 +11,6 @@
 
 .App__robot-connection-section {
     margin-top: 1.5rem;
-    text-align: right;
-}
-
-.App__warning-bluetoothAPI {
-    background-color: #E7DB6E;
-    border: 1px solid #F1F1F1;
-}
-
-.App__warning-svg {
-    width: 2rem;
-    height: 2rem;
-    margin-right: 0.5rem;
 }
 
 .App__program-section {

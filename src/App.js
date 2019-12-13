@@ -3,6 +3,7 @@
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
+import BluetoothApiWarning from './BluetoothApiWarning';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
@@ -16,7 +17,6 @@ import './App.css';
 import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
 import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
 import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
-import { ReactComponent as ErrorIcon } from './svg/Error.svg';
 
 type AppContext = {
     bluetoothApiIsAvailable: boolean
@@ -166,21 +166,13 @@ export default class App extends React.Component<{}, AppState> {
                     </Container>
                 </div>
                 <Container className='mb-5'>
-                    {!this.appContext.bluetoothApiIsAvailable ? (
-                        <Row className='App__warning-bluetoothAPI'>
-                            {localizeProperties((intl) =>
-                                <span role='img' aria-label={(intl.formatMessage({ id: 'App.warning'}))}>
-                                    <ErrorIcon className='App__warning-svg' />
-                                </span>
-                            )}
-                            <FormattedMessage id='App.warning.bluetoothAPI' />
-                        </Row>
-                        ) : (
-                        <>
-                        </>
-                    )}
                     <Row className='App__robot-connection-section'>
                         <Col>
+                            {!this.appContext.bluetoothApiIsAvailable &&
+                                <BluetoothApiWarning/>
+                            }
+                        </Col>
+                        <Col md='auto'>
                             <DeviceConnectControl
                                     disabled={!this.appContext.bluetoothApiIsAvailable}
                                     connectionStatus={this.state.dashConnectionStatus}
