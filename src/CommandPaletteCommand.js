@@ -1,9 +1,8 @@
 // @flow
 
 import React from 'react';
-import { Button, Image } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import {injectIntl} from 'react-intl';
-import './CommandPaletteCommand.css';
 
 type CommandPaletteCommandProps = {
     commandName: string,
@@ -21,14 +20,21 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
     };
 
     render() {
+        const pressed = this.props.commandName === this.props.selectedCommandName;
+        let classNames = [
+            'command-block'
+        ];
+        if (pressed) {
+            classNames.push('command-block--pressed');
+        }
         return (
             <Button
-                className='CommandPaletteCommand__command-button'
-                variant={this.props.commandName === this.props.selectedCommandName ? 'outline-primary' : 'light'}
+                className={classNames.join(' ')}
+                variant={`command-block--${this.props.commandName}`}
                 aria-label={this.props.intl.formatMessage({ id: `CommandPaletteCommand.${this.props.commandName}`})}
-                aria-pressed={this.props.commandName === this.props.selectedCommandName ? 'true' : 'false'}
+                aria-pressed={pressed}
                 onClick={this.handleClick}>
-                <Image src={this.props.icon}/>
+                {this.props.icon}
             </Button>
         )
     }

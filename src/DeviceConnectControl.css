@@ -1,0 +1,29 @@
+.DeviceConnectControl {
+    position: relative;
+    z-index: inherit;
+}
+
+.DeviceConnectControl__button {
+    position: relative;
+    z-index: 1;
+}
+
+.DeviceConnectControl__status-icon-container {
+    position: relative;
+    z-index: 0;
+    background-color: #F1F1F1;
+    padding: 1rem 0.5rem;
+}
+
+.DeviceConnectControl__status-icon {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.DeviceConnectControl svg {
+    stroke: #000;
+}
+
+.DeviceConnectControl.DeviceConnectControl--disabled svg {
+    stroke: #777;
+}
