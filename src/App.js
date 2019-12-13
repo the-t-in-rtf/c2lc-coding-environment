@@ -3,6 +3,7 @@
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
+import BluetoothApiWarning from './BluetoothApiWarning';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
@@ -167,6 +168,11 @@ export default class App extends React.Component<{}, AppState> {
                 <Container className='mb-5'>
                     <Row className='App__robot-connection-section'>
                         <Col>
+                            {!this.appContext.bluetoothApiIsAvailable &&
+                                <BluetoothApiWarning/>
+                            }
+                        </Col>
+                        <Col md='auto'>
                             <DeviceConnectControl
                                     disabled={!this.appContext.bluetoothApiIsAvailable}
                                     connectionStatus={this.state.dashConnectionStatus}
