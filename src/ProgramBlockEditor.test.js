@@ -24,6 +24,11 @@ function getProgramBlockAtPosition(programBlockEditorWrapper, index: number) {
     return getProgramBlocks(programBlockEditorWrapper).at(index)
 }
 
+function getEditorActionButtons(programBlockEditorWrapper) {
+    return programBlockEditorWrapper.find(Button)
+        .filter('.ProgramBlockEditor__editor-action-button');
+}
+
 test('onSelect property of ProgramBlockEditor component should change action buttons class and aria-pressed according to selectedAction property', () => {
     const mockSelectHandler = jest.fn();
     const intl = createIntl({
@@ -271,3 +276,38 @@ test('Whenever active program step number updates, auto scroll to the step', () 
     expect(mockScrollInto.mock.calls[1][0]).toStrictEqual({ behavior: 'smooth', block: 'start', inline: 'start'});
 
 });
+
+test('When the program is running (if activeProgramStepNum prop has a value), editor action buttons should be disabled', () => {
+    const mockRunHandler = jest.fn();
+
+    const wrapper = mount(
+        <ProgramBlockEditor
+            activeProgramStepNum={null}
+            minVisibleSteps={6}
+            program={['forward', 'left', 'forward', 'left']}
+            selectedAction={null}
+            runButtonDisabled={false}
+            onClickRunButton={mockRunHandler}
+            onSelectAction={()=>{}}
+            onChange={()=>{}} />,
+        {
+            wrappingComponent: IntlProvider,
+            wrappingComponentProps: {
+                locale: 'en',
+                defaultLocale: 'en',
+                messages: messages.en
+            }
+        }
+    );
+
+    // activeProgramStepNum is null
+    expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(false);
+    expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(false);
+
+    wrapper.setProps({activeProgramStepNum: 0});
+
+    // activeProgramStepNum is 0
+    expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(true);
+    expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(true);
+});
+
