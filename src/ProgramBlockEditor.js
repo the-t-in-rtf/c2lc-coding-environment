@@ -16,6 +16,7 @@ import './ProgramBlockEditor.css';
 type ProgramBlockEditorProps = {
     intl: any,
     activeProgramStepNum: ?number,
+    editingDisabled: boolean,
     minVisibleSteps: number,
     program: Program,
     selectedAction: SelectedAction,
@@ -26,8 +27,10 @@ type ProgramBlockEditorProps = {
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
-    commandBlock: Button
-    programSequenceWindow: Col
+    constructor(props: ProgramBlockEditorProps) {
+        super(props);
+        this.commandBlock = null;
+    }
 
     toggleAction(action: 'add' | 'delete') {
         if (this.props.selectedAction
@@ -85,6 +88,12 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         }
     };
 
+    setActiveCommandBlockRef = (block) => {
+        if (this.props.activeProgramStepNum !== null) {
+            this.commandBlock = block;
+        }
+    }
+
     makeProgramBlock(programStepNumber: number, command: string) {
         const active = this.props.activeProgramStepNum === programStepNumber;
         let classNames = [
@@ -98,7 +107,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'forward':
                 return (
                     <Button
-                        ref={active ? r => (this.commandBlock = r) : null}
+                        ref={this.setActiveCommandBlockRef}
                         key={`${programStepNumber}-forward`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -117,7 +126,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'left':
                 return (
                     <Button
-                        ref={active ? r => (this.commandBlock = r) : null}
+                        ref={this.setActiveCommandBlockRef}
                         key={`${programStepNumber}-left`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -136,7 +145,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'right':
                 return (
                     <Button
-                        ref={active ? r => (this.commandBlock = r) : null}
+                        ref={this.setActiveCommandBlockRef}
                         key={`${programStepNumber}-right`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -155,7 +164,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'none':
                 return (
                     <Button
-                        ref={active ? r => (this.commandBlock = r) : null}
+                        ref={this.setActiveCommandBlockRef}
                         key={`${programStepNumber}-none`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -205,7 +214,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     </Col>
                     <div className='ProgramBlockEditor__editor-actions'>
                         <Button
-                            disabled={this.props.activeProgramStepNum !== null}
+                            disabled={this.props.editingDisabled}
                             key='addButton'
                             className={this.addIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
@@ -216,7 +225,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             <AddIcon className='ProgramBlockEditor__editor-action-button-svg'/>
                         </Button>
                         <Button
-                            disabled={this.props.activeProgramStepNum !== null}
+                            disabled={this.props.editingDisabled}
                             key='deleteButton'
                             className={this.deleteIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
