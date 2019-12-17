@@ -76,17 +76,14 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             if (this.props.selectedAction.action === 'add') {
                 this.props.onChange(ProgramUtils.insert(this.props.program,
                     index, 'none', 'none'));
-                this.props.onSelectAction(null);
             } else if (this.props.selectedAction.action === 'delete') {
                 this.props.onChange(ProgramUtils.trimEnd(
                     ProgramUtils.deleteStep(this.props.program, index),
                     'none'));
-                this.props.onSelectAction(null);
             }
         } else if (this.props.selectedAction && this.props.selectedAction.type === 'command'){
             this.props.onChange(ProgramUtils.overwrite(this.props.program,
                     index, this.props.selectedAction.commandName, 'none'));
-            this.props.onSelectAction(null);
         }
     };
 

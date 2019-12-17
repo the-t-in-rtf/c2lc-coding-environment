@@ -190,8 +190,8 @@ test('blocks', () => {
     getProgramBlockAtPosition(wrapper, 0).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(1);
     expect(mockChangeHandler.mock.calls[0][0]).toStrictEqual(['none', 'forward', 'left', 'forward', 'left']);
-    expect(mockSelectHandler.mock.calls.length).toBe(1);
-    expect(mockSelectHandler.mock.calls[0][0]).toBeNull();
+    // No onSelectAction calls should have been made
+    expect(mockSelectHandler.mock.calls.length).toBe(0);
 
     wrapper.setProps({program : mockChangeHandler.mock.calls[0][0]});
     wrapper.setProps({selectedAction: {'commandName' : 'right', 'type': 'command'}});
@@ -199,8 +199,8 @@ test('blocks', () => {
     getProgramBlockAtPosition(wrapper, 0).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(2);
     expect(mockChangeHandler.mock.calls[1][0]).toStrictEqual(['right', 'forward', 'left', 'forward', 'left']);
-    expect(mockSelectHandler.mock.calls.length).toBe(2);
-    expect(mockSelectHandler.mock.calls[1][0]).toBeNull();
+    // No onSelectAction calls should have been made
+    expect(mockSelectHandler.mock.calls.length).toBe(0);
 
     wrapper.setProps({program : mockChangeHandler.mock.calls[1][0]});
     wrapper.setProps({selectedAction: {'action' : 'delete', 'type': 'editorAction'}});
@@ -208,8 +208,8 @@ test('blocks', () => {
     getProgramBlockAtPosition(wrapper, 0).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(3);
     expect(mockChangeHandler.mock.calls[2][0]).toStrictEqual(['forward', 'left', 'forward', 'left']);
-    expect(mockSelectHandler.mock.calls.length).toBe(3);
-    expect(mockSelectHandler.mock.calls[2][0]).toBeNull();
+    // No onSelectAction calls should have been made
+    expect(mockSelectHandler.mock.calls.length).toBe(0);
 
     // repeat the test cases for the last command in the program
 
@@ -219,8 +219,8 @@ test('blocks', () => {
     getProgramBlockAtPosition(wrapper, 3).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(4);
     expect(mockChangeHandler.mock.calls[3][0]).toStrictEqual(['forward', 'left', 'forward', 'none', 'left']);
-    expect(mockSelectHandler.mock.calls.length).toBe(4);
-    expect(mockSelectHandler.mock.calls[3][0]).toBeNull();
+    // No onSelectAction calls should have been made
+    expect(mockSelectHandler.mock.calls.length).toBe(0);
 
     wrapper.setProps({program : mockChangeHandler.mock.calls[3][0]});
     wrapper.setProps({selectedAction: {'commandName' : 'right', 'type': 'command'}});
@@ -228,8 +228,8 @@ test('blocks', () => {
     getProgramBlockAtPosition(wrapper, 3).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(5);
     expect(mockChangeHandler.mock.calls[4][0]).toStrictEqual(['forward', 'left', 'forward', 'right', 'left']);
-    expect(mockSelectHandler.mock.calls.length).toBe(5);
-    expect(mockSelectHandler.mock.calls[4][0]).toBeNull();
+    // No onSelectAction calls should have been made
+    expect(mockSelectHandler.mock.calls.length).toBe(0);
 
     wrapper.setProps({program : mockChangeHandler.mock.calls[4][0]});
     wrapper.setProps({selectedAction: {'action' : 'delete', 'type': 'editorAction'}});
@@ -237,8 +237,8 @@ test('blocks', () => {
     getProgramBlockAtPosition(wrapper, 3).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(6);
     expect(mockChangeHandler.mock.calls[5][0]).toStrictEqual(['forward', 'left', 'forward', 'left']);
-    expect(mockSelectHandler.mock.calls.length).toBe(6);
-    expect(mockSelectHandler.mock.calls[5][0]).toBeNull();
+    // No onSelectAction calls should have been made
+    expect(mockSelectHandler.mock.calls.length).toBe(0);
 })
 
 
