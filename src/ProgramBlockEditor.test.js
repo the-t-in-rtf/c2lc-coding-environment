@@ -270,12 +270,12 @@ test('Whenever active program step number updates, auto scroll to the step', () 
 
     wrapper.setProps({ activeProgramStepNum: 1 });
     expect(mockScrollInto.mock.calls.length).toBe(1);
-    expect(mockScrollInto.mock.calls[0][0]).toStrictEqual({ behavior: 'smooth', block: 'start', inline: 'start' });
+    expect(mockScrollInto.mock.calls[0][0]).toStrictEqual({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
 
     wrapper.setProps({ activeProgramStepNum: 2});
 
     expect(mockScrollInto.mock.calls.length).toBe(2);
-    expect(mockScrollInto.mock.calls[1][0]).toStrictEqual({ behavior: 'smooth', block: 'start', inline: 'start'});
+    expect(mockScrollInto.mock.calls[1][0]).toStrictEqual({ behavior: 'smooth', block: 'nearest', inline: 'nearest'});
 
 });
 

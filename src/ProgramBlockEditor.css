@@ -86,7 +86,7 @@ button.ProgramBlockEditor__program-block {
 }
 
 button.ProgramBlockEditor__program-block--active {
-    box-shadow: 0 0 0 0.2rem chartreuse;
+    box-shadow: 0 0 0 0.2rem #79F1CD;
 }
 
 .ProgramBlockEditor__footer {

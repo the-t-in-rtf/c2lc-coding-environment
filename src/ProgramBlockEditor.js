@@ -90,10 +90,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     };
 
     setActiveCommandBlockRef = (block) => {
-        if (this.props.activeProgramStepNum !== null) {
-            this.commandBlock = block;
-        }
-    }
+        this.commandBlock = block;
+    };
 
     makeProgramBlock(programStepNumber: number, command: string) {
         const active = this.props.activeProgramStepNum === programStepNumber;
@@ -108,7 +106,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'forward':
                 return (
                     <Button
-                        ref={this.setActiveCommandBlockRef}
+                        ref={active ? this.setActiveCommandBlockRef : null}
                         key={`${programStepNumber}-forward`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -127,7 +125,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'left':
                 return (
                     <Button
-                        ref={this.setActiveCommandBlockRef}
+                        ref={active ? this.setActiveCommandBlockRef : null}
                         key={`${programStepNumber}-left`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -146,7 +144,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'right':
                 return (
                     <Button
-                        ref={this.setActiveCommandBlockRef}
+                        ref={active ? this.setActiveCommandBlockRef : null}
                         key={`${programStepNumber}-right`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -165,7 +163,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'none':
                 return (
                     <Button
-                        ref={this.setActiveCommandBlockRef}
+                        ref={active ? this.setActiveCommandBlockRef : null}
                         key={`${programStepNumber}-none`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -204,6 +202,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         if (!noneAtEnd) {
             programBlocks.push(this.makeProgramBlock(programBlocks.length, 'none'));
         }
+
+        // Clear commandBlock before we render
+        this.commandBlock = null;
 
         return (
             <Container className='ProgramBlockEditor__container'>
@@ -265,8 +266,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     }
 
     componentDidUpdate() {
-        if (this.commandBlock != null) {
-            this.commandBlock.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' })
+        if (this.commandBlock !== null) {
+            this.commandBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
         }
     }
 }
