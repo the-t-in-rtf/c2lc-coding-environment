@@ -10,6 +10,7 @@ import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
+import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import type {DeviceConnectionStatus, Program, SelectedAction} from './types';
 import messages from './messages.json';
@@ -30,6 +31,8 @@ type AppState = {
     program: Program,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
+    activeProgramStepNum: ?number,
+    interpreterIsRunning: boolean,
     showDashConnectionError: boolean,
     selectedAction: SelectedAction
 };
@@ -52,11 +55,13 @@ export default class App extends React.Component<{}, AppState> {
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
+            activeProgramStepNum: null,
+            interpreterIsRunning: false,
             showDashConnectionError: false,
             selectedAction: null
         };
 
-        this.interpreter = new Interpreter();
+        this.interpreter = new Interpreter(this.handleRunningStateChange);
 
         this.interpreter.addCommandHandler(
             'none',
@@ -149,6 +154,13 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
+    handleRunningStateChange = ( interpreterRunningState : InterpreterRunningState) => {
+        this.setState({
+            activeProgramStepNum: interpreterRunningState.activeStep,
+            interpreterIsRunning: interpreterRunningState.isRunning
+        });
+    }
+
     render() {
         return (
             <IntlProvider
@@ -221,10 +233,14 @@ export default class App extends React.Component<{}, AppState> {
                         </Col>
                         <Col md={8} lg={9}>
                             <ProgramBlockEditor
+                                activeProgramStepNum={this.state.activeProgramStepNum}
+                                editingDisabled={this.state.interpreterIsRunning === true}
                                 minVisibleSteps={6}
                                 program={this.state.program}
                                 selectedAction={this.state.selectedAction}
-                                runButtonDisabled={this.state.dashConnectionStatus !== 'connected'}
+                                runButtonDisabled={
+                                    this.state.dashConnectionStatus !== 'connected' ||
+                                    this.state.interpreterIsRunning}
                                 onClickRunButton={this.handleClickRun}
                                 onSelectAction={this.handleSelectAction}
                                 onChange={this.handleChangeProgram}
@@ -244,8 +260,6 @@ export default class App extends React.Component<{}, AppState> {
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 
-            // TODO: Handle Dash disconnection
-
             if (this.state.dashConnectionStatus === 'connected') {
                 this.interpreter.addCommandHandler('forward', 'dash',
                     this.dashDriver.forward.bind(this.dashDriver));
@@ -253,6 +267,12 @@ export default class App extends React.Component<{}, AppState> {
                     this.dashDriver.left.bind(this.dashDriver));
                 this.interpreter.addCommandHandler('right', 'dash',
                     this.dashDriver.right.bind(this.dashDriver));
+            } else if (this.state.dashConnectionStatus === 'notConnected') {
+                // TODO: Remove Dash handlers
+
+                if (this.state.interpreterIsRunning) {
+                    this.interpreter.stop();
+                }
             }
         }
     }

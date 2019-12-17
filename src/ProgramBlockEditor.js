@@ -15,6 +15,8 @@ import './ProgramBlockEditor.css';
 
 type ProgramBlockEditorProps = {
     intl: any,
+    activeProgramStepNum: ?number,
+    editingDisabled: boolean,
     minVisibleSteps: number,
     program: Program,
     selectedAction: SelectedAction,
@@ -25,6 +27,13 @@ type ProgramBlockEditorProps = {
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
+    commandBlock: Button;
+
+    constructor(props: ProgramBlockEditorProps) {
+        super(props);
+        this.commandBlock = null;
+    }
+
     toggleAction(action: 'add' | 'delete') {
         if (this.props.selectedAction
                 && this.props.selectedAction.type === 'editorAction'
@@ -81,14 +90,27 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         }
     };
 
+    setActiveCommandBlockRef = (block) => {
+        this.commandBlock = block;
+    };
+
     makeProgramBlock(programStepNumber: number, command: string) {
+        const active = this.props.activeProgramStepNum === programStepNumber;
+        let classNames = [
+            'ProgramBlockEditor__program-block',
+            'command-block'
+        ];
+        if (active) {
+            classNames.push('ProgramBlockEditor__program-block--active');
+        }
         switch(command) {
             case 'forward':
                 return (
                     <Button
+                        ref={active ? this.setActiveCommandBlockRef : null}
                         key={`${programStepNumber}-forward`}
                         data-stepnumber={programStepNumber}
-                        className='ProgramBlockEditor__program-block command-block'
+                        className={classNames.join(' ')}
                         variant='command-block--forward'
                         aria-label={
                             this.addIsSelected() ?
@@ -104,9 +126,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'left':
                 return (
                     <Button
+                        ref={active ? this.setActiveCommandBlockRef : null}
                         key={`${programStepNumber}-left`}
                         data-stepnumber={programStepNumber}
-                        className='ProgramBlockEditor__program-block command-block'
+                        className={classNames.join(' ')}
                         variant='command-block--left'
                         aria-label={
                             this.addIsSelected() ?
@@ -122,9 +145,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'right':
                 return (
                     <Button
+                        ref={active ? this.setActiveCommandBlockRef : null}
                         key={`${programStepNumber}-right`}
                         data-stepnumber={programStepNumber}
-                        className='ProgramBlockEditor__program-block command-block'
+                        className={classNames.join(' ')}
                         variant='command-block--right'
                         aria-label={
                             this.addIsSelected() ?
@@ -140,9 +164,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'none':
                 return (
                     <Button
+                        ref={active ? this.setActiveCommandBlockRef : null}
                         key={`${programStepNumber}-none`}
                         data-stepnumber={programStepNumber}
-                        className='ProgramBlockEditor__program-block command-block'
+                        className={classNames.join(' ')}
                         variant='command-block--none'
                         aria-label={
                             this.addIsSelected() ?
@@ -179,6 +204,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             programBlocks.push(this.makeProgramBlock(programBlocks.length, 'none'));
         }
 
+        // Clear commandBlock before we render
+        this.commandBlock = null;
+
         return (
             <Container className='ProgramBlockEditor__container'>
                 <Row className='ProgramBlockEditor__header'>
@@ -189,6 +217,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     </Col>
                     <div className='ProgramBlockEditor__editor-actions'>
                         <Button
+                            disabled={this.props.editingDisabled}
                             key='addButton'
                             className={this.addIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
@@ -199,6 +228,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             <AddIcon className='ProgramBlockEditor__editor-action-button-svg'/>
                         </Button>
                         <Button
+                            disabled={this.props.editingDisabled}
                             key='deleteButton'
                             className={this.deleteIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
@@ -234,6 +264,12 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                 </Row>
             </Container>
         );
+    }
+
+    componentDidUpdate() {
+        if (this.commandBlock !== null) {
+            this.commandBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+        }
     }
 }
 
