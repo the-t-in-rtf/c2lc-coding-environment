@@ -227,3 +227,11 @@ test('Do not continue through program if stop is called', (done) => {
         done();
     });
 });
+
+test('Use the callback function on continueRun on program with two commands', (done) => {
+    const mockStateChangeHandler = jest.fn();
+    const interpreter = new Interpreter(mockStateChangeHandler);
+
+    expect(interpreter.run(['unknown'])).rejects.toThrow();
+    done();
+});

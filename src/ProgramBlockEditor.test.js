@@ -279,7 +279,7 @@ test('Whenever active program step number updates, auto scroll to the step', () 
 
 });
 
-test('When the program is running (if activeProgramStepNum prop has a value), editor action buttons should be disabled', () => {
+test('The editor action buttons disabled states are set according to the editingDisabled property', () => {
     const mockRunHandler = jest.fn();
 
     const wrapper = mount(
@@ -303,13 +303,12 @@ test('When the program is running (if activeProgramStepNum prop has a value), ed
         }
     );
 
-    // activeProgramStepNum is null
+    // editingDisabled is false
     expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(false);
     expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(false);
 
     wrapper.setProps({editingDisabled: true});
 
-    // activeProgramStepNum is 0
     expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(true);
     expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(true);
 });
