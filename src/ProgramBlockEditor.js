@@ -27,6 +27,7 @@ type ProgramBlockEditorProps = {
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
+    commandBlock: Button;
     constructor(props: ProgramBlockEditorProps) {
         super(props);
         this.commandBlock = null;
@@ -238,7 +239,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     </div>
                 </Row>
                 <Row>
-                    <Col ref={r => (this.programSequenceWindow = r)} className='ProgramBlockEditor__program-sequence-scroll-container'>
+                    <Col className='ProgramBlockEditor__program-sequence-scroll-container'>
                         <div className='ProgramBlockEditor__program-sequence'>
                             <div className='ProgramBlockEditor__start-indicator'>
                                 {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
