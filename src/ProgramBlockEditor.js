@@ -28,6 +28,7 @@ type ProgramBlockEditorProps = {
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     commandBlock: Button;
+
     constructor(props: ProgramBlockEditorProps) {
         super(props);
         this.commandBlock = null;
