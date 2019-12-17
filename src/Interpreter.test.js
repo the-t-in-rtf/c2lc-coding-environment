@@ -214,11 +214,8 @@ test('Do not continue through program if stop is called', (done) => {
         });
     });
     interpreter.addCommandHandler('step2', 'test', (interpreter) => {
-        return new Promise((resolve, reject) => {
-            expect(mockStateChangeHandler.mock.calls.length).toBe(2);
-            expect(mockStateChangeHandler.mock.calls[1][0]).toStrictEqual({'isRunning': true, 'activeStep': 1});
-            resolve();
-        });
+        // This step is not executed, as stop is called in step1
+        return Promise.reject();
     });
     interpreter.run(['step1', 'step2']).then(() => {
         expect(mockStateChangeHandler.mock.calls.length).toBe(2);
