@@ -146,7 +146,7 @@ test('Doing an unknown command rejects with Error', () => {
     return expect(interpreter.doCommand('unknown-command')).rejects.toThrow('Unknown command: unknown-command');
 });
 
-test('Use the callback function on continueRun with an empty program', (done) => {
+test('onRunningStateChange is called on run() empty program', (done) => {
     const mockStateChangeHandler = jest.fn();
     const interpreter = new Interpreter(mockStateChangeHandler);
 
@@ -157,7 +157,7 @@ test('Use the callback function on continueRun with an empty program', (done) =>
     });
 });
 
-test('Use the callback function on continueRun on program with a command', (done) => {
+test('onRunningStateChange is called on run() program with one step', (done) => {
     const mockStateChangeHandler = jest.fn();
     const interpreter = new Interpreter(mockStateChangeHandler);
     interpreter.addCommandHandler('step1', 'test', (interpreter) => {
@@ -175,7 +175,7 @@ test('Use the callback function on continueRun on program with a command', (done
     });
 });
 
-test('Use the callback function on continueRun on program with two commands', (done) => {
+test('onRunningStateChange is called on run() program with two steps', (done) => {
     const mockStateChangeHandler = jest.fn();
     const interpreter = new Interpreter(mockStateChangeHandler);
     interpreter.addCommandHandler('step1', 'test', (interpreter) => {
@@ -228,10 +228,14 @@ test('Do not continue through program if stop is called', (done) => {
     });
 });
 
-test('Use the callback function on continueRun on program with two commands', (done) => {
+test('run() Promise is rejected on first command error', (done) => {
     const mockStateChangeHandler = jest.fn();
     const interpreter = new Interpreter(mockStateChangeHandler);
-
-    expect(interpreter.run(['unknown'])).rejects.toThrow();
-    done();
+    interpreter.run(['unknown-command1', 'unknown-command2']).then(() => {}, (error) => {
+        expect(error.message).toBe('Unknown command: unknown-command1');
+        expect(mockStateChangeHandler.mock.calls.length).toBe(2);
+        expect(mockStateChangeHandler.mock.calls[0][0]).toStrictEqual({'isRunning': true, 'activeStep': 0});
+        expect(mockStateChangeHandler.mock.calls[1][0]).toStrictEqual({'isRunning': false, 'activeStep': null});
+        done();
+    });
 });

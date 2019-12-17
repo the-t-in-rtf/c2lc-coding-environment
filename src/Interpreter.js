@@ -61,9 +61,11 @@ export default class Interpreter {
                 this.onRunningStateChange({isRunning: this.isRunning, activeStep: this.programCounter});
                 this.step().then(() => {
                     this.continueRun(resolve, reject);
-                }, () => {
+                }, (error) => {
                     // Reject the run Promise when the step Promise is rejected
-                    reject();
+                    this.isRunning = false;
+                    this.onRunningStateChange({isRunning: this.isRunning, activeStep: null});
+                    reject(error);
                 });
             }
         } else {
