@@ -157,6 +157,7 @@ test('blocks', () => {
     const wrapper = mount(
         <ProgramBlockEditor
             activeProgramStepNum={null}
+            editingDisabled={false}
             minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
@@ -249,6 +250,7 @@ test('Whenever active program step number updates, auto scroll to the step', () 
     const wrapper = mount(
         <ProgramBlockEditor
             activeProgramStepNum={0}
+            editingDisabled={true}
             minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
@@ -283,6 +285,7 @@ test('When the program is running (if activeProgramStepNum prop has a value), ed
     const wrapper = mount(
         <ProgramBlockEditor
             activeProgramStepNum={null}
+            editingDisabled={false}
             minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
@@ -304,7 +307,7 @@ test('When the program is running (if activeProgramStepNum prop has a value), ed
     expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(false);
     expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(false);
 
-    wrapper.setProps({activeProgramStepNum: 0});
+    wrapper.setProps({editingDisabled: true});
 
     // activeProgramStepNum is 0
     expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(true);
