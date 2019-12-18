@@ -1,10 +1,10 @@
 # Coding to Learn and Create - Inclusive Coding Environment
 
-The Inclusive Coding Environment is a new educational coding tool designed for learners with disabilities. Learners can create code sequences that control the movement of a Bluetooth-connected robot. The Environment can be used with a mouse, touchscreen, or keyboard, and supports assistive technologies such as screen readers. It is a web application that works in the Chrome browser.<br>
+The Inclusive Coding Environment is a new educational coding tool designed for learners with disabilities. Learners can create code sequences that control the movement of a Bluetooth-connected robot. The Environment can be used with a mouse, touchscreen, or keyboard, and supports assistive technologies such as screen readers. It is a web application that works in the Chrome browser.
 
 ![inclusive coding environment UI](./inclusive-coding-env.png)
 
-[Live Environment](https://c2lc-dev.web.app/)
+To try the latest development version of the Inclusive Coding Environment, visit our [development build](https://c2lc-dev.web.app/).
 
 Currently, the Inclusive Coding Environment supports the [Dash](https://www.makewonder.com/robots/dash/) robot. We'll be adding support for new robots in upcoming releases.
 
@@ -22,10 +22,7 @@ npm install
 npm start
 ```
 
-Runs the app in the development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+Runs the app in the development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.The page will reload if you make edits. You will also see any lint errors in the console.
 
 ## Testing
 
@@ -33,8 +30,7 @@ You will also see any lint errors in the console.
 npm run test
 ```
 
-Launches the test runner in the interactive watch mode.<br>
-We are using [Enzyme](https://airbnb.io/enzyme/) as our testing framework.
+Launches the test runner in the interactive watch mode. We are using [Enzyme](https://airbnb.io/enzyme/) as our testing framework.
 
 ## Static Type Check
 
@@ -42,8 +38,7 @@ We are using [Enzyme](https://airbnb.io/enzyme/) as our testing framework.
 npx flow
 ```
 
-We are using flow as static type checker. <br>
-Learn more about [flow](https://flow.org/).
+We are using flow as static type checker. Learn more about [flow](https://flow.org/).
 
 ## Contributing
 
