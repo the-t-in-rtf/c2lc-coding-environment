@@ -97,7 +97,7 @@ button.btn.ProgramBlockEditor__run-button {
     border-radius: 50%;
 }
 
-button.btn.ProgramBlockEditor__run-button:disabled svg{
+button.btn.ProgramBlockEditor__run-button:disabled svg {
     fill: #777;
 }
 
@@ -110,4 +110,3 @@ button.btn.ProgramBlockEditor__run-button:not(:focus) {
     height: 1.6rem;
     display: block;
 }
-
