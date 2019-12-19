@@ -12,29 +12,29 @@ Currently, the Inclusive Coding Environment supports the [Dash](https://www.make
 
 Running this project requires [npm and Node.js](https://www.npmjs.com/get-npm); once you download or fork the source code, run npm install to get all required dependencies.
 
-```bash
+```
 npm install
 ```
 
 ## Start the application
 
-```bash
+```
 npm start
 ```
 
-Runs the app in the development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.The page will reload if you make edits. You will also see any lint errors in the console.
+Runs the app in the development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser. The page will reload if you make edits. You will also see any lint errors in the console.
 
 ## Testing
 
-```bash
-npm run test
+```
+npm test
 ```
 
-Launches the test runner in the interactive watch mode. We are using [Enzyme](https://airbnb.io/enzyme/) as our testing framework.
+Launches the test runner in the interactive watch mode. We are using the [Jest](https://jestjs.io/) and [Enzyme](https://airbnb.io/enzyme/) testing frameworks.
 
 ## Static Type Check
 
-```bash
+```
 npx flow
 ```
 
@@ -42,7 +42,7 @@ We are using flow as static type checker. Learn more about [flow](https://flow.o
 
 ## Contributing
 
-Contributions are welcome! To get started, fork the main repository. In general, we try to always create an [issue](https://issues.fluidproject.org/projects/C2LC/issues) and a branch for each new change. Branches should be named after the issue number that they address (e.g. C2LC-#). Each commit message should begin with the issue number, and use singular present tense. For example, 'C2LC-30: Update the README to include more information about how to contribute."
+Contributions are welcome! To get started, fork the main repository. In general, we try to always create an [issue](https://issues.fluidproject.org/projects/C2LC/issues) and a branch for each new change. Branches should be named after the issue number that they address (e.g. C2LC-#). Each commit message should begin with the issue number, and use singular present tense. For example, "C2LC-30: Update the README to include more information about how to contribute".
 
 Accessibility is an important part of our project. If you have any questions about accessibility, please feel free to ask questions. The [W3C's WCAG guidelines](https://www.w3.org/WAI/standards-guidelines/wcag/) are a good place to start learning about accessibility on the web.
 
