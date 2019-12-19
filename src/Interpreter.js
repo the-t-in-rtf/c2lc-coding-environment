@@ -89,8 +89,6 @@ export default class Interpreter {
                     this.programCounter = this.programCounter + 1;
                     resolve();
                 }, (error) => {
-                    console.log(error.name);
-                    console.log(error.message);
                     reject(error);
                 });
             }
