@@ -29,6 +29,11 @@ function getEditorActionButtons(programBlockEditorWrapper) {
         .filter('.ProgramBlockEditor__editor-action-button');
 }
 
+function getRunButton(programBlockEditorWrapper) {
+    return programBlockEditorWrapper.find(Button)
+        .filter('.ProgramBlockEditor__run-button');
+}
+
 test('onSelect property of ProgramBlockEditor component should change action buttons class and aria-pressed according to selectedAction property', () => {
     const mockSelectHandler = jest.fn();
     const intl = createIntl({
@@ -313,3 +318,25 @@ test('The editor action buttons disabled states are set according to the editing
     expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(true);
 });
 
+test('The run buttons color inverts by appending class name pressed when the program is running', () => {
+    const intl = createIntl({
+        locale: 'en',
+        defaultLocale: 'en',
+        messages: messages.en
+    });
+    const wrapper = shallow(
+        <ProgramBlockEditor.WrappedComponent
+            intl={intl}
+            activeProgramStepNum={0}
+            editingDisabled={true}
+            minVisibleSteps={6}
+            program={['forward', 'left', 'forward', 'left']}
+            selectedAction={null}
+            runButtonDisabled={true}
+            onClickRunButton={()=>{}}
+            onSelectAction={()=>{}}
+            onChange={()=>{}} />
+    );
+    const runButton = getRunButton(wrapper);
+    expect(runButton.hasClass('ProgramBlockEditor__run-button--pressed'));
+});
