@@ -109,6 +109,14 @@ button.btn.ProgramBlockEditor__run-button:not(:focus) {
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
 }
 
+button.btn.ProgramBlockEditor__run-button--pressed {
+    background-color: #000;
+}
+
+button.ProgramBlockEditor__run-button--pressed svg {
+    stroke: #FFF;
+}
+
 .ProgramBlockEditor__play-svg {
     width: 1.6rem;
     height: 1.6rem;
