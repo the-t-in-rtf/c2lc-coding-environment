@@ -28,10 +28,12 @@ type ProgramBlockEditorProps = {
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     commandBlock: Button;
+    actionIndex: ?number;
 
     constructor(props: ProgramBlockEditorProps) {
         super(props);
         this.commandBlock = null;
+        this.actionIndex = null;
     }
 
     toggleAction(action: 'add' | 'delete') {
@@ -74,14 +76,17 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
 
         if (this.props.selectedAction && this.props.selectedAction.type === 'editorAction') {
             if (this.props.selectedAction.action === 'add') {
+                this.actionIndex = index;
                 this.props.onChange(ProgramUtils.insert(this.props.program,
                     index, 'none', 'none'));
             } else if (this.props.selectedAction.action === 'delete') {
+                this.actionIndex = index;
                 this.props.onChange(ProgramUtils.trimEnd(
                     ProgramUtils.deleteStep(this.props.program, index),
                     'none'));
             }
         } else if (this.props.selectedAction && this.props.selectedAction.type === 'command'){
+            this.actionIndex = index;
             this.props.onChange(ProgramUtils.overwrite(this.props.program,
                     index, this.props.selectedAction.commandName, 'none'));
         }
@@ -264,6 +269,15 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     }
 
     componentDidUpdate() {
+        if (this.actionIndex != null) {
+            document.querySelectorAll(`[data-stepnumber="${this.actionIndex}"]`)[0].focus();
+            this.actionIndex = null;
+            // const blockToFocus = document.querySelectorAll(`[data-stepnumber="${this.actionIndex}"]`)[0];
+            // if (blockToFocus != null) {
+            //     blockToFocus.focus();
+            //     this.actionIndex = null;
+            // }
+        }
         if (this.commandBlock !== null) {
             this.commandBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
         }
