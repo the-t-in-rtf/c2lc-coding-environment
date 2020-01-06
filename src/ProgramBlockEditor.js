@@ -15,7 +15,8 @@ import './ProgramBlockEditor.css';
 
 type ProgramBlockEditorProps = {
     intl: any,
-    activeProgramStepNum: number,
+    activeProgramStepNum: ?number,
+    editingDisabled: boolean,
     minVisibleSteps: number,
     program: Program,
     selectedAction: SelectedAction,
@@ -26,6 +27,13 @@ type ProgramBlockEditorProps = {
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
+    commandBlock: Button;
+
+    constructor(props: ProgramBlockEditorProps) {
+        super(props);
+        this.commandBlock = null;
+    }
+
     toggleAction(action: 'add' | 'delete') {
         if (this.props.selectedAction
                 && this.props.selectedAction.type === 'editorAction'
@@ -68,18 +76,19 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             if (this.props.selectedAction.action === 'add') {
                 this.props.onChange(ProgramUtils.insert(this.props.program,
                     index, 'none', 'none'));
-                this.props.onSelectAction(null);
             } else if (this.props.selectedAction.action === 'delete') {
                 this.props.onChange(ProgramUtils.trimEnd(
                     ProgramUtils.deleteStep(this.props.program, index),
                     'none'));
-                this.props.onSelectAction(null);
             }
         } else if (this.props.selectedAction && this.props.selectedAction.type === 'command'){
             this.props.onChange(ProgramUtils.overwrite(this.props.program,
                     index, this.props.selectedAction.commandName, 'none'));
-            this.props.onSelectAction(null);
         }
+    };
+
+    setActiveCommandBlockRef = (block) => {
+        this.commandBlock = block;
     };
 
     makeProgramBlock(programStepNumber: number, command: string) {
@@ -95,6 +104,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'forward':
                 return (
                     <Button
+                        ref={active ? this.setActiveCommandBlockRef : null}
                         key={`${programStepNumber}-forward`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -113,6 +123,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'left':
                 return (
                     <Button
+                        ref={active ? this.setActiveCommandBlockRef : null}
                         key={`${programStepNumber}-left`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -131,6 +142,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'right':
                 return (
                     <Button
+                        ref={active ? this.setActiveCommandBlockRef : null}
                         key={`${programStepNumber}-right`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -149,6 +161,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'none':
                 return (
                     <Button
+                        ref={active ? this.setActiveCommandBlockRef : null}
                         key={`${programStepNumber}-none`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -188,14 +201,20 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             programBlocks.push(this.makeProgramBlock(programBlocks.length, 'none'));
         }
 
+        // Clear commandBlock before we render
+        this.commandBlock = null;
+
         return (
             <Container className='ProgramBlockEditor__container'>
                 <Row className='ProgramBlockEditor__header'>
-                    <Col className='ProgramBlockEditor__title'>
-                        <FormattedMessage id='ProgramBlockEditor.programLabel' />
+                    <Col>
+                        <h2 className='ProgramBlockEditor__heading'>
+                            <FormattedMessage id='ProgramBlockEditor.programHeading' />
+                        </h2>
                     </Col>
                     <div className='ProgramBlockEditor__editor-actions'>
                         <Button
+                            disabled={this.props.editingDisabled}
                             key='addButton'
                             className={this.addIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
@@ -206,6 +225,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             <AddIcon className='ProgramBlockEditor__editor-action-button-svg'/>
                         </Button>
                         <Button
+                            disabled={this.props.editingDisabled}
                             key='deleteButton'
                             className={this.deleteIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
@@ -218,8 +238,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     </div>
                 </Row>
                 <Row>
-                    <Col className='ProgramBlockEditor__program-sequence'>
-                        {programBlocks}
+                    <Col className='ProgramBlockEditor__program-sequence-scroll-container'>
+                        <div className='ProgramBlockEditor__program-sequence'>
+                            <div className='ProgramBlockEditor__start-indicator'>
+                                {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
+                            </div>
+                            {programBlocks}
+                        </div>
                     </Col>
                 </Row>
                 <Row className='ProgramBlockEditor__footer'>
@@ -236,6 +261,12 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                 </Row>
             </Container>
         );
+    }
+
+    componentDidUpdate() {
+        if (this.commandBlock !== null) {
+            this.commandBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+        }
     }
 }
 

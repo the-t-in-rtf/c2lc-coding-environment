@@ -24,6 +24,11 @@ function getProgramBlockAtPosition(programBlockEditorWrapper, index: number) {
     return getProgramBlocks(programBlockEditorWrapper).at(index)
 }
 
+function getEditorActionButtons(programBlockEditorWrapper) {
+    return programBlockEditorWrapper.find(Button)
+        .filter('.ProgramBlockEditor__editor-action-button');
+}
+
 test('onSelect property of ProgramBlockEditor component should change action buttons class and aria-pressed according to selectedAction property', () => {
     const mockSelectHandler = jest.fn();
     const intl = createIntl({
@@ -151,7 +156,8 @@ test('blocks', () => {
 
     const wrapper = mount(
         <ProgramBlockEditor
-            activeProgramStepNum={-1}
+            activeProgramStepNum={null}
+            editingDisabled={false}
             minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
@@ -184,8 +190,8 @@ test('blocks', () => {
     getProgramBlockAtPosition(wrapper, 0).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(1);
     expect(mockChangeHandler.mock.calls[0][0]).toStrictEqual(['none', 'forward', 'left', 'forward', 'left']);
-    expect(mockSelectHandler.mock.calls.length).toBe(1);
-    expect(mockSelectHandler.mock.calls[0][0]).toBeNull();
+    // No onSelectAction calls should have been made
+    expect(mockSelectHandler.mock.calls.length).toBe(0);
 
     wrapper.setProps({program : mockChangeHandler.mock.calls[0][0]});
     wrapper.setProps({selectedAction: {'commandName' : 'right', 'type': 'command'}});
@@ -193,8 +199,8 @@ test('blocks', () => {
     getProgramBlockAtPosition(wrapper, 0).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(2);
     expect(mockChangeHandler.mock.calls[1][0]).toStrictEqual(['right', 'forward', 'left', 'forward', 'left']);
-    expect(mockSelectHandler.mock.calls.length).toBe(2);
-    expect(mockSelectHandler.mock.calls[1][0]).toBeNull();
+    // No onSelectAction calls should have been made
+    expect(mockSelectHandler.mock.calls.length).toBe(0);
 
     wrapper.setProps({program : mockChangeHandler.mock.calls[1][0]});
     wrapper.setProps({selectedAction: {'action' : 'delete', 'type': 'editorAction'}});
@@ -202,8 +208,8 @@ test('blocks', () => {
     getProgramBlockAtPosition(wrapper, 0).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(3);
     expect(mockChangeHandler.mock.calls[2][0]).toStrictEqual(['forward', 'left', 'forward', 'left']);
-    expect(mockSelectHandler.mock.calls.length).toBe(3);
-    expect(mockSelectHandler.mock.calls[2][0]).toBeNull();
+    // No onSelectAction calls should have been made
+    expect(mockSelectHandler.mock.calls.length).toBe(0);
 
     // repeat the test cases for the last command in the program
 
@@ -213,8 +219,8 @@ test('blocks', () => {
     getProgramBlockAtPosition(wrapper, 3).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(4);
     expect(mockChangeHandler.mock.calls[3][0]).toStrictEqual(['forward', 'left', 'forward', 'none', 'left']);
-    expect(mockSelectHandler.mock.calls.length).toBe(4);
-    expect(mockSelectHandler.mock.calls[3][0]).toBeNull();
+    // No onSelectAction calls should have been made
+    expect(mockSelectHandler.mock.calls.length).toBe(0);
 
     wrapper.setProps({program : mockChangeHandler.mock.calls[3][0]});
     wrapper.setProps({selectedAction: {'commandName' : 'right', 'type': 'command'}});
@@ -222,8 +228,8 @@ test('blocks', () => {
     getProgramBlockAtPosition(wrapper, 3).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(5);
     expect(mockChangeHandler.mock.calls[4][0]).toStrictEqual(['forward', 'left', 'forward', 'right', 'left']);
-    expect(mockSelectHandler.mock.calls.length).toBe(5);
-    expect(mockSelectHandler.mock.calls[4][0]).toBeNull();
+    // No onSelectAction calls should have been made
+    expect(mockSelectHandler.mock.calls.length).toBe(0);
 
     wrapper.setProps({program : mockChangeHandler.mock.calls[4][0]});
     wrapper.setProps({selectedAction: {'action' : 'delete', 'type': 'editorAction'}});
@@ -231,6 +237,79 @@ test('blocks', () => {
     getProgramBlockAtPosition(wrapper, 3).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(6);
     expect(mockChangeHandler.mock.calls[5][0]).toStrictEqual(['forward', 'left', 'forward', 'left']);
-    expect(mockSelectHandler.mock.calls.length).toBe(6);
-    expect(mockSelectHandler.mock.calls[5][0]).toBeNull();
+    // No onSelectAction calls should have been made
+    expect(mockSelectHandler.mock.calls.length).toBe(0);
 })
+
+
+test('Whenever active program step number updates, auto scroll to the step', () => {
+    const mockScrollInto = jest.fn();
+
+    window.HTMLElement.prototype.scrollIntoView = mockScrollInto;
+
+    const wrapper = mount(
+        <ProgramBlockEditor
+            activeProgramStepNum={0}
+            editingDisabled={true}
+            minVisibleSteps={6}
+            program={['forward', 'left', 'forward', 'left']}
+            selectedAction={null}
+            runButtonDisabled={false}
+            onClickRunButton={()=>{}}
+            onSelectAction={()=>{}}
+            onChange={()=>{}} />,
+        {
+            wrappingComponent: IntlProvider,
+            wrappingComponentProps: {
+                locale: 'en',
+                defaultLocale: 'en',
+                messages: messages.en
+            }
+        }
+    );
+
+    wrapper.setProps({ activeProgramStepNum: 1 });
+    expect(mockScrollInto.mock.calls.length).toBe(1);
+    expect(mockScrollInto.mock.calls[0][0]).toStrictEqual({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+
+    wrapper.setProps({ activeProgramStepNum: 2});
+
+    expect(mockScrollInto.mock.calls.length).toBe(2);
+    expect(mockScrollInto.mock.calls[1][0]).toStrictEqual({ behavior: 'smooth', block: 'nearest', inline: 'nearest'});
+
+});
+
+test('The editor action buttons disabled states are set according to the editingDisabled property', () => {
+    const mockRunHandler = jest.fn();
+
+    const wrapper = mount(
+        <ProgramBlockEditor
+            activeProgramStepNum={null}
+            editingDisabled={false}
+            minVisibleSteps={6}
+            program={['forward', 'left', 'forward', 'left']}
+            selectedAction={null}
+            runButtonDisabled={false}
+            onClickRunButton={mockRunHandler}
+            onSelectAction={()=>{}}
+            onChange={()=>{}} />,
+        {
+            wrappingComponent: IntlProvider,
+            wrappingComponentProps: {
+                locale: 'en',
+                defaultLocale: 'en',
+                messages: messages.en
+            }
+        }
+    );
+
+    // editingDisabled is false
+    expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(false);
+    expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(false);
+
+    wrapper.setProps({editingDisabled: true});
+
+    expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(true);
+    expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(true);
+});
+

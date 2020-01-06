@@ -3,7 +3,9 @@
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
+import BluetoothApiWarning from './BluetoothApiWarning';
 import CommandPaletteCommand from './CommandPaletteCommand';
+import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
@@ -29,10 +31,11 @@ type AppState = {
     program: Program,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
-    selectedAction: SelectedAction,
-    activeProgramStepNum: number,
+    activeProgramStepNum: ?number,
     interpreterIsRunning: boolean,
-    intervalBetweenCommands: number
+    intervalBetweenCommands: number,
+    showDashConnectionError: boolean,
+    selectedAction: SelectedAction,
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -53,9 +56,10 @@ export default class App extends React.Component<{}, AppState> {
                 language: 'en'
             },
             dashConnectionStatus: 'notConnected',
-            selectedAction: null,
-            activeProgramStepNum: -1,
+            activeProgramStepNum: null,
             interpreterIsRunning: false,
+            showDashConnectionError: false,
+            selectedAction: null,
             intervalBetweenCommands: 1900
         };
 
@@ -96,12 +100,19 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
-        this.interpreter.run(this.state.program);
+        this.interpreter.run(this.state.program).then(
+            () => {}, // Do nothing on successful resolution
+            (error) => {
+                console.log(error.name);
+                console.log(error.message);
+            }
+        );
     };
 
     handleClickConnectDash = () => {
         this.setState({
-            dashConnectionStatus: 'connecting'
+            dashConnectionStatus: 'connecting',
+            showDashConnectionError: false
         });
         this.dashDriver.connect(this.handleDashDisconnect).then(() => {
             this.setState({
@@ -112,8 +123,15 @@ export default class App extends React.Component<{}, AppState> {
             console.log(error.name);
             console.log(error.message);
             this.setState({
-                dashConnectionStatus: 'notConnected'
+                dashConnectionStatus: 'notConnected',
+                showDashConnectionError: true
             });
+        });
+    };
+
+    handleCancelDashConnection = () => {
+        this.setState({
+            showDashConnectionError: false
         });
     };
 
@@ -156,9 +174,25 @@ export default class App extends React.Component<{}, AppState> {
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
-                <Container>
+                <div className='App__heading-section'>
+                    <Container>
+                        <Row>
+                            <Col>
+                                <h1 className='App__app-heading'>
+                                    <FormattedMessage id='App.appHeading'/>
+                                </h1>
+                            </Col>
+                        </Row>
+                    </Container>
+                </div>
+                <Container className='mb-5'>
                     <Row className='App__robot-connection-section'>
                         <Col>
+                            {!this.appContext.bluetoothApiIsAvailable &&
+                                <BluetoothApiWarning/>
+                            }
+                        </Col>
+                        <Col md='auto'>
                             <DeviceConnectControl
                                     disabled={!this.appContext.bluetoothApiIsAvailable}
                                     connectionStatus={this.state.dashConnectionStatus}
@@ -167,12 +201,12 @@ export default class App extends React.Component<{}, AppState> {
                             </DeviceConnectControl>
                         </Col>
                     </Row>
-                    <Row className='App__program-section'>
-                        <Col md={4} lg={3}>
+                    <Row className='App__program-section' noGutters={true}>
+                        <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
                             <div className='App__command-palette'>
-                                <div className='App__command-palette-heading'>
+                                <h2 className='App__command-palette-heading'>
                                     <FormattedMessage id='CommandPalette.movementsTitle' />
-                                </div>
+                                </h2>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
                                         commandName='forward'
@@ -208,10 +242,13 @@ export default class App extends React.Component<{}, AppState> {
                         <Col md={8} lg={9}>
                             <ProgramBlockEditor
                                 activeProgramStepNum={this.state.activeProgramStepNum}
+                                editingDisabled={this.state.interpreterIsRunning === true}
                                 minVisibleSteps={6}
                                 program={this.state.program}
                                 selectedAction={this.state.selectedAction}
-                                runButtonDisabled={this.state.dashConnectionStatus !== 'connected'}
+                                runButtonDisabled={
+                                    this.state.dashConnectionStatus !== 'connected' ||
+                                    this.state.interpreterIsRunning}
                                 onClickRunButton={this.handleClickRun}
                                 onSelectAction={this.handleSelectAction}
                                 onChange={this.handleChangeProgram}
@@ -219,6 +256,10 @@ export default class App extends React.Component<{}, AppState> {
                         </Col>
                     </Row>
                 </Container>
+                <DashConnectionErrorModal
+                    show={this.state.showDashConnectionError}
+                    onCancel={this.handleCancelDashConnection}
+                    onRetry={this.handleClickConnectDash}/>
             </IntlProvider>
         );
     }
@@ -226,8 +267,6 @@ export default class App extends React.Component<{}, AppState> {
     componentDidUpdate(prevProps: {}, prevState: AppState) {
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
-
-            // TODO: Handle Dash disconnection
 
             if (this.state.dashConnectionStatus === 'connected') {
                 this.interpreter.addCommandHandler('forward', 'dash',
@@ -247,6 +286,12 @@ export default class App extends React.Component<{}, AppState> {
                         });
                     }
                 );
+            } else if (this.state.dashConnectionStatus === 'notConnected') {
+                // TODO: Remove Dash handlers
+
+                if (this.state.interpreterIsRunning) {
+                    this.interpreter.stop();
+                }
             }
         }
     }
