@@ -36,6 +36,7 @@ type AppState = {
     intervalBetweenCommands: number,
     showDashConnectionError: boolean,
     selectedAction: SelectedAction,
+    emptyBlockStartIndex: number
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -60,7 +61,8 @@ export default class App extends React.Component<{}, AppState> {
             interpreterIsRunning: false,
             showDashConnectionError: false,
             selectedAction: null,
-            intervalBetweenCommands: 1900
+            intervalBetweenCommands: 1900,
+            emptyBlockStartIndex: 0
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -84,6 +86,16 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
+    getLastNonEmptyBlockIndex() {
+        let index = -1;
+        for (let i=0, programLength=this.state.program.length;i<programLength;i++) {
+            if (this.state.program[i] !== 'none') {
+                index = i;
+            }
+        }
+        return index;
+    }
+
     getSelectedCommandName() {
         if (this.state.selectedAction !== null
                 && this.state.selectedAction.type === 'command') {
@@ -100,6 +112,9 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
+        this.setState({
+            emptyBlockStartIndex: this.getLastNonEmptyBlockIndex() + 1
+        });
         this.interpreter.run(this.state.program).then(
             () => {}, // Do nothing on successful resolution
             (error) => {
@@ -292,6 +307,12 @@ export default class App extends React.Component<{}, AppState> {
                 if (this.state.interpreterIsRunning) {
                     this.interpreter.stop();
                 }
+            }
+        }
+
+        if (this.state.activeProgramStepNum !== prevState.activeProgramStepNum){
+            if (this.state.activeProgramStepNum === this.state.emptyBlockStartIndex) {
+                this.interpreter.stop();
             }
         }
     }
