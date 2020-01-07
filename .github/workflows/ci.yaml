@@ -3,18 +3,15 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+
   build:
     name: Build
-
     runs-on: ubuntu-18.04
-
     strategy:
       matrix:
         node-version: [10.x, 12.x]
-
     env:
       CI: true
-
     steps:
       - uses: actions/checkout@v1
         with:
@@ -43,6 +40,7 @@ jobs:
         with:
           name: ${{ format('build-{0}', matrix.node-version) }}
           path: build
+
   deploy-master:
     name: Deploy master
     needs: build
