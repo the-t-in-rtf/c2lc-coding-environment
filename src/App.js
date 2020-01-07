@@ -36,7 +36,7 @@ type AppState = {
     intervalBetweenCommands: number,
     showDashConnectionError: boolean,
     selectedAction: SelectedAction,
-    emptyBlockStartIndex: number
+    lastNonEmptyBlockIndex: number
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -62,7 +62,7 @@ export default class App extends React.Component<{}, AppState> {
             showDashConnectionError: false,
             selectedAction: null,
             intervalBetweenCommands: 1900,
-            emptyBlockStartIndex: 0
+            lastNonEmptyBlockIndex: 0
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -112,9 +112,6 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
-        this.setState({
-            emptyBlockStartIndex: this.getLastNonEmptyBlockIndex() + 1
-        });
         this.interpreter.run(this.state.program).then(
             () => {}, // Do nothing on successful resolution
             (error) => {
@@ -310,8 +307,14 @@ export default class App extends React.Component<{}, AppState> {
             }
         }
 
+        if (this.state.program !== prevState.program) {
+            this.setState({
+                lastNonEmptyBlockIndex: this.getLastNonEmptyBlockIndex()
+            });
+        }
+
         if (this.state.activeProgramStepNum !== prevState.activeProgramStepNum){
-            if (this.state.activeProgramStepNum === this.state.emptyBlockStartIndex) {
+            if (this.state.activeProgramStepNum === this.state.lastNonEmptyBlockIndex + 1) {
                 this.interpreter.stop();
             }
         }
