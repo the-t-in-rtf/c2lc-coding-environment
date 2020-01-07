@@ -260,6 +260,8 @@ export default class App extends React.Component<{}, AppState> {
                                 selectedAction={this.state.selectedAction}
                                 runButtonDisabled={
                                     this.state.dashConnectionStatus !== 'connected' ||
+                                    this.state.lastNonEmptyBlockIndex === -1 ||
+                                    this.state.program.length === 0 ||
                                     this.state.interpreterIsRunning}
                                 onClickRunButton={this.handleClickRun}
                                 onSelectAction={this.handleSelectAction}
