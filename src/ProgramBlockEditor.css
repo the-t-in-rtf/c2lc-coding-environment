@@ -101,8 +101,9 @@ button.btn.ProgramBlockEditor__run-button {
     border-radius: 50%;
 }
 
-button.btn.ProgramBlockEditor__run-button:disabled svg {
+button.btn.ProgramBlockEditor__run-button--disabled svg {
     fill: #777;
+    pointer-events: none;
 }
 
 button.btn.ProgramBlockEditor__run-button:not(:focus) {
