@@ -98,13 +98,17 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
-        this.interpreter.run(this.state.program).then(
-            () => {}, // Do nothing on successful resolution
-            (error) => {
-                console.log(error.name);
-                console.log(error.message);
-            }
-        );
+        if (this.state.dashConnectionStatus !== 'connected' ||
+            this.state.interpreterIsRunning) {
+        } else {
+            this.interpreter.run(this.state.program).then(
+                () => {}, // Do nothing on successful resolution
+                (error) => {
+                    console.log(error.name);
+                    console.log(error.message);
+                }
+            );
+        }
     };
 
     handleClickConnectDash = () => {
