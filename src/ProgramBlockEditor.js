@@ -11,7 +11,7 @@ import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
 import { ReactComponent as AddIcon } from './svg/Add.svg';
 import { ReactComponent as DeleteIcon } from './svg/Delete.svg';
 import { ReactComponent as PlayIcon } from './svg/Play.svg';
-import './ProgramBlockEditor.css';
+import './ProgramBlockEditor.scss';
 
 type ProgramBlockEditorProps = {
     intl: any,
