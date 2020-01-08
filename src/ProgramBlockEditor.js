@@ -1,6 +1,6 @@
 // @flow
 
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Collapse, Container, Row } from 'react-bootstrap';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
@@ -232,6 +232,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                                         'ProgramBlockEditor__editor-action-button'}
                             aria-pressed={this.deleteIsSelected() ? 'true' : 'false'}
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
+                            aria-expanded={this.deleteIsSelected()}
                             onClick={this.handleClickDelete}>
                             <DeleteIcon className='ProgramBlockEditor__editor-action-button-svg'/>
                         </Button>
@@ -239,6 +240,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                 </Row>
                 <Row>
                     <Col className='ProgramBlockEditor__program-sequence-scroll-container'>
+                        <Collapse className='ProgramBlockEditor__delete-all-button' in={this.deleteIsSelected()}>
+                            <Button>
+                                Delete<br />All
+                            </Button>
+                        </Collapse>
                         <div className='ProgramBlockEditor__program-sequence'>
                             <div className='ProgramBlockEditor__start-indicator'>
                                 {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
