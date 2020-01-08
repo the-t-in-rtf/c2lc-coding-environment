@@ -98,6 +98,9 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickRun = () => {
+        this.setState({
+            selectedAction: null
+        });
         this.interpreter.run(this.state.program).then(
             () => {}, // Do nothing on successful resolution
             (error) => {
