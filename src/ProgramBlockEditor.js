@@ -161,7 +161,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'none':
                 return (
                     <Button
-                        ref={active ? this.setActiveCommandBlockRef : null}
+                        ref={this.setActiveCommandBlockRef}
                         key={`${programStepNumber}-none`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
