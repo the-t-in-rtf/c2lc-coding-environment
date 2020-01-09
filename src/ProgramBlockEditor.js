@@ -5,6 +5,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
 import React from 'react';
+import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
 import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
 import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
 import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
@@ -26,12 +27,19 @@ type ProgramBlockEditorProps = {
     onChange: (Program) => void
 };
 
-class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
+type ProgramBlockEditorState = {
+    showConfirmDeleteAll: boolean
+};
+
+class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
     commandBlock: Button;
 
     constructor(props: ProgramBlockEditorProps) {
         super(props);
         this.commandBlock = null;
+        this.state = {
+            showConfirmDeleteAll : false
+        }
     }
 
     toggleAction(action: 'add' | 'delete') {
@@ -68,6 +76,25 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     handleClickDelete = () => {
         this.toggleAction('delete');
     };
+
+    handleClickDeleteAll = () => {
+        this.setState({
+            showConfirmDeleteAll : true
+        });
+    }
+
+    handleCancelDeleteAll = () => {
+        this.setState({
+            showConfirmDeleteAll : false
+        });
+    }
+
+    handleConfirmDeleteAll = () => {
+        this.props.onChange([]);
+        this.setState({
+            showConfirmDeleteAll : false
+        });
+    }
 
     handleClickStep = (e: SyntheticEvent<HTMLButtonElement>) => {
         const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
@@ -238,13 +265,17 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                         </Button>
                     </div>
                 </Row>
-                <Row>
+                <Row className='ProgramBlockEditor__delete-all-button-container'>
+                    <Collapse className='ProgramBlockEditor__delete-all-button' in={this.deleteIsSelected()}>
+                        <Button
+                            onClick={this.handleClickDeleteAll}
+                        >
+                            <FormattedMessage id='ProgramBlockEditor.delete' />
+                            <br />
+                            <FormattedMessage id='ProgramBlockEditor.all' />
+                        </Button>
+                    </Collapse>
                     <Col className='ProgramBlockEditor__program-sequence-scroll-container'>
-                        <Collapse className='ProgramBlockEditor__delete-all-button' in={this.deleteIsSelected()}>
-                            <Button>
-                                Delete<br />All
-                            </Button>
-                        </Collapse>
                         <div className='ProgramBlockEditor__program-sequence'>
                             <div className='ProgramBlockEditor__start-indicator'>
                                 {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
@@ -265,6 +296,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                         </Button>
                     </Col>
                 </Row>
+                <ConfirmDeleteAllModal
+                    show={this.state.showConfirmDeleteAll}
+                    onCancel={this.handleCancelDeleteAll}
+                    onRetry={this.handleConfirmDeleteAll}/>
             </Container>
         );
     }
