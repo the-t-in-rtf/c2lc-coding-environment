@@ -154,6 +154,8 @@ test('blocks', () => {
     const mockChangeHandler = jest.fn();
     const mockSelectHandler = jest.fn();
 
+    window.HTMLElement.prototype.scrollIntoView = () => {};
+
     const wrapper = mount(
         <ProgramBlockEditor
             activeProgramStepNum={null}
