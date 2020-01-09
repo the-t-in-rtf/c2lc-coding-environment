@@ -51,15 +51,20 @@ button.ProgramBlockEditor__editor-action-button--pressed svg {
     stroke: #FFF;
 }
 
+.ProgramBlockEditor__delete-all-button-container {
+    position: relative;
+}
+
 button.ProgramBlockEditor__delete-all-button {
+    z-index: 1;
     color: #FFF;
     background-color: #E2452B;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     margin-right: 0.5rem;
     padding: 0 0.5rem;
-    position: relative;
-    float: right;
+    position: absolute;
+    right: 0;
 }
 
 button.ProgramBlockEditor__delete-all-button:hover {
