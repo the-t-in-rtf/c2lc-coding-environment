@@ -266,8 +266,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     </div>
                 </Row>
                 <Row className='ProgramBlockEditor__delete-all-button-container'>
-                    <Collapse className='ProgramBlockEditor__delete-all-button' in={this.deleteIsSelected()}>
+                    <Collapse in={this.deleteIsSelected()}>
                         <Button
+                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.deleteAll'})}
+                            className='ProgramBlockEditor__delete-all-button'
                             onClick={this.handleClickDeleteAll}
                         >
                             <FormattedMessage id='ProgramBlockEditor.delete' />
@@ -299,7 +301,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 <ConfirmDeleteAllModal
                     show={this.state.showConfirmDeleteAll}
                     onCancel={this.handleCancelDeleteAll}
-                    onRetry={this.handleConfirmDeleteAll}/>
+                    onConfirm={this.handleConfirmDeleteAll}/>
             </Container>
         );
     }
