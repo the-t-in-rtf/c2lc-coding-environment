@@ -10,7 +10,7 @@ type ConfrimDeleteAllModalProps = {
     intl: any,
     show: boolean,
     onCancel: () => void,
-    onRetry: () => void
+    onConfirm: () => void
 };
 
 class ConfrimDeleteAllModal extends React.Component<ConfrimDeleteAllModalProps, {}> {
@@ -37,7 +37,7 @@ class ConfrimDeleteAllModal extends React.Component<ConfrimDeleteAllModalProps, 
                         </Button>
                         <Button
                             className='ConfrimDeleteAllModal__option-button'
-                            onClick={this.props.onRetry}>
+                            onClick={this.props.onConfirm}>
                             <FormattedMessage id='ConfrimDeleteAllModal.confirmButton' />
                         </Button>
                     </div>
