@@ -5,6 +5,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
 import React from 'react';
+import AriaDisablingButton from './AriaDisablingButton';
 import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
 import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
 import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
@@ -249,14 +250,15 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                 </Row>
                 <Row className='ProgramBlockEditor__footer'>
                     <Col>
-                        <Button
+                        <AriaDisablingButton
                             aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
-                            className={`ProgramBlockEditor__run-button${this.props.runButtonDisabled ? ' ProgramBlockEditor__run-button--disabled' : ''}`}
-                            aria-disabled={this.props.runButtonDisabled ? 'true' : 'false'}
+                            className='ProgramBlockEditor__run-button'
+                            disabledClassName='ProgramBlockEditor__run-button--disabled'
+                            disabled={this.props.runButtonDisabled}
                             onClick={this.props.onClickRunButton}
                         >
                             <PlayIcon className='ProgramBlockEditor__play-svg' />
-                        </Button>
+                        </AriaDisablingButton>
                     </Col>
                 </Row>
             </Container>
