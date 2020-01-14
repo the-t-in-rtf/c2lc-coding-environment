@@ -6,6 +6,7 @@ import { configure, mount, shallow } from 'enzyme';
 import { Button } from 'react-bootstrap';
 import { createIntl, IntlProvider } from 'react-intl';
 import App from './App';
+import AriaDisablingButton from './AriaDisablingButton';
 import messages from './messages.json';
 import ProgramBlockEditor from './ProgramBlockEditor';
 
@@ -25,7 +26,7 @@ function getProgramBlockAtPosition(programBlockEditorWrapper, index: number) {
 }
 
 function getEditorActionButtons(programBlockEditorWrapper) {
-    return programBlockEditorWrapper.find(Button)
+    return programBlockEditorWrapper.find(AriaDisablingButton)
         .filter('.ProgramBlockEditor__editor-action-button');
 }
 
