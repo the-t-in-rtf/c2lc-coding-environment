@@ -219,6 +219,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             className={this.addIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
                                         'ProgramBlockEditor__editor-action-button'}
+                            disabledClassName='button--disabled'
                             disabled={this.props.editingDisabled}
                             onClick={this.handleClickAdd}
                             aria-pressed={this.addIsSelected() ? 'true' : 'false'}
@@ -232,6 +233,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             className={this.deleteIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
                                         'ProgramBlockEditor__editor-action-button'}
+                            disabledClassName='button--disabled'
                             disabled={this.props.editingDisabled}
                             onClick={this.handleClickDelete}
                             aria-pressed={this.deleteIsSelected() ? 'true' : 'false'}
@@ -256,6 +258,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                         <AriaDisablingButton
                             aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
                             className='ProgramBlockEditor__run-button'
+                            disabledClassName='button--disabled'
                             disabled={this.props.runButtonDisabled}
                             onClick={this.props.onClickRunButton}
                         >
