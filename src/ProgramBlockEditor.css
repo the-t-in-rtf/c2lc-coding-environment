@@ -37,6 +37,11 @@ button.btn.ProgramBlockEditor__editor-action-button--pressed {
     background-color: #000;
 }
 
+button.btn.ProgramBlockEditor__editor-action-button--pressed.button--disabled,
+button.btn.ProgramBlockEditor__editor-action-button--pressed.button--disabled:active:focus {
+    background-color: #777;
+}
+
 .ProgramBlockEditor__editor-action-button-svg {
     width: 1.7rem;
     height: 1.7rem;
@@ -47,7 +52,8 @@ button.btn.ProgramBlockEditor__editor-action-button--pressed {
     stroke: #000;
 }
 
-button.ProgramBlockEditor__editor-action-button--pressed svg {
+button.btn.ProgramBlockEditor__editor-action-button--pressed svg,
+button.btn.ProgramBlockEditor__editor-action-button--pressed.button--disabled svg {
     stroke: #FFF;
 }
 

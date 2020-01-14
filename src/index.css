@@ -42,17 +42,17 @@ button.command-block--pressed:hover {
     border: 2px dashed #000000;
 }
 
-button.btn-primary.button--disabled svg {
+button.btn.btn-primary.button--disabled svg {
     stroke: #777;
     fill: #777;
 }
 
-button.btn-primary.button--disabled {
+button.btn.btn-primary.button--disabled {
     background-color: #FFF;
     cursor: default;
 }
 
-button.btn-primary.button--disabled:active:focus {
+button.btn.btn-primary.button--disabled:active:focus {
     background-color: #FFF;
     box-shadow: 0 0 0 0.2rem #000;
 }
