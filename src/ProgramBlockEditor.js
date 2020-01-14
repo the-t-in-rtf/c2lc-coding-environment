@@ -272,9 +272,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             className='ProgramBlockEditor__delete-all-button'
                             onClick={this.handleClickDeleteAll}
                         >
-                            <FormattedMessage id='ProgramBlockEditor.delete' />
+                            <FormattedMessage id='ProgramBlockEditor.delete-all-label-1' />
                             <br />
-                            <FormattedMessage id='ProgramBlockEditor.all' />
+                            <FormattedMessage id='ProgramBlockEditor.delete-all-label-2' />
                         </Button>
                     </Collapse>
                     <Col className='ProgramBlockEditor__program-sequence-scroll-container'>
