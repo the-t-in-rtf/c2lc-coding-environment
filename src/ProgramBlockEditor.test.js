@@ -195,10 +195,8 @@ test('blocks', () => {
     wrapper.setProps({program : mockChangeHandler.mock.calls[0][0]});
 
     // focus should remain on the same block where add or delete is performed
-    const elem = getProgramBlockAtPosition(wrapper, 0);
-    const focusedElement = document.activeElement;
 
-    expect(focusedElement).toBe(elem.getDOMNode());
+    expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
 
     // No onSelectAction calls should have been made
     expect(mockSelectHandler.mock.calls.length).toBe(0);
@@ -208,21 +206,29 @@ test('blocks', () => {
     getProgramBlockAtPosition(wrapper, 0).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(2);
     expect(mockChangeHandler.mock.calls[1][0]).toStrictEqual(['right', 'forward', 'left', 'forward', 'left']);
+    wrapper.setProps({program : mockChangeHandler.mock.calls[1][0]});
+
+    // focus should remain on the same blcok where a command is inserted
+    expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
+
     // No onSelectAction calls should have been made
     expect(mockSelectHandler.mock.calls.length).toBe(0);
 
-    wrapper.setProps({program : mockChangeHandler.mock.calls[1][0]});
     wrapper.setProps({selectedAction: {'action' : 'delete', 'type': 'editorAction'}});
     // when selected Action is delete, when you press any program blocks, the block and its command will be removed from the program
     getProgramBlockAtPosition(wrapper, 0).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(3);
     expect(mockChangeHandler.mock.calls[2][0]).toStrictEqual(['forward', 'left', 'forward', 'left']);
+    wrapper.setProps({program : mockChangeHandler.mock.calls[2][0]});
+
+    // focus should remain on the same blcok where a command is deleted
+    expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
+
     // No onSelectAction calls should have been made
     expect(mockSelectHandler.mock.calls.length).toBe(0);
 
     // repeat the test cases for the last command in the program
 
-    wrapper.setProps({program : mockChangeHandler.mock.calls[2][0]});
     wrapper.setProps({selectedAction: {'action': 'add', 'type': 'editorAction'}});
     // when selected Action is add, when you press any program blocks, an empty block (none command) will be added to the previous index and set selectedCommand to null
     getProgramBlockAtPosition(wrapper, 3).simulate('click');
