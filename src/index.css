@@ -42,6 +42,21 @@ button.command-block--pressed:hover {
     border: 2px dashed #000000;
 }
 
+button.btn.button--disabled svg {
+    stroke: #777;
+    fill: #777;
+}
+
+button.btn.button--disabled {
+    background-color: #FFF;
+    cursor: default;
+}
+
+button.btn.button--disabled:active:focus {
+    background-color: #FFF;
+    box-shadow: 0 0 0 0.2rem #000;
+}
+
 .command-block-svg {
     width: 2.75rem;
     height: 2.75rem;
