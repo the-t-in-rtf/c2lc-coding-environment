@@ -8,7 +8,6 @@ type AriaDisablingButtonProps = {
     onClick: (evt: any) => void,
     disabled: boolean,
     className?: string,
-    disabledClassName: string,
     children: React.Node
 };
 
@@ -24,14 +23,13 @@ export default class AriaDisablingButton extends React.Component<AriaDisablingBu
             onClick,
             disabled,
             className,
-            disabledClassName,
             children,
             ...otherProps
         } = this.props;
 
         const classes = classNames(
             className,
-            disabled && disabledClassName
+            disabled && 'button--disabled'
         );
 
         return React.createElement(
