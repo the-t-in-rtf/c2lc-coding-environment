@@ -15,6 +15,7 @@ test('Enabled button with no className or extra props', () => {
         <AriaDisablingButton
             onClick={mockClickHandler}
             disabled={false}
+            disabledClassName='someDisabledClass'
         >
             someContent
         </AriaDisablingButton>
@@ -24,7 +25,7 @@ test('Enabled button with no className or extra props', () => {
 
     expect(wrappedButton.props()['aria-disabled']).toBe(false);
     expect(wrappedButton.props()['children']).toBe('someContent');
-    expect(wrappedButton.hasClass('button--disabled')).toBe(false);
+    expect(wrappedButton.hasClass('someDisabledClass')).toBe(false);
 
     wrappedButton.simulate('click');
     expect(mockClickHandler.mock.calls.length).toBe(1);
@@ -37,6 +38,7 @@ test('Disabled button with no className or extra props', () => {
         <AriaDisablingButton
             onClick={mockClickHandler}
             disabled={true}
+            disabledClassName='someDisabledClass'
         >
             someContent
         </AriaDisablingButton>
@@ -46,7 +48,7 @@ test('Disabled button with no className or extra props', () => {
 
     expect(wrappedButton.props()['aria-disabled']).toBe(true);
     expect(wrappedButton.props()['children']).toBe('someContent');
-    expect(wrappedButton.hasClass('button--disabled')).toBe(true);
+    expect(wrappedButton.hasClass('someDisabledClass')).toBe(true);
 
     wrappedButton.simulate('click');
     expect(mockClickHandler.mock.calls.length).toBe(0);
@@ -60,6 +62,7 @@ test('Enabled button with className and extra props', () => {
             onClick={mockClickHandler}
             disabled={false}
             className='someClass1 someClass2'
+            disabledClassName='someDisabledClass'
             anotherProp1='anotherPropValue1'
             anotherProp2='anotherPropValue2'
         >
@@ -75,7 +78,7 @@ test('Enabled button with className and extra props', () => {
     expect(wrappedButton.props()['children']).toBe('someContent');
     expect(wrappedButton.hasClass('someClass1')).toBe(true);
     expect(wrappedButton.hasClass('someClass2')).toBe(true);
-    expect(wrappedButton.hasClass('button--disabled')).toBe(false);
+    expect(wrappedButton.hasClass('someDisabledClass')).toBe(false);
 
     wrappedButton.simulate('click');
     expect(mockClickHandler.mock.calls.length).toBe(1);
@@ -89,6 +92,7 @@ test('Disabled button with className and extra props', () => {
             onClick={mockClickHandler}
             disabled={true}
             className='someClass1 someClass2'
+            disabledClassName='someDisabledClass'
             anotherProp1='anotherPropValue1'
             anotherProp2='anotherPropValue2'
         >
@@ -104,7 +108,7 @@ test('Disabled button with className and extra props', () => {
     expect(wrappedButton.props()['children']).toBe('someContent');
     expect(wrappedButton.hasClass('someClass1')).toBe(true);
     expect(wrappedButton.hasClass('someClass2')).toBe(true);
-    expect(wrappedButton.hasClass('button--disabled')).toBe(true);
+    expect(wrappedButton.hasClass('someDisabledClass')).toBe(true);
 
     wrappedButton.simulate('click');
     expect(mockClickHandler.mock.calls.length).toBe(0);
