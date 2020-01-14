@@ -5,6 +5,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
 import React from 'react';
+import AriaDisablingButton from './AriaDisablingButton';
 import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
 import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
 import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
@@ -213,28 +214,33 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                         </h2>
                     </Col>
                     <div className='ProgramBlockEditor__editor-actions'>
-                        <Button
-                            disabled={this.props.editingDisabled}
-                            key='addButton'
+                        <AriaDisablingButton
+                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.add'})}
                             className={this.addIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
                                         'ProgramBlockEditor__editor-action-button'}
-                            aria-pressed={this.addIsSelected() ? 'true' : 'false'}
-                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.add'})}
-                            onClick={this.handleClickAdd}>
-                            <AddIcon className='ProgramBlockEditor__editor-action-button-svg'/>
-                        </Button>
-                        <Button
+                            disabledClassName='button--disabled'
                             disabled={this.props.editingDisabled}
-                            key='deleteButton'
+                            onClick={this.handleClickAdd}
+                            aria-pressed={this.addIsSelected() ? 'true' : 'false'}
+                            key='addButton'
+                        >
+                            <AddIcon className='ProgramBlockEditor__editor-action-button-svg'/>
+                        </AriaDisablingButton>
+
+                        <AriaDisablingButton
+                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
                             className={this.deleteIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
                                         'ProgramBlockEditor__editor-action-button'}
+                            disabledClassName='button--disabled'
+                            disabled={this.props.editingDisabled}
+                            onClick={this.handleClickDelete}
                             aria-pressed={this.deleteIsSelected() ? 'true' : 'false'}
-                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
-                            onClick={this.handleClickDelete}>
+                            key='deleteButton'
+                        >
                             <DeleteIcon className='ProgramBlockEditor__editor-action-button-svg'/>
-                        </Button>
+                        </AriaDisablingButton>
                     </div>
                 </Row>
                 <Row>
@@ -249,14 +255,15 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                 </Row>
                 <Row className='ProgramBlockEditor__footer'>
                     <Col>
-                        <Button
+                        <AriaDisablingButton
                             aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
                             className='ProgramBlockEditor__run-button'
+                            disabledClassName='button--disabled'
                             disabled={this.props.runButtonDisabled}
                             onClick={this.props.onClickRunButton}
                         >
                             <PlayIcon className='ProgramBlockEditor__play-svg' />
-                        </Button>
+                        </AriaDisablingButton>
                     </Col>
                 </Row>
             </Container>

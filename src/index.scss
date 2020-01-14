@@ -44,6 +44,21 @@ button.btn-primary:disabled {
     color: $c2lc-disabled-fg-color;
 }
 
+button.btn.btn-primary.button--disabled svg {
+    stroke: #777;
+    fill: #777;
+}
+
+button.btn.btn-primary.button--disabled {
+    background-color: #FFF;
+    cursor: default;
+}
+
+button.btn.btn-primary.button--disabled:active:focus {
+    background-color: #FFF;
+    box-shadow: 0 0 0 0.2rem #000;
+}
+
 button.btn-command-block--none {
     border: 1px solid #C4C4C4;
 }
