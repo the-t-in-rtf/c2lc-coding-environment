@@ -154,9 +154,6 @@ test('onSelect property of ProgramBlockEditor component should change action but
 test('blocks', () => {
     const mockChangeHandler = jest.fn();
     const mockSelectHandler = jest.fn();
-    const mockFocusHandler = jest.fn();
-
-    window.HTMLElement.prototype.focus = mockFocusHandler;
 
     const wrapper = mount(
         <ProgramBlockEditor
@@ -191,15 +188,21 @@ test('blocks', () => {
 
     wrapper.setProps({selectedAction: {'action': 'add', 'type': 'editorAction'}});
     // when selected Action is add, when you press any program blocks, an empty block (none command) will be added to the previous index and set selectedCommand to null
-    //getProgramBlocks(wrapper).at(0).getDOMNode().focus = mockFocusHandler;
     getProgramBlockAtPosition(wrapper, 0).simulate('click');
-    //expect(mockFocusHandler.mock.calls.length).toBe(1);
+
     expect(mockChangeHandler.mock.calls.length).toBe(1);
     expect(mockChangeHandler.mock.calls[0][0]).toStrictEqual(['none', 'forward', 'left', 'forward', 'left']);
+    wrapper.setProps({program : mockChangeHandler.mock.calls[0][0]});
+
+    // focus should remain on the same block where add or delete is performed
+    const elem = getProgramBlockAtPosition(wrapper, 0);
+    const focusedElement = document.activeElement;
+
+    expect(focusedElement).toBe(elem.getDOMNode());
+
     // No onSelectAction calls should have been made
     expect(mockSelectHandler.mock.calls.length).toBe(0);
 
-    wrapper.setProps({program : mockChangeHandler.mock.calls[0][0]});
     wrapper.setProps({selectedAction: {'commandName' : 'right', 'type': 'command'}});
     // when selected Action is a command, change existing command at a clicked block to be selected command and set selected action back to null
     getProgramBlockAtPosition(wrapper, 0).simulate('click');
@@ -246,7 +249,6 @@ test('blocks', () => {
     // No onSelectAction calls should have been made
     expect(mockSelectHandler.mock.calls.length).toBe(0);
 })
-
 
 test('Whenever active program step number updates, auto scroll to the step', () => {
     const mockScrollInto = jest.fn();
@@ -318,4 +320,3 @@ test('The editor action buttons disabled states are set according to the editing
     expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(true);
     expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(true);
 });
-
