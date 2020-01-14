@@ -214,7 +214,32 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                         </h2>
                     </Col>
                     <div className='ProgramBlockEditor__editor-actions'>
-                        <Button
+                        <AriaDisablingButton
+                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.add'})}
+                            className={this.addIsSelected() ?
+                                        'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
+                                        'ProgramBlockEditor__editor-action-button'}
+                            disabled={this.props.editingDisabled}
+                            onClick={this.handleClickAdd}
+                            aria-pressed={this.addIsSelected() ? 'true' : 'false'}
+                            key='addButton'
+                        >
+                            <AddIcon className='ProgramBlockEditor__editor-action-button-svg'/>
+                        </AriaDisablingButton>
+
+                        <AriaDisablingButton
+                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
+                            className={this.deleteIsSelected() ?
+                                        'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
+                                        'ProgramBlockEditor__editor-action-button'}
+                            disabled={this.props.editingDisabled}
+                            onClick={this.handleClickDelete}
+                            aria-pressed={this.deleteIsSelected() ? 'true' : 'false'}
+                            key='deleteButton'
+                        >
+                            <DeleteIcon className='ProgramBlockEditor__editor-action-button-svg'/>
+                        </AriaDisablingButton>
+                        {/* <Button
                             disabled={this.props.editingDisabled}
                             key='addButton'
                             className={this.addIsSelected() ?
@@ -235,7 +260,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
                             onClick={this.handleClickDelete}>
                             <DeleteIcon className='ProgramBlockEditor__editor-action-button-svg'/>
-                        </Button>
+                        </Button> */}
                     </div>
                 </Row>
                 <Row>
@@ -253,7 +278,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                         <AriaDisablingButton
                             aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
                             className='ProgramBlockEditor__run-button'
-                            disabledClassName='ProgramBlockEditor__run-button--disabled'
                             disabled={this.props.runButtonDisabled}
                             onClick={this.props.onClickRunButton}
                         >
