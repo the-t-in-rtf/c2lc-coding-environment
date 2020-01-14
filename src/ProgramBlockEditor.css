@@ -103,7 +103,16 @@ button.btn.ProgramBlockEditor__run-button {
 
 button.btn.ProgramBlockEditor__run-button--disabled svg {
     fill: #777;
-    pointer-events: none;
+}
+
+button.btn.ProgramBlockEditor__run-button.ProgramBlockEditor__run-button--disabled {
+    background-color: #FFF;
+    cursor: default;
+}
+
+button.btn.ProgramBlockEditor__run-button.ProgramBlockEditor__run-button--disabled:active:focus {
+    background-color: #FFF;
+    box-shadow: 0 0 0 0.2rem #000;
 }
 
 button.btn.ProgramBlockEditor__run-button:not(:focus) {
