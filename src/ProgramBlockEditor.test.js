@@ -194,7 +194,7 @@ test('blocks', () => {
     expect(mockChangeHandler.mock.calls[0][0]).toStrictEqual(['none', 'forward', 'left', 'forward', 'left']);
     wrapper.setProps({program : mockChangeHandler.mock.calls[0][0]});
 
-    // focus should remain on the same block where add or delete is performed
+    // focus should remain on the same block where an empty block is added
 
     expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
 
@@ -208,7 +208,7 @@ test('blocks', () => {
     expect(mockChangeHandler.mock.calls[1][0]).toStrictEqual(['right', 'forward', 'left', 'forward', 'left']);
     wrapper.setProps({program : mockChangeHandler.mock.calls[1][0]});
 
-    // focus should remain on the same blcok where a command is inserted
+    // focus should remain on the same block where a command is inserted
     expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
 
     // No onSelectAction calls should have been made
