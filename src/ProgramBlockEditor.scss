@@ -1,3 +1,5 @@
+@import 'variables';
+
 .ProgramBlockEditor__container {
     padding-top: 1rem;
     background: #F1F1F1;
@@ -37,24 +39,38 @@ button.btn.ProgramBlockEditor__editor-action-button--pressed {
     background-color: #000;
 }
 
-button.btn.ProgramBlockEditor__editor-action-button--pressed.button--disabled,
-button.btn.ProgramBlockEditor__editor-action-button--pressed.button--disabled:active:focus {
-    background-color: #777;
+button.btn.ProgramBlockEditor__editor-action-button--disabled {
+    background-color: $c2lc-primary-button-color;
+    cursor: default;
 }
 
-.ProgramBlockEditor__editor-action-button-svg {
-    width: 1.7rem;
-    height: 1.7rem;
-    display: block;
+button.btn.ProgramBlockEditor__editor-action-button.ProgramBlockEditor__editor-action-button--disabled:active:focus {
+    background-color: $c2lc-primary-button-color;
+    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+}
+
+button.btn.ProgramBlockEditor__editor-action-button--pressed.ProgramBlockEditor__editor-action-button--disabled,
+button.btn.ProgramBlockEditor__editor-action-button--pressed.ProgramBlockEditor__editor-action-button--disabled:active:focus {
+    background-color: $c2lc-disabled-color;
 }
 
 .ProgramBlockEditor__editor-action-button svg {
     stroke: #000;
 }
 
+button.btn.ProgramBlockEditor__editor-action-button--disabled svg {
+    stroke: $c2lc-disabled-color;
+}
+
 button.btn.ProgramBlockEditor__editor-action-button--pressed svg,
-button.btn.ProgramBlockEditor__editor-action-button--pressed.button--disabled svg {
+button.btn.ProgramBlockEditor__editor-action-button--pressed.ProgramBlockEditor__editor-action-button--disabled svg {
     stroke: #FFF;
+}
+
+.ProgramBlockEditor__editor-action-button-svg {
+    width: 1.7rem;
+    height: 1.7rem;
+    display: block;
 }
 
 .ProgramBlockEditor__program-sequence-scroll-container {
@@ -109,6 +125,20 @@ button.btn.ProgramBlockEditor__run-button {
 
 button.btn.ProgramBlockEditor__run-button:not(:focus) {
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+}
+
+button.btn.ProgramBlockEditor__run-button--disabled {
+    background-color: $c2lc-primary-button-color;
+    cursor: default;
+}
+
+button.btn.ProgramBlockEditor__run-button.ProgramBlockEditor__run-button--disabled:active:focus {
+    background-color: $c2lc-primary-button-color;
+    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+}
+
+button.btn.ProgramBlockEditor__run-button--disabled svg {
+    fill: $c2lc-disabled-color;
 }
 
 .ProgramBlockEditor__play-svg {
