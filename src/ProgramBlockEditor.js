@@ -18,6 +18,7 @@ type ProgramBlockEditorProps = {
     intl: any,
     activeProgramStepNum: ?number,
     editingDisabled: boolean,
+    interpreterIsRunning: boolean,
     minVisibleSteps: number,
     program: Program,
     selectedAction: SelectedAction,
@@ -28,11 +29,13 @@ type ProgramBlockEditorProps = {
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
-    commandBlock: Button;
+    commandBlockRefs: Map<number, HTMLElement>;
+    focusIndex: ?number;
 
     constructor(props: ProgramBlockEditorProps) {
         super(props);
-        this.commandBlock = null;
+        this.commandBlockRefs = new Map();
+        this.focusIndex = null;
     }
 
     toggleAction(action: 'add' | 'delete') {
@@ -75,21 +78,28 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
 
         if (this.props.selectedAction && this.props.selectedAction.type === 'editorAction') {
             if (this.props.selectedAction.action === 'add') {
+                this.focusIndex = index;
                 this.props.onChange(ProgramUtils.insert(this.props.program,
                     index, 'none', 'none'));
             } else if (this.props.selectedAction.action === 'delete') {
+                this.focusIndex = index;
                 this.props.onChange(ProgramUtils.trimEnd(
                     ProgramUtils.deleteStep(this.props.program, index),
                     'none'));
             }
         } else if (this.props.selectedAction && this.props.selectedAction.type === 'command'){
+            this.focusIndex = index;
             this.props.onChange(ProgramUtils.overwrite(this.props.program,
                     index, this.props.selectedAction.commandName, 'none'));
         }
     };
 
-    setActiveCommandBlockRef = (block) => {
-        this.commandBlock = block;
+    setCommandBlockRef = (programStepNumber: number, element: ?HTMLElement) => {
+        if (element) {
+            this.commandBlockRefs.set(programStepNumber, element);
+        } else {
+            this.commandBlockRefs.delete(programStepNumber);
+        }
     };
 
     makeProgramBlock(programStepNumber: number, command: string) {
@@ -105,7 +115,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'forward':
                 return (
                     <Button
-                        ref={active ? this.setActiveCommandBlockRef : null}
+                        ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                         key={`${programStepNumber}-forward`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -124,7 +134,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'left':
                 return (
                     <Button
-                        ref={active ? this.setActiveCommandBlockRef : null}
+                        ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                         key={`${programStepNumber}-left`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -143,7 +153,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'right':
                 return (
                     <Button
-                        ref={active ? this.setActiveCommandBlockRef : null}
+                        ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                         key={`${programStepNumber}-right`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -162,7 +172,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             case 'none':
                 return (
                     <Button
-                        ref={active ? this.setActiveCommandBlockRef : null}
+                        ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                         key={`${programStepNumber}-none`}
                         data-stepnumber={programStepNumber}
                         className={classNames.join(' ')}
@@ -201,9 +211,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         if (!noneAtEnd) {
             programBlocks.push(this.makeProgramBlock(programBlocks.length, 'none'));
         }
-
-        // Clear commandBlock before we render
-        this.commandBlock = null;
 
         return (
             <Container className='ProgramBlockEditor__container'>
@@ -257,7 +264,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                     <Col>
                         <AriaDisablingButton
                             aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
-                            className={this.props.editingDisabled ?
+                            className={this.props.interpreterIsRunning ?
                                 'ProgramBlockEditor__run-button ProgramBlockEditor__run-button--pressed' :
                                 'ProgramBlockEditor__run-button'}
                             disabledClassName='ProgramBlockEditor__run-button--disabled'
@@ -273,8 +280,18 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     }
 
     componentDidUpdate() {
-        if (this.commandBlock !== null) {
-            this.commandBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+        if (this.focusIndex != null) {
+            let element = this.commandBlockRefs.get(this.focusIndex);
+            if (element) {
+                element.focus();
+            }
+            this.focusIndex = null;
+        }
+        if (this.props.activeProgramStepNum != null) {
+            let element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+            }
         }
     }
 }
