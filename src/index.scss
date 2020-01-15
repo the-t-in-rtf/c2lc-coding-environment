@@ -40,8 +40,8 @@ button.btn-primary:hover {
 }
 
 button.btn-primary:disabled {
-    border: $c2lc-button-border-width solid $c2lc-disabled-fg-color;
-    color: $c2lc-disabled-fg-color;
+    border: $c2lc-button-border-width solid $c2lc-disabled-color;
+    color: $c2lc-disabled-color;
 }
 
 button.btn-command-block--none {

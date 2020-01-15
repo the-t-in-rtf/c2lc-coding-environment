@@ -51,7 +51,7 @@ button.btn.ProgramBlockEditor__editor-action-button.ProgramBlockEditor__editor-a
 
 button.btn.ProgramBlockEditor__editor-action-button--pressed.ProgramBlockEditor__editor-action-button--disabled,
 button.btn.ProgramBlockEditor__editor-action-button--pressed.ProgramBlockEditor__editor-action-button--disabled:active:focus {
-    background-color: $c2lc-disabled-fg-color;
+    background-color: $c2lc-disabled-color;
 }
 
 .ProgramBlockEditor__editor-action-button svg {
@@ -59,7 +59,7 @@ button.btn.ProgramBlockEditor__editor-action-button--pressed.ProgramBlockEditor_
 }
 
 button.btn.ProgramBlockEditor__editor-action-button--disabled svg {
-    stroke: $c2lc-disabled-fg-color;
+    stroke: $c2lc-disabled-color;
 }
 
 button.btn.ProgramBlockEditor__editor-action-button--pressed svg,
@@ -138,7 +138,7 @@ button.btn.ProgramBlockEditor__run-button.ProgramBlockEditor__run-button--disabl
 }
 
 button.btn.ProgramBlockEditor__run-button--disabled svg {
-    fill: $c2lc-disabled-fg-color;
+    fill: $c2lc-disabled-color;
 }
 
 .ProgramBlockEditor__play-svg {
