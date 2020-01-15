@@ -31,7 +31,7 @@ function getEditorActionButtons(programBlockEditorWrapper) {
 }
 
 function getRunButton(programBlockEditorWrapper) {
-    return programBlockEditorWrapper.find(Button)
+    return programBlockEditorWrapper.find(AriaDisablingButton)
         .filter('.ProgramBlockEditor__run-button');
 }
 
