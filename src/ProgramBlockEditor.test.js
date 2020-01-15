@@ -37,6 +37,7 @@ function getDeleteAllButton(programBlockEditorWrapper) {
 }
 
 test('onSelect property of ProgramBlockEditor component should change action buttons class and aria-pressed according to selectedAction property', () => {
+
     const mockSelectHandler = jest.fn();
     const intl = createIntl({
         locale: 'en',
@@ -195,32 +196,46 @@ test('blocks', () => {
     wrapper.setProps({selectedAction: {'action': 'add', 'type': 'editorAction'}});
     // when selected Action is add, when you press any program blocks, an empty block (none command) will be added to the previous index and set selectedCommand to null
     getProgramBlockAtPosition(wrapper, 0).simulate('click');
+
     expect(mockChangeHandler.mock.calls.length).toBe(1);
     expect(mockChangeHandler.mock.calls[0][0]).toStrictEqual(['none', 'forward', 'left', 'forward', 'left']);
+    wrapper.setProps({program : mockChangeHandler.mock.calls[0][0]});
+
+    // focus should remain on the same block where an empty block is added
+
+    expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
+
     // No onSelectAction calls should have been made
     expect(mockSelectHandler.mock.calls.length).toBe(0);
 
-    wrapper.setProps({program : mockChangeHandler.mock.calls[0][0]});
     wrapper.setProps({selectedAction: {'commandName' : 'right', 'type': 'command'}});
     // when selected Action is a command, change existing command at a clicked block to be selected command and set selected action back to null
     getProgramBlockAtPosition(wrapper, 0).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(2);
     expect(mockChangeHandler.mock.calls[1][0]).toStrictEqual(['right', 'forward', 'left', 'forward', 'left']);
+    wrapper.setProps({program : mockChangeHandler.mock.calls[1][0]});
+
+    // focus should remain on the same block where a command is inserted
+    expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
+
     // No onSelectAction calls should have been made
     expect(mockSelectHandler.mock.calls.length).toBe(0);
 
-    wrapper.setProps({program : mockChangeHandler.mock.calls[1][0]});
     wrapper.setProps({selectedAction: {'action' : 'delete', 'type': 'editorAction'}});
     // when selected Action is delete, when you press any program blocks, the block and its command will be removed from the program
     getProgramBlockAtPosition(wrapper, 0).simulate('click');
     expect(mockChangeHandler.mock.calls.length).toBe(3);
     expect(mockChangeHandler.mock.calls[2][0]).toStrictEqual(['forward', 'left', 'forward', 'left']);
+    wrapper.setProps({program : mockChangeHandler.mock.calls[2][0]});
+
+    // focus should remain on the same blcok where a command is deleted
+    expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
+
     // No onSelectAction calls should have been made
     expect(mockSelectHandler.mock.calls.length).toBe(0);
 
     // repeat the test cases for the last command in the program
 
-    wrapper.setProps({program : mockChangeHandler.mock.calls[2][0]});
     wrapper.setProps({selectedAction: {'action': 'add', 'type': 'editorAction'}});
     // when selected Action is add, when you press any program blocks, an empty block (none command) will be added to the previous index and set selectedCommand to null
     getProgramBlockAtPosition(wrapper, 3).simulate('click');
@@ -247,7 +262,6 @@ test('blocks', () => {
     // No onSelectAction calls should have been made
     expect(mockSelectHandler.mock.calls.length).toBe(0);
 })
-
 
 test('Whenever active program step number updates, auto scroll to the step', () => {
     const mockScrollInto = jest.fn();
@@ -351,4 +365,3 @@ test('Delete all button appears when delete action is toggled, which will open a
     deleteAllButton.simulate('click');
     expect(wrapper.state().showConfirmDeleteAll).toBe(true);
 });
-
