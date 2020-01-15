@@ -30,6 +30,7 @@ export default class EditorContainer extends React.Component<EditorContainerProp
                     <ProgramBlockEditor
                         activeProgramStepNum={null}
                         editingDisabled={false}
+                        interpreterIsRunning={false}
                         minVisibleSteps={6}
                         program={this.props.program}
                         runButtonDisabled={this.props.runButtonDisabled}
