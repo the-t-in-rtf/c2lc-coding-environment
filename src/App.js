@@ -263,19 +263,19 @@ export default class App extends React.Component<{}, AppState> {
                     </Row>
                     <Row>
                         <Col>
-                            <h2 class='App__instructions-heading'>
+                            <h2 className='App__instructions-heading'>
                                 <FormattedMessage id='App.instructions.heading' />
                             </h2>
-                            <h3 class="App__instructions-section-heading">
+                            <h3 className="App__instructions-section-heading">
                                 <FormattedMessage id='App.instructions.addHeading' />
                             </h3>
-                            <div class='App__instructions-text' id={this.addModeDescriptionId}>
+                            <div className='App__instructions-text' id={this.addModeDescriptionId}>
                                 <FormattedMessage id='App.instructions.addText' />
                             </div>
-                            <h3 class="App__instructions-section-heading">
+                            <h3 className="App__instructions-section-heading">
                                 <FormattedMessage id='App.instructions.deleteHeading' />
                             </h3>
-                            <div class='App__instructions-text' id={this.deleteModeDescriptionId}>
+                            <div className='App__instructions-text' id={this.deleteModeDescriptionId}>
                                 <FormattedMessage id='App.instructions.deleteText' />
                             </div>
                         </Col>
