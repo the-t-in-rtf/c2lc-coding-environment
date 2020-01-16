@@ -30,6 +30,7 @@ type ProgramBlockEditorProps = {
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
     commandBlockRefs: Map<number, HTMLElement>;
     focusIndex: ?number;
+    scrollToIndex: ?number;
 
     constructor(props: ProgramBlockEditorProps) {
         super(props);
@@ -87,11 +88,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
                 this.props.onChange(ProgramUtils.trimEnd(
                     ProgramUtils.deleteStep(this.props.program, index),
                     'none'));
+                this.scrollToIndex = null;
             }
         } else if (this.props.selectedAction && this.props.selectedAction.type === 'command'){
             this.focusIndex = index;
             this.props.onChange(ProgramUtils.overwrite(this.props.program,
                     index, this.props.selectedAction.commandName, 'none'));
+            this.scrollToIndex = index + 1;
         }
     };
 
@@ -197,7 +200,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
 
     render() {
         var noneAtEnd = this.props.program[this.props.program.length - 1] === 'none';
-        console.log(`the last element is ${this.props.program[this.props.program.length -1 ]}`);
 
         const programBlocks = this.props.program.map((command, stepNumber) => {
             return this.makeProgramBlock(stepNumber, command);
@@ -212,8 +214,12 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         // Ensure that the last block is 'none'
         if (!noneAtEnd) {
             programBlocks.push(this.makeProgramBlock(programBlocks.length, 'none'));
-            console.log(`scroll to index ${this.scrollToIndex}`);
-            this.scrollToIndex = programBlocks.length - 1;
+            if (this.deleteIsSelected()
+                || this.addIsSelected()
+                || this.props.selectedAction.type === 'command') {
+            } else {
+                this.scrollToIndex = programBlocks.length - 1;
+            }
         }
 
         return (
@@ -281,11 +287,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         );
     }
 
-    componentDidUpdate() {
-        if (this.scrollToIndex !== null) {
-            let element = this.commandBlockRefs.get(this.scrollToIndex);
-            if (element) {
-                element.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
+    componentDidUpdate(prevProps: ProgramBlockEditorProps, prevState: {}) {
+        if (this.props.selectedAction === prevProps.selectedAction){
+            if (this.scrollToIndex != null) {
+                let element = this.commandBlockRefs.get(this.scrollToIndex);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'auto', block: 'end', inline: 'end' });
+                }
             }
         }
         if (this.focusIndex != null) {
