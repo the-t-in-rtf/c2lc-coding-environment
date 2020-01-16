@@ -170,6 +170,8 @@ test('blocks', () => {
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
             runButtonDisabled={false}
+            addModeDescriptionId={'someAddModeDescriptionId'}
+            deleteModeDescriptionId={'someDeleteModeDescriptionId'}
             onClickRunButton={()=>{}}
             onSelectAction={mockSelectHandler}
             onChange={mockChangeHandler} />,
@@ -263,6 +265,34 @@ test('blocks', () => {
     expect(mockSelectHandler.mock.calls.length).toBe(0);
 })
 
+test('The editor action buttons have aria-describedby set to provided ids', () => {
+    const wrapper = mount(
+        <ProgramBlockEditor
+            activeProgramStepNum={null}
+            editingDisabled={false}
+            minVisibleSteps={6}
+            program={['forward', 'left', 'forward', 'left']}
+            selectedAction={null}
+            runButtonDisabled={false}
+            addModeDescriptionId={'someAddModeDescriptionId'}
+            deleteModeDescriptionId={'someDeleteModeDescriptionId'}
+            onClickRunButton={()=>{}}
+            onSelectAction={()=>{}}
+            onChange={()=>{}} />,
+        {
+            wrappingComponent: IntlProvider,
+            wrappingComponentProps: {
+                locale: 'en',
+                defaultLocale: 'en',
+                messages: messages.en
+            }
+        }
+    );
+
+    expect(getEditorActionButtons(wrapper).get(0).props['aria-describedby']).toBe('someAddModeDescriptionId');
+    expect(getEditorActionButtons(wrapper).get(1).props['aria-describedby']).toBe('someDeleteModeDescriptionId');
+});
+
 test('Whenever active program step number updates, auto scroll to the step', () => {
     const mockScrollInto = jest.fn();
 
@@ -276,6 +306,8 @@ test('Whenever active program step number updates, auto scroll to the step', () 
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
             runButtonDisabled={false}
+            addModeDescriptionId={'someAddModeDescriptionId'}
+            deleteModeDescriptionId={'someDeleteModeDescriptionId'}
             onClickRunButton={()=>{}}
             onSelectAction={()=>{}}
             onChange={()=>{}} />,
@@ -311,6 +343,8 @@ test('The editor action buttons disabled states are set according to the editing
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
             runButtonDisabled={false}
+            addModeDescriptionId={'someAddModeDescriptionId'}
+            deleteModeDescriptionId={'someDeleteModeDescriptionId'}
             onClickRunButton={mockRunHandler}
             onSelectAction={()=>{}}
             onChange={()=>{}} />,

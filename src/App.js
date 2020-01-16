@@ -12,6 +12,7 @@ import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
+import * as Utils from './Utils';
 import type {DeviceConnectionStatus, Program, SelectedAction} from './types';
 import messages from './messages.json';
 import './App.scss';
@@ -41,6 +42,8 @@ export default class App extends React.Component<{}, AppState> {
     appContext: AppContext;
     dashDriver: DashDriver;
     interpreter: Interpreter;
+    addModeDescriptionId: string;
+    deleteModeDescriptionId: string;
 
     constructor(props: {}) {
         super(props);
@@ -72,6 +75,9 @@ export default class App extends React.Component<{}, AppState> {
         );
 
         this.dashDriver = new DashDriver();
+
+        this.addModeDescriptionId = Utils.generateId('addModeDescription');
+        this.deleteModeDescriptionId = Utils.generateId('deleteModeDescription');
     }
 
     setStateSettings(settings: $Shape<AppSettings>) {
@@ -247,10 +253,31 @@ export default class App extends React.Component<{}, AppState> {
                                 runButtonDisabled={
                                     this.state.dashConnectionStatus !== 'connected' ||
                                     this.state.interpreterIsRunning}
+                                addModeDescriptionId={this.addModeDescriptionId}
+                                deleteModeDescriptionId={this.deleteModeDescriptionId}
                                 onClickRunButton={this.handleClickRun}
                                 onSelectAction={this.handleSelectAction}
                                 onChange={this.handleChangeProgram}
                             />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <h2 class='App__instructions-heading'>
+                                <FormattedMessage id='App.instructions.heading' />
+                            </h2>
+                            <h3 class="App__instructions-section-heading">
+                                <FormattedMessage id='App.instructions.addHeading' />
+                            </h3>
+                            <div class='App__instructions-text' id={this.addModeDescriptionId}>
+                                <FormattedMessage id='App.instructions.addText' />
+                            </div>
+                            <h3 class="App__instructions-section-heading">
+                                <FormattedMessage id='App.instructions.deleteHeading' />
+                            </h3>
+                            <div class='App__instructions-text' id={this.deleteModeDescriptionId}>
+                                <FormattedMessage id='App.instructions.deleteText' />
+                            </div>
                         </Col>
                     </Row>
                 </Container>

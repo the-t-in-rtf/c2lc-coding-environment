@@ -23,6 +23,8 @@ type ProgramBlockEditorProps = {
     program: Program,
     selectedAction: SelectedAction,
     runButtonDisabled: boolean,
+    addModeDescriptionId: string,
+    deleteModeDescriptionId: string,
     onClickRunButton: () => void,
     onSelectAction: (selectedAction: SelectedAction) => void,
     onChange: (Program) => void
@@ -249,6 +251,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <div className='ProgramBlockEditor__editor-actions'>
                         <AriaDisablingButton
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.add'})}
+                            aria-describedby={this.props.addModeDescriptionId}
                             className={this.addIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
                                         'ProgramBlockEditor__editor-action-button'}
@@ -263,6 +266,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
                         <AriaDisablingButton
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
+                            aria-describedby={this.props.deleteModeDescriptionId}
                             className={this.deleteIsSelected() ?
                                         'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
                                         'ProgramBlockEditor__editor-action-button'}
@@ -270,7 +274,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             disabled={this.props.editingDisabled}
                             onClick={this.handleClickDelete}
                             aria-pressed={this.deleteIsSelected() ? 'true' : 'false'}
-                            aria-expanded={this.deleteIsSelected()}
                             key='deleteButton'
                         >
                             <DeleteIcon className='ProgramBlockEditor__editor-action-button-svg'/>
@@ -289,6 +292,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             <FormattedMessage id='ProgramBlockEditor.delete-all-label-2' />
                         </Button>
                     </Collapse>
+                </Row>
+                <Row>
                     <Col className='ProgramBlockEditor__program-sequence-scroll-container'>
                         <div className='ProgramBlockEditor__program-sequence'>
                             <div className='ProgramBlockEditor__start-indicator'>
