@@ -347,6 +347,7 @@ test('The run buttons color inverts by appending class name pressed when the pro
             intl={intl}
             activeProgramStepNum={0}
             editingDisabled={true}
+            interpreterIsRunning={true}
             minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
@@ -355,6 +356,18 @@ test('The run buttons color inverts by appending class name pressed when the pro
             onSelectAction={()=>{}}
             onChange={()=>{}} />
     );
-    const runButton = getRunButton(wrapper);
-    expect(runButton.hasClass('ProgramBlockEditor__run-button--pressed'));
+
+    // When the interpreter is running, the run button has pressed and disabled class name
+    expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(true);
+    expect(getRunButton(wrapper).props().disabled).toBe(true);
+
+    wrapper.setProps({
+        activeProgramStepNum: null,
+        editingDisabled: false,
+        interpreterIsRunning: false,
+        runButtonDisabled: false });
+
+    // When the interpreter is not running, the run button doesn't have pressed and disabled class name
+    expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(false);
+    expect(getRunButton(wrapper).props().disabled).toBe(false);
 });
