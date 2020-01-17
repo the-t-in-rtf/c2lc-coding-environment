@@ -357,7 +357,7 @@ test('The run buttons color inverts by appending class name pressed when the pro
             onChange={()=>{}} />
     );
 
-    // When the interpreter is running, the run button has pressed and disabled class name
+    // When the interpreter is running, the run button has pressed and disabled
     expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(true);
     expect(getRunButton(wrapper).props().disabled).toBe(true);
 
@@ -367,7 +367,7 @@ test('The run buttons color inverts by appending class name pressed when the pro
         interpreterIsRunning: false,
         runButtonDisabled: false });
 
-    // When the interpreter is not running, the run button doesn't have pressed and disabled class name
+    // When the interpreter is not running, the run button doesn't have pressed and disabled
     expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(false);
     expect(getRunButton(wrapper).props().disabled).toBe(false);
 });

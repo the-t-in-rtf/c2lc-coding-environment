@@ -150,8 +150,8 @@ button.btn.ProgramBlockEditor__run-button--pressed {
     background-color: #000;
 }
 
-button.btn.ProgramBlockEditor__run-button--pressed.ProgramBlockEditor__run-button--disabled,
-button.btn.ProgramBlockEditor__run-button--pressed.ProgramBlockEditor__run-button--disabled:active:focus {
+button.btn.ProgramBlockEditor__run-button.ProgramBlockEditor__run-button--pressed.ProgramBlockEditor__run-button--disabled,
+button.btn.ProgramBlockEditor__run-button.ProgramBlockEditor__run-button--pressed.ProgramBlockEditor__run-button--disabled:active:focus {
     background-color: $c2lc-disabled-color;
 }
 
