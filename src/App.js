@@ -249,6 +249,7 @@ export default class App extends React.Component<{}, AppState> {
                             <ProgramBlockEditor
                                 activeProgramStepNum={this.state.activeProgramStepNum}
                                 editingDisabled={this.state.interpreterIsRunning === true}
+                                interpreterIsRunning={this.state.interpreterIsRunning}
                                 minVisibleSteps={6}
                                 program={this.state.program}
                                 selectedAction={this.state.selectedAction}

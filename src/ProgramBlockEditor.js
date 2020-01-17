@@ -22,6 +22,7 @@ type ProgramBlockEditorProps = {
     intl: any,
     activeProgramStepNum: ?number,
     editingDisabled: boolean,
+    interpreterIsRunning: boolean,
     minVisibleSteps: number,
     program: Program,
     selectedAction: SelectedAction,
@@ -308,7 +309,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <Col>
                         <AriaDisablingButton
                             aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
-                            className='ProgramBlockEditor__run-button'
+                            className={this.props.interpreterIsRunning ?
+                                'ProgramBlockEditor__run-button ProgramBlockEditor__run-button--pressed' :
+                                'ProgramBlockEditor__run-button'}
                             disabledClassName='ProgramBlockEditor__run-button--disabled'
                             disabled={this.props.runButtonDisabled}
                             onClick={this.props.onClickRunButton}

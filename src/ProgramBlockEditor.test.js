@@ -31,6 +31,11 @@ function getEditorActionButtons(programBlockEditorWrapper) {
         .filter('.ProgramBlockEditor__editor-action-button');
 }
 
+function getRunButton(programBlockEditorWrapper) {
+    return programBlockEditorWrapper.find(AriaDisablingButton)
+        .filter('.ProgramBlockEditor__run-button');
+}
+
 function getDeleteAllButton(programBlockEditorWrapper) {
     return programBlockEditorWrapper.find(Button)
         .filter('.ProgramBlockEditor__delete-all-button');
@@ -166,6 +171,7 @@ test('blocks', () => {
         <ProgramBlockEditor
             activeProgramStepNum={null}
             editingDisabled={false}
+            interpreterIsRunning={false}
             minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
@@ -302,6 +308,7 @@ test('Whenever active program step number updates, auto scroll to the step', () 
         <ProgramBlockEditor
             activeProgramStepNum={0}
             editingDisabled={true}
+            interpreterIsRunning={true}
             minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
@@ -339,6 +346,7 @@ test('The editor action buttons disabled states are set according to the editing
         <ProgramBlockEditor
             activeProgramStepNum={null}
             editingDisabled={false}
+            interpreterIsRunning={false}
             minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
@@ -366,6 +374,42 @@ test('The editor action buttons disabled states are set according to the editing
 
     expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(true);
     expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(true);
+});
+
+test('The run buttons color inverts by appending class name pressed when the program is running', () => {
+    const intl = createIntl({
+        locale: 'en',
+        defaultLocale: 'en',
+        messages: messages.en
+    });
+    const wrapper = shallow(
+        <ProgramBlockEditor.WrappedComponent
+            intl={intl}
+            activeProgramStepNum={0}
+            editingDisabled={true}
+            interpreterIsRunning={true}
+            minVisibleSteps={6}
+            program={['forward', 'left', 'forward', 'left']}
+            selectedAction={null}
+            runButtonDisabled={true}
+            onClickRunButton={()=>{}}
+            onSelectAction={()=>{}}
+            onChange={()=>{}} />
+    );
+
+    // When the interpreter is running, the run button has pressed and disabled
+    expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(true);
+    expect(getRunButton(wrapper).props().disabled).toBe(true);
+
+    wrapper.setProps({
+        activeProgramStepNum: null,
+        editingDisabled: false,
+        interpreterIsRunning: false,
+        runButtonDisabled: false });
+
+    // When the interpreter is not running, the run button doesn't have pressed and disabled
+    expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(false);
+    expect(getRunButton(wrapper).props().disabled).toBe(false);
 });
 
 test('Delete all button appears when delete action is toggled, which will open a confirmation modal onClick', () => {
