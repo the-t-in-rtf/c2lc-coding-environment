@@ -94,7 +94,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
             this.focusIndex = index;
             this.props.onChange(ProgramUtils.overwrite(this.props.program,
                     index, this.props.selectedAction.commandName, 'none'));
-            this.scrollToIndex = index + 1;
+            if (this.commandBlockRefs.get(index+1) == null) {
+                this.scrollToIndex = index+1;
+            } else {
+                this.scrollToIndex = null;
+            }
         }
     };
 
@@ -214,12 +218,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         // Ensure that the last block is 'none'
         if (!noneAtEnd) {
             programBlocks.push(this.makeProgramBlock(programBlocks.length, 'none'));
-            if (this.deleteIsSelected()
-                || this.addIsSelected()
-                || this.props.selectedAction.type === 'command') {
-            } else {
-                this.scrollToIndex = programBlocks.length - 1;
-            }
         }
 
         return (
@@ -287,14 +285,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, {}> {
         );
     }
 
-    componentDidUpdate(prevProps: ProgramBlockEditorProps, prevState: {}) {
-        if (this.props.selectedAction === prevProps.selectedAction){
-            if (this.scrollToIndex != null) {
-                let element = this.commandBlockRefs.get(this.scrollToIndex);
-                if (element) {
-                    element.scrollIntoView({ behavior: 'auto', block: 'end', inline: 'end' });
-                }
+    componentDidUpdate() {
+        if (this.scrollToIndex != null) {
+            let element = this.commandBlockRefs.get(this.scrollToIndex);
+            if (element) {
+                element.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
             }
+            this.scrollToIndex = null;
         }
         if (this.focusIndex != null) {
             let element = this.commandBlockRefs.get(this.focusIndex);
