@@ -73,6 +73,30 @@ button.btn.ProgramBlockEditor__editor-action-button--pressed.ProgramBlockEditor_
     display: block;
 }
 
+.ProgramBlockEditor__delete-all-button-container {
+    position: relative;
+}
+
+button.ProgramBlockEditor__delete-all-button {
+    z-index: 1;
+    color: #FFF;
+    background-color: #E2452B;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    max-width: 5em;
+    margin-right: 0.5rem;
+    padding: 0 0.5rem;
+    position: absolute;
+    right: 0;
+}
+
+button.ProgramBlockEditor__delete-all-button:hover {
+    color: #FFF;
+    background-color: #000;
+    margin-right: 0.5rem;
+    padding: 0 0.5rem;
+}
+
 .ProgramBlockEditor__program-sequence-scroll-container {
     border: 0.1rem solid #8F8F8F;
     background: #FFF;
