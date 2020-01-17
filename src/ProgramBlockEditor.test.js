@@ -276,6 +276,7 @@ test('The editor action buttons have aria-describedby set to provided ids', () =
         <ProgramBlockEditor
             activeProgramStepNum={null}
             editingDisabled={false}
+            interpreterIsRunning={false}
             minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
