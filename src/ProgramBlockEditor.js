@@ -15,6 +15,9 @@ import { ReactComponent as DeleteIcon } from './svg/Delete.svg';
 import { ReactComponent as PlayIcon } from './svg/Play.svg';
 import './ProgramBlockEditor.scss';
 
+// TODO: Send focus to Delete toggle button on close of Delete All confirmation dialog
+// TODO: Use workaround to ensure that Delete All confirmation dialog is read at open on VoiceOver
+
 type ProgramBlockEditorProps = {
     intl: any,
     activeProgramStepNum: ?number,

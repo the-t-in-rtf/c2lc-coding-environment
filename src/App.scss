@@ -49,5 +49,19 @@
 }
 
 .App__instructions-text {
-    max-width: 40em;
+    max-width: 32em;
+}
+
+.App__add-mode-image svg {
+    width: 1em;
+    height: 1em;
+    stroke: #000;
+    vertical-align: -0.1em;
+}
+
+.App__delete-mode-image svg {
+    width: 1em;
+    height: 1em;
+    stroke: #000;
+    vertical-align: -0.2em;
 }
