@@ -12,12 +12,15 @@ import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
+import * as Utils from './Utils';
 import type {DeviceConnectionStatus, Program, SelectedAction} from './types';
 import messages from './messages.json';
-import './App.css';
+import './App.scss';
 import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
 import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
 import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
+import AddModeImage from './AddModeImage';
+import DeleteModeImage from './DeleteModeImage';
 
 type AppContext = {
     bluetoothApiIsAvailable: boolean
@@ -43,6 +46,8 @@ export default class App extends React.Component<{}, AppState> {
     appContext: AppContext;
     dashDriver: DashDriver;
     interpreter: Interpreter;
+    addModeDescriptionId: string;
+    deleteModeDescriptionId: string;
 
     constructor(props: {}) {
         super(props);
@@ -76,6 +81,9 @@ export default class App extends React.Component<{}, AppState> {
         );
 
         this.dashDriver = new DashDriver(this.state.intervalBetweenCommands);
+
+        this.addModeDescriptionId = Utils.generateId('addModeDescription');
+        this.deleteModeDescriptionId = Utils.generateId('deleteModeDescription');
     }
 
     setStateSettings(settings: $Shape<AppSettings>) {
@@ -255,6 +263,7 @@ export default class App extends React.Component<{}, AppState> {
                             <ProgramBlockEditor
                                 activeProgramStepNum={this.state.activeProgramStepNum}
                                 editingDisabled={this.state.interpreterIsRunning === true}
+                                interpreterIsRunning={this.state.interpreterIsRunning}
                                 minVisibleSteps={6}
                                 program={this.state.program}
                                 selectedAction={this.state.selectedAction}
@@ -263,10 +272,35 @@ export default class App extends React.Component<{}, AppState> {
                                     this.state.lastNonEmptyBlockIndex === -1 ||
                                     this.state.program.length === 0 ||
                                     this.state.interpreterIsRunning}
+                                addModeDescriptionId={this.addModeDescriptionId}
+                                deleteModeDescriptionId={this.deleteModeDescriptionId}
                                 onClickRunButton={this.handleClickRun}
                                 onSelectAction={this.handleSelectAction}
                                 onChange={this.handleChangeProgram}
                             />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <h2 className='App__instructions-heading'>
+                                <FormattedMessage id='App.instructions.heading' />
+                            </h2>
+                            <h3 className="App__instructions-section-heading">
+                                <FormattedMessage id='App.instructions.addHeading' />
+                            </h3>
+                            <div className='App__instructions-text' id={this.addModeDescriptionId}>
+                                <FormattedMessage id='App.instructions.addText1' />
+                                <AddModeImage className='App__add-mode-image'/>
+                                <FormattedMessage id='App.instructions.addText2' />
+                            </div>
+                            <h3 className="App__instructions-section-heading">
+                                <FormattedMessage id='App.instructions.deleteHeading' />
+                            </h3>
+                            <div className='App__instructions-text' id={this.deleteModeDescriptionId}>
+                                <FormattedMessage id='App.instructions.deleteText1' />
+                                <DeleteModeImage className='App__delete-mode-image'/>
+                                <FormattedMessage id='App.instructions.deleteText2' />
+                            </div>
                         </Col>
                     </Row>
                 </Container>
