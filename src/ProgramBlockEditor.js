@@ -126,11 +126,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             this.focusIndex = index;
             this.props.onChange(ProgramUtils.overwrite(this.props.program,
                     index, this.props.selectedAction.commandName, 'none'));
-            if (this.commandBlockRefs.get(index+1) == null) {
-                this.scrollToIndex = index+1;
-            } else {
-                this.scrollToIndex = null;
-            }
+            this.scrollToIndex = index + 1;
         }
     };
 
