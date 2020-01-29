@@ -446,3 +446,45 @@ test('Delete all button appears when delete action is toggled, which will open a
     deleteAllButton.simulate('click');
     expect(wrapper.state().showConfirmDeleteAll).toBe(true);
 });
+
+test('Auto scroll to the next block in editing', () => {
+    const mockScrollInto = jest.fn();
+    const mockChangeHandler = jest.fn();
+
+    window.HTMLElement.prototype.scrollIntoView = mockScrollInto;
+
+    const wrapper = mount(
+        <ProgramBlockEditor
+            activeProgramStepNum={null}
+            editingDisabled={false}
+            interpreterIsRunning={false}
+            minVisibleSteps={6}
+            program={['forward', 'forward', 'forward', 'forward', 'forward']}
+            selectedAction={{'commandName' : 'forward', 'type': 'command'}}
+            runButtonDisabled={false}
+            addModeDescriptionId={'someAddModeDescriptionId'}
+            deleteModeDescriptionId={'someDeleteModeDescriptionId'}
+            onClickRunButton={()=>{}}
+            onSelectAction={()=>{}}
+            onChange={mockChangeHandler} />,
+        {
+            wrappingComponent: IntlProvider,
+            wrappingComponentProps: {
+                locale: 'en',
+                defaultLocale: 'en',
+                messages: messages.en
+            }
+        }
+    );
+
+    const emptyBlock = wrapper.find({'data-stepnumber': 5}).at(0);
+    emptyBlock.simulate('click');
+
+    // Click on an empty block causes program to change
+    expect(mockChangeHandler.mock.calls.length).toBe(1);
+
+    // Updating the new program triggers auto scroll
+    wrapper.setProps({program : mockChangeHandler.mock.calls[0][0]});
+    expect(mockScrollInto.mock.calls.length).toBe(1);
+    expect(mockScrollInto.mock.calls[0][0]).toStrictEqual({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
+});
