@@ -14,18 +14,15 @@ import ProgramBlockEditor from './ProgramBlockEditor';
 configure({ adapter: new Adapter()});
 
 const defaultProgramBlockEditorProps = {
-    activeProgramStepNum: null,
-    editingDisabled: false,
-    interpreterIsRunning: false,
-    minVisibleSteps: 6,
     program: ['forward', 'left', 'forward', 'left'],
+    interpreterIsRunning: false,
+    activeProgramStepNum: null,
+    minVisibleSteps: 6,
     selectedAction: null,
+    editingDisabled: false,
     runButtonDisabled: false,
     addModeDescriptionId: 'someAddModeDescriptionId',
-    deleteModeDescriptionId: 'someDeleteModeDescriptionId',
-    onClickRunButton: () => {},
-    onSelectAction: () => {},
-    onChange: () => {}
+    deleteModeDescriptionId: 'someDeleteModeDescriptionId'
 };
 
 function createShallowProgramBlockEditor(props) {
@@ -35,20 +32,26 @@ function createShallowProgramBlockEditor(props) {
         messages: messages.en
     });
 
+    const mockClickRunButtonHandler = jest.fn();
     const mockSelectActionHandler = jest.fn();
+    const mockChangeHandler = jest.fn();
 
-    const wrapper = shallow(React.createElement(
-        ProgramBlockEditor.WrappedComponent,
-        Object.assign(
-            {},
-            defaultProgramBlockEditorProps,
-            {
-                intl: intl,
-                onSelectAction: mockSelectActionHandler
-            },
-            props
+    const wrapper = shallow(
+        React.createElement(
+            ProgramBlockEditor.WrappedComponent,
+            Object.assign(
+                {},
+                defaultProgramBlockEditorProps,
+                {
+                    intl: intl,
+                    onClickRunButton: mockClickRunButtonHandler,
+                    onSelectAction: mockSelectActionHandler,
+                    onChange: mockChangeHandler
+                },
+                props
+            )
         )
-    ));
+    );
 
     return {
         wrapper,
@@ -57,6 +60,7 @@ function createShallowProgramBlockEditor(props) {
 }
 
 function createMountProgramBlockEditor(props) {
+    const mockClickRunButtonHandler = jest.fn();
     const mockSelectActionHandler = jest.fn();
     const mockChangeHandler = jest.fn();
 
@@ -67,6 +71,7 @@ function createMountProgramBlockEditor(props) {
                 {},
                 defaultProgramBlockEditorProps,
                 {
+                    onClickRunButton: mockClickRunButtonHandler,
                     onSelectAction: mockSelectActionHandler,
                     onChange: mockChangeHandler
                 },
