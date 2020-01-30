@@ -101,17 +101,16 @@ button.ProgramBlockEditor__delete-all-button:hover {
     border: 0.1rem solid #8F8F8F;
     background: #FFF;
     padding: 0;
-    overflow-x: scroll;
+    overflow-y: scroll;
 }
 
 .ProgramBlockEditor__program-sequence {
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
+    flex-direction: column-reverse;
+    justify-content: center;
     align-items: center;
-    height: 14rem;
-    padding-left: 1.4rem;
-    float: left;
+    height: 38rem;
+    padding-bottom: 1.4rem;
 }
 
 .ProgramBlockEditor__start-indicator {
@@ -119,16 +118,17 @@ button.ProgramBlockEditor__delete-all-button:hover {
     align-items: center;
     justify-content: center;
     text-align: center;
-    margin-right:1.4rem;
     background-color: #000;
     color: #fff;
     min-width: 4rem;
-    height: 4rem;
+    min-height: 4rem;
     border-radius: 50%;
+    margin-bottom: 2.5rem;
 }
 
 button.ProgramBlockEditor__program-block {
-    margin-right: 1.4rem;
+    margin-bottom: 1.4rem;
+    box-sizing: border-box;
 }
 
 button.ProgramBlockEditor__program-block--active {
