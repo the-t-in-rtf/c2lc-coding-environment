@@ -13,6 +13,83 @@ import ProgramBlockEditor from './ProgramBlockEditor';
 
 configure({ adapter: new Adapter()});
 
+const defaultProgramBlockEditorProps = {
+    activeProgramStepNum: null,
+    editingDisabled: false,
+    interpreterIsRunning: false,
+    minVisibleSteps: 6,
+    program: ['forward', 'left', 'forward', 'left'],
+    selectedAction: null,
+    runButtonDisabled: false,
+    addModeDescriptionId: 'someAddModeDescriptionId',
+    deleteModeDescriptionId: 'someDeleteModeDescriptionId',
+    onClickRunButton: () => {},
+    onSelectAction: () => {},
+    onChange: () => {}
+};
+
+function createShallowProgramBlockEditor(props) {
+    const intl = createIntl({
+        locale: 'en',
+        defaultLocale: 'en',
+        messages: messages.en
+    });
+
+    const mockSelectActionHandler = jest.fn();
+
+    const wrapper = shallow(React.createElement(
+        ProgramBlockEditor.WrappedComponent,
+        Object.assign(
+            {},
+            defaultProgramBlockEditorProps,
+            {
+                intl: intl,
+                onSelectAction: mockSelectActionHandler
+            },
+            props
+        )
+    ));
+
+    return {
+        wrapper,
+        mockSelectActionHandler
+    };
+}
+
+function createMountProgramBlockEditor(props) {
+    const mockSelectActionHandler = jest.fn();
+    const mockChangeHandler = jest.fn();
+
+    const wrapper = mount(
+        React.createElement(
+            ProgramBlockEditor,
+            Object.assign(
+                {},
+                defaultProgramBlockEditorProps,
+                {
+                    onSelectAction: mockSelectActionHandler,
+                    onChange: mockChangeHandler
+                },
+                props
+            )
+        ),
+        {
+            wrappingComponent: IntlProvider,
+            wrappingComponentProps: {
+                locale: 'en',
+                defaultLocale: 'en',
+                messages: messages.en
+            }
+        }
+    );
+
+    return {
+        wrapper,
+        mockSelectActionHandler,
+        mockChangeHandler
+    };
+}
+
 function hasPressedClass(button) {
     return button.hasClass('ProgramBlockEditor__editor-action-button--pressed');
 }
@@ -43,21 +120,7 @@ function getDeleteAllButton(programBlockEditorWrapper) {
 
 test('onSelect property of ProgramBlockEditor component should change action buttons class and aria-pressed according to selectedAction property', () => {
 
-    const mockSelectHandler = jest.fn();
-    const intl = createIntl({
-        locale: 'en',
-        defaultLocale: 'en',
-        messages: messages.en
-    });
-
-    const wrapper = shallow(
-        <ProgramBlockEditor.WrappedComponent
-            intl={intl}
-            minVisibleSteps={6}
-            program={['forward', 'left', 'forward', 'left']}
-            selectedAction={null}
-            onSelectAction={mockSelectHandler} />
-    );
+    const { wrapper, mockSelectActionHandler } = createShallowProgramBlockEditor();
 
     const getEditorActionButtons = () => (wrapper.find('.ProgramBlockEditor__editor-action-button'));
     // check if two buttons for editor action add and delete are rendered
@@ -75,9 +138,9 @@ test('onSelect property of ProgramBlockEditor component should change action but
     const deleteButton = wrapper.find('.ProgramBlockEditor__editor-action-button').at(1);
 
     addButton.simulate('click');
-    expect(mockSelectHandler.mock.calls.length).toBe(1);
-    expect(mockSelectHandler.mock.calls[0][0]).toStrictEqual({'action': 'add', 'type': 'editorAction'});
-    wrapper.setProps({selectedAction : mockSelectHandler.mock.calls[0][0]});
+    expect(mockSelectActionHandler.mock.calls.length).toBe(1);
+    expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({'action': 'add', 'type': 'editorAction'});
+    wrapper.setProps({selectedAction : mockSelectActionHandler.mock.calls[0][0]});
 
     // addButton -- aria-pressed should be true and pressed class should be
     // present with a click event for a selected action,
@@ -88,9 +151,9 @@ test('onSelect property of ProgramBlockEditor component should change action but
     expect(hasPressedClass(getEditorActionButtons().at(1))).toBe(false);
 
     addButton.simulate('click');
-    expect(mockSelectHandler.mock.calls.length).toBe(2);
-    expect(mockSelectHandler.mock.calls[1][0]).toBeNull();
-    wrapper.setProps({selectedAction : mockSelectHandler.mock.calls[1][0]});
+    expect(mockSelectActionHandler.mock.calls.length).toBe(2);
+    expect(mockSelectActionHandler.mock.calls[1][0]).toBeNull();
+    wrapper.setProps({selectedAction : mockSelectActionHandler.mock.calls[1][0]});
 
     // addButton -- when same action button is clicked,
     // aria-pressed and pressed class of the action should reset to initial state
@@ -100,13 +163,13 @@ test('onSelect property of ProgramBlockEditor component should change action but
     expect(hasPressedClass(getEditorActionButtons().at(1))).toBe(false);
 
     addButton.simulate('click');
-    expect(mockSelectHandler.mock.calls.length).toBe(3);
-    expect(mockSelectHandler.mock.calls[2][0]).toStrictEqual({'action': 'add', 'type': 'editorAction'});
-    wrapper.setProps({selectedAction : mockSelectHandler.mock.calls[2][0]});
+    expect(mockSelectActionHandler.mock.calls.length).toBe(3);
+    expect(mockSelectActionHandler.mock.calls[2][0]).toStrictEqual({'action': 'add', 'type': 'editorAction'});
+    wrapper.setProps({selectedAction : mockSelectActionHandler.mock.calls[2][0]});
     deleteButton.simulate('click');
-    expect(mockSelectHandler.mock.calls.length).toBe(4);
-    expect(mockSelectHandler.mock.calls[3][0]).toStrictEqual({'action': 'delete', 'type': 'editorAction'});
-    wrapper.setProps({selectedAction : mockSelectHandler.mock.calls[3][0]});
+    expect(mockSelectActionHandler.mock.calls.length).toBe(4);
+    expect(mockSelectActionHandler.mock.calls[3][0]).toStrictEqual({'action': 'delete', 'type': 'editorAction'});
+    wrapper.setProps({selectedAction : mockSelectActionHandler.mock.calls[3][0]});
 
     // addButton -- when an action is selected and different action button is
     // clicked, aria-pressed and pressed class of previous action before the
@@ -120,9 +183,9 @@ test('onSelect property of ProgramBlockEditor component should change action but
     wrapper.setProps({selectedAction : null});
 
     deleteButton.simulate('click');
-    expect(mockSelectHandler.mock.calls.length).toBe(5);
-    expect(mockSelectHandler.mock.calls[4][0]).toStrictEqual({'action': 'delete', 'type': 'editorAction'});
-    wrapper.setProps({selectedAction : mockSelectHandler.mock.calls[4][0]});
+    expect(mockSelectActionHandler.mock.calls.length).toBe(5);
+    expect(mockSelectActionHandler.mock.calls[4][0]).toStrictEqual({'action': 'delete', 'type': 'editorAction'});
+    wrapper.setProps({selectedAction : mockSelectActionHandler.mock.calls[4][0]});
 
     // deleteButton -- aria-pressed should be true and pressed class should be
     // present with a click event for a selected action, and the other action
@@ -133,9 +196,9 @@ test('onSelect property of ProgramBlockEditor component should change action but
     expect(hasPressedClass(getEditorActionButtons().at(1))).toBe(true);
 
     deleteButton.simulate('click');
-    expect(mockSelectHandler.mock.calls.length).toBe(6);
-    expect(mockSelectHandler.mock.calls[5][0]).toBeNull();
-    wrapper.setProps({selectedAction : mockSelectHandler.mock.calls[5][0]});
+    expect(mockSelectActionHandler.mock.calls.length).toBe(6);
+    expect(mockSelectActionHandler.mock.calls[5][0]).toBeNull();
+    wrapper.setProps({selectedAction : mockSelectActionHandler.mock.calls[5][0]});
 
     // deleteButton -- when same action button is clicked, aria-pressed and
     // pressed class of the action should reset to initial state
@@ -145,13 +208,13 @@ test('onSelect property of ProgramBlockEditor component should change action but
     expect(hasPressedClass(getEditorActionButtons().at(1))).toBe(false);
 
     deleteButton.simulate('click');
-    expect(mockSelectHandler.mock.calls.length).toBe(7);
-    expect(mockSelectHandler.mock.calls[6][0]).toStrictEqual({'action': 'delete', 'type': 'editorAction'});
-    wrapper.setProps({selectedAction : mockSelectHandler.mock.calls[6][0]});
+    expect(mockSelectActionHandler.mock.calls.length).toBe(7);
+    expect(mockSelectActionHandler.mock.calls[6][0]).toStrictEqual({'action': 'delete', 'type': 'editorAction'});
+    wrapper.setProps({selectedAction : mockSelectActionHandler.mock.calls[6][0]});
     addButton.simulate('click');
-    expect(mockSelectHandler.mock.calls.length).toBe(8);
-    expect(mockSelectHandler.mock.calls[7][0]).toStrictEqual({'action': 'add', 'type': 'editorAction'});
-    wrapper.setProps({selectedAction : mockSelectHandler.mock.calls[7][0]});
+    expect(mockSelectActionHandler.mock.calls.length).toBe(8);
+    expect(mockSelectActionHandler.mock.calls[7][0]).toStrictEqual({'action': 'add', 'type': 'editorAction'});
+    wrapper.setProps({selectedAction : mockSelectActionHandler.mock.calls[7][0]});
 
     // deleteButton -- when an action is selected and different action button
     // is clicked, aria-pressed and pressed class of previous action before the
@@ -164,32 +227,7 @@ test('onSelect property of ProgramBlockEditor component should change action but
 });
 
 test('blocks', () => {
-    const mockChangeHandler = jest.fn();
-    const mockSelectHandler = jest.fn();
-
-    const wrapper = mount(
-        <ProgramBlockEditor
-            activeProgramStepNum={null}
-            editingDisabled={false}
-            interpreterIsRunning={false}
-            minVisibleSteps={6}
-            program={['forward', 'left', 'forward', 'left']}
-            selectedAction={null}
-            runButtonDisabled={false}
-            addModeDescriptionId={'someAddModeDescriptionId'}
-            deleteModeDescriptionId={'someDeleteModeDescriptionId'}
-            onClickRunButton={()=>{}}
-            onSelectAction={mockSelectHandler}
-            onChange={mockChangeHandler} />,
-        {
-            wrappingComponent: IntlProvider,
-            wrappingComponentProps: {
-                locale: 'en',
-                defaultLocale: 'en',
-                messages: messages.en
-            }
-        }
-    );
+    const { wrapper, mockSelectActionHandler, mockChangeHandler } = createMountProgramBlockEditor();
 
     // number of blocks getting rendered should be equal to minVisibleSteps
     // as minVisibleSteps is greater than the number of program steps
@@ -214,7 +252,7 @@ test('blocks', () => {
     expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
 
     // No onSelectAction calls should have been made
-    expect(mockSelectHandler.mock.calls.length).toBe(0);
+    expect(mockSelectActionHandler.mock.calls.length).toBe(0);
 
     wrapper.setProps({selectedAction: {'commandName' : 'right', 'type': 'command'}});
     // when selected Action is a command, change existing command at a clicked block to be selected command and set selected action back to null
@@ -227,7 +265,7 @@ test('blocks', () => {
     expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
 
     // No onSelectAction calls should have been made
-    expect(mockSelectHandler.mock.calls.length).toBe(0);
+    expect(mockSelectActionHandler.mock.calls.length).toBe(0);
 
     wrapper.setProps({selectedAction: {'action' : 'delete', 'type': 'editorAction'}});
     // when selected Action is delete, when you press any program blocks, the block and its command will be removed from the program
@@ -240,7 +278,7 @@ test('blocks', () => {
     expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
 
     // No onSelectAction calls should have been made
-    expect(mockSelectHandler.mock.calls.length).toBe(0);
+    expect(mockSelectActionHandler.mock.calls.length).toBe(0);
 
     // repeat the test cases for the last command in the program
 
@@ -250,7 +288,7 @@ test('blocks', () => {
     expect(mockChangeHandler.mock.calls.length).toBe(4);
     expect(mockChangeHandler.mock.calls[3][0]).toStrictEqual(['forward', 'left', 'forward', 'none', 'left']);
     // No onSelectAction calls should have been made
-    expect(mockSelectHandler.mock.calls.length).toBe(0);
+    expect(mockSelectActionHandler.mock.calls.length).toBe(0);
 
     wrapper.setProps({program : mockChangeHandler.mock.calls[3][0]});
     wrapper.setProps({selectedAction: {'commandName' : 'right', 'type': 'command'}});
@@ -259,7 +297,7 @@ test('blocks', () => {
     expect(mockChangeHandler.mock.calls.length).toBe(5);
     expect(mockChangeHandler.mock.calls[4][0]).toStrictEqual(['forward', 'left', 'forward', 'right', 'left']);
     // No onSelectAction calls should have been made
-    expect(mockSelectHandler.mock.calls.length).toBe(0);
+    expect(mockSelectActionHandler.mock.calls.length).toBe(0);
 
     wrapper.setProps({program : mockChangeHandler.mock.calls[4][0]});
     wrapper.setProps({selectedAction: {'action' : 'delete', 'type': 'editorAction'}});
@@ -268,33 +306,11 @@ test('blocks', () => {
     expect(mockChangeHandler.mock.calls.length).toBe(6);
     expect(mockChangeHandler.mock.calls[5][0]).toStrictEqual(['forward', 'left', 'forward', 'left']);
     // No onSelectAction calls should have been made
-    expect(mockSelectHandler.mock.calls.length).toBe(0);
+    expect(mockSelectActionHandler.mock.calls.length).toBe(0);
 })
 
 test('The editor action buttons have aria-describedby set to provided ids', () => {
-    const wrapper = mount(
-        <ProgramBlockEditor
-            activeProgramStepNum={null}
-            editingDisabled={false}
-            interpreterIsRunning={false}
-            minVisibleSteps={6}
-            program={['forward', 'left', 'forward', 'left']}
-            selectedAction={null}
-            runButtonDisabled={false}
-            addModeDescriptionId={'someAddModeDescriptionId'}
-            deleteModeDescriptionId={'someDeleteModeDescriptionId'}
-            onClickRunButton={()=>{}}
-            onSelectAction={()=>{}}
-            onChange={()=>{}} />,
-        {
-            wrappingComponent: IntlProvider,
-            wrappingComponentProps: {
-                locale: 'en',
-                defaultLocale: 'en',
-                messages: messages.en
-            }
-        }
-    );
+    const { wrapper } = createMountProgramBlockEditor();
 
     expect(getEditorActionButtons(wrapper).get(0).props['aria-describedby']).toBe('someAddModeDescriptionId');
     expect(getEditorActionButtons(wrapper).get(1).props['aria-describedby']).toBe('someDeleteModeDescriptionId');
@@ -305,29 +321,7 @@ test('Whenever active program step number updates, auto scroll to the step', () 
 
     window.HTMLElement.prototype.scrollIntoView = mockScrollInto;
 
-    const wrapper = mount(
-        <ProgramBlockEditor
-            activeProgramStepNum={0}
-            editingDisabled={true}
-            interpreterIsRunning={true}
-            minVisibleSteps={6}
-            program={['forward', 'left', 'forward', 'left']}
-            selectedAction={null}
-            runButtonDisabled={false}
-            addModeDescriptionId={'someAddModeDescriptionId'}
-            deleteModeDescriptionId={'someDeleteModeDescriptionId'}
-            onClickRunButton={()=>{}}
-            onSelectAction={()=>{}}
-            onChange={()=>{}} />,
-        {
-            wrappingComponent: IntlProvider,
-            wrappingComponentProps: {
-                locale: 'en',
-                defaultLocale: 'en',
-                messages: messages.en
-            }
-        }
-    );
+    const { wrapper } = createMountProgramBlockEditor();
 
     wrapper.setProps({ activeProgramStepNum: 1 });
     expect(mockScrollInto.mock.calls.length).toBe(1);
@@ -341,31 +335,8 @@ test('Whenever active program step number updates, auto scroll to the step', () 
 });
 
 test('The editor action buttons disabled states are set according to the editingDisabled property', () => {
-    const mockRunHandler = jest.fn();
 
-    const wrapper = mount(
-        <ProgramBlockEditor
-            activeProgramStepNum={null}
-            editingDisabled={false}
-            interpreterIsRunning={false}
-            minVisibleSteps={6}
-            program={['forward', 'left', 'forward', 'left']}
-            selectedAction={null}
-            runButtonDisabled={false}
-            addModeDescriptionId={'someAddModeDescriptionId'}
-            deleteModeDescriptionId={'someDeleteModeDescriptionId'}
-            onClickRunButton={mockRunHandler}
-            onSelectAction={()=>{}}
-            onChange={()=>{}} />,
-        {
-            wrappingComponent: IntlProvider,
-            wrappingComponentProps: {
-                locale: 'en',
-                defaultLocale: 'en',
-                messages: messages.en
-            }
-        }
-    );
+    const { wrapper } = createMountProgramBlockEditor();
 
     // editingDisabled is false
     expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(false);
@@ -378,25 +349,12 @@ test('The editor action buttons disabled states are set according to the editing
 });
 
 test('The run buttons color inverts by appending class name pressed when the program is running', () => {
-    const intl = createIntl({
-        locale: 'en',
-        defaultLocale: 'en',
-        messages: messages.en
+
+    const { wrapper } = createShallowProgramBlockEditor({
+        editingDisabled: true,
+        interpreterIsRunning: true,
+        runButtonDisabled: true
     });
-    const wrapper = shallow(
-        <ProgramBlockEditor.WrappedComponent
-            intl={intl}
-            activeProgramStepNum={0}
-            editingDisabled={true}
-            interpreterIsRunning={true}
-            minVisibleSteps={6}
-            program={['forward', 'left', 'forward', 'left']}
-            selectedAction={null}
-            runButtonDisabled={true}
-            onClickRunButton={()=>{}}
-            onSelectAction={()=>{}}
-            onChange={()=>{}} />
-    );
 
     // When the interpreter is running, the run button has pressed and disabled
     expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(true);
@@ -414,21 +372,8 @@ test('The run buttons color inverts by appending class name pressed when the pro
 });
 
 test('Delete all button appears when delete action is toggled, which will open a confirmation modal onClick', () => {
-    const mockSelectHandler = jest.fn();
-    const intl = createIntl({
-        locale: 'en',
-        defaultLocale: 'en',
-        messages: messages.en
-    });
 
-    const wrapper = shallow(
-        <ProgramBlockEditor.WrappedComponent
-            intl={intl}
-            minVisibleSteps={6}
-            program={['forward', 'left', 'forward', 'left']}
-            selectedAction={null}
-            onSelectAction={mockSelectHandler} />
-    );
+    const { wrapper, mockSelectActionHandler } = createShallowProgramBlockEditor();
 
     // initially, confirm modal for delete all is not visiable
     expect(wrapper.state().showConfirmDeleteAll).toBe(false);
@@ -436,8 +381,8 @@ test('Delete all button appears when delete action is toggled, which will open a
     // toggle delete button
     const deleteButton = getEditorActionButtons(wrapper).at(1);
     deleteButton.simulate('click');
-    expect(mockSelectHandler.mock.calls.length).toBe(1);
-    expect(mockSelectHandler.mock.calls[0][0]).toStrictEqual({'action': 'delete', 'type': 'editorAction'});
+    expect(mockSelectActionHandler.mock.calls.length).toBe(1);
+    expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({'action': 'delete', 'type': 'editorAction'});
 
     // click deleteAll button and see if modal showes up
     const deleteAllButton = getDeleteAllButton(wrapper).at(0);
