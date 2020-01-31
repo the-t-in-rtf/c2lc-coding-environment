@@ -53,7 +53,6 @@ test('onSelect property of ProgramBlockEditor component should change action but
     const wrapper = shallow(
         <ProgramBlockEditor.WrappedComponent
             intl={intl}
-            minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
             onSelectAction={mockSelectHandler} />
@@ -172,7 +171,6 @@ test('blocks', () => {
             activeProgramStepNum={null}
             editingDisabled={false}
             interpreterIsRunning={false}
-            minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
             runButtonDisabled={false}
@@ -191,15 +189,14 @@ test('blocks', () => {
         }
     );
 
-    // number of blocks getting rendered should be equal to minVisibleSteps
-    // as minVisibleSteps is greater than the number of program steps
-    expect(getProgramBlocks(wrapper).length).toBe(6);
+    // number of blocks getting rendered should be equal to number of program + 1
+    // as there's one empty block gets generated at the end
+    expect(getProgramBlocks(wrapper).length).toBe(5);
     expect(getProgramBlocks(wrapper).get(0).key.includes('forward')).toBe(true);
     expect(getProgramBlocks(wrapper).get(1).key.includes('left')).toBe(true);
     expect(getProgramBlocks(wrapper).get(2).key.includes('forward')).toBe(true);
     expect(getProgramBlocks(wrapper).get(3).key.includes('left')).toBe(true);
     expect(getProgramBlocks(wrapper).get(4).key.includes('none')).toBe(true);
-    expect(getProgramBlocks(wrapper).get(5).key.includes('none')).toBe(true);
 
     wrapper.setProps({selectedAction: {'action': 'add', 'type': 'editorAction'}});
     // when selected Action is add, when you press any program blocks, an empty block (none command) will be added to the previous index and set selectedCommand to null
@@ -277,7 +274,6 @@ test('The editor action buttons have aria-describedby set to provided ids', () =
             activeProgramStepNum={null}
             editingDisabled={false}
             interpreterIsRunning={false}
-            minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
             runButtonDisabled={false}
@@ -310,7 +306,6 @@ test('Whenever active program step number updates, auto scroll to the step', () 
             activeProgramStepNum={0}
             editingDisabled={true}
             interpreterIsRunning={true}
-            minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
             runButtonDisabled={false}
@@ -348,7 +343,6 @@ test('The editor action buttons disabled states are set according to the editing
             activeProgramStepNum={null}
             editingDisabled={false}
             interpreterIsRunning={false}
-            minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
             runButtonDisabled={false}
@@ -389,7 +383,6 @@ test('The run buttons color inverts by appending class name pressed when the pro
             activeProgramStepNum={0}
             editingDisabled={true}
             interpreterIsRunning={true}
-            minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
             runButtonDisabled={true}
@@ -424,7 +417,6 @@ test('Delete all button appears when delete action is toggled, which will open a
     const wrapper = shallow(
         <ProgramBlockEditor.WrappedComponent
             intl={intl}
-            minVisibleSteps={6}
             program={['forward', 'left', 'forward', 'left']}
             selectedAction={null}
             onSelectAction={mockSelectHandler} />
