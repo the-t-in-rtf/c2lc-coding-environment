@@ -102,6 +102,7 @@ button.ProgramBlockEditor__delete-all-button:hover {
     background: #FFF;
     padding: 0;
     overflow-y: scroll;
+    padding-top: 4rem;
 }
 
 .ProgramBlockEditor__program-sequence {
@@ -127,8 +128,7 @@ button.ProgramBlockEditor__delete-all-button:hover {
 }
 
 button.ProgramBlockEditor__program-block {
-    margin-bottom: 1.4rem;
-    box-sizing: border-box;
+    margin: 0;
 }
 
 button.ProgramBlockEditor__program-block--active {
@@ -193,4 +193,10 @@ button.btn.ProgramBlockEditor__run-button.ProgramBlockEditor__run-button--disabl
     width: 1.6rem;
     height: 1.6rem;
     display: block;
+}
+
+.ProgramBlockEditor__program-block-connector {
+    background-color: #939595;
+    width: 0.1rem;
+    min-height: 2rem;
 }
