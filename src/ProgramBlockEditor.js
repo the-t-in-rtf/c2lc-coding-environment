@@ -145,78 +145,90 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         switch(command) {
             case 'forward':
                 return (
-                    <Button
-                        ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
-                        key={`${programStepNumber}-forward`}
-                        data-stepnumber={programStepNumber}
-                        className={classNames.join(' ')}
-                        variant='command-block--forward'
-                        aria-label={
-                            this.addIsSelected() ?
-                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                            this.deleteIsSelected() ?
-                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                            this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
-                        }
-                        onClick={this.handleClickStep}>
-                        <ArrowForward className='command-block-svg'/>
-                    </Button>
+                    <React.Fragment key={programStepNumber}>
+                        <div className='ProgramBlockEditor__program-block-connector'/>
+                        <Button
+                            ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
+                            key={`${programStepNumber}-forward`}
+                            data-stepnumber={programStepNumber}
+                            className={classNames.join(' ')}
+                            variant='command-block--forward'
+                            aria-label={
+                                this.addIsSelected() ?
+                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                                this.deleteIsSelected() ?
+                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
+                            }
+                            onClick={this.handleClickStep}>
+                            <ArrowForward className='command-block-svg'/>
+                        </Button>
+                    </React.Fragment>
                 );
             case 'left':
                 return (
-                    <Button
-                        ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
-                        key={`${programStepNumber}-left`}
-                        data-stepnumber={programStepNumber}
-                        className={classNames.join(' ')}
-                        variant='command-block--left'
-                        aria-label={
-                            this.addIsSelected() ?
-                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                            this.deleteIsSelected() ?
-                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                            this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})
-                        }
-                        onClick={this.handleClickStep}>
-                        <ArrowTurnLeft className='command-block-svg'/>
-                    </Button>
+                    <React.Fragment key={programStepNumber}>
+                        <div className='ProgramBlockEditor__program-block-connector'/>
+                        <Button
+                            ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
+                            key={`${programStepNumber}-left`}
+                            data-stepnumber={programStepNumber}
+                            className={classNames.join(' ')}
+                            variant='command-block--left'
+                            aria-label={
+                                this.addIsSelected() ?
+                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                                this.deleteIsSelected() ?
+                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})
+                            }
+                            onClick={this.handleClickStep}>
+                            <ArrowTurnLeft className='command-block-svg'/>
+                        </Button>
+                    </React.Fragment>
                 );
             case 'right':
                 return (
-                    <Button
-                        ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
-                        key={`${programStepNumber}-right`}
-                        data-stepnumber={programStepNumber}
-                        className={classNames.join(' ')}
-                        variant='command-block--right'
-                        aria-label={
-                            this.addIsSelected() ?
-                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                            this.deleteIsSelected() ?
-                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                            this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})
-                        }
-                        onClick={this.handleClickStep}>
-                        <ArrowTurnRight className='command-block-svg'/>
-                    </Button>
+                    <React.Fragment key={programStepNumber}>
+                        <div className='ProgramBlockEditor__program-block-connector'/>
+                        <Button
+                            ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
+                            key={`${programStepNumber}-right`}
+                            data-stepnumber={programStepNumber}
+                            className={classNames.join(' ')}
+                            variant='command-block--right'
+                            aria-label={
+                                this.addIsSelected() ?
+                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                                this.deleteIsSelected() ?
+                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})
+                            }
+                            onClick={this.handleClickStep}>
+                            <ArrowTurnRight className='command-block-svg'/>
+                        </Button>
+                    </React.Fragment>
                 );
             case 'none':
                 return (
-                    <Button
-                        ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
-                        key={`${programStepNumber}-none`}
-                        data-stepnumber={programStepNumber}
-                        className={classNames.join(' ')}
-                        variant='command-block--none'
-                        aria-label={
-                            this.addIsSelected() ?
-                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                            this.deleteIsSelected() ?
-                            `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                            this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})
-                        }
-                        onClick={this.handleClickStep}>
-                    </Button>
+                    <React.Fragment key={programStepNumber}>
+                        <div className='ProgramBlockEditor__program-block-connector'/>
+                        <Button
+                            ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
+                            key={`${programStepNumber}-none`}
+                            data-stepnumber={programStepNumber}
+                            className={classNames.join(' ')}
+                            variant='command-block--none'
+                            aria-label={
+                                this.addIsSelected() ?
+                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                                this.deleteIsSelected() ?
+                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})
+                            }
+                            onClick={this.handleClickStep}>
+                        </Button>
+                    </React.Fragment>
                 );
             default:
                 return (
