@@ -22,7 +22,6 @@ type ProgramBlockEditorProps = {
     activeProgramStepNum: ?number,
     editingDisabled: boolean,
     interpreterIsRunning: boolean,
-    minVisibleSteps: number,
     program: Program,
     selectedAction: SelectedAction,
     runButtonDisabled: boolean,
@@ -243,12 +242,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         const programBlocks = this.props.program.map((command, stepNumber) => {
             return this.makeProgramBlock(stepNumber, command);
         });
-
-        // Ensure that we have at least props.minVisibleSteps
-        for (var i = this.props.program.length; i < this.props.minVisibleSteps; i++) {
-            programBlocks.push(this.makeProgramBlock(i, 'none'));
-            noneAtEnd = true;
-        }
 
         // Ensure that the last block is 'none'
         if (!noneAtEnd) {
