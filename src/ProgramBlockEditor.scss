@@ -108,7 +108,7 @@ button.ProgramBlockEditor__delete-all-button:hover {
 .ProgramBlockEditor__program-sequence {
     display: flex;
     flex-direction: column-reverse;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     height: 38rem;
     padding-bottom: 1.4rem;
