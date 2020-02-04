@@ -98,6 +98,8 @@ button.ProgramBlockEditor__delete-all-button:hover {
 }
 
 .ProgramBlockEditor__program-sequence-scroll-container {
+    display: flex;
+    justify-content: center;
     border: 0.1rem solid #8F8F8F;
     background: #FFF;
     padding: 0;
@@ -111,6 +113,7 @@ button.ProgramBlockEditor__delete-all-button:hover {
     justify-content: flex-start;
     align-items: center;
     padding-top: 2.5rem;
+    margin-top: auto;
 }
 
 .ProgramBlockEditor__start-indicator {
