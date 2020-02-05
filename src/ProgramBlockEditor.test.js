@@ -124,7 +124,7 @@ function getRunButton(programBlockEditorWrapper) {
 }
 
 describe('Editor buttons', () => {
-    describe('selectedAction is null', () => {
+    describe('Given no selected action', () => {
         let wrapper, mockSelectActionHandler;
 
         beforeEach(() => {
@@ -133,7 +133,7 @@ describe('Editor buttons', () => {
             }));
         });
 
-        test('No editor buttons have presssed state', () => {
+        test('Then no editor buttons should have presssed state', () => {
             expect(getEditorActionButtons(wrapper).length).toBe(2);
 
             expect(getEditorActionButtons(wrapper).get(0).key).toBe('addButton');
@@ -145,7 +145,7 @@ describe('Editor buttons', () => {
             expect(hasPressedClass(getEditorActionButtons(wrapper).at(1))).toBe(false);
         });
 
-        test('Clicking the Add button sets selectedAction to add', () => {
+        test('When Add is clicked, then selected action should be set to Add', () => {
             getEditorActionButtons(wrapper).at(0).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
             expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({
@@ -154,7 +154,7 @@ describe('Editor buttons', () => {
             });
         });
 
-        test('Clicking the Delete button sets selectedAction to delete', () => {
+        test('When Delete is clicked, then selected action should be set to Delete', () => {
             getEditorActionButtons(wrapper).at(1).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
             expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({
@@ -164,7 +164,7 @@ describe('Editor buttons', () => {
         });
     });
 
-    describe('selectedAction is add', () => {
+    describe('Given selected action is Add', () => {
         let wrapper, mockSelectActionHandler;
 
         beforeEach(() => {
@@ -176,20 +176,20 @@ describe('Editor buttons', () => {
             }));
         });
 
-        test('The Add button has pressed state', () => {
+        test('Then the Add button should have pressed state', () => {
             expect(getEditorActionButtons(wrapper).get(0).props['aria-pressed']).toBe('true');
             expect(hasPressedClass(getEditorActionButtons(wrapper).at(0))).toBe(true);
             expect(getEditorActionButtons(wrapper).get(1).props['aria-pressed']).toBe('false');
             expect(hasPressedClass(getEditorActionButtons(wrapper).at(1))).toBe(false);
         });
 
-        test('Clicking the Add button toggles it off', () => {
+        test('When Add is clicked, then it should be toggled off', () => {
             getEditorActionButtons(wrapper).at(0).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
             expect(mockSelectActionHandler.mock.calls[0][0]).toBeNull();
         });
 
-        test('Clicking the Delete button sets selectedAction to delete', () => {
+        test('When Delete is clicked, then selected action should be set to Delete', () => {
             getEditorActionButtons(wrapper).at(1).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
             expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({
@@ -199,7 +199,7 @@ describe('Editor buttons', () => {
         });
     });
 
-    describe('selectedAction is delete', () => {
+    describe('Given selected action is Delete', () => {
         let wrapper, mockSelectActionHandler;
 
         beforeEach(() => {
@@ -211,20 +211,20 @@ describe('Editor buttons', () => {
             }));
         });
 
-        test('The Delete button has pressed state', () => {
+        test('Then the Delete button should have pressed state', () => {
             expect(getEditorActionButtons(wrapper).get(0).props['aria-pressed']).toBe('false');
             expect(hasPressedClass(getEditorActionButtons(wrapper).at(0))).toBe(false);
             expect(getEditorActionButtons(wrapper).get(1).props['aria-pressed']).toBe('true');
             expect(hasPressedClass(getEditorActionButtons(wrapper).at(1))).toBe(true);
         });
 
-        test('Clicking the Delete button toggles it off', () => {
+        test('When Delete is clicked, then it should be toggled off', () => {
             getEditorActionButtons(wrapper).at(1).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
             expect(mockSelectActionHandler.mock.calls[0][0]).toBeNull();
         });
 
-        test('Clicking the Add button sets selectedAction to add', () => {
+        test('When Add is clicked, then selected action should be set to Add', () => {
             getEditorActionButtons(wrapper).at(0).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
             expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({
