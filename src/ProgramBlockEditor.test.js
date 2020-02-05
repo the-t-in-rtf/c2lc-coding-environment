@@ -25,6 +25,21 @@ const defaultProgramBlockEditorProps = {
     deleteModeDescriptionId: 'someDeleteModeDescriptionId'
 };
 
+const addAction = {
+    type: 'editorAction',
+    action: 'add'
+};
+
+const deleteAction = {
+    type: 'editorAction',
+    action: 'delete'
+}
+
+const rightCommandAction = {
+    type: 'command',
+    commandName: 'right'
+}
+
 function createShallowProgramBlockEditor(props) {
     const intl = createIntl({
         locale: 'en',
@@ -169,10 +184,7 @@ describe('Editor buttons', () => {
 
         beforeEach(() => {
             ({ wrapper, mockSelectActionHandler } = createShallowProgramBlockEditor({
-                selectedAction: {
-                    type: 'editorAction',
-                    action: 'add'
-                }
+                selectedAction: addAction
             }));
         });
 
@@ -204,10 +216,7 @@ describe('Editor buttons', () => {
 
         beforeEach(() => {
             ({ wrapper, mockSelectActionHandler } = createShallowProgramBlockEditor({
-                selectedAction: {
-                    type: 'editorAction',
-                    action: 'delete'
-                }
+                selectedAction: deleteAction
             }));
         });
 
@@ -235,88 +244,49 @@ describe('Editor buttons', () => {
     });
 });
 
-test('blocks', () => {
-    const { wrapper, mockSelectActionHandler, mockChangeHandler } = createMountProgramBlockEditor();
+describe('Program blocks', () => {
+    describe('Given a program of 4 steps and minVisibleSteps of 6', () => {
+        test('Then blocks should be rendered for the program with 2 none blocks at the end', () => {
+            const { wrapper } = createMountProgramBlockEditor();
+            expect(getProgramBlocks(wrapper).length).toBe(6);
+            expect(getProgramBlocks(wrapper).get(0).key.includes('forward')).toBe(true);
+            expect(getProgramBlocks(wrapper).get(1).key.includes('left')).toBe(true);
+            expect(getProgramBlocks(wrapper).get(2).key.includes('forward')).toBe(true);
+            expect(getProgramBlocks(wrapper).get(3).key.includes('left')).toBe(true);
+            expect(getProgramBlocks(wrapper).get(4).key.includes('none')).toBe(true);
+            expect(getProgramBlocks(wrapper).get(5).key.includes('none')).toBe(true);
+        });
+    });
 
-    // number of blocks getting rendered should be equal to minVisibleSteps
-    // as minVisibleSteps is greater than the number of program steps
-    expect(getProgramBlocks(wrapper).length).toBe(6);
-    expect(getProgramBlocks(wrapper).get(0).key.includes('forward')).toBe(true);
-    expect(getProgramBlocks(wrapper).get(1).key.includes('left')).toBe(true);
-    expect(getProgramBlocks(wrapper).get(2).key.includes('forward')).toBe(true);
-    expect(getProgramBlocks(wrapper).get(3).key.includes('left')).toBe(true);
-    expect(getProgramBlocks(wrapper).get(4).key.includes('none')).toBe(true);
-    expect(getProgramBlocks(wrapper).get(5).key.includes('none')).toBe(true);
+    test.each([
+        ['Add', 0, ['none', 'forward', 'left', 'forward', 'left'], addAction],
+        ['Add', 3, ['forward', 'left', 'forward', 'none', 'left'], addAction],
+        ['Delete', 0, ['left', 'forward', 'left'], deleteAction],
+        ['Delete', 3, ['forward', 'left', 'forward'], deleteAction],
+        ['Right command', 0, ['right', 'left', 'forward', 'left'], rightCommandAction],
+        ['Right command', 3, ['forward', 'left', 'forward', 'right'], rightCommandAction]
+    ])('Given selected action is %s, when block %i is clicked, then program should be updated',
+        (actionName, stepNum, expectedProgram, action) => {
+            const { wrapper, mockSelectActionHandler, mockChangeHandler } =
+                createMountProgramBlockEditor({
+                    selectedAction: action
+                });
 
-    wrapper.setProps({selectedAction: {'action': 'add', 'type': 'editorAction'}});
-    // when selected Action is add, when you press any program blocks, an empty block (none command) will be added to the previous index and set selectedCommand to null
-    getProgramBlockAtPosition(wrapper, 0).simulate('click');
+            getProgramBlockAtPosition(wrapper, stepNum).simulate('click');
 
-    expect(mockChangeHandler.mock.calls.length).toBe(1);
-    expect(mockChangeHandler.mock.calls[0][0]).toStrictEqual(['none', 'forward', 'left', 'forward', 'left']);
-    wrapper.setProps({program : mockChangeHandler.mock.calls[0][0]});
+            // The program should be updated
+            expect(mockChangeHandler.mock.calls.length).toBe(1);
+            expect(mockChangeHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
+            wrapper.setProps({program: expectedProgram});
 
-    // focus should remain on the same block where an empty block is added
+            // And focus should remain on the clicked block
+            expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, stepNum).getDOMNode());
 
-    expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
-
-    // No onSelectAction calls should have been made
-    expect(mockSelectActionHandler.mock.calls.length).toBe(0);
-
-    wrapper.setProps({selectedAction: {'commandName' : 'right', 'type': 'command'}});
-    // when selected Action is a command, change existing command at a clicked block to be selected command and set selected action back to null
-    getProgramBlockAtPosition(wrapper, 0).simulate('click');
-    expect(mockChangeHandler.mock.calls.length).toBe(2);
-    expect(mockChangeHandler.mock.calls[1][0]).toStrictEqual(['right', 'forward', 'left', 'forward', 'left']);
-    wrapper.setProps({program : mockChangeHandler.mock.calls[1][0]});
-
-    // focus should remain on the same block where a command is inserted
-    expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
-
-    // No onSelectAction calls should have been made
-    expect(mockSelectActionHandler.mock.calls.length).toBe(0);
-
-    wrapper.setProps({selectedAction: {'action' : 'delete', 'type': 'editorAction'}});
-    // when selected Action is delete, when you press any program blocks, the block and its command will be removed from the program
-    getProgramBlockAtPosition(wrapper, 0).simulate('click');
-    expect(mockChangeHandler.mock.calls.length).toBe(3);
-    expect(mockChangeHandler.mock.calls[2][0]).toStrictEqual(['forward', 'left', 'forward', 'left']);
-    wrapper.setProps({program : mockChangeHandler.mock.calls[2][0]});
-
-    // focus should remain on the same blcok where a command is deleted
-    expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, 0).getDOMNode());
-
-    // No onSelectAction calls should have been made
-    expect(mockSelectActionHandler.mock.calls.length).toBe(0);
-
-    // repeat the test cases for the last command in the program
-
-    wrapper.setProps({selectedAction: {'action': 'add', 'type': 'editorAction'}});
-    // when selected Action is add, when you press any program blocks, an empty block (none command) will be added to the previous index and set selectedCommand to null
-    getProgramBlockAtPosition(wrapper, 3).simulate('click');
-    expect(mockChangeHandler.mock.calls.length).toBe(4);
-    expect(mockChangeHandler.mock.calls[3][0]).toStrictEqual(['forward', 'left', 'forward', 'none', 'left']);
-    // No onSelectAction calls should have been made
-    expect(mockSelectActionHandler.mock.calls.length).toBe(0);
-
-    wrapper.setProps({program : mockChangeHandler.mock.calls[3][0]});
-    wrapper.setProps({selectedAction: {'commandName' : 'right', 'type': 'command'}});
-    // when selected Action is a command, change existing command at a clicked block to be selected command and set selected action back to null
-    getProgramBlockAtPosition(wrapper, 3).simulate('click');
-    expect(mockChangeHandler.mock.calls.length).toBe(5);
-    expect(mockChangeHandler.mock.calls[4][0]).toStrictEqual(['forward', 'left', 'forward', 'right', 'left']);
-    // No onSelectAction calls should have been made
-    expect(mockSelectActionHandler.mock.calls.length).toBe(0);
-
-    wrapper.setProps({program : mockChangeHandler.mock.calls[4][0]});
-    wrapper.setProps({selectedAction: {'action' : 'delete', 'type': 'editorAction'}});
-    // when selected Action is delete, when you press any program blocks, the block and its command will be removed from the program
-    getProgramBlockAtPosition(wrapper, 3).simulate('click');
-    expect(mockChangeHandler.mock.calls.length).toBe(6);
-    expect(mockChangeHandler.mock.calls[5][0]).toStrictEqual(['forward', 'left', 'forward', 'left']);
-    // No onSelectAction calls should have been made
-    expect(mockSelectActionHandler.mock.calls.length).toBe(0);
-})
+            // And the selected action should not have changed
+            expect(mockSelectActionHandler.mock.calls.length).toBe(0);
+        }
+    );
+});
 
 test('The editor action buttons have aria-describedby set to provided ids', () => {
     const { wrapper } = createMountProgramBlockEditor();
