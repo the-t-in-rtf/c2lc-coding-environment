@@ -149,6 +149,8 @@ describe('Editor buttons', () => {
         });
 
         test('Then no editor buttons should have presssed state', () => {
+            expect.assertions(7);
+
             expect(getEditorActionButtons(wrapper).length).toBe(2);
 
             expect(getEditorActionButtons(wrapper).get(0).key).toBe('addButton');
@@ -161,6 +163,7 @@ describe('Editor buttons', () => {
         });
 
         test('When Add is clicked, then selected action should be set to Add', () => {
+            expect.assertions(2);
             getEditorActionButtons(wrapper).at(0).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
             expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({
@@ -170,6 +173,7 @@ describe('Editor buttons', () => {
         });
 
         test('When Delete is clicked, then selected action should be set to Delete', () => {
+            expect.assertions(2);
             getEditorActionButtons(wrapper).at(1).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
             expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({
@@ -189,6 +193,7 @@ describe('Editor buttons', () => {
         });
 
         test('Then the Add button should have pressed state', () => {
+            expect.assertions(4);
             expect(getEditorActionButtons(wrapper).get(0).props['aria-pressed']).toBe('true');
             expect(hasPressedClass(getEditorActionButtons(wrapper).at(0))).toBe(true);
             expect(getEditorActionButtons(wrapper).get(1).props['aria-pressed']).toBe('false');
@@ -196,12 +201,14 @@ describe('Editor buttons', () => {
         });
 
         test('When Add is clicked, then it should be toggled off', () => {
+            expect.assertions(2);
             getEditorActionButtons(wrapper).at(0).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
             expect(mockSelectActionHandler.mock.calls[0][0]).toBeNull();
         });
 
         test('When Delete is clicked, then selected action should be set to Delete', () => {
+            expect.assertions(2);
             getEditorActionButtons(wrapper).at(1).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
             expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({
@@ -221,6 +228,7 @@ describe('Editor buttons', () => {
         });
 
         test('Then the Delete button should have pressed state', () => {
+            expect.assertions(4);
             expect(getEditorActionButtons(wrapper).get(0).props['aria-pressed']).toBe('false');
             expect(hasPressedClass(getEditorActionButtons(wrapper).at(0))).toBe(false);
             expect(getEditorActionButtons(wrapper).get(1).props['aria-pressed']).toBe('true');
@@ -228,12 +236,14 @@ describe('Editor buttons', () => {
         });
 
         test('When Delete is clicked, then it should be toggled off', () => {
+            expect.assertions(2);
             getEditorActionButtons(wrapper).at(1).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
             expect(mockSelectActionHandler.mock.calls[0][0]).toBeNull();
         });
 
         test('When Add is clicked, then selected action should be set to Add', () => {
+            expect.assertions(2);
             getEditorActionButtons(wrapper).at(0).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
             expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({
@@ -244,9 +254,39 @@ describe('Editor buttons', () => {
     });
 });
 
-describe('Program blocks', () => {
+describe('Editor buttons aria-describedby', () => {
+    test('Should be set to the provided ids', () => {
+        expect.assertions(2);
+        const { wrapper } = createMountProgramBlockEditor();
+        expect(getEditorActionButtons(wrapper).get(0).props['aria-describedby']).toBe('someAddModeDescriptionId');
+        expect(getEditorActionButtons(wrapper).get(1).props['aria-describedby']).toBe('someDeleteModeDescriptionId');
+    });
+});
+
+describe('Delete All button', () => {
+    describe('Given selected action is Delete', () => {
+        test('When the Delete All button is clicked, then the dialog should be shown', () => {
+            expect.assertions(2);
+
+            const { wrapper } = createShallowProgramBlockEditor({
+                    selectedAction: deleteAction
+            });
+
+            // Initially, check that the modal is not showing
+            expect(wrapper.state().showConfirmDeleteAll).toBe(false);
+            // When the Delete All button is clicked
+            const deleteAllButton = getDeleteAllButton(wrapper).at(0);
+            deleteAllButton.simulate('click');
+            // Then the dialog should be shown
+            expect(wrapper.state().showConfirmDeleteAll).toBe(true);
+        });
+    });
+});
+
+describe('Add, Delete, and replace program steps', () => {
     describe('Given a program of 4 steps and minVisibleSteps of 6', () => {
-        test('Then blocks should be rendered for the program with 2 none blocks at the end', () => {
+        test('Then blocks should be rendered for the program, with 2 none blocks at the end', () => {
+            expect.assertions(7);
             const { wrapper } = createMountProgramBlockEditor();
             expect(getProgramBlocks(wrapper).length).toBe(6);
             expect(getProgramBlocks(wrapper).get(0).key.includes('forward')).toBe(true);
@@ -267,6 +307,9 @@ describe('Program blocks', () => {
         ['Right command', 3, ['forward', 'left', 'forward', 'right'], rightCommandAction]
     ])('Given selected action is %s, when block %i is clicked, then program should be updated',
         (actionName, stepNum, expectedProgram, action) => {
+
+            expect.assertions(4);
+
             const { wrapper, mockSelectActionHandler, mockChangeHandler } =
                 createMountProgramBlockEditor({
                     selectedAction: action
@@ -288,83 +331,101 @@ describe('Program blocks', () => {
     );
 });
 
-test('The editor action buttons have aria-describedby set to provided ids', () => {
-    const { wrapper } = createMountProgramBlockEditor();
-
-    expect(getEditorActionButtons(wrapper).get(0).props['aria-describedby']).toBe('someAddModeDescriptionId');
-    expect(getEditorActionButtons(wrapper).get(1).props['aria-describedby']).toBe('someDeleteModeDescriptionId');
-});
-
-test('Whenever active program step number updates, auto scroll to the step', () => {
-    const mockScrollInto = jest.fn();
-
-    window.HTMLElement.prototype.scrollIntoView = mockScrollInto;
-
-    const { wrapper } = createMountProgramBlockEditor();
-
-    wrapper.setProps({ activeProgramStepNum: 1 });
-    expect(mockScrollInto.mock.calls.length).toBe(1);
-    expect(mockScrollInto.mock.calls[0][0]).toStrictEqual({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-
-    wrapper.setProps({ activeProgramStepNum: 2});
-
-    expect(mockScrollInto.mock.calls.length).toBe(2);
-    expect(mockScrollInto.mock.calls[1][0]).toStrictEqual({ behavior: 'smooth', block: 'nearest', inline: 'nearest'});
-
-});
-
-test('The editor action buttons disabled states are set according to the editingDisabled property', () => {
-
-    const { wrapper } = createMountProgramBlockEditor();
-
-    // editingDisabled is false
-    expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(false);
-    expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(false);
-
-    wrapper.setProps({editingDisabled: true});
-
-    expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(true);
-    expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(true);
-});
-
-test('The run buttons color inverts by appending class name pressed when the program is running', () => {
-
-    const { wrapper } = createShallowProgramBlockEditor({
-        editingDisabled: true,
-        interpreterIsRunning: true,
-        runButtonDisabled: true
+describe('Editing can be disabled', () => {
+    describe('Given editing is enabled', () => {
+        test('Then the buttons should not be disabled', () => {
+            expect.assertions(2);
+            const { wrapper } = createMountProgramBlockEditor({
+                editingDisabled: false
+            });
+            expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(false);
+            expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(false);
+        });
     });
 
-    // When the interpreter is running, the run button has pressed and disabled
-    expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(true);
-    expect(getRunButton(wrapper).props().disabled).toBe(true);
-
-    wrapper.setProps({
-        activeProgramStepNum: null,
-        editingDisabled: false,
-        interpreterIsRunning: false,
-        runButtonDisabled: false });
-
-    // When the interpreter is not running, the run button doesn't have pressed and disabled
-    expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(false);
-    expect(getRunButton(wrapper).props().disabled).toBe(false);
+    describe('Given editing is disabled', () => {
+        test('Then the buttons should be disabled', () => {
+            expect.assertions(2);
+            const { wrapper } = createMountProgramBlockEditor({
+                editingDisabled: true
+            });
+            expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(true);
+            expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(true);
+        });
+    });
 });
 
-test('Delete all button appears when delete action is toggled, which will open a confirmation modal onClick', () => {
+describe('Scroll to show the active program step', () => {
+    test.each([
+        1,
+        2
+    ])('When active program step number is set to %i, then the editor should scroll to the step',
+        (stepNum) => {
+            expect.assertions(4);
 
-    const { wrapper, mockSelectActionHandler } = createShallowProgramBlockEditor();
+            const mockScrollInto = jest.fn();
 
-    // initially, confirm modal for delete all is not visiable
-    expect(wrapper.state().showConfirmDeleteAll).toBe(false);
+            window.HTMLElement.prototype.scrollIntoView = mockScrollInto;
 
-    // toggle delete button
-    const deleteButton = getEditorActionButtons(wrapper).at(1);
-    deleteButton.simulate('click');
-    expect(mockSelectActionHandler.mock.calls.length).toBe(1);
-    expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({'action': 'delete', 'type': 'editorAction'});
+            const { wrapper } = createMountProgramBlockEditor();
 
-    // click deleteAll button and see if modal showes up
-    const deleteAllButton = getDeleteAllButton(wrapper).at(0);
-    deleteAllButton.simulate('click');
-    expect(wrapper.state().showConfirmDeleteAll).toBe(true);
+            wrapper.setProps({
+                activeProgramStepNum: stepNum
+            });
+
+            expect(mockScrollInto.mock.calls.length).toBe(1);
+            expect(mockScrollInto.mock.calls[0][0]).toStrictEqual({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'nearest'
+            });
+
+            expect(mockScrollInto.mock.instances.length).toBe(1);
+            expect(mockScrollInto.mock.instances[0]).toBe(getProgramBlockAtPosition(wrapper, stepNum).getDOMNode());
+        }
+    );
+});
+
+describe('The Run button class is changed when the program is running', () => {
+    describe('Given the program is running', () => {
+        test('Then the Run button should have the pressed class', () => {
+            expect.assertions(1);
+            const { wrapper } = createShallowProgramBlockEditor({
+                interpreterIsRunning: true
+            });
+            expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(true);
+        })
+    });
+
+    describe('Given the program is not running', () => {
+        test('Then the Run button should not have the pressed class', () => {
+            expect.assertions(1);
+            const { wrapper } = createShallowProgramBlockEditor({
+                interpreterIsRunning: false
+            });
+            expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(false);
+        })
+    });
+});
+
+describe('The Run button can be disabled', () => {
+    describe('Given runButtonDisabled is true', () => {
+        test('Then the Run button should be disabled', () => {
+            expect.assertions(1);
+            const { wrapper } = createShallowProgramBlockEditor({
+                runButtonDisabled: true
+            });
+            expect(getRunButton(wrapper).props().disabled).toBe(true);
+        })
+    });
+
+    describe('Given runButtonDisabled is false', () => {
+        test('Then the Run button should not be disabled', () => {
+            expect.assertions(1);
+            const { wrapper } = createShallowProgramBlockEditor({
+                runButtonDisabled: false
+            });
+            expect(getRunButton(wrapper).props().disabled).toBe(false);
+        })
+    });
 });
