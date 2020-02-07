@@ -35,7 +35,7 @@ jobs:
       - name: Flow
         run: npx flow
       - name: Test
-        run: npm test
+        run: npm test -- --verbose
       - name: Archive build artifact
         if: (matrix.os == 'ubuntu-18.04') && (matrix.node-version == '10.x')
         uses: actions/upload-artifact@v1
