@@ -70,7 +70,9 @@ function createShallowProgramBlockEditor(props) {
 
     return {
         wrapper,
-        mockSelectActionHandler
+        mockClickRunButtonHandler,
+        mockSelectActionHandler,
+        mockChangeHandler
     };
 }
 
@@ -105,6 +107,7 @@ function createMountProgramBlockEditor(props) {
 
     return {
         wrapper,
+        mockClickRunButtonHandler,
         mockSelectActionHandler,
         mockChangeHandler
     };
@@ -363,9 +366,9 @@ describe('Scroll to show the active program step', () => {
         (stepNum) => {
             expect.assertions(4);
 
-            const mockScrollInto = jest.fn();
+            const mockScrollIntoView = jest.fn();
 
-            window.HTMLElement.prototype.scrollIntoView = mockScrollInto;
+            window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
 
             const { wrapper } = createMountProgramBlockEditor();
 
@@ -373,15 +376,15 @@ describe('Scroll to show the active program step', () => {
                 activeProgramStepNum: stepNum
             });
 
-            expect(mockScrollInto.mock.calls.length).toBe(1);
-            expect(mockScrollInto.mock.calls[0][0]).toStrictEqual({
+            expect(mockScrollIntoView.mock.calls.length).toBe(1);
+            expect(mockScrollIntoView.mock.calls[0][0]).toStrictEqual({
                 behavior: 'smooth',
                 block: 'nearest',
                 inline: 'nearest'
             });
 
-            expect(mockScrollInto.mock.instances.length).toBe(1);
-            expect(mockScrollInto.mock.instances[0]).toBe(getProgramBlockAtPosition(wrapper, stepNum).getDOMNode());
+            expect(mockScrollIntoView.mock.instances.length).toBe(1);
+            expect(mockScrollIntoView.mock.instances[0]).toBe(getProgramBlockAtPosition(wrapper, stepNum).getDOMNode());
         }
     );
 });
