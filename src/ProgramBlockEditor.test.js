@@ -432,3 +432,40 @@ describe('The Run button can be disabled', () => {
         })
     });
 });
+
+test('The editor scrolls when a step is added to the end of the program', () => {
+    expect.assertions(6);
+
+    const mockScrollIntoView = jest.fn();
+
+    window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
+
+    // Given a program of 5 forwards and 'forward' as the selected command
+    const { wrapper, mockChangeHandler } = createMountProgramBlockEditor({
+        program: ['forward', 'forward', 'forward', 'forward', 'forward'],
+        selectedAction: {
+            'commandName': 'forward',
+            'type': 'command'
+        }
+    });
+
+    // When the empty block at the end of the program is replaced by 'forward'
+    const emptyBlock = wrapper.find({'data-stepnumber': 5}).at(0);
+    emptyBlock.simulate('click');
+
+    // Then the program should be changed
+    expect(mockChangeHandler.mock.calls.length).toBe(1);
+    expect(mockChangeHandler.mock.calls[0][0]).toStrictEqual(
+        ['forward', 'forward', 'forward', 'forward', 'forward', 'forward']);
+
+    // And updating the program triggers auto scroll
+    wrapper.setProps({ program: mockChangeHandler.mock.calls[0][0] });
+    expect(mockScrollIntoView.mock.calls.length).toBe(1);
+    expect(mockScrollIntoView.mock.calls[0][0]).toStrictEqual({
+        behavior: 'auto',
+        block: 'nearest',
+        inline: 'nearest'
+    });
+    expect(mockScrollIntoView.mock.instances.length).toBe(1);
+    expect(mockScrollIntoView.mock.instances[0]).toBe(getProgramBlockAtPosition(wrapper, 6).getDOMNode());
+});
