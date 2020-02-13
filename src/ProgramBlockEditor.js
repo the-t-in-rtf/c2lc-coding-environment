@@ -335,7 +335,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     componentDidUpdate() {
         if (this.scrollToIndex != null) {
             let element = this.commandBlockRefs.get(this.scrollToIndex);
-            if (element) {
+            if (element && element.scrollIntoView) {
                 element.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
             }
             this.scrollToIndex = null;

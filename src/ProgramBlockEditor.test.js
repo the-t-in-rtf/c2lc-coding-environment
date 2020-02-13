@@ -81,8 +81,6 @@ function createMountProgramBlockEditor(props) {
     const mockSelectActionHandler = jest.fn();
     const mockChangeHandler = jest.fn();
 
-    window.HTMLElement.prototype.scrollIntoView = () => {};
-
     const wrapper = mount(
         React.createElement(
             ProgramBlockEditor,
@@ -435,44 +433,39 @@ describe('The Run button can be disabled', () => {
     });
 });
 
-test('Auto scroll to the next block in editing', () => {
-    const mockScrollInto = jest.fn();
-    const mockChangeHandler = jest.fn();
+test('The editor scrolls when a step is added to the end of the program', () => {
+    expect.assertions(6);
 
-    window.HTMLElement.prototype.scrollIntoView = mockScrollInto;
+    const mockScrollIntoView = jest.fn();
 
-    const wrapper = mount(
-        <ProgramBlockEditor
-            activeProgramStepNum={null}
-            editingDisabled={false}
-            interpreterIsRunning={false}
-            minVisibleSteps={6}
-            program={['forward', 'forward', 'forward', 'forward', 'forward']}
-            selectedAction={{'commandName' : 'forward', 'type': 'command'}}
-            runButtonDisabled={false}
-            addModeDescriptionId={'someAddModeDescriptionId'}
-            deleteModeDescriptionId={'someDeleteModeDescriptionId'}
-            onClickRunButton={()=>{}}
-            onSelectAction={()=>{}}
-            onChange={mockChangeHandler} />,
-        {
-            wrappingComponent: IntlProvider,
-            wrappingComponentProps: {
-                locale: 'en',
-                defaultLocale: 'en',
-                messages: messages.en
-            }
+    window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
+
+    // Given a program of 5 forwards and 'forward' as the selected command
+    const { wrapper, mockChangeHandler } = createMountProgramBlockEditor({
+        program: ['forward', 'forward', 'forward', 'forward', 'forward'],
+        selectedAction: {
+            'commandName': 'forward',
+            'type': 'command'
         }
-    );
+    });
 
+    // When the empty block at the end of the program is replaced by 'forward'
     const emptyBlock = wrapper.find({'data-stepnumber': 5}).at(0);
     emptyBlock.simulate('click');
 
-    // Click on an empty block causes program to change
+    // Then the program should be changed
     expect(mockChangeHandler.mock.calls.length).toBe(1);
+    expect(mockChangeHandler.mock.calls[0][0]).toStrictEqual(
+        ['forward', 'forward', 'forward', 'forward', 'forward', 'forward']);
 
-    // Updating the new program triggers auto scroll
-    wrapper.setProps({program : mockChangeHandler.mock.calls[0][0]});
-    expect(mockScrollInto.mock.calls.length).toBe(1);
-    expect(mockScrollInto.mock.calls[0][0]).toStrictEqual({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
+    // And updating the program triggers auto scroll
+    wrapper.setProps({ program: mockChangeHandler.mock.calls[0][0] });
+    expect(mockScrollIntoView.mock.calls.length).toBe(1);
+    expect(mockScrollIntoView.mock.calls[0][0]).toStrictEqual({
+        behavior: 'auto',
+        block: 'nearest',
+        inline: 'nearest'
+    });
+    expect(mockScrollIntoView.mock.instances.length).toBe(1);
+    expect(mockScrollIntoView.mock.instances[0]).toBe(getProgramBlockAtPosition(wrapper, 6).getDOMNode());
 });
