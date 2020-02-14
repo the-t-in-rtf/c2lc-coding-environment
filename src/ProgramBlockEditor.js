@@ -39,11 +39,13 @@ type ProgramBlockEditorState = {
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
     commandBlockRefs: Map<number, HTMLElement>;
     focusIndex: ?number;
+    scrollToIndex: ?number;
 
     constructor(props: ProgramBlockEditorProps) {
         super(props);
         this.commandBlockRefs = new Map();
         this.focusIndex = null;
+        this.scrollToIndex = null;
         this.state = {
             showConfirmDeleteAll : false
         }
@@ -111,16 +113,19 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 this.focusIndex = index;
                 this.props.onChange(ProgramUtils.insert(this.props.program,
                     index, 'none', 'none'));
+                this.scrollToIndex = index + 1;
             } else if (this.props.selectedAction.action === 'delete') {
                 this.focusIndex = index;
                 this.props.onChange(ProgramUtils.trimEnd(
                     ProgramUtils.deleteStep(this.props.program, index),
                     'none'));
+                this.scrollToIndex = null;
             }
         } else if (this.props.selectedAction && this.props.selectedAction.type === 'command'){
             this.focusIndex = index;
             this.props.onChange(ProgramUtils.overwrite(this.props.program,
                     index, this.props.selectedAction.commandName, 'none'));
+            this.scrollToIndex = index + 1;
         }
     };
 
@@ -333,6 +338,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     componentDidUpdate() {
+        if (this.scrollToIndex != null) {
+            let element = this.commandBlockRefs.get(this.scrollToIndex);
+            if (element && element.scrollIntoView) {
+                element.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
+            }
+            this.scrollToIndex = null;
+        }
         if (this.focusIndex != null) {
             let element = this.commandBlockRefs.get(this.focusIndex);
             if (element) {
