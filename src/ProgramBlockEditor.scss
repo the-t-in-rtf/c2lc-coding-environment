@@ -98,8 +98,6 @@ button.ProgramBlockEditor__delete-all-button:hover {
 }
 
 .ProgramBlockEditor__program-sequence-scroll-container {
-    display: flex;
-    justify-content: center;
     border: 0.1rem solid #8F8F8F;
     background: #FFF;
     padding: 0;
@@ -109,10 +107,11 @@ button.ProgramBlockEditor__delete-all-button:hover {
 
 .ProgramBlockEditor__program-sequence {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
     margin-top: auto;
 }
 
@@ -126,7 +125,6 @@ button.ProgramBlockEditor__delete-all-button:hover {
     min-width: 4rem;
     min-height: 4rem;
     border-radius: 50%;
-    margin-bottom: 2.5rem;
 }
 
 button.ProgramBlockEditor__program-block {
