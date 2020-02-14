@@ -180,7 +180,7 @@ export default class App extends React.Component<{}, AppState> {
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
-                <div className='App__heading-section'>
+                <div role='banner' className='App__heading-section'>
                     <Container>
                         <Row>
                             <Col>
@@ -191,7 +191,7 @@ export default class App extends React.Component<{}, AppState> {
                         </Row>
                     </Container>
                 </div>
-                <Container className='mb-5'>
+                <Container role='main' className='mb-5'>
                     <Row className='App__robot-connection-section'>
                         <Col>
                             {!this.appContext.bluetoothApiIsAvailable &&
