@@ -12,6 +12,7 @@ import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
+import { programIsEmpty } from './ProgramUtils';
 import * as Utils from './Utils';
 import type {DeviceConnectionStatus, Program, SelectedAction} from './types';
 import messages from './messages.json';
@@ -37,8 +38,7 @@ type AppState = {
     activeProgramStepNum: ?number,
     interpreterIsRunning: boolean,
     showDashConnectionError: boolean,
-    selectedAction: SelectedAction,
-    lastNonEmptyBlockIndex: number
+    selectedAction: SelectedAction
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -64,7 +64,6 @@ export default class App extends React.Component<{}, AppState> {
             activeProgramStepNum: null,
             interpreterIsRunning: false,
             showDashConnectionError: false,
-            lastNonEmptyBlockIndex: 0,
             selectedAction: null
         };
 
@@ -89,16 +88,6 @@ export default class App extends React.Component<{}, AppState> {
                 settings: Object.assign({}, state.settings, settings)
             }
         });
-    }
-
-    getLastNonEmptyBlockIndex() {
-        let index = -1;
-        for (let i=0, programLength=this.state.program.length;i<programLength;i++) {
-            if (this.state.program[i] !== 'none') {
-                index = i;
-            }
-        }
-        return index;
     }
 
     getSelectedCommandName() {
@@ -266,9 +255,8 @@ export default class App extends React.Component<{}, AppState> {
                                 selectedAction={this.state.selectedAction}
                                 runButtonDisabled={
                                     this.state.dashConnectionStatus !== 'connected' ||
-                                    this.state.lastNonEmptyBlockIndex === -1 ||
-                                    this.state.program.length === 0 ||
-                                    this.state.interpreterIsRunning}
+                                    this.state.interpreterIsRunning ||
+                                    programIsEmpty(this.state.program)}
                                 addModeDescriptionId={this.addModeDescriptionId}
                                 deleteModeDescriptionId={this.deleteModeDescriptionId}
                                 onClickRunButton={this.handleClickRun}
@@ -326,18 +314,6 @@ export default class App extends React.Component<{}, AppState> {
                 if (this.state.interpreterIsRunning) {
                     this.interpreter.stop();
                 }
-            }
-        }
-
-        if (this.state.program !== prevState.program) {
-            this.setState({
-                lastNonEmptyBlockIndex: this.getLastNonEmptyBlockIndex()
-            });
-        }
-
-        if (this.state.activeProgramStepNum !== prevState.activeProgramStepNum){
-            if (this.state.activeProgramStepNum === this.state.lastNonEmptyBlockIndex + 1) {
-                this.interpreter.stop();
             }
         }
     }
