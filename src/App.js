@@ -13,7 +13,7 @@ import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import * as Utils from './Utils';
-import type {DeviceConnectionStatus, Program, SelectedAction} from './types';
+import type { DeviceConnectionStatus, Program, RobotDriver, SelectedAction } from './types';
 import messages from './messages.json';
 import './App.scss';
 import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
@@ -42,7 +42,7 @@ type AppState = {
 
 export default class App extends React.Component<{}, AppState> {
     appContext: AppContext;
-    dashDriver: DashDriver;
+    dashDriver: RobotDriver;
     interpreter: Interpreter;
     addModeDescriptionId: string;
     deleteModeDescriptionId: string;

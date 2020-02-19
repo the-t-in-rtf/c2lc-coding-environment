@@ -1,9 +1,11 @@
 // @flow
 
+import type { RobotDriver } from './types';
+
 const dashServiceUuid = 'af237777-879d-6186-1f49-deca0e85d9c1';
 const dashCommandCharacteristicUuid = 'af230002-879d-6186-1f49-deca0e85d9c1';
 
-export default class DashDriver {
+export default class DashDriver implements RobotDriver {
     commandCharacteristic: any;
 
     connect(onDisconnected: () => void): Promise<void> {
