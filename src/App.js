@@ -22,6 +22,9 @@ import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
 import AddModeImage from './AddModeImage';
 import DeleteModeImage from './DeleteModeImage';
 
+// Uncomment to use the FakeRobotDriver (see driver construction below also)
+//import FakeRobotDriver from './FakeRobotDriver';
+
 type AppContext = {
     bluetoothApiIsAvailable: boolean
 };
@@ -76,6 +79,7 @@ export default class App extends React.Component<{}, AppState> {
             }
         );
 
+        // For FakeRobotDriver, replace with: this.dashDriver = new FakeRobotDriver();
         this.dashDriver = new DashDriver();
 
         this.addModeDescriptionId = Utils.generateId('addModeDescription');
