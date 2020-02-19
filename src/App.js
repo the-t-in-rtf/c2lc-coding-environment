@@ -36,7 +36,6 @@ type AppState = {
     dashConnectionStatus: DeviceConnectionStatus,
     activeProgramStepNum: ?number,
     interpreterIsRunning: boolean,
-    intervalBetweenCommands: number,
     showDashConnectionError: boolean,
     selectedAction: SelectedAction,
     lastNonEmptyBlockIndex: number
