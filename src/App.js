@@ -65,9 +65,8 @@ export default class App extends React.Component<{}, AppState> {
             activeProgramStepNum: null,
             interpreterIsRunning: false,
             showDashConnectionError: false,
-            selectedAction: null,
-            intervalBetweenCommands: 1900,
-            lastNonEmptyBlockIndex: 0
+            lastNonEmptyBlockIndex: 0,
+            selectedAction: null
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -80,10 +79,9 @@ export default class App extends React.Component<{}, AppState> {
             }
         );
 
-        this.dashDriver = new DashDriver(this.state.intervalBetweenCommands);
-
         this.addModeDescriptionId = Utils.generateId('addModeDescription');
         this.deleteModeDescriptionId = Utils.generateId('deleteModeDescription');
+        this.dashDriver = new DashDriver();
     }
 
     setStateSettings(settings: $Shape<AppSettings>) {
@@ -323,17 +321,6 @@ export default class App extends React.Component<{}, AppState> {
                     this.dashDriver.left.bind(this.dashDriver));
                 this.interpreter.addCommandHandler('right', 'dash',
                     this.dashDriver.right.bind(this.dashDriver));
-                this.interpreter.addCommandHandler(
-                    'none',
-                    'noneHandler',
-                    () => {
-                        return new Promise((resolve, reject) => {
-                            setTimeout(() => {
-                                resolve();
-                            }, this.state.intervalBetweenCommands);
-                        });
-                    }
-                );
             } else if (this.state.dashConnectionStatus === 'notConnected') {
                 // TODO: Remove Dash handlers
 
