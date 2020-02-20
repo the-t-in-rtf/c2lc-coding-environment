@@ -128,7 +128,7 @@ function getDeleteAllButton(programBlockEditorWrapper) {
 }
 
 function getProgramBlocks(programBlockEditorWrapper) {
-    return programBlockEditorWrapper.find(Button)
+    return programBlockEditorWrapper.find(AriaDisablingButton)
         .filter('.ProgramBlockEditor__program-block');
 }
 
