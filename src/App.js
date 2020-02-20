@@ -12,6 +12,7 @@ import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
+import { programIsEmpty } from './ProgramUtils';
 import * as Utils from './Utils';
 import type { DeviceConnectionStatus, Program, RobotDriver, SelectedAction } from './types';
 import messages from './messages.json';
@@ -259,7 +260,8 @@ export default class App extends React.Component<{}, AppState> {
                                 selectedAction={this.state.selectedAction}
                                 runButtonDisabled={
                                     this.state.dashConnectionStatus !== 'connected' ||
-                                    this.state.interpreterIsRunning}
+                                    this.state.interpreterIsRunning ||
+                                    programIsEmpty(this.state.program)}
                                 addModeDescriptionId={this.addModeDescriptionId}
                                 deleteModeDescriptionId={this.deleteModeDescriptionId}
                                 onClickRunButton={this.handleClickRun}
