@@ -40,10 +40,20 @@ function trimEnd(program: Program, commandToTrim: string): Program {
     return program;
 };
 
+function programIsEmpty(program: Program): boolean {
+    for (let i=0; i<program.length; i++) {
+        if (program[i] !== 'none') {
+            return false;
+        }
+    }
+    return true;
+}
+
 export {
     deleteStep,
     expandProgram,
     insert,
     overwrite,
-    trimEnd
+    trimEnd,
+    programIsEmpty
 };
