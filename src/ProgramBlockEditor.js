@@ -130,6 +130,23 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     };
 
+    hanldeDropCommand = (e) => {
+        e.preventDefault();
+        const draggedComponentId = e.dataTransfer.getData('command');
+        if (draggedComponentId.includes('command-block') && e.target.id.includes('programBlock')) {
+            const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
+            this.focusIndex = index;
+            const commandName = draggedComponentId.split('--')[1];
+            this.props.onChange(ProgramUtils.overwrite(this.props.program,
+                    index, commandName, 'none'));
+            this.scrollToIndex = index + 1;
+        }
+    }
+
+    handleDragOver = (e) => {
+        e.preventDefault();
+    }
+
     setCommandBlockRef = (programStepNumber: number, element: ?HTMLElement) => {
         if (element) {
             this.commandBlockRefs.set(programStepNumber, element);
@@ -151,6 +168,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             case 'forward':
                 return (
                     <Button
+                        id={`programBlock-${programStepNumber}`}
                         ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                         key={`${programStepNumber}-forward`}
                         data-stepnumber={programStepNumber}
@@ -163,13 +181,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
                             this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
                         }
-                        onClick={this.handleClickStep}>
+                        onClick={this.handleClickStep}
+                        onDrop={this.hanldeDropCommand}
+                        onDragOver={this.handleDragOver}>
                         <ArrowForward className='command-block-svg'/>
                     </Button>
                 );
             case 'left':
                 return (
                     <Button
+                        id={`programBlock-${programStepNumber}`}
                         ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                         key={`${programStepNumber}-left`}
                         data-stepnumber={programStepNumber}
@@ -182,13 +203,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
                             this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})
                         }
-                        onClick={this.handleClickStep}>
+                        onClick={this.handleClickStep}
+                        onDrop={this.hanldeDropCommand}
+                        onDragOver={this.handleDragOver}>
                         <ArrowTurnLeft className='command-block-svg'/>
                     </Button>
                 );
             case 'right':
                 return (
                     <Button
+                        id={`programBlock-${programStepNumber}`}
                         ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                         key={`${programStepNumber}-right`}
                         data-stepnumber={programStepNumber}
@@ -201,13 +225,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
                             this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})
                         }
-                        onClick={this.handleClickStep}>
+                        onClick={this.handleClickStep}
+                        onDrop={this.hanldeDropCommand}
+                        onDragOver={this.handleDragOver}>
                         <ArrowTurnRight className='command-block-svg'/>
                     </Button>
                 );
             case 'none':
                 return (
                     <Button
+                        id={`programBlock-${programStepNumber}`}
                         ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                         key={`${programStepNumber}-none`}
                         data-stepnumber={programStepNumber}
@@ -220,7 +247,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
                             this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})
                         }
-                        onClick={this.handleClickStep}>
+                        onClick={this.handleClickStep}
+                        onDrop={this.hanldeDropCommand}
+                        onDragOver={this.handleDragOver}>
                     </Button>
                 );
             default:
