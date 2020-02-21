@@ -19,6 +19,15 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
         );
     };
 
+    handleDrag = (e) => {
+        e.dataTransfer.setData('command', e.target.id);
+        e.effectAllowed = 'copyMove';
+    }
+
+    handleDragEnd = (e) => {
+        e.dataTransfer.clearData();
+    }
+
     render() {
         const pressed = this.props.commandName === this.props.selectedCommandName;
         let classNames = [
@@ -29,6 +38,10 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
         }
         return (
             <Button
+                draggable='true'
+                id={`command-block--${this.props.commandName}`}
+                onDragStart={this.handleDrag}
+                onDragEnd={this.handleDragEnd}
                 className={classNames.join(' ')}
                 variant={`command-block--${this.props.commandName}`}
                 aria-label={this.props.intl.formatMessage({ id: `CommandPaletteCommand.${this.props.commandName}`})}
