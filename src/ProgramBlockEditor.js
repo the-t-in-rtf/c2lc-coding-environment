@@ -130,9 +130,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     };
 
-    hanldeDropCommand = (e) => {
+    hanldeDropCommand = (e: SyntheticDragEvent<HTMLButtonElement>) => {
         e.preventDefault();
         const draggedComponentId = e.dataTransfer.getData('command');
+        // $FlowFixMe
         if (draggedComponentId.includes('command-block') && e.target.id.includes('programBlock')) {
             const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
             this.focusIndex = index;
@@ -143,7 +144,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
-    handleDragOver = (e) => {
+    handleDragOver = (e: SyntheticDragEvent<HTMLButtonElement>) => {
         e.preventDefault();
     }
 
