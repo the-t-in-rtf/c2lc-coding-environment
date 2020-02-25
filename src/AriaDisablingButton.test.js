@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
-import { configure, shallow } from 'enzyme';
+import { configure, mount, shallow } from 'enzyme';
 import { Button } from 'react-bootstrap';
 import AriaDisablingButton from './AriaDisablingButton';
 
@@ -112,4 +112,21 @@ test('Disabled button with className and extra props', () => {
 
     wrappedButton.simulate('click');
     expect(mockClickHandler.mock.calls.length).toBe(0);
+});
+
+test('Ref is forwarded to implementation HTML button', () => {
+    const buttonRef = React.createRef();
+
+    const wrapper = mount(
+        <AriaDisablingButton
+            onClick={() => {}}
+            disabled={false}
+            disabledClassName='someDisabledClass'
+            ref={buttonRef}
+        >
+            someContent
+        </AriaDisablingButton>
+    );
+
+    expect(buttonRef.current).toBeInstanceOf(HTMLButtonElement);
 });
