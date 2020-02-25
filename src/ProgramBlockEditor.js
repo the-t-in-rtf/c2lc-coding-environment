@@ -1,6 +1,6 @@
 // @flow
 
-import { Button, Col, Collapse, Container, Row } from 'react-bootstrap';
+import { Col, Collapse, Container, Row } from 'react-bootstrap';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
@@ -297,13 +297,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 </Row>
                 <Row className='ProgramBlockEditor__delete-all-button-container'>
                     <Collapse in={this.deleteIsSelected()}>
-                        <Button
+                        <AriaDisablingButton
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.deleteAll'})}
-                            className='ProgramBlockEditor__delete-all-button'
+                            aria-describedby={this.props.deleteModeDescriptionId}
+                            className={'ProgramBlockEditor__delete-all-button'}
+                            disabledClassName='ProgramBlockEditor__editor-action-button--disabled'
+                            disabled={this.props.editingDisabled}
                             onClick={this.handleClickDeleteAll}
                         >
                             <FormattedMessage id='ProgramBlockEditor.deleteAll' />
-                        </Button>
+                        </AriaDisablingButton>
                     </Collapse>
                 </Row>
                 <Row>
