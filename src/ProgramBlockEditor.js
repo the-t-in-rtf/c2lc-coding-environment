@@ -6,6 +6,7 @@ import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
 import React from 'react';
 import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
+import AddNodeButton from './AddNodeButton';
 import AriaDisablingButton from './AriaDisablingButton';
 import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
 import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
@@ -129,6 +130,24 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     };
 
+    hanldeDropCommand = (e: SyntheticDragEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const draggedComponentId = e.dataTransfer.getData('command');
+        // $FlowFixMe
+        if (draggedComponentId.includes('command-block')) {
+            const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
+            this.focusIndex = index;
+            const commandName = draggedComponentId.split('--')[1];
+            this.props.onChange(ProgramUtils.overwrite(this.props.program,
+                    index, commandName, 'none'));
+            this.scrollToIndex = index + 1;
+        }
+    }
+
+    handleDragOver = (e: SyntheticDragEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+    }
+
     setCommandBlockRef = (programStepNumber: number, element: ?HTMLElement) => {
         if (element) {
             this.commandBlockRefs.set(programStepNumber, element);
@@ -152,6 +171,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <React.Fragment key={programStepNumber}>
                         <div className='ProgramBlockEditor__program-block-connector'/>
                         <Button
+                            id={`programBlock-${programStepNumber}`}
                             ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                             key={`${programStepNumber}-forward`}
                             data-stepnumber={programStepNumber}
@@ -174,6 +194,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <React.Fragment key={programStepNumber}>
                         <div className='ProgramBlockEditor__program-block-connector'/>
                         <Button
+                            id={`programBlock-${programStepNumber}`}
                             ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                             key={`${programStepNumber}-left`}
                             data-stepnumber={programStepNumber}
@@ -196,6 +217,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <React.Fragment key={programStepNumber}>
                         <div className='ProgramBlockEditor__program-block-connector'/>
                         <Button
+                            id={`programBlock-${programStepNumber}`}
                             ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                             key={`${programStepNumber}-right`}
                             data-stepnumber={programStepNumber}
@@ -215,24 +237,40 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 );
             case 'none':
                 return (
-                    <React.Fragment key={programStepNumber}>
-                        <div className='ProgramBlockEditor__program-block-connector'/>
-                        <Button
-                            ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
-                            key={`${programStepNumber}-none`}
-                            data-stepnumber={programStepNumber}
-                            className={classNames.join(' ')}
-                            variant='command-block--none'
-                            aria-label={
-                                this.addIsSelected() ?
-                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                                this.deleteIsSelected() ?
-                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})
-                            }
-                            onClick={this.handleClickStep}>
-                        </Button>
-                    </React.Fragment>
+                        <React.Fragment key={programStepNumber}>
+                            <div className='ProgramBlockEditor__program-block-connector' />
+                            <AddNodeButton
+                                commandSelected={
+                                    this.props.selectedAction &&
+                                    this.props.selectedAction.type === 'command'}
+                                showButton={false}
+                                programStepNumber={programStepNumber}
+                                onClick={this.handleClickStep}
+                                onDrop={this.hanldeDropCommand}
+                            />
+                        </React.Fragment>
+                    // <React.Fragment key={programStepNumber}>
+                    //     <div className='ProgramBlockEditor__program-block-connector'/>
+                    //     <Button
+                    //         id={`programBlock-${programStepNumber}`}
+                    //         ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
+                    //         key={`${programStepNumber}-none`}
+                    //         data-stepnumber={programStepNumber}
+                    //         className={classNames.join(' ')}
+                    //         variant='command-block--none'
+                    //         aria-label={
+                    //             this.addIsSelected() ?
+                    //             `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
+                    //             this.deleteIsSelected() ?
+                    //             `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                    //             this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})
+                    //         }
+                    //         onClick={this.handleClickStep}
+                    //         onDrop={this.hanldeDropCommand}
+                    //         onDragOver={this.handleDragOver}>
+                    //     </Button>
+                    // </React.Fragment>
+
                 );
             default:
                 return (
