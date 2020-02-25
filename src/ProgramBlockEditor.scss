@@ -131,10 +131,6 @@ button.ProgramBlockEditor__program-block {
     margin-right: 1.4rem;
 }
 
-button.ProgramBlockEditor__program-block--disabled {
-    fill: $c2lc-disabled-color;
-}
-
 button.ProgramBlockEditor__program-block--active {
     box-shadow: 0 0 0 0.2rem #79F1CD;
 }
