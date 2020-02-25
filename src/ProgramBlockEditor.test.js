@@ -123,7 +123,7 @@ function hasPressedClass(button) {
 }
 
 function getDeleteAllButton(programBlockEditorWrapper) {
-    return programBlockEditorWrapper.find(Button)
+    return programBlockEditorWrapper.find(AriaDisablingButton)
         .filter('.ProgramBlockEditor__delete-all-button');
 }
 
