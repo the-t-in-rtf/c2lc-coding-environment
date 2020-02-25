@@ -41,7 +41,6 @@ button.btn.ProgramBlockEditor__editor-action-button--pressed {
 
 button.btn.ProgramBlockEditor__editor-action-button--disabled {
     background-color: $c2lc-primary-button-color;
-    color: $c2lc-disabled-color;
     cursor: default;
 }
 
@@ -89,6 +88,10 @@ button.ProgramBlockEditor__delete-all-button {
     padding: 0 0.5rem;
     position: absolute;
     right: 0;
+}
+
+button.btn.ProgramBlockEditor__delete-all-button--disabled {
+    background-color: $c2lc-disabled-color;
 }
 
 button.ProgramBlockEditor__delete-all-button:hover {
