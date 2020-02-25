@@ -41,6 +41,7 @@ button.btn.ProgramBlockEditor__editor-action-button--pressed {
 
 button.btn.ProgramBlockEditor__editor-action-button--disabled {
     background-color: $c2lc-primary-button-color;
+    color: $c2lc-disabled-color;
     cursor: default;
 }
 
