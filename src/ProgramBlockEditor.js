@@ -299,9 +299,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <Collapse in={this.deleteIsSelected()}>
                         <AriaDisablingButton
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.deleteAll'})}
-                            aria-describedby={this.props.deleteModeDescriptionId}
                             className={'ProgramBlockEditor__delete-all-button'}
-                            disabledClassName='ProgramBlockEditor__editor-action-button--disabled'
+                            disabledClassName='ProgramBlockEditor__delete-all-button--disabled'
                             disabled={this.props.editingDisabled}
                             onClick={this.handleClickDeleteAll}
                         >
