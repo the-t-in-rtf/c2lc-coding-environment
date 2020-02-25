@@ -1,0 +1,26 @@
+@import 'variables';
+
+button.btn.AddNodeButton__plus-button {
+    border: 1px solid #FFF;
+    border-radius: 50%;
+    background-color: #FFF;
+    padding: 0.5rem;
+}
+
+button.btn.AddNodeButton__plus-button svg {
+    stroke: #000;
+}
+
+.AddNodeButton__plus-button-svg {
+    width: 1.7rem;
+    height: 1.7rem;
+    display: block;
+}
+
+.AddNodeButton__plus-button--minimize {
+    background-color: #939595;
+    min-height: 1rem;
+    width: 1rem;
+    border: 0.1rem solid #8F8F8F;
+    border-radius: 50%;
+}
