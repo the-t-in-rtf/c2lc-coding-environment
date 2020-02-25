@@ -8,7 +8,7 @@ type AriaDisablingButtonProps = {
     onClick: (evt: any) => void,
     disabled: boolean,
     className?: string,
-    disabledClassName: string,
+    disabledClassName?: string,
     children?: React.Node
 };
 
