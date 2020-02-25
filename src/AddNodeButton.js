@@ -45,6 +45,14 @@ class AddNodeButton extends React.Component<AddNodeButtonProps, AddNodeButtonSta
         });
     }
 
+    handleBlur = () => {
+        if (!this.props.showButton) {
+            this.setState({
+                showNode: false
+            });
+        }
+    }
+
     // $FlowFixMe
     render() {
         if (this.props.showButton || this.state.showNode) {
@@ -55,6 +63,7 @@ class AddNodeButton extends React.Component<AddNodeButtonProps, AddNodeButtonSta
                     id={`programBlock-${this.props.programStepNumber}`}
                     data-stepnumber={this.props.programStepNumber}
                     onClick={this.props.onClick}
+                    onBlur={this.handleBlur}
                     onDrop={this.props.onDrop}
                     onDragOver={this.handleDragOver}>
                     <AddIcon className='AddNodeButton__plus-button-svg' />
@@ -82,7 +91,9 @@ class AddNodeButton extends React.Component<AddNodeButtonProps, AddNodeButtonSta
 
     componentDidUpdate(prevProps: {}, prevState: AddNodeButtonState) {
         if (this.state.showNode !== prevState.showNode) {
-            this.ref.current.focus();
+            if (this.state.showNode) {
+                this.ref.current.focus();
+            }
         }
     }
 }
