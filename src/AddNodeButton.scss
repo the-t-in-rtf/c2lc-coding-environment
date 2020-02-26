@@ -24,3 +24,11 @@ button.btn.AddNodeButton__plus-button svg {
     border: 0.1rem solid #8F8F8F;
     border-radius: 50%;
 }
+
+.AddNodeButton__background {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 0.8rem;
+    width: 6.25rem;
+}
