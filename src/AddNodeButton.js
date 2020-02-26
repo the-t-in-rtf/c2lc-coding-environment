@@ -72,19 +72,28 @@ class AddNodeButton extends React.Component<AddNodeButtonProps, AddNodeButtonSta
         } else if (!this.props.showButton) {
             return(
                 <div
-                    className='AddNodeButton__plus-button--minimize'
-                    id={`programBlock-${this.props.programStepNumber}`}
-                    tabIndex={
-                        this.props.commandSelected ?
-                        '0' :
-                        '-1'}
-                    onFocus={this.handleFocus}
+                    className='AddNodeButton__background'
                     onDragOver={
                         this.props.commandSelected ?
                             this.handleDragOver :
                             undefined
                     }
-                />
+                >
+                    <div
+                        className='AddNodeButton__plus-button--minimize'
+                        id={`programBlock-${this.props.programStepNumber}`}
+                        tabIndex={
+                            this.props.commandSelected ?
+                            '0' :
+                            '-1'}
+                        onFocus={this.handleFocus}
+                        onDragOver={
+                            this.props.commandSelected ?
+                                this.handleDragOver :
+                                undefined
+                        }
+                    />
+                </div>
             )
         }
     }
