@@ -24,7 +24,9 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
         e.dataTransfer.setData('command', e.target.id);
         // $FlowFixMe
         e.effectAllowed = 'copyMove';
-        this.handleClick();
+        if (this.props.commandName !== this.props.selectedCommandName) {
+            this.handleClick();
+        }
     }
 
     handleDragEnd = (e: SyntheticDragEvent<HTMLButtonElement>) => {
