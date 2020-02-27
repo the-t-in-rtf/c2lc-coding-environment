@@ -80,7 +80,7 @@ button.btn.ProgramBlockEditor__editor-action-button--pressed.ProgramBlockEditor_
 button.ProgramBlockEditor__delete-all-button {
     z-index: 1;
     color: #FFF;
-    background-color: #E2452B;
+    background-color: #A0311F;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     max-width: 5em;
@@ -88,6 +88,10 @@ button.ProgramBlockEditor__delete-all-button {
     padding: 0 0.5rem;
     position: absolute;
     right: 0;
+}
+
+button.btn.ProgramBlockEditor__delete-all-button--disabled {
+    background-color: $c2lc-disabled-color;
 }
 
 button.ProgramBlockEditor__delete-all-button:hover {

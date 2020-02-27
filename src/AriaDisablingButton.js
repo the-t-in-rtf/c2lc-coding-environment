@@ -8,18 +8,12 @@ type AriaDisablingButtonProps = {
     onClick: (evt: any) => void,
     disabled: boolean,
     className?: string,
-    disabledClassName: string,
-    children: React.Node
+    disabledClassName?: string,
+    children?: React.Node
 };
 
-export default class AriaDisablingButton extends React.Component<AriaDisablingButtonProps, {}> {
-    handleClick = (evt: any) => {
-        if (!this.props.disabled) {
-            this.props.onClick(evt);
-        }
-    };
-
-    render() {
+const AriaDisablingButton = React.forwardRef<AriaDisablingButtonProps, Button>(
+    (props, ref) => {
         const {
             onClick,
             disabled,
@@ -27,7 +21,7 @@ export default class AriaDisablingButton extends React.Component<AriaDisablingBu
             disabledClassName,
             children,
             ...otherProps
-        } = this.props;
+        } = props;
 
         const classes = classNames(
             className,
@@ -37,11 +31,14 @@ export default class AriaDisablingButton extends React.Component<AriaDisablingBu
         return React.createElement(
             Button,
             Object.assign({
-                "onClick": this.handleClick,
-                "aria-disabled": disabled,
-                "className": classes
+                'onClick': disabled ? undefined : onClick,
+                'aria-disabled': disabled,
+                'className': classes,
+                'ref': ref
             }, otherProps),
             children
         );
     }
-};
+);
+
+export default AriaDisablingButton;

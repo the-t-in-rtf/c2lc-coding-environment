@@ -12,8 +12,9 @@ import * as FeatureDetection from './FeatureDetection';
 import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
+import { programIsEmpty } from './ProgramUtils';
 import * as Utils from './Utils';
-import type {DeviceConnectionStatus, Program, SelectedAction} from './types';
+import type { DeviceConnectionStatus, Program, RobotDriver, SelectedAction } from './types';
 import messages from './messages.json';
 import './App.scss';
 import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
@@ -21,6 +22,9 @@ import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
 import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
 import AddModeImage from './AddModeImage';
 import DeleteModeImage from './DeleteModeImage';
+
+// Uncomment to use the FakeRobotDriver (see driver construction below also)
+//import FakeRobotDriver from './FakeRobotDriver';
 
 type AppContext = {
     bluetoothApiIsAvailable: boolean
@@ -42,7 +46,7 @@ type AppState = {
 
 export default class App extends React.Component<{}, AppState> {
     appContext: AppContext;
-    dashDriver: DashDriver;
+    dashDriver: RobotDriver;
     interpreter: Interpreter;
     addModeDescriptionId: string;
     deleteModeDescriptionId: string;
@@ -76,6 +80,7 @@ export default class App extends React.Component<{}, AppState> {
             }
         );
 
+        // For FakeRobotDriver, replace with: this.dashDriver = new FakeRobotDriver();
         this.dashDriver = new DashDriver();
 
         this.addModeDescriptionId = Utils.generateId('addModeDescription');
@@ -254,7 +259,8 @@ export default class App extends React.Component<{}, AppState> {
                                 selectedAction={this.state.selectedAction}
                                 runButtonDisabled={
                                     this.state.dashConnectionStatus !== 'connected' ||
-                                    this.state.interpreterIsRunning}
+                                    this.state.interpreterIsRunning ||
+                                    programIsEmpty(this.state.program)}
                                 addModeDescriptionId={this.addModeDescriptionId}
                                 deleteModeDescriptionId={this.deleteModeDescriptionId}
                                 onClickRunButton={this.handleClickRun}
