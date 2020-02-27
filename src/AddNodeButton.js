@@ -1,95 +1,95 @@
 // @flow
 
-import React from 'react';
-import { Button } from 'react-bootstrap';
-import {injectIntl} from 'react-intl';
+import React, { useState, useEffect } from 'react';
+import AriaDisablingButton from './AriaDisablingButton';
 import { ReactComponent as AddIcon } from './svg/Add.svg';
 import './AddNodeButton.scss';
 
 type AddNodeButtonProps = {
     commandSelected: ?boolean,
+    disabled: boolean,
     showButton: boolean,
     programStepNumber: number,
-    intl: any,
     onDrop: (e: SyntheticDragEvent<HTMLButtonElement>) => void,
-    onClick: (e: SyntheticEvent<HTMLButtonElement>) => void
+    onClick: (e: SyntheticEvent<HTMLButtonElement>) => void,
+    onFocus: (stepNumber: number) => void
 };
 
-type AddNodeButtonState = {
-    showNode: boolean
-}
+const AddNodeButton = React.forwardRef<AddNodeButtonProps, any>(
+    (props, ref) => {
+        const {
+            commandSelected,
+            disabled,
+            showButton,
+            programStepNumber,
+            onDrop,
+            onClick,
+            onFocus
+        } = props;
 
-class AddNodeButton extends React.Component<AddNodeButtonProps, AddNodeButtonState> {
-    ref: any;
+        const [showNode, setShowNode] = useState(false);
 
-    constructor(props: AddNodeButtonProps) {
-        super(props);
-        this.ref = React.createRef();
-        this.state = {
-            showNode: false
+        useEffect(() => {
+            if (showNode) {
+                onFocus(programStepNumber);
+            }
+        }, [showNode, onFocus, programStepNumber]);
+
+        const handleDragOver = (e: SyntheticDragEvent<HTMLButtonElement>) => {
+            e.preventDefault();
+            if (showNode === false) {
+                setShowNode(true);
+            }
         }
-    }
 
-    handleDragOver = (e: SyntheticDragEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        if (this.state.showNode === false) {
-            this.setState({
-                showNode: true
-            });
+        const handleFocus = () => {
+            setShowNode(true);
+            console.log('is on focus');
         }
-    }
 
-    handleFocus = () => {
-        this.setState({
-            showNode: true
-        });
-    }
-
-    handleBlur = () => {
-        if (!this.props.showButton) {
-            this.setState({
-                showNode: false
-            });
+        const handleBlur = () => {
+            if (!showButton) {
+                setShowNode(false);
+            }
         }
-    }
 
-    // $FlowFixMe
-    render() {
-        if (this.props.showButton || this.state.showNode) {
-            return(
-                <Button
-                    ref={this.ref}
-                    className='AddNodeButton__plus-button'
-                    id={`programBlock-${this.props.programStepNumber}`}
-                    data-stepnumber={this.props.programStepNumber}
-                    onClick={this.props.onClick}
-                    onBlur={this.handleBlur}
-                    onDrop={this.props.onDrop}
-                    onDragOver={this.handleDragOver}>
-                    <AddIcon className='AddNodeButton__plus-button-svg' />
-                </Button>
-            )
-        } else if (!this.props.showButton) {
-            return(
+        if (showButton || showNode) {
+            return React.createElement(
+                AriaDisablingButton,
+                {
+                    'onClick': onClick,
+                    'disabled': disabled,
+                    'className': 'AddNodeButton__plus-button',
+                    'ref': ref,
+                    'id': `programBlock-${programStepNumber}`,
+                    'data-stepnumber': programStepNumber,
+                    'onBlur': handleBlur,
+                    'onDrop': onDrop,
+                    'onDragOver': handleDragOver
+                },
+                <AddIcon className='AddNodeButton__plus-button-svg' />
+            );
+        } else if (!showButton) {
+            return (
                 <div
                     className='AddNodeButton__background'
                     onDragOver={
-                        this.props.commandSelected ?
-                            this.handleDragOver :
+                        commandSelected ?
+                            handleDragOver :
                             undefined
                     }
                 >
                     <div
                         className='AddNodeButton__plus-button--minimize'
-                        id={`programBlock-${this.props.programStepNumber}`}
+                        id={`programBlock-${programStepNumber}`}
                         tabIndex={
-                            this.props.commandSelected ?
+                            commandSelected ?
                             '0' :
                             '-1'}
-                        onFocus={this.handleFocus}
+                        onFocus={handleFocus}
                         onDragOver={
-                            this.props.commandSelected ?
-                                this.handleDragOver :
+                            commandSelected ?
+                                handleDragOver :
                                 undefined
                         }
                     />
@@ -97,14 +97,6 @@ class AddNodeButton extends React.Component<AddNodeButtonProps, AddNodeButtonSta
             )
         }
     }
+);
 
-    componentDidUpdate(prevProps: {}, prevState: AddNodeButtonState) {
-        if (this.state.showNode !== prevState.showNode) {
-            if (this.state.showNode) {
-                this.ref.current.focus();
-            }
-        }
-    }
-}
-
-export default injectIntl(AddNodeButton);
+export default AddNodeButton;
