@@ -140,6 +140,12 @@ function getRunButton(programBlockEditorWrapper) {
         .filter('.ProgramBlockEditor__run-button');
 }
 
+function getAddNodeButtonAtPosition(programBlockEditorWrapper, index: number) {
+    const nodeIndex = index*2;
+    const addNodeButton = programBlockEditorWrapper.find({'data-stepnumber': nodeIndex});
+    return addNodeButton.at(0);
+}
+
 describe('Editor buttons', () => {
     describe('Given no selected action', () => {
         let wrapper, mockSelectActionHandler;
@@ -151,67 +157,18 @@ describe('Editor buttons', () => {
         });
 
         test('Then no editor buttons should have presssed state', () => {
-            expect.assertions(7);
+            expect.assertions(4);
 
-            expect(getEditorActionButtons(wrapper).length).toBe(2);
+            expect(getEditorActionButtons(wrapper).length).toBe(1);
 
-            expect(getEditorActionButtons(wrapper).get(0).key).toBe('addButton');
+            expect(getEditorActionButtons(wrapper).get(0).key).toBe('deleteButton');
             expect(getEditorActionButtons(wrapper).get(0).props['aria-pressed']).toBe('false');
             expect(hasPressedClass(getEditorActionButtons(wrapper).at(0))).toBe(false);
-
-            expect(getEditorActionButtons(wrapper).get(1).key).toBe('deleteButton');
-            expect(getEditorActionButtons(wrapper).get(1).props['aria-pressed']).toBe('false');
-            expect(hasPressedClass(getEditorActionButtons(wrapper).at(1))).toBe(false);
-        });
-
-        test('When Add is clicked, then selected action should be set to Add', () => {
-            expect.assertions(2);
-            getEditorActionButtons(wrapper).at(0).simulate('click');
-            expect(mockSelectActionHandler.mock.calls.length).toBe(1);
-            expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({
-                type: 'editorAction',
-                action: 'add'
-            });
         });
 
         test('When Delete is clicked, then selected action should be set to Delete', () => {
             expect.assertions(2);
-            getEditorActionButtons(wrapper).at(1).simulate('click');
-            expect(mockSelectActionHandler.mock.calls.length).toBe(1);
-            expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({
-                'type': 'editorAction',
-                'action': 'delete'
-            });
-        });
-    });
-
-    describe('Given selected action is Add', () => {
-        let wrapper, mockSelectActionHandler;
-
-        beforeEach(() => {
-            ({ wrapper, mockSelectActionHandler } = createShallowProgramBlockEditor({
-                selectedAction: addAction
-            }));
-        });
-
-        test('Then the Add button should have pressed state', () => {
-            expect.assertions(4);
-            expect(getEditorActionButtons(wrapper).get(0).props['aria-pressed']).toBe('true');
-            expect(hasPressedClass(getEditorActionButtons(wrapper).at(0))).toBe(true);
-            expect(getEditorActionButtons(wrapper).get(1).props['aria-pressed']).toBe('false');
-            expect(hasPressedClass(getEditorActionButtons(wrapper).at(1))).toBe(false);
-        });
-
-        test('When Add is clicked, then it should be toggled off', () => {
-            expect.assertions(2);
             getEditorActionButtons(wrapper).at(0).simulate('click');
-            expect(mockSelectActionHandler.mock.calls.length).toBe(1);
-            expect(mockSelectActionHandler.mock.calls[0][0]).toBeNull();
-        });
-
-        test('When Delete is clicked, then selected action should be set to Delete', () => {
-            expect.assertions(2);
-            getEditorActionButtons(wrapper).at(1).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
             expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({
                 'type': 'editorAction',
@@ -230,38 +187,25 @@ describe('Editor buttons', () => {
         });
 
         test('Then the Delete button should have pressed state', () => {
-            expect.assertions(4);
-            expect(getEditorActionButtons(wrapper).get(0).props['aria-pressed']).toBe('false');
-            expect(hasPressedClass(getEditorActionButtons(wrapper).at(0))).toBe(false);
-            expect(getEditorActionButtons(wrapper).get(1).props['aria-pressed']).toBe('true');
-            expect(hasPressedClass(getEditorActionButtons(wrapper).at(1))).toBe(true);
+            expect.assertions(2);
+            expect(getEditorActionButtons(wrapper).get(0).props['aria-pressed']).toBe('true');
+            expect(hasPressedClass(getEditorActionButtons(wrapper).at(0))).toBe(true);
         });
 
         test('When Delete is clicked, then it should be toggled off', () => {
             expect.assertions(2);
-            getEditorActionButtons(wrapper).at(1).simulate('click');
-            expect(mockSelectActionHandler.mock.calls.length).toBe(1);
-            expect(mockSelectActionHandler.mock.calls[0][0]).toBeNull();
-        });
-
-        test('When Add is clicked, then selected action should be set to Add', () => {
-            expect.assertions(2);
             getEditorActionButtons(wrapper).at(0).simulate('click');
             expect(mockSelectActionHandler.mock.calls.length).toBe(1);
-            expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({
-                'type': 'editorAction',
-                'action': 'add'
-            });
+            expect(mockSelectActionHandler.mock.calls[0][0]).toBeNull();
         });
     });
 });
 
 describe('Editor buttons aria-describedby', () => {
     test('Should be set to the provided ids', () => {
-        expect.assertions(2);
+        expect.assertions(1);
         const { wrapper } = createMountProgramBlockEditor();
-        expect(getEditorActionButtons(wrapper).get(0).props['aria-describedby']).toBe('someAddModeDescriptionId');
-        expect(getEditorActionButtons(wrapper).get(1).props['aria-describedby']).toBe('someDeleteModeDescriptionId');
+        expect(getEditorActionButtons(wrapper).get(0).props['aria-describedby']).toBe('someDeleteModeDescriptionId');
     });
 });
 
@@ -285,14 +229,10 @@ describe('Delete All button', () => {
     });
 });
 
-describe('Add, Delete, and replace program steps', () => {
+describe('Delete program steps', () => {
     test.each([
-        ['Add', 0, ['none', 'forward', 'left', 'forward', 'left'], addAction],
-        ['Add', 3, ['forward', 'left', 'forward', 'none', 'left'], addAction],
         ['Delete', 0, ['left', 'forward', 'left'], deleteAction],
-        ['Delete', 3, ['forward', 'left', 'forward'], deleteAction],
-        ['Right command', 0, ['right', 'left', 'forward', 'left'], rightCommandAction],
-        ['Right command', 3, ['forward', 'left', 'forward', 'right'], rightCommandAction]
+        ['Delete', 2, ['forward', 'left', 'left'], deleteAction]
     ])('Given selected action is %s, when block %i is clicked, then program should be updated',
         (actionName, stepNum, expectedProgram, action) => {
 
@@ -322,23 +262,21 @@ describe('Add, Delete, and replace program steps', () => {
 describe('Editing can be disabled', () => {
     describe('Given editing is enabled', () => {
         test('Then the buttons should not be disabled', () => {
-            expect.assertions(2);
+            expect.assertions(1);
             const { wrapper } = createMountProgramBlockEditor({
                 editingDisabled: false
             });
             expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(false);
-            expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(false);
         });
     });
 
     describe('Given editing is disabled', () => {
         test('Then the buttons should be disabled', () => {
-            expect.assertions(2);
+            expect.assertions(1);
             const { wrapper } = createMountProgramBlockEditor({
                 editingDisabled: true
             });
             expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(true);
-            expect(getEditorActionButtons(wrapper).get(1).props.disabled).toBe(true);
         });
     });
 });
@@ -435,8 +373,8 @@ test('The editor scrolls when a step is added to the end of the program', () => 
     });
 
     // When the empty block at the end of the program is replaced by 'forward'
-    const emptyBlock = wrapper.find({'data-stepnumber': 5}).at(0);
-    emptyBlock.simulate('click');
+    const addNode = getAddNodeButtonAtPosition(wrapper, 5);
+    addNode.simulate('click');
 
     // Then the program should be changed
     expect(mockChangeHandler.mock.calls.length).toBe(1);
@@ -452,5 +390,5 @@ test('The editor scrolls when a step is added to the end of the program', () => 
         inline: 'nearest'
     });
     expect(mockScrollIntoView.mock.instances.length).toBe(1);
-    expect(mockScrollIntoView.mock.instances[0]).toBe(getProgramBlockAtPosition(wrapper, 6).getDOMNode());
+    expect(mockScrollIntoView.mock.instances[0]).toBe(getAddNodeButtonAtPosition(wrapper, 6).getDOMNode());
 });
