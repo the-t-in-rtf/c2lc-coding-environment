@@ -23,6 +23,7 @@ type ProgramBlockEditorProps = {
     editingDisabled: boolean,
     interpreterIsRunning: boolean,
     program: Program,
+    // $FlowFixMe
     selectedAction: SelectedAction,
     runButtonDisabled: boolean,
     addModeDescriptionId: string,
@@ -74,6 +75,17 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         return this.actionIsSelected('delete');
     }
 
+    commandIsSelected() {
+        return (this.props.selectedAction
+            && this.props.selectedAction.type === 'command');
+    }
+
+    getSelectedCommandName() {
+        if (this.commandIsSelected()) {
+            return this.props.selectedAction.commandName;
+        }
+    }
+
     handleClickDelete = () => {
         this.toggleAction('delete');
     };
@@ -99,12 +111,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     handleClickStep = (e: SyntheticEvent<HTMLButtonElement>) => {
         const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
+        const programIndex = index/2;
 
         if (this.props.selectedAction && this.props.selectedAction.type === 'editorAction') {
             if (this.props.selectedAction.action === 'delete') {
                 this.focusIndex = index;
                 this.props.onChange(ProgramUtils.trimEnd(
-                    ProgramUtils.deleteStep(this.props.program, index),
+                    ProgramUtils.deleteStep(this.props.program, programIndex),
                     'none'));
                 this.scrollToIndex = null;
             }
@@ -140,11 +153,47 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     };
 
+    programIsActive = (programStepNumber: number) => {
+        if (this.props.interpreterIsRunning && this.props.activeProgramStepNum) {
+            return (this.props.activeProgramStepNum*2+1) === programStepNumber;
+        } else {
+            return false;
+        }
+    }
+
+    makeNodeAriaLabel = (programStepNumber: number) => {
+        const isLastBlock = (programStepNumber === (this.props.program.length * 2 - 1));
+        const programBlockPosition = (programStepNumber + 1)/2;
+        if (isLastBlock) {
+            if (this.commandIsSelected()) {
+                return this.props.intl.formatMessage(
+                    {id: 'ProgramBlockEditor.lastBlock'},
+                    {
+                        command: this.getSelectedCommandName()
+                    });
+            } else {
+                return this.props.intl.formatMessage({id: 'ProgramBlockEditor.blocks.noCommandSelected'});
+            }
+        } else {
+            if (this.commandIsSelected()) {
+                return this.props.intl.formatMessage(
+                    {id: 'ProgramBlockEditor.betweenBlocks'},
+                    {
+                        command: this.getSelectedCommandName(),
+                        prevCommand: `${programBlockPosition}, ${this.props.program[programBlockPosition-1]}`,
+                        postCommand: `${programBlockPosition+1}, ${this.props.program[programBlockPosition]}`
+                    });
+            } else {
+                return this.props.intl.formatMessage({id: 'ProgramBlockEditor.blocks.noCommandSelected'});
+            }
+        }
+    }
+
     makeProgramBlock(programStepNumber: number, command: string) {
-        const active = this.props.interpreterIsRunning &&
-            this.props.activeProgramStepNum*2+1 === programStepNumber;
-        const showButton =
+        const active = this.programIsActive(programStepNumber);
+        const isLastBlock =
             programStepNumber === (this.props.program.length * 2 - 1);
+        const programBlockPosition = (programStepNumber + 1)/2;
         let classNames = [
             'ProgramBlockEditor__program-block',
             'command-block'
@@ -166,8 +215,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             variant='command-block--forward'
                             aria-label={
                                 this.deleteIsSelected() ?
-                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
+                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programBlockPosition})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programBlockPosition})
                             }
                             disabled={this.props.editingDisabled}
                             onClick={this.handleClickStep}
@@ -176,13 +225,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         </AriaDisablingButton>
                         <div className='ProgramBlockEditor__program-block-connector' />
                         <AddNodeButton
+                            aria-label={this.makeNodeAriaLabel(programStepNumber)}
                             ref={ (element) => this.setCommandBlockRef(programStepNumber+1, element) }
-                            showButton={showButton}
+                            showButton={isLastBlock}
                             commandSelected={
                                 this.props.selectedAction &&
                                 this.props.selectedAction.type === 'command'}
                             programStepNumber={programStepNumber+1}
-                            disabled={this.props.editingDisabled}
+                            disabled={
+                                this.props.editingDisabled ||
+                                !this.commandIsSelected()}
                             onClick={this.handleClickAddButton}
                             onDrop={this.hanldeDropCommand}
                             onFocus={this.handleSetFocus}
@@ -202,8 +254,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             variant='command-block--left'
                             aria-label={
                                 this.deleteIsSelected() ?
-                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
+                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programBlockPosition})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programBlockPosition})
                             }
                             disabled={this.props.editingDisabled}
                             onClick={this.handleClickStep}
@@ -212,13 +264,14 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         </AriaDisablingButton>
                         <div className='ProgramBlockEditor__program-block-connector' />
                         <AddNodeButton
+                            aria-label={this.makeNodeAriaLabel(programStepNumber)}
                             ref={ (element) => this.setCommandBlockRef(programStepNumber+1, element) }
-                            showButton={showButton}
-                            commandSelected={
-                                this.props.selectedAction &&
-                                this.props.selectedAction.type === 'command'}
+                            showButton={isLastBlock}
+                            commandSelected={this.commandIsSelected()}
                             programStepNumber={programStepNumber+1}
-                            disabled={this.props.editingDisabled}
+                            disabled={
+                                this.props.editingDisabled ||
+                                !this.commandIsSelected()}
                             onClick={this.handleClickAddButton}
                             onDrop={this.hanldeDropCommand}
                             onFocus={this.handleSetFocus}
@@ -238,8 +291,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             variant='command-block--right'
                             aria-label={
                                 this.deleteIsSelected() ?
-                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
+                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programBlockPosition})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
+                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programBlockPosition})
                             }
                             disabled={this.props.editingDisabled}
                             onClick={this.handleClickStep}
@@ -248,13 +301,14 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         </AriaDisablingButton>
                         <div className='ProgramBlockEditor__program-block-connector' />
                         <AddNodeButton
+                            aria-label={this.makeNodeAriaLabel(programStepNumber)}
                             ref={ (element) => this.setCommandBlockRef(programStepNumber+1, element) }
-                            showButton={showButton}
-                            commandSelected={
-                                this.props.selectedAction &&
-                                this.props.selectedAction.type === 'command'}
+                            showButton={isLastBlock}
+                            commandSelected={this.commandIsSelected()}
                             programStepNumber={programStepNumber+1}
-                            disabled={this.props.editingDisabled}
+                            disabled={
+                                this.props.editingDisabled ||
+                                !this.commandIsSelected()}
                             onClick={this.handleClickAddButton}
                             onDrop={this.hanldeDropCommand}
                             onFocus={this.handleSetFocus}
@@ -266,14 +320,21 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         <React.Fragment key={`none-${programStepNumber}`}>
                             <div className='ProgramBlockEditor__program-block-connector' />
                             <AddNodeButton
+                                aria-label={
+                                    this.commandIsSelected() ?
+                                    this.props.intl.formatMessage(
+                                    { id: 'ProgramBlockEditor.beginningBlock' },
+                                    { command: this.getSelectedCommandName() }) :
+                                    this.props.intl.formatMessage(
+                                    {id: 'ProgramBlockEditor.blocks.noCommandSelected'})}
                                 ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                                 commandBlockRefs = {this.commandBlockRefs}
                                 showButton={this.props.program.length === 0}
-                                commandSelected={
-                                    this.props.selectedAction &&
-                                    this.props.selectedAction.type === 'command'}
+                                commandSelected={this.commandIsSelected()}
                                 programStepNumber={programStepNumber}
-                                disabled={this.props.editingDisabled}
+                                disabled={
+                                    this.props.editingDisabled ||
+                                    !this.commandIsSelected()}
                                 onClick={this.handleClickAddButton}
                                 onDrop={this.hanldeDropCommand}
                                 onFocus={this.handleSetFocus}
