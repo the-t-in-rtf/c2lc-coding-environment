@@ -16,6 +16,7 @@ type AddNodeButtonProps = {
 };
 
 const AddNodeButton = React.forwardRef<AddNodeButtonProps, any>(
+    // $FlowFixMe
     (props, ref) => {
         const {
             commandSelected,
@@ -24,7 +25,8 @@ const AddNodeButton = React.forwardRef<AddNodeButtonProps, any>(
             programStepNumber,
             onDrop,
             onClick,
-            onFocus
+            onFocus,
+            ...otherProps
         } = props;
 
         const [showNode, setShowNode] = useState(false);
@@ -44,7 +46,6 @@ const AddNodeButton = React.forwardRef<AddNodeButtonProps, any>(
 
         const handleFocus = () => {
             setShowNode(true);
-            console.log('is on focus');
         }
 
         const handleBlur = () => {
@@ -56,17 +57,17 @@ const AddNodeButton = React.forwardRef<AddNodeButtonProps, any>(
         if (showButton || showNode) {
             return React.createElement(
                 AriaDisablingButton,
-                {
+                Object.assign({
                     'onClick': onClick,
                     'disabled': disabled,
-                    'className': 'AddNodeButton__plus-button',
+                    'className': 'AddNodeButton AddNodeButton__plus-button',
                     'ref': ref,
                     'id': `programBlock-${programStepNumber}`,
                     'data-stepnumber': programStepNumber,
                     'onBlur': handleBlur,
                     'onDrop': onDrop,
                     'onDragOver': handleDragOver
-                },
+                }, otherProps),
                 <AddIcon className='AddNodeButton__plus-button-svg' />
             );
         } else if (!showButton) {
@@ -80,7 +81,7 @@ const AddNodeButton = React.forwardRef<AddNodeButtonProps, any>(
                     }
                 >
                     <div
-                        className='AddNodeButton__plus-button--minimize'
+                        className='AddNodeButton AddNodeButton__plus-button--minimize'
                         id={`programBlock-${programStepNumber}`}
                         tabIndex={
                             commandSelected ?
@@ -92,7 +93,9 @@ const AddNodeButton = React.forwardRef<AddNodeButtonProps, any>(
                                 handleDragOver :
                                 undefined
                         }
-                    />
+                    >
+                        <AddIcon className='AddNodeButton__plus-button--minimize-svg' />
+                    </div>
                 </div>
             )
         }
