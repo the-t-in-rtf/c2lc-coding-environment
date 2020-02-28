@@ -19,10 +19,15 @@ button.btn.AddNodeButton__plus-button svg {
 
 .AddNodeButton__plus-button--minimize {
     background-color: #939595;
-    min-height: 0.8rem;
+    height: 0.8rem;
     width: 0.8rem;
     border: 0.1rem solid #8F8F8F;
     border-radius: 50%;
+}
+
+.AddNodeButton__plus-button--minimize-svg {
+    display: block;
+    stroke: #FFF;
 }
 
 .AddNodeButton__background {
