@@ -1,0 +1,18 @@
+@import 'variables';
+
+.ActionPanel__panel {
+    height: 16rem;
+    width: 5rem;
+    background-color: #939595;
+    border-radius: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+button.btn.ActionPanel__action-buttons {
+    width: 1.84rem;
+    height: 1.84rem;
+    border-radius: 50%;
+}
