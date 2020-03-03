@@ -11,6 +11,10 @@
     align-items: center;
 }
 
+.ActionPanel__panel--hidden {
+    display: none;
+}
+
 button.btn.ActionPanel__action-buttons {
     width: 1.84rem;
     height: 1.84rem;
