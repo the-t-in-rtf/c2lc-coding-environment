@@ -1,12 +1,11 @@
 // @flow
 
 import React from 'react';
-import { Button } from 'react-bootstrap';
-import {injectIntl} from 'react-intl';
+import CommandBlock from './CommandBlock';
+import { injectIntl } from 'react-intl';
 
 type CommandPaletteCommandProps = {
     commandName: string,
-    icon: any,
     intl: any,
     selectedCommandName: ?string,
     onChange: (commandName: ?string) => void
@@ -21,21 +20,20 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
 
     render() {
         const pressed = this.props.commandName === this.props.selectedCommandName;
-        let classNames = [
-            'command-block'
-        ];
-        if (pressed) {
-            classNames.push('command-block--pressed');
-        }
+
+        const ariaLabel = this.props.intl.formatMessage({
+            id: `CommandPaletteCommand.${this.props.commandName}`
+        });
+
         return (
-            <Button
-                className={classNames.join(' ')}
-                variant={`command-block--${this.props.commandName}`}
-                aria-label={this.props.intl.formatMessage({ id: `CommandPaletteCommand.${this.props.commandName}`})}
+            <CommandBlock
+                commandName={this.props.commandName}
+                className={pressed ? 'command-block--pressed' : undefined}
+                aria-label={ariaLabel}
                 aria-pressed={pressed}
-                onClick={this.handleClick}>
-                {this.props.icon}
-            </Button>
+                onClick={this.handleClick}
+                disabled={false}>
+            </CommandBlock>
         )
     }
 }
