@@ -44,10 +44,6 @@ const AddNodeButton = React.forwardRef<AddNodeButtonProps, any>(
             }
         }
 
-        const handleFocus = () => {
-            setShowNode(true);
-        }
-
         const handleBlur = () => {
             if (!showButton) {
                 setShowNode(false);
@@ -83,11 +79,6 @@ const AddNodeButton = React.forwardRef<AddNodeButtonProps, any>(
                     <div
                         className='AddNodeButton AddNodeButton__plus-button--minimize'
                         id={`programBlock-${programStepNumber}`}
-                        tabIndex={
-                            commandSelected ?
-                            '0' :
-                            '-1'}
-                        onFocus={handleFocus}
                         onDragOver={
                             commandSelected ?
                                 handleDragOver :
