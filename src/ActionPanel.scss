@@ -3,7 +3,8 @@
 .ActionPanel__panel {
     height: 16rem;
     width: 5rem;
-    background-color: #939595;
+    background-color: #F1F1F1;
+    border: 0.1rem solid #939595;
     border-radius: 3rem;
     display: flex;
     flex-direction: column;
@@ -16,7 +17,18 @@
 }
 
 button.btn.ActionPanel__action-buttons {
+    background-color: #8F8F8F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     width: 1.84rem;
     height: 1.84rem;
     border-radius: 50%;
+}
+
+.ActionPanel__action-button-svg {
+    position: relative;
+    margin: auto;
+    display: block;
 }
