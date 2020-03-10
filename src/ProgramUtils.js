@@ -47,7 +47,27 @@ function programIsEmpty(program: Program): boolean {
         }
     }
     return true;
-}
+};
+
+function moveUpPosition(program: Program, indexFrom: number): Program {
+    let indexTo = indexFrom - 1;
+    if (program[indexTo] != null) {
+        let temp = program[indexTo];
+        program[indexTo] = program[indexFrom];
+        program[indexFrom] = temp;
+    }
+    return program;
+};
+
+function moveDownPosition(program: Program, indexFrom: number): Program {
+    let indexTo = indexFrom + 1;
+    if (program[indexTo] != null) {
+        let temp = program[indexTo];
+        program[indexTo] = program[indexFrom];
+        program[indexFrom] = temp;
+    }
+    return program;
+};
 
 export {
     deleteStep,
@@ -55,5 +75,7 @@ export {
     insert,
     overwrite,
     trimEnd,
-    programIsEmpty
+    programIsEmpty,
+    moveUpPosition,
+    moveDownPosition
 };
