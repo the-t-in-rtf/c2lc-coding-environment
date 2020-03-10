@@ -1,5 +1,9 @@
 {
     "en": {
+        "ActionPanel.action.delete": "Delete Step {stepNumber} {stepName}",
+        "ActionPanel.action.moveDown": "Move Step {stepNumber} {stepName} {postStepInfo}",
+        "ActionPanel.action.moveUp": "Move Step {stepNumber} {stepName} {prevStepInfo}",
+        "ActionPanel.action.replace": "Replace Step {stepNumber} {stepName} {selectedCommandName}",
         "App.appHeading": "Inclusive Coding Environment",
         "App.blockMode": "Block",
         "App.changeMode": "Change Mode",
