@@ -41,7 +41,9 @@ type AppState = {
     activeProgramStepNum: ?number,
     interpreterIsRunning: boolean,
     showDashConnectionError: boolean,
-    selectedAction: SelectedAction
+    showNoticeMessage: boolean,
+    selectedAction: SelectedAction,
+    replaceIsActive: boolean
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -50,6 +52,7 @@ export default class App extends React.Component<{}, AppState> {
     interpreter: Interpreter;
     addModeDescriptionId: string;
     deleteModeDescriptionId: string;
+    toCommandPaletteNoticeId: string;
 
     constructor(props: {}) {
         super(props);
@@ -67,7 +70,9 @@ export default class App extends React.Component<{}, AppState> {
             activeProgramStepNum: null,
             interpreterIsRunning: false,
             showDashConnectionError: false,
-            selectedAction: null
+            showNoticeMessage: false,
+            selectedAction: null,
+            replaceIsActive: false
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -85,6 +90,7 @@ export default class App extends React.Component<{}, AppState> {
 
         this.addModeDescriptionId = Utils.generateId('addModeDescription');
         this.deleteModeDescriptionId = Utils.generateId('deleteModeDescription');
+        this.toCommandPaletteNoticeId = Utils.generateId('toCommandPaletteNotice');
     }
 
     setStateSettings(settings: $Shape<AppSettings>) {
@@ -140,6 +146,12 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
+    handleSetReplaceIsActive = (booleanValue: boolean) => {
+        this.setState({
+            replaceIsActive: booleanValue
+        });
+    };
+
     handleCancelDashConnection = () => {
         this.setState({
             showDashConnectionError: false
@@ -178,6 +190,36 @@ export default class App extends React.Component<{}, AppState> {
             activeProgramStepNum: interpreterRunningState.activeStep,
             interpreterIsRunning: interpreterRunningState.isRunning
         });
+    }
+
+    setLockFocusOnCommandPalette = (e: any) => {
+        const tabKeyCode = 9;
+        const escKeyCode = 27;
+        const firstCommandButton = document.getElementById('command-block--forward');
+        const lastCommandButton = document.getElementById('command-block--left');
+        const replaceButton = document.getElementById('replaceAction');
+        if (firstCommandButton && lastCommandButton && replaceButton) {
+            if (this.state.replaceIsActive) {
+                if (e.keyCode === tabKeyCode) {
+                    if (e.shiftKey && document.activeElement === replaceButton) {
+                        e.preventDefault();
+                        lastCommandButton.focus();
+                    } else if (e.shiftKey && document.activeElement === firstCommandButton) {
+                        e.preventDefault();
+                        replaceButton.focus();
+                    } else if (!e.shiftKey && document.activeElement === replaceButton) {
+                        e.preventDefault();
+                        firstCommandButton.focus();
+                    } else if (!e.shiftKey && document.activeElement === lastCommandButton) {
+                        e.preventDefault();
+                        replaceButton.focus();
+                    }
+                } else if (e.keyCode === escKeyCode) {
+                    this.handleSetReplaceIsActive(false);
+                    replaceButton.focus();
+                }
+            }
+        }
     }
 
     render() {
@@ -226,7 +268,8 @@ export default class App extends React.Component<{}, AppState> {
                                             {className:'command-block-svg'}
                                         )}
                                         selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}/>
+                                        onChange={this.handleCommandFromCommandPalette}
+                                        onKeyDown={this.setLockFocusOnCommandPalette}/>
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
@@ -236,7 +279,8 @@ export default class App extends React.Component<{}, AppState> {
                                             {className:'command-block-svg'}
                                         )}
                                         selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}/>
+                                        onChange={this.handleCommandFromCommandPalette}
+                                        onKeyDown={this.setLockFocusOnCommandPalette}/>
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
@@ -246,7 +290,8 @@ export default class App extends React.Component<{}, AppState> {
                                             {className:'command-block-svg'}
                                         )}
                                         selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}/>
+                                        onChange={this.handleCommandFromCommandPalette}
+                                        onKeyDown={this.setLockFocusOnCommandPalette}/>
                                 </div>
                             </div>
                         </Col>
@@ -257,6 +302,7 @@ export default class App extends React.Component<{}, AppState> {
                                 interpreterIsRunning={this.state.interpreterIsRunning}
                                 program={this.state.program}
                                 selectedAction={this.state.selectedAction}
+                                replaceIsActive={this.state.replaceIsActive}
                                 runButtonDisabled={
                                     this.state.dashConnectionStatus !== 'connected' ||
                                     this.state.interpreterIsRunning ||
@@ -264,6 +310,7 @@ export default class App extends React.Component<{}, AppState> {
                                 addModeDescriptionId={this.addModeDescriptionId}
                                 deleteModeDescriptionId={this.deleteModeDescriptionId}
                                 onClickRunButton={this.handleClickRun}
+                                onSetReplaceIsActive={this.handleSetReplaceIsActive}
                                 onSelectAction={this.handleSelectAction}
                                 onChange={this.handleChangeProgram}
                             />
@@ -271,6 +318,11 @@ export default class App extends React.Component<{}, AppState> {
                     </Row>
                     <Row>
                         <Col>
+                            <h4 className='App__notice'
+                                id={this.toCommandPaletteNoticeId}
+                                hidden={!this.state.showNoticeMessage}>
+                                You are moved to the action tab, pick an action you want to replace with
+                            </h4>
                             <h2 className='App__instructions-heading'>
                                 <FormattedMessage id='App.instructions.heading' />
                             </h2>
@@ -302,6 +354,17 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
+        if (this.state.replaceIsActive !== prevState.replaceIsActive) {
+            if (this.state.replaceIsActive) {
+                const noticeMessage = document.getElementById(this.toCommandPaletteNoticeId);
+                if (noticeMessage) {
+                    noticeMessage.setAttribute('aria-live', 'assertive');
+                }
+                this.setState({
+                    showNoticeMessage: true
+                });
+            }
+        }
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 
