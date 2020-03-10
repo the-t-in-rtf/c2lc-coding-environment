@@ -91,7 +91,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
         const positionStyles = {
             position: 'absolute',
             top: this.props.position.top - 150,
-            left: this.props.position.left
+            left: this.props.position.left + 25
         }
         const stepInfoMessage = this.setStepInfoMessage();
         return (
