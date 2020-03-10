@@ -6,12 +6,12 @@ import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
 import React from 'react';
 import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
+import ActionPanel from './ActionPanel';
 import AriaDisablingButton from './AriaDisablingButton';
 import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
 import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
 import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
-import { ReactComponent as AddIcon } from './svg/Add.svg';
-import { ReactComponent as DeleteIcon } from './svg/Delete.svg';
+import { ReactComponent as DeleteIcon } from './svg/delete.svg';
 import { ReactComponent as PlayIcon } from './svg/Play.svg';
 import './ProgramBlockEditor.scss';
 
@@ -24,16 +24,24 @@ type ProgramBlockEditorProps = {
     interpreterIsRunning: boolean,
     program: Program,
     selectedAction: SelectedAction,
+    replaceIsActive: boolean,
     runButtonDisabled: boolean,
     addModeDescriptionId: string,
     deleteModeDescriptionId: string,
     onClickRunButton: () => void,
+    onSetReplaceIsActive: (booleanValue: boolean) => void,
     onSelectAction: (selectedAction: SelectedAction) => void,
     onChange: (Program) => void
 };
 
 type ProgramBlockEditorState = {
-    showConfirmDeleteAll: boolean
+    showConfirmDeleteAll: boolean,
+    showActionPanel: boolean,
+    currentStepPosition: {
+        top: number,
+        left: number
+    },
+    currentStepIndex: ?number
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
@@ -47,7 +55,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.focusIndex = null;
         this.scrollToIndex = null;
         this.state = {
-            showConfirmDeleteAll : false
+            showConfirmDeleteAll : false,
+            showActionPanel: false,
+            currentStepPosition: {
+                top: 0,
+                left: 0
+            },
+            currentStepIndex: null
         }
     }
 
@@ -78,12 +92,28 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         return this.actionIsSelected('delete');
     }
 
+    commandIsSelected() {
+        return (this.props.selectedAction
+            && this.props.selectedAction.type === 'command');
+    }
+
+    getSelectedCommandName() {
+        if (this.commandIsSelected()) {
+            // $FlowFixMe
+            return this.props.selectedAction.commandName;
+        }
+    }
+
     handleClickAdd = () => {
         this.toggleAction('add');
     };
 
     handleClickDelete = () => {
         this.toggleAction('delete');
+        this.focusIndex = this.state.currentStepIndex;
+        if (this.state.currentStepIndex) {
+            this.props.onChange(ProgramUtils.deleteStep(this.props.program, this.state.currentStepIndex));
+        }
     };
 
     handleClickDeleteAll = () => {
@@ -105,8 +135,79 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         });
     }
 
+    handleMoveUpPosition = () => {
+        if (this.state.currentStepIndex != null) {
+            this.props.onChange(
+                ProgramUtils.moveUpPosition(
+                    this.props.program,
+                    this.state.currentStepIndex
+                )
+            );
+        }
+    }
+
+    handleMoveDownPosition = () => {
+        if (this.state.currentStepIndex != null) {
+            this.props.onChange(
+                ProgramUtils.moveDownPosition(
+                    this.props.program,
+                    this.state.currentStepIndex
+                )
+            );
+        }
+    }
+
+    handleReplaceStep = () => {
+        let index = this.state.currentStepIndex;
+        if (index) {
+            if (this.commandIsSelected()) {
+                if (this.props.program[index] !== this.getSelectedCommandName()) {
+                    this.props.onSetReplaceIsActive(false);
+                    this.focusIndex = index;
+                    this.props.onChange(ProgramUtils.overwrite(this.props.program,
+                            // $FlowFixMe
+                            index, this.props.selectedAction.commandName, 'none'));
+                    this.scrollToIndex = index + 1;
+                } else {
+                    this.props.onSetReplaceIsActive(true);
+                }
+            } else {
+                this.props.onSetReplaceIsActive(true);
+            }
+        }
+    }
+
     handleClickStep = (e: SyntheticEvent<HTMLButtonElement>) => {
         const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
+        // $FlowFixMe
+        const programSequenceContainerPosition = document.getElementById('programSequenceContainer').getBoundingClientRect();
+        // $FlowFixMe
+        const programSequenceContainerScrollTop = document.getElementById('programSequenceContainer').scrollTop;
+
+        let currentStepPositionObj = {
+            top: 0,
+            left: 0
+        }
+
+        if (!this.state.showActionPanel && this.props.program[index] != null) {
+            currentStepPositionObj.top =
+                e.currentTarget.getBoundingClientRect().top -
+                programSequenceContainerPosition.top +
+                e.currentTarget.getBoundingClientRect().height/2 +
+                programSequenceContainerScrollTop;
+            currentStepPositionObj.left = e.currentTarget.getBoundingClientRect().right - programSequenceContainerPosition.left;
+            this.setState({
+                showActionPanel: true,
+                currentStepPosition: currentStepPositionObj,
+                currentStepIndex: index
+            });
+        } else {
+            this.setState({
+                showActionPanel: false,
+                currentStepPosition: currentStepPositionObj,
+                currentStepIndex: null
+            })
+        }
 
         if (this.props.selectedAction && this.props.selectedAction.type === 'editorAction') {
             if (this.props.selectedAction.action === 'add') {
@@ -121,11 +222,78 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     'none'));
                 this.scrollToIndex = null;
             }
-        } else if (this.props.selectedAction && this.props.selectedAction.type === 'command'){
+        } else if (
+            this.props.selectedAction && this.props.selectedAction.type === 'command' && this.props.program[index] == null ){
             this.focusIndex = index;
             this.props.onChange(ProgramUtils.overwrite(this.props.program,
                     index, this.props.selectedAction.commandName, 'none'));
             this.scrollToIndex = index + 1;
+        }
+    };
+
+    handleBlurStep = () => {
+        this.setState({
+            showActionPanel : false
+        });
+    };
+
+    handleKeyboardNavigation = (e: any) => {
+        const tabKeyCode = 9;
+        const escKeyCode = 27;
+        const currentStepButton = this.state.currentStepIndex ?
+            document.getElementById(`programBlock-${this.state.currentStepIndex}`) :
+            null;
+        if (currentStepButton) {
+            if (this.state.showActionPanel && !this.props.replaceIsActive) {
+                const firstActionButton = document.getElementById('deleteAction');
+                const lastActionButton = document.getElementById('moveDownAction');
+                if (firstActionButton && lastActionButton) {
+                    if (e.keyCode === tabKeyCode && this.state.showActionPanel) {
+                        if (e.shiftKey && document.activeElement === currentStepButton) {
+                            e.preventDefault();
+                            lastActionButton.focus();
+                        } else if (e.shiftKey && document.activeElement === firstActionButton) {
+                            e.preventDefault();
+                            currentStepButton.focus();
+                        } else if (!e.shiftKey && document.activeElement === currentStepButton) {
+                            e.preventDefault();
+                            firstActionButton.focus();
+                        } else if (!e.shiftKey && document.activeElement === lastActionButton) {
+                            e.preventDefault();
+                            currentStepButton.focus();
+                        }
+                    } else if (e.keyCode === escKeyCode) {
+                        this.setState({
+                            showActionPanel: false
+                        });
+                        currentStepButton.focus();
+                    }
+                }
+            } else if (this.state.showActionPanel && this.props.replaceIsActive) {
+                const firstCommandButton = document.getElementById('command-block--forward');
+                const lastCommandButton = document.getElementById('command-block--left');
+                const replaceButton = document.getElementById('replaceAction');
+                if (firstCommandButton && lastCommandButton && replaceButton) {
+                    if (e.keyCode === tabKeyCode) {
+                        if (e.shiftKey && document.activeElement === replaceButton) {
+                            e.preventDefault();
+                            lastCommandButton.focus();
+                        } else if (e.shiftKey && document.activeElement === firstCommandButton) {
+                            e.preventDefault();
+                            replaceButton.focus();
+                        } else if (!e.shiftKey && document.activeElement === replaceButton) {
+                            e.preventDefault();
+                            firstCommandButton.focus();
+                        } else if (!e.shiftKey && document.activeElement === lastCommandButton) {
+                            e.preventDefault();
+                            replaceButton.focus();
+                        }
+                    } else if (e.keyCode === escKeyCode) {
+                        this.props.onSetReplaceIsActive(false);
+                        replaceButton.focus();
+                    }
+                }
+            }
         }
     };
 
@@ -139,6 +307,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     makeProgramBlock(programStepNumber: number, command: string) {
         const active = this.props.activeProgramStepNum === programStepNumber;
+        const hasActionPanelControl = this.state.currentStepIndex === programStepNumber;
         let classNames = [
             'ProgramBlockEditor__program-block',
             'command-block'
@@ -152,6 +321,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <React.Fragment key={programStepNumber}>
                         <div className='ProgramBlockEditor__program-block-connector'/>
                         <AriaDisablingButton
+                            id={`programBlock-${programStepNumber}`}
                             ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                             key={`${programStepNumber}-forward`}
                             data-stepnumber={programStepNumber}
@@ -164,8 +334,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
                                 this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
                             }
+                            aria-controls={hasActionPanelControl ? 'ActionPanel' : undefined}
+                            aria-expanded={hasActionPanelControl && this.state.showActionPanel}
                             disabled={this.props.editingDisabled}
                             onClick={this.handleClickStep}
+                            onKeyDown={this.handleKeyboardNavigation}
                         >
                             <ArrowForward className='command-block-svg'/>
                         </AriaDisablingButton>
@@ -176,6 +349,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <React.Fragment key={programStepNumber}>
                         <div className='ProgramBlockEditor__program-block-connector'/>
                         <AriaDisablingButton
+                            id={`programBlock-${programStepNumber}`}
                             ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                             key={`${programStepNumber}-left`}
                             data-stepnumber={programStepNumber}
@@ -188,8 +362,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
                                 this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})
                             }
+                            aria-controls={hasActionPanelControl ? 'ActionPanel' : undefined}
+                            aria-expanded={hasActionPanelControl && this.state.showActionPanel}
                             disabled={this.props.editingDisabled}
                             onClick={this.handleClickStep}
+                            onKeyDown={this.handleKeyboardNavigation}
                         >
                             <ArrowTurnLeft className='command-block-svg'/>
                         </AriaDisablingButton>
@@ -200,6 +377,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <React.Fragment key={programStepNumber}>
                         <div className='ProgramBlockEditor__program-block-connector'/>
                         <AriaDisablingButton
+                            id={`programBlock-${programStepNumber}`}
                             ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                             key={`${programStepNumber}-right`}
                             data-stepnumber={programStepNumber}
@@ -212,8 +390,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
                                 this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})
                             }
+                            aria-controls={hasActionPanelControl ? 'ActionPanel' : undefined}
+                            aria-expanded={hasActionPanelControl && this.state.showActionPanel}
                             disabled={this.props.editingDisabled}
                             onClick={this.handleClickStep}
+                            onKeyDown={this.handleKeyboardNavigation}
                         >
                             <ArrowTurnRight className='command-block-svg'/>
                         </AriaDisablingButton>
@@ -224,6 +405,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <React.Fragment key={programStepNumber}>
                         <div className='ProgramBlockEditor__program-block-connector'/>
                         <AriaDisablingButton
+                            id={`programBlock-${programStepNumber}`}
                             ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                             key={`${programStepNumber}-none`}
                             data-stepnumber={programStepNumber}
@@ -236,8 +418,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
                                 this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})
                             }
+                            aria-controls={hasActionPanelControl ? 'ActionPanel' : undefined}
+                            aria-expanded={hasActionPanelControl && this.state.showActionPanel}
                             disabled={this.props.editingDisabled}
                             onClick={this.handleClickStep}
+                            onKeyDown={this.handleKeyboardNavigation}
                         />
                     </React.Fragment>
                 );
@@ -270,21 +455,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     </Col>
                     <div className='ProgramBlockEditor__editor-actions'>
                         <AriaDisablingButton
-                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.add'})}
-                            aria-describedby={this.props.addModeDescriptionId}
-                            className={this.addIsSelected() ?
-                                        'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
-                                        'ProgramBlockEditor__editor-action-button'}
-                            disabledClassName='ProgramBlockEditor__editor-action-button--disabled'
-                            disabled={this.props.editingDisabled}
-                            onClick={this.handleClickAdd}
-                            aria-pressed={this.addIsSelected() ? 'true' : 'false'}
-                            key='addButton'
-                        >
-                            <AddIcon className='ProgramBlockEditor__editor-action-button-svg'/>
-                        </AriaDisablingButton>
-
-                        <AriaDisablingButton
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
                             aria-describedby={this.props.deleteModeDescriptionId}
                             className={this.deleteIsSelected() ?
@@ -314,12 +484,23 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     </Collapse>
                 </Row>
                 <Row>
-                    <Col className='ProgramBlockEditor__program-sequence-scroll-container'>
+                    <Col className='ProgramBlockEditor__program-sequence-scroll-container' id='programSequenceContainer'>
                         <div className='ProgramBlockEditor__program-sequence'>
                             <div className='ProgramBlockEditor__start-indicator'>
                                 {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
                             </div>
                             {programBlocks}
+                            <ActionPanel
+                                selectedCommandName={this.getSelectedCommandName()}
+                                program={this.props.program}
+                                currentStepIndex={this.state.currentStepIndex}
+                                showActionPanel={this.state.showActionPanel}
+                                position={this.state.currentStepPosition}
+                                onDelete={this.handleClickDelete}
+                                onReplace={this.handleReplaceStep}
+                                onMoveUpPosition={this.handleMoveUpPosition}
+                                onMoveDownPosition={this.handleMoveDownPosition}
+                                onKeyDown={this.handleKeyboardNavigation}/>
                         </div>
                     </Col>
                 </Row>
