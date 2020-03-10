@@ -19,6 +19,7 @@ const defaultProgramBlockEditorProps = {
     activeProgramStepNum: null,
     selectedAction: null,
     editingDisabled: false,
+    replaceIsActive: false,
     runButtonDisabled: false,
     addModeDescriptionId: 'someAddModeDescriptionId',
     deleteModeDescriptionId: 'someDeleteModeDescriptionId'
@@ -49,6 +50,7 @@ function createShallowProgramBlockEditor(props) {
     const mockClickRunButtonHandler = jest.fn();
     const mockSelectActionHandler = jest.fn();
     const mockChangeHandler = jest.fn();
+    const mockSetReplaceHandler = jest.fn();
 
     const wrapper = shallow(
         React.createElement(
@@ -59,6 +61,7 @@ function createShallowProgramBlockEditor(props) {
                 {
                     intl: intl,
                     onClickRunButton: mockClickRunButtonHandler,
+                    onSetReplaceIsActive: mockSetReplaceHandler,
                     onSelectAction: mockSelectActionHandler,
                     onChange: mockChangeHandler
                 },
@@ -79,6 +82,7 @@ function createMountProgramBlockEditor(props) {
     const mockClickRunButtonHandler = jest.fn();
     const mockSelectActionHandler = jest.fn();
     const mockChangeHandler = jest.fn();
+    const mockSetReplaceHandler = jest.fn();
 
     const wrapper = mount(
         React.createElement(
@@ -88,6 +92,7 @@ function createMountProgramBlockEditor(props) {
                 defaultProgramBlockEditorProps,
                 {
                     onClickRunButton: mockClickRunButtonHandler,
+                    onSetReplaceIsActive: mockSetReplaceHandler,
                     onSelectAction: mockSelectActionHandler,
                     onChange: mockChangeHandler
                 },
