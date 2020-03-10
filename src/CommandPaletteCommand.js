@@ -9,7 +9,8 @@ type CommandPaletteCommandProps = {
     icon: any,
     intl: any,
     selectedCommandName: ?string,
-    onChange: (commandName: ?string) => void
+    onChange: (commandName: ?string) => void,
+    onKeyDown: (e: any) => void
 };
 
 class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, {}> {
@@ -29,11 +30,13 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
         }
         return (
             <Button
+                id={`command-block--${this.props.commandName}`}
                 className={classNames.join(' ')}
                 variant={`command-block--${this.props.commandName}`}
                 aria-label={this.props.intl.formatMessage({ id: `CommandPaletteCommand.${this.props.commandName}`})}
                 aria-pressed={pressed}
-                onClick={this.handleClick}>
+                onClick={this.handleClick}
+                onKeyDown={this.props.onKeyDown}>
                 {this.props.icon}
             </Button>
         )
