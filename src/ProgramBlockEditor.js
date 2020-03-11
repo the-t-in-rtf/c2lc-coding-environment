@@ -159,7 +159,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     handleReplaceStep = () => {
         let index = this.state.currentStepIndex;
-        if (index) {
+        if (index != null) {
             if (this.commandIsSelected()) {
                 if (this.props.program[index] !== this.getSelectedCommandName()) {
                     this.props.onSetReplaceIsActive(false);
@@ -240,7 +240,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     handleKeyboardNavigation = (e: any) => {
         const tabKeyCode = 9;
         const escKeyCode = 27;
-        const currentStepButton = this.state.currentStepIndex ?
+        const currentStepButton = this.state.currentStepIndex != null ?
             document.getElementById(`programBlock-${this.state.currentStepIndex}`) :
             null;
         if (currentStepButton) {
