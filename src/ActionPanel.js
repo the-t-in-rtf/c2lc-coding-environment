@@ -35,31 +35,27 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
     }
 
     setStepInfoMessage = () => {
-        if (this.props.currentStepIndex) {
+        if (this.props.currentStepIndex != null) {
             const currentStepName = this.props.program[this.props.currentStepIndex];
             const prevStepName =
                 this.props.program[this.props.currentStepIndex - 1] ?
                 this.props.program[this.props.currentStepIndex - 1] :
-                null;
+                undefined;
             const postStepName =
                 this.props.program[this.props.currentStepIndex + 1] ?
                 this.props.program[this.props.currentStepIndex + 1] :
-                null;
+                undefined;
             let ariaLabelObj = {};
-            ariaLabelObj['stepNumber'] = this.props.currentStepIndex + 1 || '';
+            ariaLabelObj['stepNumber'] = this.props.currentStepIndex + 1;
 
             if (this.props.selectedCommandName) {
                 ariaLabelObj['selectedCommandName'] = `with selected action ${this.props.selectedCommandName}`;
-            } else {
-                ariaLabelObj['selectedCommandName'] = '';
             }
 
             if (currentStepName === 'forward') {
                 ariaLabelObj['stepName'] = 'go forward';
             } else if (currentStepName === 'right' || currentStepName === 'left') {
                 ariaLabelObj['stepName'] = `turn ${currentStepName}`;
-            } else {
-                ariaLabelObj['stepName'] = '';
             }
 
             if (prevStepName !== null) {
@@ -70,8 +66,6 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     // $FlowFixMe
                     ariaLabelObj['prevStepInfo'] = `after Step ${this.props.currentStepIndex} turn ${prevStepName}`;
                 }
-            } else {
-                ariaLabelObj['prevStepInfo'] = '';
             }
 
             if (postStepName !== null) {
@@ -80,8 +74,6 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                 } else if (postStepName === 'right' || postStepName === 'left') {
                     ariaLabelObj['postStepInfo'] = `before Step ${this.props.currentStepIndex + 2} turn ${postStepName}`;
                 }
-            } else {
-                ariaLabelObj['postStepInfo'] = '';
             }
             return ariaLabelObj;
         }
@@ -93,7 +85,13 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
             top: this.props.position.top - 150,
             left: this.props.position.left + 25
         }
-        const stepInfoMessage = this.setStepInfoMessage();
+        const stepInfoMessage = Object.assign({
+            'stepNumber': '',
+            'stepName': '',
+            'selectedCommandName': '',
+            'prevStepInfo': '',
+            'postStepInfo': ''
+        }, this.setStepInfoMessage());
         return (
             <div
                 id='ActionPanel'
