@@ -321,7 +321,7 @@ export default class App extends React.Component<{}, AppState> {
                             <h4 className='App__notice'
                                 id={this.toCommandPaletteNoticeId}
                                 hidden={!this.state.showNoticeMessage}>
-                                You are moved to the action tab, pick an action you want to replace with
+                                You can now move to the action tab, pick an action you want to replace with
                             </h4>
                             <h2 className='App__instructions-heading'>
                                 <FormattedMessage id='App.instructions.heading' />
@@ -355,13 +355,16 @@ export default class App extends React.Component<{}, AppState> {
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
         if (this.state.replaceIsActive !== prevState.replaceIsActive) {
+            const noticeMessage = document.getElementById(this.toCommandPaletteNoticeId);
             if (this.state.replaceIsActive) {
-                const noticeMessage = document.getElementById(this.toCommandPaletteNoticeId);
-                if (noticeMessage) {
-                    noticeMessage.setAttribute('aria-live', 'assertive');
-                }
+                noticeMessage.setAttribute('aria-live', 'assertive');
                 this.setState({
                     showNoticeMessage: true
+                });
+            } else {
+                noticeMessage.setAttribute('aria-live', 'off');
+                this.setState({
+                    showNoticeMessage: false
                 });
             }
         }
