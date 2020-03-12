@@ -24,7 +24,7 @@ type ActionPanelProps = {
     onReplace: () => void,
     onMoveUpPosition: () => void,
     onMoveDownPosition: () => void,
-    onKeyDown: () => void
+    onKeyDown: (e: SyntheticKeyboardEvent<HTMLInputElement>) => void
 };
 
 class ActionPanel extends React.Component<ActionPanelProps, {}> {
@@ -82,11 +82,11 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
     render() {
         const positionStyles = {
             position: 'absolute',
-            top: this.props.position.top - 150,
-            left: this.props.position.left + 25
+            top: this.props.position.top,
+            left: this.props.position.left
         }
         const stepInfoMessage = Object.assign({
-            'stepNumber': '',
+            'stepNumber': 0,
             'stepName': '',
             'selectedCommandName': '',
             'prevStepInfo': '',
