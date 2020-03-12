@@ -8,6 +8,7 @@ import React from 'react';
 import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
 import ActionPanel from './ActionPanel';
 import AriaDisablingButton from './AriaDisablingButton';
+import * as Utils from './Utils';
 import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
 import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
 import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
@@ -192,10 +193,14 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         if (!this.state.showActionPanel && this.props.program[index] != null) {
             currentStepPositionObj.top =
                 e.currentTarget.getBoundingClientRect().top -
+                e.currentTarget.getBoundingClientRect().height*2 -
                 programSequenceContainerPosition.top +
                 e.currentTarget.getBoundingClientRect().height/2 +
                 programSequenceContainerScrollTop;
-            currentStepPositionObj.left = e.currentTarget.getBoundingClientRect().right - programSequenceContainerPosition.left;
+            currentStepPositionObj.left =
+                e.currentTarget.getBoundingClientRect().right -
+                programSequenceContainerPosition.left +
+                e.currentTarget.getBoundingClientRect().width/4;
             this.setState({
                 showActionPanel: true,
                 currentStepPosition: currentStepPositionObj,
@@ -237,7 +242,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         });
     };
 
-    handleKeyboardNavigation = (e: any) => {
+    handleKeyboardNavigation = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
         const tabKeyCode = 9;
         const escKeyCode = 27;
         const currentStepButton = this.state.currentStepIndex != null ?
@@ -269,31 +274,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         currentStepButton.focus();
                     }
                 }
-            } else if (this.state.showActionPanel && this.props.replaceIsActive) {
-                const firstCommandButton = document.getElementById('command-block--forward');
-                const lastCommandButton = document.getElementById('command-block--left');
-                const replaceButton = document.getElementById('replaceAction');
-                if (firstCommandButton && lastCommandButton && replaceButton) {
-                    if (e.keyCode === tabKeyCode) {
-                        if (e.shiftKey && document.activeElement === replaceButton) {
-                            e.preventDefault();
-                            lastCommandButton.focus();
-                        } else if (e.shiftKey && document.activeElement === firstCommandButton) {
-                            e.preventDefault();
-                            replaceButton.focus();
-                        } else if (!e.shiftKey && document.activeElement === replaceButton) {
-                            e.preventDefault();
-                            firstCommandButton.focus();
-                        } else if (!e.shiftKey && document.activeElement === lastCommandButton) {
-                            e.preventDefault();
-                            replaceButton.focus();
-                        }
-                    } else if (e.keyCode === escKeyCode) {
-                        this.props.onSetReplaceIsActive(false);
-                        replaceButton.focus();
-                    }
-                }
             }
+            Utils.setFocusTrap(e, this.props.replaceIsActive);
         }
     };
 
