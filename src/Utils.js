@@ -8,7 +8,7 @@ function generateId(prefix: string): string {
     return id;
 }
 
-function setFocusTrap(e: SyntheticKeyboardEvent<HTMLInputElement>, replaceIsActive: boolean) {
+function setFocusTrap(e: SyntheticKeyboardEvent<HTMLInputElement>, replaceIsActive: boolean): void {
     const tabKeyCode = 9;
     const escKeyCode = 27;
     if (replaceIsActive) {
