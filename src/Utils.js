@@ -8,7 +8,8 @@ function generateId(prefix: string): string {
     return id;
 }
 
-function setFocusTrap(e: SyntheticKeyboardEvent<HTMLInputElement>, replaceIsActive: boolean): void {
+// make ids of interacting element, first focus item, and last focus item as parameter
+function setFocusTrap(e: SyntheticKeyboardEvent<HTMLInputElement>, replaceIsActive: boolean, setReplaceIsActive: (active: boolean) => null): void {
     const tabKeyCode = 9;
     const escKeyCode = 27;
     if (replaceIsActive) {
@@ -31,7 +32,7 @@ function setFocusTrap(e: SyntheticKeyboardEvent<HTMLInputElement>, replaceIsActi
                     replaceButton.focus();
                 }
             } else if (e.keyCode === escKeyCode) {
-                this.props.onSetReplaceIsActive(false);
+                setReplaceIsActive(false);
                 replaceButton.focus();
             }
         }

@@ -193,7 +193,7 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     setFocusTrapOnCommandPalette = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
-        Utils.setFocusTrap(e, this.state.replaceIsActive);
+        Utils.setFocusTrap(e, this.state.replaceIsActive, this.handleSetReplaceIsActive);
     }
 
     render() {

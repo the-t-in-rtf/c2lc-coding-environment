@@ -144,6 +144,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     this.state.currentStepIndex
                 )
             );
+            this.handleAdjustActionPanelPosition(this.state.currentStepIndex-1);
         }
     }
 
@@ -155,6 +156,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     this.state.currentStepIndex
                 )
             );
+            this.handleAdjustActionPanelPosition(this.state.currentStepIndex+1);
         }
     }
 
@@ -178,41 +180,52 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
-    handleClickStep = (e: SyntheticEvent<HTMLButtonElement>) => {
-        const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
+    handleAdjustActionPanelPosition = (index: number) => {
         // $FlowFixMe
         const programSequenceContainerPosition = document.getElementById('programSequenceContainer').getBoundingClientRect();
         // $FlowFixMe
         const programSequenceContainerScrollTop = document.getElementById('programSequenceContainer').scrollTop;
+        const currentActiveButton = document.getElementById(`programBlock-${index}`);
 
+        // Change name to actionPanelPositionObj and change name of the state as well
         let currentStepPositionObj = {
             top: 0,
             left: 0
-        }
+        };
 
-        if (!this.state.showActionPanel && this.props.program[index] != null) {
+        if (
+            (!this.state.showActionPanel || this.state.currentStepIndex !== index) &&
+            this.props.program[index] != null
+            )
+        {
             currentStepPositionObj.top =
-                e.currentTarget.getBoundingClientRect().top -
-                e.currentTarget.getBoundingClientRect().height*2 -
+                currentActiveButton.getBoundingClientRect().top -
+                currentActiveButton.getBoundingClientRect().height*2 -
                 programSequenceContainerPosition.top +
-                e.currentTarget.getBoundingClientRect().height/2 +
+                currentActiveButton.getBoundingClientRect().height/2 +
                 programSequenceContainerScrollTop;
             currentStepPositionObj.left =
-                e.currentTarget.getBoundingClientRect().right -
+                currentActiveButton.getBoundingClientRect().right -
                 programSequenceContainerPosition.left +
-                e.currentTarget.getBoundingClientRect().width/4;
+                currentActiveButton.getBoundingClientRect().width/4;
             this.setState({
                 showActionPanel: true,
                 currentStepPosition: currentStepPositionObj,
                 currentStepIndex: index
             });
-        } else {
+        } else if (this.state.showActionPanel && this.state.currentStepIndex === index){
             this.setState({
                 showActionPanel: false,
                 currentStepPosition: currentStepPositionObj,
                 currentStepIndex: null
-            })
+            });
         }
+    }
+
+    handleClickStep = (e: SyntheticEvent<HTMLButtonElement>) => {
+        const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
+
+        this.handleAdjustActionPanelPosition(index);
 
         if (this.props.selectedAction && this.props.selectedAction.type === 'editorAction') {
             if (this.props.selectedAction.action === 'add') {
@@ -236,12 +249,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     };
 
-    handleBlurStep = () => {
-        this.setState({
-            showActionPanel : false
-        });
-    };
-
     handleKeyboardNavigation = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
         const tabKeyCode = 9;
         const escKeyCode = 27;
@@ -250,6 +257,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             null;
         if (currentStepButton) {
             if (this.state.showActionPanel && !this.props.replaceIsActive) {
+                // use setFocusTrap function after updating the function
                 const firstActionButton = document.getElementById('deleteAction');
                 const lastActionButton = document.getElementById('moveDownAction');
                 if (firstActionButton && lastActionButton) {
@@ -275,7 +283,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     }
                 }
             }
-            Utils.setFocusTrap(e, this.props.replaceIsActive);
+            Utils.setFocusTrap(e, this.props.replaceIsActive, this.props.onSetReplaceIsActive);
         }
     };
 
