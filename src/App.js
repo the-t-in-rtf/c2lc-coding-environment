@@ -192,34 +192,8 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
-    setLockFocusOnCommandPalette = (e: any) => {
-        const tabKeyCode = 9;
-        const escKeyCode = 27;
-        const firstCommandButton = document.getElementById('command-block--forward');
-        const lastCommandButton = document.getElementById('command-block--left');
-        const replaceButton = document.getElementById('replaceAction');
-        if (firstCommandButton && lastCommandButton && replaceButton) {
-            if (this.state.replaceIsActive) {
-                if (e.keyCode === tabKeyCode) {
-                    if (e.shiftKey && document.activeElement === replaceButton) {
-                        e.preventDefault();
-                        lastCommandButton.focus();
-                    } else if (e.shiftKey && document.activeElement === firstCommandButton) {
-                        e.preventDefault();
-                        replaceButton.focus();
-                    } else if (!e.shiftKey && document.activeElement === replaceButton) {
-                        e.preventDefault();
-                        firstCommandButton.focus();
-                    } else if (!e.shiftKey && document.activeElement === lastCommandButton) {
-                        e.preventDefault();
-                        replaceButton.focus();
-                    }
-                } else if (e.keyCode === escKeyCode) {
-                    this.handleSetReplaceIsActive(false);
-                    replaceButton.focus();
-                }
-            }
-        }
+    setFocusTrapOnCommandPalette = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
+        Utils.setFocusTrap(e, this.state.replaceIsActive);
     }
 
     render() {
@@ -269,7 +243,7 @@ export default class App extends React.Component<{}, AppState> {
                                         )}
                                         selectedCommandName={this.getSelectedCommandName()}
                                         onChange={this.handleCommandFromCommandPalette}
-                                        onKeyDown={this.setLockFocusOnCommandPalette}/>
+                                        onKeyDown={this.setFocusTrapOnCommandPalette}/>
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
@@ -280,7 +254,7 @@ export default class App extends React.Component<{}, AppState> {
                                         )}
                                         selectedCommandName={this.getSelectedCommandName()}
                                         onChange={this.handleCommandFromCommandPalette}
-                                        onKeyDown={this.setLockFocusOnCommandPalette}/>
+                                        onKeyDown={this.setFocusTrapOnCommandPalette}/>
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
@@ -291,7 +265,7 @@ export default class App extends React.Component<{}, AppState> {
                                         )}
                                         selectedCommandName={this.getSelectedCommandName()}
                                         onChange={this.handleCommandFromCommandPalette}
-                                        onKeyDown={this.setLockFocusOnCommandPalette}/>
+                                        onKeyDown={this.setFocusTrapOnCommandPalette}/>
                                 </div>
                             </div>
                         </Col>
@@ -357,12 +331,16 @@ export default class App extends React.Component<{}, AppState> {
         if (this.state.replaceIsActive !== prevState.replaceIsActive) {
             const noticeMessage = document.getElementById(this.toCommandPaletteNoticeId);
             if (this.state.replaceIsActive) {
-                noticeMessage.setAttribute('aria-live', 'assertive');
+                if (noticeMessage) {
+                    noticeMessage.setAttribute('aria-live', 'assertive');
+                }
                 this.setState({
                     showNoticeMessage: true
                 });
             } else {
-                noticeMessage.setAttribute('aria-live', 'off');
+                if (noticeMessage) {
+                    noticeMessage.setAttribute('aria-live', 'off');
+                }
                 this.setState({
                     showNoticeMessage: false
                 });
