@@ -9,31 +9,40 @@ function generateId(prefix: string): string {
 }
 
 // make ids of interacting element, first focus item, and last focus item as parameter
-function setFocusTrap(e: SyntheticKeyboardEvent<HTMLInputElement>, replaceIsActive: boolean, setReplaceIsActive: (active: boolean) => null): void {
+// parent and selector
+function setFocusTrap(
+    e: SyntheticKeyboardEvent<HTMLInputElement>,
+    trapCondition: boolean,
+    trapStateHandler: (active: boolean) => void,
+    parentContainerClassName: string,
+    childrenSelector: string,
+    interactingElementClassName: string): void {
     const tabKeyCode = 9;
     const escKeyCode = 27;
-    if (replaceIsActive) {
-        const firstCommandButton = document.getElementById('command-block--forward');
-        const lastCommandButton = document.getElementById('command-block--left');
-        const replaceButton = document.getElementById('replaceAction');
-        if (firstCommandButton && lastCommandButton && replaceButton) {
+    const parentContainer = document.querySelector(parentContainerClassName);
+    console.log(parentContainer);
+    if (trapCondition && parentContainer) {
+        const childComponents = parentContainer.querySelectorAll(childrenSelector);
+        const interactingElement = document.querySelector(interactingElementClassName);
+        if (childComponents && interactingElement) {
+            const numberOfChildComponents = childComponents.length;
             if (e.keyCode === tabKeyCode) {
-                if (e.shiftKey && document.activeElement === replaceButton) {
+                if (e.shiftKey && document.activeElement === interactingElement) {
                     e.preventDefault();
-                    lastCommandButton.focus();
-                } else if (e.shiftKey && document.activeElement === firstCommandButton) {
+                    childComponents[numberOfChildComponents-1].focus();
+                } else if (e.shiftKey && document.activeElement === childComponents[0]) {
                     e.preventDefault();
-                    replaceButton.focus();
-                } else if (!e.shiftKey && document.activeElement === replaceButton) {
+                    interactingElement.focus();
+                } else if (!e.shiftKey && document.activeElement === interactingElement) {
                     e.preventDefault();
-                    firstCommandButton.focus();
-                } else if (!e.shiftKey && document.activeElement === lastCommandButton) {
+                    childComponents[0].focus();
+                } else if (!e.shiftKey && document.activeElement === childComponents[numberOfChildComponents-1]) {
                     e.preventDefault();
-                    replaceButton.focus();
+                    interactingElement.focus();
                 }
             } else if (e.keyCode === escKeyCode) {
-                setReplaceIsActive(false);
-                replaceButton.focus();
+                trapStateHandler(false);
+                interactingElement.focus();
             }
         }
     }
