@@ -94,7 +94,6 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
         }, this.setStepInfoMessage());
         return (
             <div
-                id='ActionPanel'
                 className={
                     this.props.showActionPanel ?
                     'ActionPanel__panel' :
@@ -104,15 +103,13 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                 onKeyDown={this.props.onKeyDown}>
                 <Button
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.delete'}, stepInfoMessage)}
-                    id='deleteAction'
                     className='ActionPanel__action-buttons'
                     onClick={this.props.onDelete}>
                     <DeleteIcon className='ActionPanel__action-button-svg' />
                 </Button>
                 <Button
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.replace'}, stepInfoMessage)}
-                    id='replaceAction'
-                    className='ActionPanel__action-buttons'
+                    className='ActionPanel__action-buttons replace-action-button'
                     onClick={this.props.onReplace}>
                     <ReplaceIcon className='ActionPanel__action-button-svg' />
                 </Button>
@@ -124,7 +121,6 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                 </Button>
                 <Button
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveDown'}, stepInfoMessage)}
-                    id='moveDownAction'
                     className='ActionPanel__action-buttons'
                     onClick={this.props.onMoveDownPosition}>
                     <MoveDownIcon className='ActionPanel__action-button-svg' />
