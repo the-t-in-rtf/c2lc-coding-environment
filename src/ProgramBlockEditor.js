@@ -144,7 +144,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     this.state.currentStepIndex
                 )
             );
-            if (this.props.program[this.state.currentStepIndex-1] != null) {
+            if (this.state.currentStepIndex != null && this.props.program[this.state.currentStepIndex-1] != null) {
                 this.setState({
                     currentStepIndex: this.state.currentStepIndex-1
                 });
@@ -191,32 +191,33 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     handleAdjustActionPanelPosition = (index: number) => {
         const currentActiveButton = document.getElementById(`programBlock-${index}`);
 
-        // Change name to actionPanelPositionObj and change name of the state as well
-        let actionPanelPositionObj = {
-            top: 0,
-            left: 0
-        };
+        if (currentActiveButton) {
+            let actionPanelPositionObj = {
+                top: 0,
+                left: 0
+            };
 
-        if (
-            (!this.state.showActionPanel || this.state.currentStepIndex !== index) &&
-            this.props.program[index] != null
-            )
-        {
-            actionPanelPositionObj.top =
-                currentActiveButton.getBoundingClientRect().height/2 -
-                currentActiveButton.getBoundingClientRect().height*2;
-            actionPanelPositionObj.left = currentActiveButton.getBoundingClientRect().width/3;
-            this.setState({
-                showActionPanel: true,
-                actionPanelPosition: actionPanelPositionObj,
-                currentStepIndex: index
-            });
-        } else if (this.state.showActionPanel && this.state.currentStepIndex === index){
-            this.setState({
-                showActionPanel: false,
-                actionPanelPosition: actionPanelPositionObj,
-                currentStepIndex: null
-            });
+            if (
+                (!this.state.showActionPanel || this.state.currentStepIndex !== index) &&
+                this.props.program[index] != null
+                )
+            {
+                actionPanelPositionObj.top =
+                    currentActiveButton.getBoundingClientRect().height/2 -
+                    currentActiveButton.getBoundingClientRect().height*2;
+                actionPanelPositionObj.left = currentActiveButton.getBoundingClientRect().width/3;
+                this.setState({
+                    showActionPanel: true,
+                    actionPanelPosition: actionPanelPositionObj,
+                    currentStepIndex: index
+                });
+            } else if (this.state.showActionPanel && this.state.currentStepIndex === index){
+                this.setState({
+                    showActionPanel: false,
+                    actionPanelPosition: actionPanelPositionObj,
+                    currentStepIndex: null
+                });
+            }
         }
     }
 
@@ -247,41 +248,18 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     };
 
+    handleDisplayActionPanel = (show: boolean) => {
+        this.setState({
+            showActionPanel: show
+        });
+    }
+
     handleKeyboardNavigation = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
-        const tabKeyCode = 9;
-        const escKeyCode = 27;
-        const currentStepButton = this.state.currentStepIndex != null ?
-            document.getElementById(`programBlock-${this.state.currentStepIndex}`) :
-            null;
-        if (currentStepButton) {
-            if (this.state.showActionPanel && !this.props.replaceIsActive) {
-                // use setFocusTrap function after updating the function
-                const firstActionButton = document.getElementById('deleteAction');
-                const lastActionButton = document.getElementById('moveDownAction');
-                if (firstActionButton && lastActionButton) {
-                    if (e.keyCode === tabKeyCode && this.state.showActionPanel) {
-                        if (e.shiftKey && document.activeElement === currentStepButton) {
-                            e.preventDefault();
-                            lastActionButton.focus();
-                        } else if (e.shiftKey && document.activeElement === firstActionButton) {
-                            e.preventDefault();
-                            currentStepButton.focus();
-                        } else if (!e.shiftKey && document.activeElement === currentStepButton) {
-                            e.preventDefault();
-                            firstActionButton.focus();
-                        } else if (!e.shiftKey && document.activeElement === lastActionButton) {
-                            e.preventDefault();
-                            currentStepButton.focus();
-                        }
-                    } else if (e.keyCode === escKeyCode) {
-                        this.setState({
-                            showActionPanel: false
-                        });
-                        currentStepButton.focus();
-                    }
-                }
+        if (this.state.currentStepIndex != null) {
+            if (this.state.showActionPanel) {
+                Utils.setFocusTrap(e, !this.props.replaceIsActive, this.handleDisplayActionPanel, '.ActionPanel__panel', 'button', `#programBlock-${this.state.currentStepIndex}`);
             }
-            Utils.setFocusTrap(e, this.props.replaceIsActive, this.props.onSetReplaceIsActive);
+            Utils.setFocusTrap(e, this.props.replaceIsActive, this.props.onSetReplaceIsActive, '.App__command-palette', 'button', '.replace-action-button');
         }
     };
 
