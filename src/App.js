@@ -193,7 +193,7 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     setFocusTrapOnCommandPalette = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
-        Utils.setFocusTrap(e, this.state.replaceIsActive, this.handleSetReplaceIsActive);
+        Utils.setFocusTrap(e, this.state.replaceIsActive, this.handleSetReplaceIsActive, '.App__command-palette', 'button', '.replace-action-button');
     }
 
     render() {
