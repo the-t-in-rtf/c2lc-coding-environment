@@ -8,8 +8,6 @@ function generateId(prefix: string): string {
     return id;
 }
 
-// make ids of interacting element, first focus item, and last focus item as parameter
-// parent and selector
 function setFocusTrap(
     e: SyntheticKeyboardEvent<HTMLInputElement>,
     trapCondition: boolean,
@@ -20,7 +18,6 @@ function setFocusTrap(
     const tabKeyCode = 9;
     const escKeyCode = 27;
     const parentContainer = document.querySelector(parentContainerClassName);
-    console.log(parentContainer);
     if (trapCondition && parentContainer) {
         const childComponents = parentContainer.querySelectorAll(childrenSelector);
         const interactingElement = document.querySelector(interactingElementClassName);
