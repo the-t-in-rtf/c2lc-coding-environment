@@ -50,8 +50,10 @@ function programIsEmpty(program: Program): boolean {
 };
 
 function moveUpPosition(program: Program, indexFrom: number): Program {
+    // Make a shallow copy before we add to the program
+    program = program.slice();
     let indexTo = indexFrom - 1;
-    if (program[indexTo] != null) {
+    if (program[indexTo] != null && program.length >= indexFrom ) {
         let temp = program[indexTo];
         program[indexTo] = program[indexFrom];
         program[indexFrom] = temp;
@@ -60,8 +62,10 @@ function moveUpPosition(program: Program, indexFrom: number): Program {
 };
 
 function moveDownPosition(program: Program, indexFrom: number): Program {
+    // Make a shallow copy before we add to the program
+    program = program.slice();
     let indexTo = indexFrom + 1;
-    if (program[indexTo] != null) {
+    if (program[indexTo] != null && program.length >= indexTo) {
         let temp = program[indexTo];
         program[indexTo] = program[indexFrom];
         program[indexFrom] = temp;

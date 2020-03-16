@@ -105,3 +105,31 @@ test.each([
         expect(result).toBe(expected);
     }
 );
+
+test.each([
+    [[], 0, []],
+    [[], 2, []],
+    [['command1'], 0, ['command1']],
+    [['command1', 'command2', 'command3'], 1, ['command2', 'command1', 'command3']]
+])('moveUpPosition',
+    (input, indexFrom, expected) => {
+        expect.assertions(2);
+        const inputValues = input.slice();
+        const result = ProgramUtils.moveUpPosition(inputValues, indexFrom);
+        checkProgramEdit(input, expected, inputValues, result);
+    }
+);
+
+test.each([
+    [[], 0, []],
+    [[], 2, []],
+    [['command1'], 0, ['command1']],
+    [['command1', 'command2', 'command3'], 1, ['command1', 'command3', 'command2']]
+])('moveDownPosition',
+    (input, indexFrom, expected) => {
+        expect.assertions(2);
+        const inputValues = input.slice();
+        const result = ProgramUtils.moveDownPosition(inputValues, indexFrom);
+        checkProgramEdit(input, expected, inputValues, result);
+    }
+);
