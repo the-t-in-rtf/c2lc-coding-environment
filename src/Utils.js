@@ -23,17 +23,19 @@ function setFocusTrap(
         const interactingElement = document.querySelector(interactingElementClassName);
         if (childComponents && interactingElement) {
             const numberOfChildComponents = childComponents.length;
+            const lastChildComponent = childComponents[numberOfChildComponents-1];
+            const firstChildComponent = childComponents[0];
             if (e.keyCode === tabKeyCode) {
                 if (e.shiftKey && document.activeElement === interactingElement) {
                     e.preventDefault();
-                    childComponents[numberOfChildComponents-1].focus();
-                } else if (e.shiftKey && document.activeElement === childComponents[0]) {
+                    lastChildComponent.focus();
+                } else if (e.shiftKey && document.activeElement === firstChildComponent) {
                     e.preventDefault();
                     interactingElement.focus();
                 } else if (!e.shiftKey && document.activeElement === interactingElement) {
                     e.preventDefault();
-                    childComponents[0].focus();
-                } else if (!e.shiftKey && document.activeElement === childComponents[numberOfChildComponents-1]) {
+                    firstChildComponent.focus();
+                } else if (!e.shiftKey && document.activeElement === lastChildComponent) {
                     e.preventDefault();
                     interactingElement.focus();
                 }
