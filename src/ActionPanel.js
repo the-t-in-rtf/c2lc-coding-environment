@@ -94,6 +94,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
         }, this.setStepInfoMessage());
         return (
             <div
+                id='ActionPanel'
                 className={
                     this.props.showActionPanel ?
                     'ActionPanel__panel' :
@@ -129,13 +130,11 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
         )
     }
 
-    componentDidUpdate() {
-        if (this.props.showActionPanel) {
-            const element = this.actionPanelRef.current;
-            if (element && element.scrollIntoView) {
-                element.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
-                element.focus();
-            }
+    componentDidMount() {
+        const element = this.actionPanelRef.current;
+        if (element && element.scrollIntoView) {
+            element.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
+            element.focus();
         }
     }
 }
