@@ -9,6 +9,7 @@ import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
+import FocusTrapManager from './FocusTrapManager';
 import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
@@ -53,6 +54,7 @@ export default class App extends React.Component<{}, AppState> {
     addModeDescriptionId: string;
     deleteModeDescriptionId: string;
     toCommandPaletteNoticeId: string;
+    focusTrapManager: FocusTrapManager;
 
     constructor(props: {}) {
         super(props);
@@ -91,6 +93,8 @@ export default class App extends React.Component<{}, AppState> {
         this.addModeDescriptionId = Utils.generateId('addModeDescription');
         this.deleteModeDescriptionId = Utils.generateId('deleteModeDescription');
         this.toCommandPaletteNoticeId = Utils.generateId('toCommandPaletteNotice');
+
+        this.focusTrapManager = new FocusTrapManager();
     }
 
     setStateSettings(settings: $Shape<AppSettings>) {
@@ -190,11 +194,11 @@ export default class App extends React.Component<{}, AppState> {
             activeProgramStepNum: interpreterRunningState.activeStep,
             interpreterIsRunning: interpreterRunningState.isRunning
         });
-    }
+    };
 
-    setFocusTrapOnCommandPalette = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
-        Utils.setFocusTrap(e, this.state.replaceIsActive, this.handleSetReplaceIsActive, '.App__command-palette', 'button', '.replace-action-button');
-    }
+    handleRootKeyDown = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
+        this.focusTrapManager.handleKeyDown(e);
+    };
 
     render() {
         return (
@@ -212,7 +216,7 @@ export default class App extends React.Component<{}, AppState> {
                         </Row>
                     </Container>
                 </div>
-                <Container role='main' className='mb-5'>
+                <Container role='main' className='mb-5' onKeyDown={this.handleRootKeyDown}>
                     <Row className='App__robot-connection-section'>
                         <Col>
                             {!this.appContext.bluetoothApiIsAvailable &&
@@ -242,8 +246,7 @@ export default class App extends React.Component<{}, AppState> {
                                             {className:'command-block-svg'}
                                         )}
                                         selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}
-                                        onKeyDown={this.setFocusTrapOnCommandPalette}/>
+                                        onChange={this.handleCommandFromCommandPalette}/>
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
@@ -253,8 +256,7 @@ export default class App extends React.Component<{}, AppState> {
                                             {className:'command-block-svg'}
                                         )}
                                         selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}
-                                        onKeyDown={this.setFocusTrapOnCommandPalette}/>
+                                        onChange={this.handleCommandFromCommandPalette}/>
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
@@ -264,8 +266,7 @@ export default class App extends React.Component<{}, AppState> {
                                             {className:'command-block-svg'}
                                         )}
                                         selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}
-                                        onKeyDown={this.setFocusTrapOnCommandPalette}/>
+                                        onChange={this.handleCommandFromCommandPalette}/>
                                 </div>
                             </div>
                         </Col>
@@ -283,6 +284,7 @@ export default class App extends React.Component<{}, AppState> {
                                     programIsEmpty(this.state.program)}
                                 addModeDescriptionId={this.addModeDescriptionId}
                                 deleteModeDescriptionId={this.deleteModeDescriptionId}
+                                focusTrapManager={this.focusTrapManager}
                                 onClickRunButton={this.handleClickRun}
                                 onSetReplaceIsActive={this.handleSetReplaceIsActive}
                                 onSelectAction={this.handleSelectAction}

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
-import { ReactComponent as DeleteIcon } from './svg/delete.svg';
+import { ReactComponent as DeleteIcon } from './svg/Delete.svg';
 
 type DeleteModeImageProps = {
     className: any,

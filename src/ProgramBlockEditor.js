@@ -8,11 +8,11 @@ import React from 'react';
 import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
 import ActionPanel from './ActionPanel';
 import AriaDisablingButton from './AriaDisablingButton';
-import * as Utils from './Utils';
+import FocusTrapManager from './FocusTrapManager';
 import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
 import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
 import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
-import { ReactComponent as DeleteIcon } from './svg/delete.svg';
+import { ReactComponent as DeleteIcon } from './svg/Delete.svg';
 import { ReactComponent as PlayIcon } from './svg/Play.svg';
 import './ProgramBlockEditor.scss';
 
@@ -29,6 +29,7 @@ type ProgramBlockEditorProps = {
     runButtonDisabled: boolean,
     addModeDescriptionId: string,
     deleteModeDescriptionId: string,
+    focusTrapManager: FocusTrapManager,
     onClickRunButton: () => void,
     onSetReplaceIsActive: (booleanValue: boolean) => void,
     onSelectAction: (selectedAction: SelectedAction) => void,
@@ -252,15 +253,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.setState({
             showActionPanel: show
         });
-    }
+    };
 
-    handleKeyboardNavigation = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
-        if (this.state.currentStepIndex != null) {
-            if (this.state.showActionPanel) {
-                Utils.setFocusTrap(e, !this.props.replaceIsActive, this.handleDisplayActionPanel, '.ActionPanel__panel', 'button', `#programBlock-${this.state.currentStepIndex}`);
-            }
-            Utils.setFocusTrap(e, this.props.replaceIsActive, this.props.onSetReplaceIsActive, '.App__command-palette', 'button', '.replace-action-button');
-        }
+    handleCloseActionPanelFocusTrap = () => {
+        this.setState({
+            showActionPanel: false
+        });
+    };
+
+    handleCloseReplaceFocusTrap = () => {
+        this.props.onSetReplaceIsActive(false);
     };
 
     setCommandBlockRef = (programStepNumber: number, element: ?HTMLElement) => {
@@ -305,7 +307,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 aria-expanded={hasActionPanelControl && this.state.showActionPanel}
                                 disabled={this.props.editingDisabled}
                                 onClick={this.handleClickStep}
-                                onKeyDown={this.handleKeyboardNavigation}
                             >
                                 <ArrowForward className='command-block-svg'/>
                             </AriaDisablingButton>
@@ -323,8 +324,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                         onDelete={this.handleClickDelete}
                                         onReplace={this.handleReplaceStep}
                                         onMoveUpPosition={this.handleMoveUpPosition}
-                                        onMoveDownPosition={this.handleMoveDownPosition}
-                                        onKeyDown={this.handleKeyboardNavigation}/>
+                                        onMoveDownPosition={this.handleMoveDownPosition}/>
                                 </div> :
                                 <></>
                             }
@@ -354,7 +354,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 aria-expanded={hasActionPanelControl && this.state.showActionPanel}
                                 disabled={this.props.editingDisabled}
                                 onClick={this.handleClickStep}
-                                onKeyDown={this.handleKeyboardNavigation}
                             >
                                 <ArrowTurnLeft className='command-block-svg'/>
                             </AriaDisablingButton>
@@ -372,8 +371,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                         onDelete={this.handleClickDelete}
                                         onReplace={this.handleReplaceStep}
                                         onMoveUpPosition={this.handleMoveUpPosition}
-                                        onMoveDownPosition={this.handleMoveDownPosition}
-                                        onKeyDown={this.handleKeyboardNavigation}/>
+                                        onMoveDownPosition={this.handleMoveDownPosition}/>
                                 </div> :
                                 <></>
                             }
@@ -403,7 +401,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 aria-expanded={hasActionPanelControl && this.state.showActionPanel}
                                 disabled={this.props.editingDisabled}
                                 onClick={this.handleClickStep}
-                                onKeyDown={this.handleKeyboardNavigation}
                             >
                                 <ArrowTurnRight className='command-block-svg'/>
                             </AriaDisablingButton>
@@ -421,8 +418,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                         onDelete={this.handleClickDelete}
                                         onReplace={this.handleReplaceStep}
                                         onMoveUpPosition={this.handleMoveUpPosition}
-                                        onMoveDownPosition={this.handleMoveDownPosition}
-                                        onKeyDown={this.handleKeyboardNavigation}/>
+                                        onMoveDownPosition={this.handleMoveDownPosition}/>
                                 </div> :
                                 <></>
                             }
@@ -451,7 +447,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             aria-expanded={hasActionPanelControl && this.state.showActionPanel}
                             disabled={this.props.editingDisabled}
                             onClick={this.handleClickStep}
-                            onKeyDown={this.handleKeyboardNavigation}
                         />
                     </React.Fragment>
                 );
@@ -565,6 +560,23 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
             }
+        }
+        if (this.state.showActionPanel && (this.state.currentStepIndex != null)) {
+            if (this.props.replaceIsActive) {
+                this.props.focusTrapManager.setFocusTrap(
+                    this.handleCloseReplaceFocusTrap,
+                    ['.replace-action-button', '.App__command-palette button'],
+                    '.replace-action-button'
+                );
+            } else {
+                this.props.focusTrapManager.setFocusTrap(
+                    this.handleCloseActionPanelFocusTrap,
+                    [`#programBlock-${this.state.currentStepIndex}`, '.ActionPanel__panel button'],
+                    `#programBlock-${this.state.currentStepIndex}`
+                );
+            }
+        } else {
+            this.props.focusTrapManager.unsetFocusTrap();
         }
     }
 }
