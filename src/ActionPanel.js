@@ -94,10 +94,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
         return (
             <div
                 id='ActionPanel'
-                className={
-                    this.props.showActionPanel ?
-                    'ActionPanel__panel' :
-                    'ActionPanel__panel--hidden'}
+                className={'ActionPanel__panel'}
                 style={positionStyles}
                 ref={this.actionPanelRef}>
                 <Button
@@ -132,7 +129,11 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
         const element = this.actionPanelRef.current;
         if (element && element.scrollIntoView) {
             element.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
-            element.focus();
+            if (this.props.focusIndex != null) {
+                element.children[this.props.focusIndex].focus();
+            } else {
+                element.focus();
+            }
         }
     }
 }
