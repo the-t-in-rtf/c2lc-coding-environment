@@ -11,6 +11,7 @@ import { ReactComponent as ReplaceIcon } from './svg/replace.svg';
 import './ActionPanel.scss';
 
 type ActionPanelProps = {
+    focusIndex: ?number,
     selectedCommandName: ?string,
     program: Program,
     currentStepIndex: ?number,

@@ -141,17 +141,17 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     handleMoveUpPosition = () => {
         if (this.state.currentStepIndex != null && this.props.program[this.state.currentStepIndex-1] != null) {
+            const currentStepIndex = this.state.currentStepIndex;
+            this.setState({
+                currentStepIndex: currentStepIndex-1,
+                actionPanelItemFocusIndex: 2
+            });
             this.props.onChange(
                 ProgramUtils.moveUpPosition(
                     this.props.program,
-                    this.state.currentStepIndex
+                    currentStepIndex
                 )
             );
-            this.setState({
-                currentStepIndex: this.state.currentStepIndex-1,
-                actionPanelItemFocusIndex: 2
-            });
-
         }
     }
 
