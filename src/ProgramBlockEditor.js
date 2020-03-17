@@ -43,7 +43,8 @@ type ProgramBlockEditorState = {
         top: number,
         left: number
     },
-    currentStepIndex: ?number
+    currentStepIndex: ?number,
+    actionPanelItemFocusIndex: ?number
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
@@ -63,7 +64,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 top: 0,
                 left: 0
             },
-            currentStepIndex: null
+            currentStepIndex: null,
+            actionPanelItemFocusIndex: null
         }
     }
 
@@ -138,34 +140,33 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     handleMoveUpPosition = () => {
-        if (this.state.currentStepIndex != null) {
+        if (this.state.currentStepIndex != null && this.props.program[this.state.currentStepIndex-1] != null) {
             this.props.onChange(
                 ProgramUtils.moveUpPosition(
                     this.props.program,
                     this.state.currentStepIndex
                 )
             );
-            if (this.state.currentStepIndex != null && this.props.program[this.state.currentStepIndex-1] != null) {
-                this.setState({
-                    currentStepIndex: this.state.currentStepIndex-1
-                });
-            }
+            this.setState({
+                currentStepIndex: this.state.currentStepIndex-1,
+                actionPanelItemFocusIndex: 2
+            });
+
         }
     }
 
     handleMoveDownPosition = () => {
-        if (this.state.currentStepIndex != null) {
+        if (this.state.currentStepIndex != null && this.props.program[this.state.currentStepIndex+1] != null) {
             this.props.onChange(
                 ProgramUtils.moveDownPosition(
                     this.props.program,
                     this.state.currentStepIndex
                 )
             );
-            if (this.props.program[this.state.currentStepIndex+1] != null) {
-                this.setState({
-                    currentStepIndex: this.state.currentStepIndex+1
-                });
-            }
+            this.setState({
+                currentStepIndex: this.state.currentStepIndex+1,
+                actionPanelItemFocusIndex: 3
+            });
         }
     }
 
@@ -216,7 +217,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 this.setState({
                     showActionPanel: false,
                     actionPanelPosition: actionPanelPositionObj,
-                    currentStepIndex: null
+                    currentStepIndex: null,
+                    actionPanelItemFocusIndex: null
                 });
             }
         }
@@ -249,15 +251,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     };
 
-    handleDisplayActionPanel = (show: boolean) => {
-        this.setState({
-            showActionPanel: show
-        });
-    };
-
     handleCloseActionPanelFocusTrap = () => {
         this.setState({
-            showActionPanel: false
+            showActionPanel: false,
+            actionPanelItemFocusIndex: null
         });
     };
 
@@ -316,6 +313,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 float: 'right'
                                 }}>
                                     <ActionPanel
+                                        focusIndex={this.state.actionPanelItemFocusIndex}
                                         selectedCommandName={this.getSelectedCommandName()}
                                         program={this.props.program}
                                         currentStepIndex={this.state.currentStepIndex}
@@ -363,6 +361,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 float: 'right'
                                 }}>
                                     <ActionPanel
+                                        focusIndex={this.state.actionPanelItemFocusIndex}
                                         selectedCommandName={this.getSelectedCommandName()}
                                         program={this.props.program}
                                         currentStepIndex={this.state.currentStepIndex}
@@ -410,6 +409,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 float: 'right'
                                 }}>
                                     <ActionPanel
+                                        focusIndex={this.state.actionPanelItemFocusIndex}
                                         selectedCommandName={this.getSelectedCommandName()}
                                         program={this.props.program}
                                         currentStepIndex={this.state.currentStepIndex}
