@@ -6,7 +6,7 @@ import { injectIntl } from 'react-intl';
 import type { Program } from './types';
 import { ReactComponent as MoveUpIcon } from './svg/up.svg';
 import { ReactComponent as MoveDownIcon } from './svg/down.svg';
-import { ReactComponent as DeleteIcon } from './svg/delete.svg';
+import { ReactComponent as DeleteIcon } from './svg/Delete.svg';
 import { ReactComponent as ReplaceIcon } from './svg/replace.svg';
 import './ActionPanel.scss';
 
@@ -23,8 +23,7 @@ type ActionPanelProps = {
     onDelete: () => void,
     onReplace: () => void,
     onMoveUpPosition: () => void,
-    onMoveDownPosition: () => void,
-    onKeyDown: (e: SyntheticKeyboardEvent<HTMLInputElement>) => void
+    onMoveDownPosition: () => void
 };
 
 class ActionPanel extends React.Component<ActionPanelProps, {}> {
@@ -100,8 +99,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     'ActionPanel__panel' :
                     'ActionPanel__panel--hidden'}
                 style={positionStyles}
-                ref={this.actionPanelRef}
-                onKeyDown={this.props.onKeyDown}>
+                ref={this.actionPanelRef}>
                 <Button
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.delete'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'

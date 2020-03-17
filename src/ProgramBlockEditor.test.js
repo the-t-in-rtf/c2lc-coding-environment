@@ -7,11 +7,14 @@ import { Button } from 'react-bootstrap';
 import { createIntl, IntlProvider } from 'react-intl';
 import App from './App';
 import AriaDisablingButton from './AriaDisablingButton';
+import FocusTrapManager from './FocusTrapManager';
 import messages from './messages.json';
 import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
 import ProgramBlockEditor from './ProgramBlockEditor';
 
 configure({ adapter: new Adapter()});
+
+// TODO: Mock the FocusTrapManager
 
 const defaultProgramBlockEditorProps = {
     program: ['forward', 'left', 'forward', 'left'],
@@ -22,7 +25,8 @@ const defaultProgramBlockEditorProps = {
     replaceIsActive: false,
     runButtonDisabled: false,
     addModeDescriptionId: 'someAddModeDescriptionId',
-    deleteModeDescriptionId: 'someDeleteModeDescriptionId'
+    deleteModeDescriptionId: 'someDeleteModeDescriptionId',
+    focusTrapManager: new FocusTrapManager()
 };
 
 const addAction = {
