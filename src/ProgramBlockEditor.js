@@ -248,13 +248,15 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             this.props.onChange(ProgramUtils.overwrite(this.props.program,
                     index, this.props.selectedAction.commandName, 'none'));
             this.scrollToIndex = index + 1;
+            this.handleCloseActionPanelFocusTrap();
         }
     };
 
     handleCloseActionPanelFocusTrap = () => {
         this.setState({
             showActionPanel: false,
-            actionPanelItemFocusIndex: null
+            actionPanelItemFocusIndex: null,
+            currentStepIndex: null
         });
     };
 
