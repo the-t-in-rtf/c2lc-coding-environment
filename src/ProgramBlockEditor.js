@@ -9,9 +9,8 @@ import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
 import ActionPanel from './ActionPanel';
 import AriaDisablingButton from './AriaDisablingButton';
 import FocusTrapManager from './FocusTrapManager';
-import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
-import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
-import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
+import CommandBlock from './CommandBlock';
+import classNames from 'classnames';
 import { ReactComponent as DeleteIcon } from './svg/Delete.svg';
 import { ReactComponent as PlayIcon } from './svg/Play.svg';
 import './ProgramBlockEditor.scss';
@@ -275,200 +274,79 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     makeProgramBlock(programStepNumber: number, command: string) {
         const active = this.props.activeProgramStepNum === programStepNumber;
         const hasActionPanelControl = this.state.currentStepIndex === programStepNumber;
-        let classNames = [
+        const classes = classNames(
             'ProgramBlockEditor__program-block',
-            'command-block'
-        ];
-        if (active) {
-            classNames.push('ProgramBlockEditor__program-block--active');
+            active && 'ProgramBlockEditor__program-block--active'
+        );
+
+        let ariaLabel = this.props.intl.formatMessage(
+            { id: `ProgramBlockEditor.command.${command}` },
+            { index: programStepNumber + 1 }
+        );
+
+        if (this.addIsSelected()) {
+            ariaLabel += `. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}`;
+        } else if (this.deleteIsSelected()) {
+            ariaLabel += `. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}`;
         }
-        switch(command) {
-            case 'forward':
-                return (
-                    <React.Fragment key={programStepNumber}>
-                        <div className='ProgramBlockEditor__program-block-connector'/>
-                        <div>
-                            <AriaDisablingButton
-                                id={`programBlock-${programStepNumber}`}
-                                ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
-                                key={`${programStepNumber}-forward`}
-                                data-stepnumber={programStepNumber}
-                                className={classNames.join(' ')}
-                                variant='command-block--forward'
-                                aria-label={
-                                    this.addIsSelected() ?
-                                    `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                                    this.deleteIsSelected() ?
-                                    `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                                    this.props.intl.formatMessage({id:'ProgramBlockEditor.commandForward'}, {index: programStepNumber + 1})
-                                }
-                                aria-controls={hasActionPanelControl ? 'ActionPanel' : undefined}
-                                aria-expanded={hasActionPanelControl && this.state.showActionPanel}
-                                disabled={this.props.editingDisabled}
-                                onClick={this.handleClickStep}
-                            >
-                                <ArrowForward className='command-block-svg'/>
-                            </AriaDisablingButton>
-                            {this.state.currentStepIndex === programStepNumber ?
-                                <div style={{
-                                position: 'relative',
-                                float: 'right'
-                                }}>
-                                    <ActionPanel
-                                        focusIndex={this.state.actionPanelItemFocusIndex}
-                                        selectedCommandName={this.getSelectedCommandName()}
-                                        program={this.props.program}
-                                        currentStepIndex={this.state.currentStepIndex}
-                                        showActionPanel={this.state.showActionPanel}
-                                        position={this.state.actionPanelPosition}
-                                        onDelete={this.handleClickDelete}
-                                        onReplace={this.handleReplaceStep}
-                                        onMoveUpPosition={this.handleMoveUpPosition}
-                                        onMoveDownPosition={this.handleMoveDownPosition}/>
-                                </div> :
-                                <></>
-                            }
-                        </div>
-                    </React.Fragment>
-                );
-            case 'left':
-                return (
-                    <React.Fragment key={programStepNumber}>
-                        <div className='ProgramBlockEditor__program-block-connector'/>
-                        <div>
-                            <AriaDisablingButton
-                                id={`programBlock-${programStepNumber}`}
-                                ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
-                                key={`${programStepNumber}-left`}
-                                data-stepnumber={programStepNumber}
-                                className={classNames.join(' ')}
-                                variant='command-block--left'
-                                aria-label={
-                                    this.addIsSelected() ?
-                                    `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                                    this.deleteIsSelected() ?
-                                    `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                                    this.props.intl.formatMessage({id:'ProgramBlockEditor.commandLeft'}, {index: programStepNumber + 1})
-                                }
-                                aria-controls={hasActionPanelControl ? 'ActionPanel' : undefined}
-                                aria-expanded={hasActionPanelControl && this.state.showActionPanel}
-                                disabled={this.props.editingDisabled}
-                                onClick={this.handleClickStep}
-                            >
-                                <ArrowTurnLeft className='command-block-svg'/>
-                            </AriaDisablingButton>
-                            {this.state.currentStepIndex === programStepNumber ?
-                                <div style={{
-                                position: 'relative',
-                                float: 'right'
-                                }}>
-                                    <ActionPanel
-                                        focusIndex={this.state.actionPanelItemFocusIndex}
-                                        selectedCommandName={this.getSelectedCommandName()}
-                                        program={this.props.program}
-                                        currentStepIndex={this.state.currentStepIndex}
-                                        showActionPanel={this.state.showActionPanel}
-                                        position={this.state.actionPanelPosition}
-                                        onDelete={this.handleClickDelete}
-                                        onReplace={this.handleReplaceStep}
-                                        onMoveUpPosition={this.handleMoveUpPosition}
-                                        onMoveDownPosition={this.handleMoveDownPosition}/>
-                                </div> :
-                                <></>
-                            }
-                        </div>
-                    </React.Fragment>
-                );
-            case 'right':
-                return (
-                    <React.Fragment key={programStepNumber}>
-                        <div className='ProgramBlockEditor__program-block-connector'/>
-                        <div>
-                            <AriaDisablingButton
-                                id={`programBlock-${programStepNumber}`}
-                                ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
-                                key={`${programStepNumber}-right`}
-                                data-stepnumber={programStepNumber}
-                                className={classNames.join(' ')}
-                                variant='command-block--right'
-                                aria-label={
-                                    this.addIsSelected() ?
-                                    `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                                    this.deleteIsSelected() ?
-                                    `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                                    this.props.intl.formatMessage({id:'ProgramBlockEditor.commandRight'}, {index: programStepNumber + 1})
-                                }
-                                aria-controls={hasActionPanelControl ? 'ActionPanel' : undefined}
-                                aria-expanded={hasActionPanelControl && this.state.showActionPanel}
-                                disabled={this.props.editingDisabled}
-                                onClick={this.handleClickStep}
-                            >
-                                <ArrowTurnRight className='command-block-svg'/>
-                            </AriaDisablingButton>
-                            {this.state.currentStepIndex === programStepNumber ?
-                                <div style={{
-                                position: 'relative',
-                                float: 'right'
-                                }}>
-                                    <ActionPanel
-                                        focusIndex={this.state.actionPanelItemFocusIndex}
-                                        selectedCommandName={this.getSelectedCommandName()}
-                                        program={this.props.program}
-                                        currentStepIndex={this.state.currentStepIndex}
-                                        showActionPanel={this.state.showActionPanel}
-                                        position={this.state.actionPanelPosition}
-                                        onDelete={this.handleClickDelete}
-                                        onReplace={this.handleReplaceStep}
-                                        onMoveUpPosition={this.handleMoveUpPosition}
-                                        onMoveDownPosition={this.handleMoveDownPosition}/>
-                                </div> :
-                                <></>
-                            }
-                        </div>
-                    </React.Fragment>
-                );
-            case 'none':
-                return (
-                    <React.Fragment key={programStepNumber}>
-                        <div className='ProgramBlockEditor__program-block-connector'/>
-                        <AriaDisablingButton
-                            id={`programBlock-${programStepNumber}`}
-                            ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
-                            key={`${programStepNumber}-none`}
-                            data-stepnumber={programStepNumber}
-                            className={classNames.join(' ')}
-                            variant='command-block--none'
-                            aria-label={
-                                this.addIsSelected() ?
-                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}` :
-                                this.deleteIsSelected() ?
-                                `${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})}. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}` :
-                                this.props.intl.formatMessage({id:'ProgramBlockEditor.commandNone'}, {index: programStepNumber + 1})
-                            }
-                            aria-controls={hasActionPanelControl ? 'ActionPanel' : undefined}
-                            aria-expanded={hasActionPanelControl && this.state.showActionPanel}
-                            disabled={this.props.editingDisabled}
-                            onClick={this.handleClickStep}
-                        />
-                    </React.Fragment>
-                );
-            default:
-                return (
-                    <div key={`${programStepNumber}-unknown`}/>
-                );
-        }
+
+        return (
+            <CommandBlock
+                id={`programBlock-${programStepNumber}`}
+                commandName={command}
+                ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
+                key={`${programStepNumber}-${command}`}
+                data-stepnumber={programStepNumber}
+                className={classes}
+                aria-label={ariaLabel}
+                aria-controls={hasActionPanelControl ? 'ActionPanel' : undefined}
+                aria-expanded={hasActionPanelControl && this.state.showActionPanel}
+                disabled={this.props.editingDisabled}
+                onClick={this.handleClickStep}
+            />
+        );
+    }
+
+    makeProgramBlockSection(programStepNumber: number, command: string) {
+        return (
+            <React.Fragment key={programStepNumber}>
+                <div className='ProgramBlockEditor__program-block-connector'/>
+                <div>
+                    {this.makeProgramBlock(programStepNumber, command)}
+                    {this.state.currentStepIndex === programStepNumber ?
+                        <div style={{
+                        position: 'relative',
+                        float: 'right'
+                        }}>
+                            <ActionPanel
+                                focusIndex={this.state.actionPanelItemFocusIndex}
+                                selectedCommandName={this.getSelectedCommandName()}
+                                program={this.props.program}
+                                currentStepIndex={this.state.currentStepIndex}
+                                showActionPanel={this.state.showActionPanel}
+                                position={this.state.actionPanelPosition}
+                                onDelete={this.handleClickDelete}
+                                onReplace={this.handleReplaceStep}
+                                onMoveUpPosition={this.handleMoveUpPosition}
+                                onMoveDownPosition={this.handleMoveDownPosition}/>
+                        </div> :
+                        <></>
+                    }
+                </div>
+            </React.Fragment>
+        );
     }
 
     render() {
         var noneAtEnd = this.props.program[this.props.program.length - 1] === 'none';
 
-        const programBlocks = this.props.program.map((command, stepNumber) => {
-            return this.makeProgramBlock(stepNumber, command);
+        const contents = this.props.program.map((command, stepNumber) => {
+            return this.makeProgramBlockSection(stepNumber, command);
         });
 
         // Ensure that the last block is 'none'
         if (!noneAtEnd) {
-            programBlocks.push(this.makeProgramBlock(programBlocks.length, 'none'));
+            contents.push(this.makeProgramBlockSection(this.props.program.length, 'none'));
         }
 
         return (
@@ -515,7 +393,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             <div className='ProgramBlockEditor__start-indicator'>
                                 {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
                             </div>
-                            {programBlocks}
+                            {contents}
                         </div>
                     </Col>
                 </Row>
