@@ -20,9 +20,4 @@ export type SelectedAction =
         type: 'command',
         commandName: string
     }
-    |
-    {
-        type: 'editorAction',
-        action: 'add' | 'delete'
-    }
 ;
