@@ -12,12 +12,3 @@ export interface RobotDriver {
     left(): Promise<void>;
     right(): Promise<void>;
 };
-
-export type SelectedAction =
-    null
-    |
-    {
-        type: 'command',
-        commandName: string
-    }
-;
