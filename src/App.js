@@ -15,10 +15,9 @@ import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import { programIsEmpty } from './ProgramUtils';
 import * as Utils from './Utils';
-import type { DeviceConnectionStatus, Program, RobotDriver, SelectedAction } from './types';
+import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import messages from './messages.json';
 import './App.scss';
-import DeleteModeImage from './DeleteModeImage';
 
 // Uncomment to use the FakeRobotDriver (see driver construction below also)
 //import FakeRobotDriver from './FakeRobotDriver';
@@ -39,7 +38,7 @@ type AppState = {
     interpreterIsRunning: boolean,
     showDashConnectionError: boolean,
     showNoticeMessage: boolean,
-    selectedAction: SelectedAction,
+    selectedAction: ?string,
     replaceIsActive: boolean
 };
 
@@ -47,8 +46,6 @@ export default class App extends React.Component<{}, AppState> {
     appContext: AppContext;
     dashDriver: RobotDriver;
     interpreter: Interpreter;
-    addModeDescriptionId: string;
-    deleteModeDescriptionId: string;
     toCommandPaletteNoticeId: string;
     focusTrapManager: FocusTrapManager;
 
@@ -86,8 +83,6 @@ export default class App extends React.Component<{}, AppState> {
         // For FakeRobotDriver, replace with: this.dashDriver = new FakeRobotDriver();
         this.dashDriver = new DashDriver();
 
-        this.addModeDescriptionId = Utils.generateId('addModeDescription');
-        this.deleteModeDescriptionId = Utils.generateId('deleteModeDescription');
         this.toCommandPaletteNoticeId = Utils.generateId('toCommandPaletteNotice');
 
         this.focusTrapManager = new FocusTrapManager();
@@ -102,9 +97,8 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     getSelectedCommandName() {
-        if (this.state.selectedAction !== null
-                && this.state.selectedAction.type === 'command') {
-            return this.state.selectedAction.commandName;
+        if (this.state.selectedAction !== null) {
+            return this.state.selectedAction;
         } else {
             return null;
         }
@@ -167,10 +161,7 @@ export default class App extends React.Component<{}, AppState> {
     handleCommandFromCommandPalette = (command: ?string) => {
         if (command) {
             this.setState({
-                selectedAction: {
-                    type: 'command',
-                    commandName: command
-                }
+                selectedAction: command
             });
         } else {
             this.setState({
@@ -260,8 +251,6 @@ export default class App extends React.Component<{}, AppState> {
                                     this.state.dashConnectionStatus !== 'connected' ||
                                     this.state.interpreterIsRunning ||
                                     programIsEmpty(this.state.program)}
-                                addModeDescriptionId={this.addModeDescriptionId}
-                                deleteModeDescriptionId={this.deleteModeDescriptionId}
                                 focusTrapManager={this.focusTrapManager}
                                 onClickRunButton={this.handleClickRun}
                                 onSetReplaceIsActive={this.handleSetReplaceIsActive}
@@ -276,17 +265,6 @@ export default class App extends React.Component<{}, AppState> {
                                 hidden={!this.state.showNoticeMessage}>
                                 You can now move to the action tab, pick an action you want to replace with
                             </h4>
-                            <h2 className='App__instructions-heading'>
-                                <FormattedMessage id='App.instructions.heading' />
-                            </h2>
-                            <h3 className="App__instructions-section-heading">
-                                <FormattedMessage id='App.instructions.deleteHeading' />
-                            </h3>
-                            <div className='App__instructions-text' id={this.deleteModeDescriptionId}>
-                                <FormattedMessage id='App.instructions.deleteText1' />
-                                <DeleteModeImage className='App__delete-mode-image'/>
-                                <FormattedMessage id='App.instructions.deleteText2' />
-                            </div>
                         </Col>
                     </Row>
                 </Container>
