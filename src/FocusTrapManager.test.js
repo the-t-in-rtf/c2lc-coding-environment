@@ -7,7 +7,7 @@ function checkFocusTrapProps(
     active: boolean,
     trapCloseHandler: () => void,
     elementSelectors: Array<string>,
-    returnElementSelector: string) {
+    returnElementSelector: ?string) {
         expect(focusTrapManager).toHaveProperty('active', active);
         expect(focusTrapManager).toHaveProperty('elementSelectors', elementSelectors);
         expect(focusTrapManager).toHaveProperty('onFocusTrapClosed');
