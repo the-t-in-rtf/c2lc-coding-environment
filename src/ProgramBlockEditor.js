@@ -214,7 +214,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         const hasActionPanelControl = this.state.programStepIndexWithActionPanel === programStepNumber;
         const classes = classNames(
             'ProgramBlockEditor__program-block',
-            active && 'ProgramBlockEditor__program-block--active'
+            active && 'ProgramBlockEditor__program-block--active',
+            hasActionPanelControl && 'ProgramBlockEditor__program-block--expanded'
         );
 
         let ariaLabel = this.props.intl.formatMessage(
@@ -224,7 +225,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
         return (
             <CommandBlock
-                id={`programBlock-${programStepNumber}`}
                 commandName={command}
                 ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                 key={`${programStepNumber}-${command}`}
@@ -243,7 +243,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         return (
             <React.Fragment key={programStepNumber}>
                 <div className='ProgramBlockEditor__program-block-connector'/>
-                <div>
+                <div className='ProgramBlockEditor__program-block-with-panel'>
                     {this.makeProgramBlock(programStepNumber, command)}
                     {this.state.programStepIndexWithActionPanel === programStepNumber ?
                         <div style={{
@@ -366,8 +366,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             } else {
                 this.props.focusTrapManager.setFocusTrap(
                     this.handleCloseActionPanelFocusTrap,
-                    [`#programBlock-${this.state.programStepIndexWithActionPanel}`, '.ActionPanel__panel button'],
-                    `#programBlock-${this.state.programStepIndexWithActionPanel}`
+                    ['.ProgramBlockEditor__program-block--expanded', '.ActionPanel__panel button'],
+                    '.ProgramBlockEditor__program-block--expanded'
                 );
             }
         } else {
