@@ -39,7 +39,7 @@ type ProgramBlockEditorState = {
         top: number,
         left: number
     },
-    programStepIndexWithActionPanel: ?number,
+    pressedStepIndex: ?number,
     actionPanelItemFocusIndex: ?number
 };
 
@@ -60,15 +60,15 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 top: 0,
                 left: 0
             },
-            programStepIndexWithActionPanel: null,
+            pressedStepIndex: null,
             actionPanelItemFocusIndex: null
         }
     }
 
     handleClickDelete = () => {
-        this.focusIndex = this.state.programStepIndexWithActionPanel;
-        if (this.state.programStepIndexWithActionPanel != null) {
-            this.props.onChange(ProgramUtils.deleteStep(this.props.program, this.state.programStepIndexWithActionPanel));
+        this.focusIndex = this.state.pressedStepIndex;
+        if (this.state.pressedStepIndex != null) {
+            this.props.onChange(ProgramUtils.deleteStep(this.props.program, this.state.pressedStepIndex));
             this.handleCloseActionPanelFocusTrap();
         }
     };
@@ -93,38 +93,38 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     handleMoveUpPosition = () => {
-        if (this.state.programStepIndexWithActionPanel != null && this.props.program[this.state.programStepIndexWithActionPanel-1] != null) {
-            const programStepIndexWithActionPanel = this.state.programStepIndexWithActionPanel;
+        if (this.state.pressedStepIndex != null && this.props.program[this.state.pressedStepIndex-1] != null) {
+            const pressedStepIndex = this.state.pressedStepIndex;
             this.setState({
-                programStepIndexWithActionPanel: programStepIndexWithActionPanel-1,
+                pressedStepIndex: pressedStepIndex-1,
                 actionPanelItemFocusIndex: 2
             });
             this.props.onChange(
                 ProgramUtils.moveUpPosition(
                     this.props.program,
-                    programStepIndexWithActionPanel
+                    pressedStepIndex
                 )
             );
         }
     }
 
     handleMoveDownPosition = () => {
-        if (this.state.programStepIndexWithActionPanel != null && this.props.program[this.state.programStepIndexWithActionPanel+1] != null) {
+        if (this.state.pressedStepIndex != null && this.props.program[this.state.pressedStepIndex+1] != null) {
             this.props.onChange(
                 ProgramUtils.moveDownPosition(
                     this.props.program,
-                    this.state.programStepIndexWithActionPanel
+                    this.state.pressedStepIndex
                 )
             );
             this.setState({
-                programStepIndexWithActionPanel: this.state.programStepIndexWithActionPanel+1,
+                pressedStepIndex: this.state.pressedStepIndex+1,
                 actionPanelItemFocusIndex: 3
             });
         }
     }
 
     handleReplaceStep = () => {
-        let index = this.state.programStepIndexWithActionPanel;
+        let index = this.state.pressedStepIndex;
         if (index != null) {
             if (this.props.selectedAction) {
                 if (this.props.program[index] !== this.props.selectedAction) {
@@ -152,7 +152,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             };
 
             if (
-                (!this.state.showActionPanel || this.state.programStepIndexWithActionPanel !== index) &&
+                (!this.state.showActionPanel || this.state.pressedStepIndex !== index) &&
                 this.props.program[index] != null
                 )
             {
@@ -163,15 +163,15 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 this.setState({
                     showActionPanel: true,
                     actionPanelPosition: actionPanelPositionObj,
-                    programStepIndexWithActionPanel: index
+                    pressedStepIndex: index
                 });
             } else if (
-                (this.state.showActionPanel && this.state.programStepIndexWithActionPanel === index) ||
+                (this.state.showActionPanel && this.state.pressedStepIndex === index) ||
                 (this.state.showActionPanel && this.props.program[index] == null)){
                 this.setState({
                     showActionPanel: false,
                     actionPanelPosition: actionPanelPositionObj,
-                    programStepIndexWithActionPanel: null,
+                    pressedStepIndex: null,
                     actionPanelItemFocusIndex: null
                 });
             }
@@ -193,7 +193,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.setState({
             showActionPanel: false,
             actionPanelItemFocusIndex: null,
-            programStepIndexWithActionPanel: null
+            pressedStepIndex: null
         });
     };
 
@@ -211,11 +211,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     makeProgramBlock(programStepNumber: number, command: string) {
         const active = this.props.activeProgramStepNum === programStepNumber;
-        const hasActionPanelControl = this.state.programStepIndexWithActionPanel === programStepNumber;
+        const hasActionPanelControl = this.state.pressedStepIndex === programStepNumber;
         const classes = classNames(
             'ProgramBlockEditor__program-block',
             active && 'ProgramBlockEditor__program-block--active',
-            hasActionPanelControl && 'ProgramBlockEditor__program-block--expanded'
+            hasActionPanelControl && 'ProgramBlockEditor__program-block--pressed'
         );
 
         let ariaLabel = this.props.intl.formatMessage(
@@ -245,7 +245,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 <div className='ProgramBlockEditor__program-block-connector'/>
                 <div className='ProgramBlockEditor__program-block-with-panel'>
                     {this.makeProgramBlock(programStepNumber, command)}
-                    {this.state.programStepIndexWithActionPanel === programStepNumber ?
+                    {this.state.pressedStepIndex === programStepNumber ?
                         <div style={{
                         position: 'relative',
                         float: 'right'
@@ -254,7 +254,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 focusIndex={this.state.actionPanelItemFocusIndex}
                                 selectedCommandName={this.props.selectedAction}
                                 program={this.props.program}
-                                currentStepIndex={this.state.programStepIndexWithActionPanel}
+                                pressedStepIndex={this.state.pressedStepIndex}
                                 showActionPanel={this.state.showActionPanel}
                                 position={this.state.actionPanelPosition}
                                 onDelete={this.handleClickDelete}
@@ -356,7 +356,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
             }
         }
-        if (this.state.showActionPanel && (this.state.programStepIndexWithActionPanel != null)) {
+        if (this.state.showActionPanel && (this.state.pressedStepIndex != null)) {
             if (this.props.replaceIsActive) {
                 this.props.focusTrapManager.setFocusTrap(
                     this.handleCloseReplaceFocusTrap,
@@ -366,8 +366,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             } else {
                 this.props.focusTrapManager.setFocusTrap(
                     this.handleCloseActionPanelFocusTrap,
-                    ['.ProgramBlockEditor__program-block--expanded', '.ActionPanel__panel button'],
-                    '.ProgramBlockEditor__program-block--expanded'
+                    ['.ProgramBlockEditor__program-block--pressed', '.ActionPanel__panel button'],
+                    '.ProgramBlockEditor__program-block--pressed'
                 );
             }
         } else {
