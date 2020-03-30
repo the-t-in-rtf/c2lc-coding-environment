@@ -263,7 +263,7 @@ export default class App extends React.Component<{}, AppState> {
                             <h4 className='App__notice'
                                 id={this.toCommandPaletteNoticeId}
                                 hidden={!this.state.showNoticeMessage}>
-                                You can now move to the action tab, pick an action you want to replace with
+                                <FormattedMessage id='App.notice.focusTrap'/>
                             </h4>
                         </Col>
                     </Row>
