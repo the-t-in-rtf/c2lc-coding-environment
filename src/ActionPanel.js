@@ -14,7 +14,7 @@ type ActionPanelProps = {
     focusIndex: ?number,
     selectedCommandName: ?string,
     program: Program,
-    currentStepIndex: ?number,
+    pressedStepIndex: ?number,
     showActionPanel: boolean,
     position: {
         top: number,
@@ -35,44 +35,73 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
     }
 
     setStepInfoMessage = () => {
-        if (this.props.currentStepIndex != null) {
-            const currentStepName = this.props.program[this.props.currentStepIndex];
+        if (this.props.pressedStepIndex != null) {
+            const currentStepName = this.props.program[this.props.pressedStepIndex];
             const prevStepName =
-                this.props.program[this.props.currentStepIndex - 1] ?
-                this.props.program[this.props.currentStepIndex - 1] :
+                this.props.program[this.props.pressedStepIndex - 1] ?
+                this.props.program[this.props.pressedStepIndex - 1] :
                 undefined;
             const postStepName =
-                this.props.program[this.props.currentStepIndex + 1] ?
-                this.props.program[this.props.currentStepIndex + 1] :
+                this.props.program[this.props.pressedStepIndex + 1] ?
+                this.props.program[this.props.pressedStepIndex + 1] :
                 undefined;
             let ariaLabelObj = {};
-            ariaLabelObj['stepNumber'] = this.props.currentStepIndex + 1;
+            ariaLabelObj['stepNumber'] = this.props.pressedStepIndex + 1;
 
             if (this.props.selectedCommandName) {
-                ariaLabelObj['selectedCommandName'] = `with selected action ${this.props.selectedCommandName}`;
+                ariaLabelObj['selectedCommandName'] =
+                    this.props.intl.formatMessage(
+                        { id: 'ActionPanel.selectedCommandName' },
+                        { selectedCommandName: this.props.selectedCommandName }
+                    );
             }
 
             if (currentStepName === 'forward') {
-                ariaLabelObj['stepName'] = 'go forward';
+                ariaLabelObj['stepName'] =
+                    this.props.intl.formatMessage({id:'ActionPanel.commandName.forward'});
             } else if (currentStepName === 'right' || currentStepName === 'left') {
-                ariaLabelObj['stepName'] = `turn ${currentStepName}`;
+                ariaLabelObj['stepName'] =
+                    this.props.intl.formatMessage(
+                        { id: 'ActionPanel.commandName.turn' },
+                        { stepName: currentStepName }
+                    );
             }
 
-            if (prevStepName !== null) {
+            if (prevStepName !== null && this.props.pressedStepIndex) {
                 if (prevStepName === 'forward') {
-                    // $FlowFixMe
-                    ariaLabelObj['prevStepInfo'] = `after Step ${this.props.currentStepIndex} go forward`;
+                    ariaLabelObj['prevStepInfo'] =
+                        this.props.intl.formatMessage(
+                            { id: 'ActionPanel.prevStepInfo.forward' },
+                            { prevStepNumber: this.props.pressedStepIndex }
+                        );
                 } else if (prevStepName === 'right' || prevStepName === 'left') {
-                    // $FlowFixMe
-                    ariaLabelObj['prevStepInfo'] = `after Step ${this.props.currentStepIndex} turn ${prevStepName}`;
+                    ariaLabelObj['prevStepInfo'] =
+                        this.props.intl.formatMessage(
+                            { id: 'ActionPanel.prevStepInfo.turn' },
+                            {
+                                prevStepNumber: this.props.pressedStepIndex,
+                                prevStepName
+                            }
+                        );
                 }
             }
 
             if (postStepName !== null) {
                 if (postStepName === 'forward') {
-                    ariaLabelObj['postStepInfo'] = `before Step ${this.props.currentStepIndex + 2} go forward`;
+                    ariaLabelObj['postStepInfo'] =
+                        this.props.intl.formatMessage(
+                            { id: 'ActionPanel.postStepInfo.forward' },
+                            { postStepNumber: this.props.pressedStepIndex + 2 }
+                        );
                 } else if (postStepName === 'right' || postStepName === 'left') {
-                    ariaLabelObj['postStepInfo'] = `before Step ${this.props.currentStepIndex + 2} turn ${postStepName}`;
+                    ariaLabelObj['postStepInfo'] =
+                        this.props.intl.formatMessage(
+                            { id: 'ActionPanel.postStepInfo.turn' },
+                            {
+                                postStepNumber: this.props.pressedStepIndex + 2 ,
+                                postStepName
+                            }
+                        )
                 }
             }
             return ariaLabelObj;
