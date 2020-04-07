@@ -11,8 +11,8 @@ import AriaDisablingButton from './AriaDisablingButton';
 import FocusTrapManager from './FocusTrapManager';
 import CommandBlock from './CommandBlock';
 import classNames from 'classnames';
-import { ReactComponent as DeleteIcon } from './svg/Delete.svg';
 import { ReactComponent as PlayIcon } from './svg/Play.svg';
+import { ReactComponent as RefreshIcon } from './svg/Refresh.svg';
 import './ProgramBlockEditor.scss';
 
 // TODO: Send focus to Delete toggle button on close of Delete All confirmation dialog
@@ -289,18 +289,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             <FormattedMessage id='ProgramBlockEditor.programHeading' />
                         </h2>
                     </Col>
-                    <div className='ProgramBlockEditor__editor-actions'>
-                        <AriaDisablingButton
-                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.clear'})}
-                            className='ProgramBlockEditor__editor-action-button'
-                            disabledClassName='ProgramBlockEditor__editor-action-button--disabled'
-                            disabled={this.props.editingDisabled}
-                            onClick={this.handleClickDeleteAll}
-                            key='deleteButton'
-                        >
-                            <DeleteIcon className='ProgramBlockEditor__editor-action-button-svg'/>
-                        </AriaDisablingButton>
-                    </div>
                 </Row>
                 <Row>
                     <Col className='ProgramBlockEditor__program-sequence-scroll-container' id='programSequenceContainer'>
@@ -325,6 +313,18 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         >
                             <PlayIcon className='ProgramBlockEditor__play-svg' />
                         </AriaDisablingButton>
+                        <div className='ProgramBlockEditor__editor-actions'>
+                            <AriaDisablingButton
+                                aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.clear'})}
+                                className='ProgramBlockEditor__editor-action-button'
+                                disabledClassName='ProgramBlockEditor__editor-action-button--disabled'
+                                disabled={this.props.editingDisabled}
+                                onClick={this.handleClickDeleteAll}
+                                key='deleteButton'
+                            >
+                                <RefreshIcon className='ProgramBlockEditor__editor-action-button-svg'/>
+                            </AriaDisablingButton>
+                        </div>
                     </Col>
                 </Row>
                 <ConfirmDeleteAllModal
