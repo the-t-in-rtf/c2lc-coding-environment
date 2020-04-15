@@ -52,7 +52,7 @@ test('Connect button should have disabled class name when disabled prop is true'
     expect(buttonIsDisabled(wrapper)).toBe(true);
 });
 
-test('Checking icon and aria-label for notConnected status', () => {
+test('There should be no status icon for notConnected status', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
@@ -60,9 +60,7 @@ test('Checking icon and aria-label for notConnected status', () => {
             connectionStatus='notConnected'
             onClickConnect={() => {}}/>
     );
-    expect(getStatusIconContainer(wrapper).props['aria-label']).toBe(intl.messages['DeviceConnectControl.notConnected']);
-    expect(getStatusIconContainer(wrapper).props.role).toBe('img');
-    expect(getStatusIconContainer(wrapper).props.children.type.render.name).toBe('SvgStatusNotConnected')
+    expect(wrapper.find('.DeviceConnectControl__status-icon-container').childAt(0)).toHaveLength(0);
 });
 
 test('Checking icon and aria-label for connected status', () => {
@@ -75,7 +73,7 @@ test('Checking icon and aria-label for connected status', () => {
     );
     expect(getStatusIconContainer(wrapper).props['aria-label']).toBe(intl.messages['DeviceConnectControl.connected']);
     expect(getStatusIconContainer(wrapper).props.role).toBe('img');
-    expect(getStatusIconContainer(wrapper).props.children.type.render.name).toBe('SvgStatusConnected')
+    expect(getStatusIconContainer(wrapper).props.children.props.style.opacity).toBe('100%');
 });
 
 test('Checking icon and aria-label for connecting status', () => {
@@ -86,8 +84,8 @@ test('Checking icon and aria-label for connecting status', () => {
             connectionStatus='connecting'
             onClickConnect={() => {}}/>
     );
-    expect(getStatusIconContainer(wrapper).type.displayName).toBe('Spinner');
     expect(getStatusIconContainer(wrapper).props.role).toBe('status');
-    expect(getStatusIconContainer(wrapper).props.children.props.className).toBe('sr-only');
-    expect(getStatusIconContainer(wrapper).props.children.props.children).toBe(intl.messages['DeviceConnectControl.connecting']);
+    expect(getStatusIconContainer(wrapper).props['aria-label']).toBe(intl.messages['DeviceConnectControl.connecting']);
+    expect(getStatusIconContainer(wrapper).props.children[0].props.style.opacity).toBe('50%');
+    expect(getStatusIconContainer(wrapper).props.children[1].type.render.name).toBe('SvgConnecting');
 });
