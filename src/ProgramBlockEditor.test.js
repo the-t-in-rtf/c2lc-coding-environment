@@ -141,8 +141,7 @@ function getRunButton(programBlockEditorWrapper) {
 }
 
 function getAddNodeButtonAtPosition(programBlockEditorWrapper, index: number) {
-    const nodeIndex = index*2;
-    const addNodeButton = programBlockEditorWrapper.find({'data-stepnumber': nodeIndex});
+    const addNodeButton = programBlockEditorWrapper.find({'data-stepnumber': index});
     return addNodeButton.at(0);
 }
 
@@ -231,14 +230,13 @@ describe('Delete All button', () => {
 
 describe('Program rendering', () => {
     test('Blocks should be rendered for the test program, with a none block at the end', () => {
-        expect.assertions(6);
+        expect.assertions(5);
         const { wrapper } = createMountProgramBlockEditor();
-        expect(getProgramBlocks(wrapper).length).toBe(5);
+        expect(getProgramBlocks(wrapper).length).toBe(4);
         expect(getProgramBlocks(wrapper).at(0).prop('data-command')).toBe('forward');
         expect(getProgramBlocks(wrapper).at(1).prop('data-command')).toBe('left');
         expect(getProgramBlocks(wrapper).at(2).prop('data-command')).toBe('forward');
         expect(getProgramBlocks(wrapper).at(3).prop('data-command')).toBe('left');
-        expect(getProgramBlocks(wrapper).at(4).prop('data-command')).toBe('none');
     });
 });
 
