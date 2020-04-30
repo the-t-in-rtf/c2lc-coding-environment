@@ -17,9 +17,6 @@ import * as Utils from './Utils';
 import type { DeviceConnectionStatus, Program, RobotDriver, SelectedAction } from './types';
 import messages from './messages.json';
 import './App.scss';
-import { ReactComponent as ArrowForward } from './svg/ArrowForward.svg';
-import { ReactComponent as ArrowTurnLeft } from './svg/ArrowTurnLeft.svg';
-import { ReactComponent as ArrowTurnRight } from './svg/ArrowTurnRight.svg';
 import AddModeImage from './AddModeImage';
 import DeleteModeImage from './DeleteModeImage';
 
@@ -221,41 +218,28 @@ export default class App extends React.Component<{}, AppState> {
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
                                         commandName='forward'
-                                        icon={React.createElement(
-                                            ArrowForward,
-                                            {className:'command-block-svg'}
-                                        )}
                                         selectedCommandName={this.getSelectedCommandName()}
                                         onChange={this.handleCommandFromCommandPalette}/>
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
                                         commandName='right'
-                                        icon={React.createElement(
-                                            ArrowTurnRight,
-                                            {className:'command-block-svg'}
-                                        )}
                                         selectedCommandName={this.getSelectedCommandName()}
                                         onChange={this.handleCommandFromCommandPalette}/>
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
                                         commandName='left'
-                                        icon={React.createElement(
-                                            ArrowTurnLeft,
-                                            {className:'command-block-svg'}
-                                        )}
                                         selectedCommandName={this.getSelectedCommandName()}
                                         onChange={this.handleCommandFromCommandPalette}/>
                                 </div>
                             </div>
                         </Col>
-                        <Col md={8} lg={9}>
+                        <Col md={6} lg={6}>
                             <ProgramBlockEditor
                                 activeProgramStepNum={this.state.activeProgramStepNum}
                                 editingDisabled={this.state.interpreterIsRunning === true}
                                 interpreterIsRunning={this.state.interpreterIsRunning}
-                                minVisibleSteps={6}
                                 program={this.state.program}
                                 selectedAction={this.state.selectedAction}
                                 runButtonDisabled={

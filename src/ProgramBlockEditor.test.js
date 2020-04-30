@@ -17,7 +17,6 @@ const defaultProgramBlockEditorProps = {
     program: ['forward', 'left', 'forward', 'left'],
     interpreterIsRunning: false,
     activeProgramStepNum: null,
-    minVisibleSteps: 6,
     selectedAction: null,
     editingDisabled: false,
     runButtonDisabled: false,
@@ -286,21 +285,20 @@ describe('Delete All button', () => {
     });
 });
 
-describe('Add, Delete, and replace program steps', () => {
-    describe('Given a program of 4 steps and minVisibleSteps of 6', () => {
-        test('Then blocks should be rendered for the program, with 2 none blocks at the end', () => {
-            expect.assertions(7);
-            const { wrapper } = createMountProgramBlockEditor();
-            expect(getProgramBlocks(wrapper).length).toBe(6);
-            expect(getProgramBlocks(wrapper).get(0).key.includes('forward')).toBe(true);
-            expect(getProgramBlocks(wrapper).get(1).key.includes('left')).toBe(true);
-            expect(getProgramBlocks(wrapper).get(2).key.includes('forward')).toBe(true);
-            expect(getProgramBlocks(wrapper).get(3).key.includes('left')).toBe(true);
-            expect(getProgramBlocks(wrapper).get(4).key.includes('none')).toBe(true);
-            expect(getProgramBlocks(wrapper).get(5).key.includes('none')).toBe(true);
-        });
+describe('Program rendering', () => {
+    test('Blocks should be rendered for the test program, with a none block at the end', () => {
+        expect.assertions(6);
+        const { wrapper } = createMountProgramBlockEditor();
+        expect(getProgramBlocks(wrapper).length).toBe(5);
+        expect(getProgramBlocks(wrapper).at(0).prop('data-command')).toBe('forward');
+        expect(getProgramBlocks(wrapper).at(1).prop('data-command')).toBe('left');
+        expect(getProgramBlocks(wrapper).at(2).prop('data-command')).toBe('forward');
+        expect(getProgramBlocks(wrapper).at(3).prop('data-command')).toBe('left');
+        expect(getProgramBlocks(wrapper).at(4).prop('data-command')).toBe('none');
     });
+});
 
+describe('Add, Delete, and replace program steps', () => {
     test.each([
         ['Add', 0, ['none', 'forward', 'left', 'forward', 'left'], addAction],
         ['Add', 3, ['forward', 'left', 'forward', 'none', 'left'], addAction],
