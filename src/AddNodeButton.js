@@ -58,7 +58,6 @@ const AddNodeButton = React.forwardRef<AddNodeButtonProps, any>(
                     'disabled': disabled,
                     'className': 'AddNodeButton AddNodeButton__plus-button',
                     'ref': ref,
-                    'id': `programBlock-${programStepNumber}`,
                     'data-stepnumber': programStepNumber,
                     'onBlur': handleBlur,
                     'onDrop': onDrop,
