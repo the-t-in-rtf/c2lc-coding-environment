@@ -1,23 +1,23 @@
 @import 'variables';
 
-.App__heading-section {
+.App__header {
     display: flex;
     background: #000;
     color: #FFF;
     padding: 0.5rem 3rem;
 }
 
-.App__app-heading {
+.App__header-row {
     justify-content: space-between;
 }
 
-.App__app-heading-text {
+.App__app-heading {
     font-weight: normal;
     font-size: 1.3rem;
     margin: 1rem 0;
 }
 
-.App__robot-connection-section {
+.App__bluetooth-api-warning-section {
     margin-top: 1.5rem;
 }
 

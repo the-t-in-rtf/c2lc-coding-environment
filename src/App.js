@@ -185,10 +185,10 @@ export default class App extends React.Component<{}, AppState> {
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
-                <div role='banner' className='App__heading-section'>
+                <header className='App__header'>
                     <Container>
-                        <Row className='App__app-heading'>
-                            <h1 className='App__app-heading-text'>
+                        <Row className='App__header-row'>
+                            <h1 className='App__app-heading'>
                                 <FormattedMessage id='App.appHeading'/>
                             </h1>
                             <DeviceConnectControl
@@ -199,15 +199,15 @@ export default class App extends React.Component<{}, AppState> {
                             </DeviceConnectControl>
                         </Row>
                     </Container>
-                </div>
+                </header>
                 <Container role='main' className='mb-5'>
-                    <Row className='App__robot-connection-section'>
-                        <Col>
-                            {!this.appContext.bluetoothApiIsAvailable &&
+                    {!this.appContext.bluetoothApiIsAvailable &&
+                        <Row className='App__bluetooth-api-warning-section'>
+                            <Col>
                                 <BluetoothApiWarning/>
-                            }
-                        </Col>
-                    </Row>
+                            </Col>
+                        </Row>
+                    }
                     <Row className='App__program-section' noGutters={true}>
                         <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
                             <div className='App__command-palette'>
