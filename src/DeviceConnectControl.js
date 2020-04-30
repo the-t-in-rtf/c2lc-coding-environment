@@ -18,22 +18,13 @@ type DeviceConnectControlProps = {
 
 class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}> {
     connectionStatusIcon() {
-        const dashIconStyle = {
-            opacity: '50%',
-            width: '2.5rem',
-            height: '2.5rem',
-            position: 'relative',
-            top: '0.1rem'
-        };
-
         switch (this.props.connectionStatus) {
             case 'connected':
-                dashIconStyle.opacity = '100%';
                 return (
                     <span
                         role='img'
                         aria-label={this.props.intl.formatMessage({id:'DeviceConnectControl.connected'})}>
-                        <DashConnectionIcon style={dashIconStyle}/>
+                        <DashConnectionIcon className='DeviceConnectControl__dash-icon connected' />
                     </span>
                 );
             case 'connecting':
@@ -41,8 +32,8 @@ class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}
                     <span
                         role='status'
                         aria-label={this.props.intl.formatMessage({id:'DeviceConnectControl.connecting'})}>
-                        <DashConnectionIcon style={dashIconStyle}/>
-                        <ConnectingIcon className='DeviceConnectControl__status-icon'/>
+                        <DashConnectionIcon className='DeviceConnectControl__dash-icon' />
+                        <ConnectingIcon className='DeviceConnectControl__status-icon' />
                     </span>
                 );
             default:

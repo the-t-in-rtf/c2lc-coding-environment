@@ -24,6 +24,18 @@ button.btn-primary.DeviceConnectControl__button {
     height: 3.5rem;
 }
 
+.DeviceConnectControl__dash-icon {
+    opacity: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    position: relative;
+    top: 0.1rem;
+}
+
+.DeviceConnectControl__dash-icon.connected {
+    opacity: 100%;
+}
+
 .DeviceConnectControl svg {
     stroke: #000;
 }
