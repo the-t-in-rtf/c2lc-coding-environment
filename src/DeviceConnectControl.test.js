@@ -73,7 +73,7 @@ test('Checking icon and aria-label for connected status', () => {
     );
     expect(getStatusIconContainer(wrapper).props['aria-label']).toBe(intl.messages['DeviceConnectControl.connected']);
     expect(getStatusIconContainer(wrapper).props.role).toBe('img');
-    expect(getStatusIconContainer(wrapper).props.children.props.style.opacity).toBe('100%');
+    expect(getStatusIconContainer(wrapper).props.children.props.className.includes('connected')).toBe(true);
 });
 
 test('Checking icon and aria-label for connecting status', () => {
@@ -86,6 +86,6 @@ test('Checking icon and aria-label for connecting status', () => {
     );
     expect(getStatusIconContainer(wrapper).props.role).toBe('status');
     expect(getStatusIconContainer(wrapper).props['aria-label']).toBe(intl.messages['DeviceConnectControl.connecting']);
-    expect(getStatusIconContainer(wrapper).props.children[0].props.style.opacity).toBe('50%');
+    expect(getStatusIconContainer(wrapper).props.children[0].props.className.includes('connected')).toBe(false);
     expect(getStatusIconContainer(wrapper).props.children[1].type.render.name).toBe('SvgConnecting');
 });
