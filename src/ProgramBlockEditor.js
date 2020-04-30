@@ -190,8 +190,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     makeProgramBlock(programStepNumber: number, command: string) {
         const active = this.programIsActive(programStepNumber);
-        const isLastBlock =
-            programStepNumber === (this.props.program.length * 2 - 1);
         const programBlockPosition = (programStepNumber + 1)/2;
 
         const classes = classNames(
@@ -212,24 +210,57 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
         if (command !== 'addNode') {
             return (
-                <React.Fragment>
-                    <CommandBlock
-                        commandName={command}
-                        ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
-                        key={`${programStepNumber}-${command}`}
-                        data-stepnumber={programStepNumber}
-                        className={classes}
-                        aria-label={ariaLabel}
-                        disabled={this.props.editingDisabled}
-                        onClick={this.handleClickStep}
-                    />
-                    <div className='ProgramBlockEditor__program-block-connector' />
+                <CommandBlock
+                    commandName={command}
+                    ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
+                    key={`${programStepNumber}-${command}`}
+                    data-stepnumber={programStepNumber}
+                    className={classes}
+                    aria-label={ariaLabel}
+                    disabled={this.props.editingDisabled}
+                    onClick={this.handleClickStep}
+                />
+            );
+        }
+    }
+
+    makeProgramBlockSection(programStepNumber: number, command: string) {
+        const isLastBlock =
+            programStepNumber === (this.props.program.length * 2 - 1);
+        return (
+            <React.Fragment key={programStepNumber}>
+                <div className='ProgramBlockEditor__program-block-connector'/>
+                {command !== 'addNode' ?
+                    <React.Fragment>
+                        {this.makeProgramBlock(programStepNumber, command)}
+                        <div className='ProgramBlockEditor__program-block-connector' />
+                        <AddNodeButton
+                            aria-label={this.makeNodeAriaLabel(programStepNumber)}
+                            ref={ (element) => this.setCommandBlockRef(programStepNumber+1, element) }
+                            showButton={isLastBlock}
+                            commandSelected={this.commandIsSelected()}
+                            programStepNumber={programStepNumber+1}
+                            disabled={
+                                this.props.editingDisabled ||
+                                !this.commandIsSelected()}
+                            onClick={this.handleClickAddButton}
+                            onDrop={this.hanldeDropCommand}
+                            onFocus={this.handleSetFocus}
+                        />
+                    </React.Fragment> :
                     <AddNodeButton
-                        aria-label={this.makeNodeAriaLabel(programStepNumber)}
-                        ref={ (element) => this.setCommandBlockRef(programStepNumber+1, element) }
-                        showButton={isLastBlock}
+                        aria-label={
+                            this.commandIsSelected() ?
+                            this.props.intl.formatMessage(
+                            { id: 'ProgramBlockEditor.beginningBlock' },
+                            { command: this.getSelectedCommandName() }) :
+                            this.props.intl.formatMessage(
+                            {id: 'ProgramBlockEditor.blocks.noCommandSelected'})}
+                        ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
+                        commandBlockRefs = {this.commandBlockRefs}
+                        showButton={this.props.program.length === 0}
                         commandSelected={this.commandIsSelected()}
-                        programStepNumber={programStepNumber+1}
+                        programStepNumber={programStepNumber}
                         disabled={
                             this.props.editingDisabled ||
                             !this.commandIsSelected()}
@@ -237,39 +268,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         onDrop={this.hanldeDropCommand}
                         onFocus={this.handleSetFocus}
                     />
-                </React.Fragment>
-            );
-        } else {
-            return (
-                <AddNodeButton
-                    aria-label={
-                        this.commandIsSelected() ?
-                        this.props.intl.formatMessage(
-                        { id: 'ProgramBlockEditor.beginningBlock' },
-                        { command: this.getSelectedCommandName() }) :
-                        this.props.intl.formatMessage(
-                        {id: 'ProgramBlockEditor.blocks.noCommandSelected'})}
-                    ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
-                    commandBlockRefs = {this.commandBlockRefs}
-                    showButton={this.props.program.length === 0}
-                    commandSelected={this.commandIsSelected()}
-                    programStepNumber={programStepNumber}
-                    disabled={
-                        this.props.editingDisabled ||
-                        !this.commandIsSelected()}
-                    onClick={this.handleClickAddButton}
-                    onDrop={this.hanldeDropCommand}
-                    onFocus={this.handleSetFocus}
-                />
-            )
-        }
-    }
-
-    makeProgramBlockSection(programStepNumber: number, command: string) {
-        return (
-            <React.Fragment key={programStepNumber}>
-                <div className='ProgramBlockEditor__program-block-connector'/>
-                {this.makeProgramBlock(programStepNumber, command)}
+                }
             </React.Fragment>
         );
     }
