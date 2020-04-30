@@ -285,6 +285,19 @@ describe('Delete All button', () => {
     });
 });
 
+describe('Program rendering', () => {
+    test('Blocks should be rendered for the test program, with a none block at the end', () => {
+        expect.assertions(6);
+        const { wrapper } = createMountProgramBlockEditor();
+        expect(getProgramBlocks(wrapper).length).toBe(5);
+        expect(getProgramBlocks(wrapper).at(0).prop('data-command')).toBe('forward');
+        expect(getProgramBlocks(wrapper).at(1).prop('data-command')).toBe('left');
+        expect(getProgramBlocks(wrapper).at(2).prop('data-command')).toBe('forward');
+        expect(getProgramBlocks(wrapper).at(3).prop('data-command')).toBe('left');
+        expect(getProgramBlocks(wrapper).at(4).prop('data-command')).toBe('none');
+    });
+});
+
 describe('Add, Delete, and replace program steps', () => {
     test.each([
         ['Add', 0, ['none', 'forward', 'left', 'forward', 'left'], addAction],
