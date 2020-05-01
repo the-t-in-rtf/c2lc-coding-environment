@@ -31,12 +31,14 @@ button.btn.ProgramBlockEditor__editor-action-button {
     padding: 0.5rem;
 }
 
-button.btn.ProgramBlockEditor__editor-action-button:hover {
-    background-color: #e5e5e5;
-}
-
 button.btn.ProgramBlockEditor__editor-action-button:not(:focus) {
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+}
+
+button.btn.ProgramBlockEditor__editor-action-button:hover {
+    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+    z-index: 1;
+    background-color: #e5e5e5;
 }
 
 button.btn.ProgramBlockEditor__editor-action-button--pressed {
