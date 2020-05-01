@@ -88,7 +88,6 @@ button.btn.ProgramBlockEditor__editor-action-button--pressed.ProgramBlockEditor_
     align-items: center;
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
-    margin-top: auto;
 }
 
 .ProgramBlockEditor__start-indicator {
@@ -101,10 +100,6 @@ button.btn.ProgramBlockEditor__editor-action-button--pressed.ProgramBlockEditor_
     min-width: 4rem;
     min-height: 4rem;
     border-radius: 50%;
-}
-
-button.ProgramBlockEditor__program-block {
-    margin: 0;
 }
 
 button.ProgramBlockEditor__program-block--active {
