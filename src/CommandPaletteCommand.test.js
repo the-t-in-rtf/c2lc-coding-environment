@@ -3,7 +3,7 @@
 import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
 import { shallow, configure } from 'enzyme';
-import { Col, Button } from 'react-bootstrap';
+import CommandBlock from './CommandBlock';
 import { createIntl } from 'react-intl';
 import App from './App';
 import CommandPaletteCommand from './CommandPaletteCommand';
@@ -11,11 +11,11 @@ import CommandPaletteCommand from './CommandPaletteCommand';
 configure({ adapter: new Adapter()});
 
 function hasPressedClass(wrapper) {
-    return wrapper.find(Button).hasClass('command-block--pressed');
+    return wrapper.find(CommandBlock).hasClass('command-block--pressed');
 }
 
 function getAriaPressedValue(wrapper) {
-    return wrapper.find(Button).getElement().props['aria-pressed'];
+    return wrapper.find(CommandBlock).getElement().props['aria-pressed'];
 }
 
 const intl = createIntl({
@@ -73,7 +73,7 @@ test('Clicking the button toggles selectedCommandName', () => {
             onChange={mockChangeHandler}/>
     );
 
-    const button = wrapper.find(Button);
+    const button = wrapper.find(CommandBlock);
 
     // Initially the command is not selected
     button.simulate('click');
