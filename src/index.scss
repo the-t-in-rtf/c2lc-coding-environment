@@ -32,10 +32,6 @@ button.btn:focus {
     box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
 }
 
-button.btn:hover {
-    background-color: $c2lc-focus-indicator-color;
-}
-
 button.btn-primary,
 button.btn-primary:hover {
     border: $c2lc-button-border-width solid #000000;
