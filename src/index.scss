@@ -40,6 +40,11 @@ button.btn-primary:hover {
     padding: 1.15rem 1.25rem;
 }
 
+button.btn:hover {
+    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+    z-index: 1;
+}
+
 button.btn-primary:disabled {
     border: $c2lc-button-border-width solid $c2lc-disabled-color;
     color: $c2lc-disabled-color;
