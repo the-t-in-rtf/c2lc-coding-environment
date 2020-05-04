@@ -36,7 +36,7 @@ button.btn.ProgramBlockEditor__editor-action-button:not(:focus) {
 }
 
 button.btn.ProgramBlockEditor__editor-action-button:hover {
-    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+    box-shadow: 0 0 0 $c2lc-hover-indicator-width $c2lc-focus-indicator-color;
     z-index: 1;
     background-color: #e5e5e5;
 }
