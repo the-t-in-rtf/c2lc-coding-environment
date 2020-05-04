@@ -24,7 +24,7 @@ class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}
                     <span
                         role='img'
                         aria-label={this.props.intl.formatMessage({id:'DeviceConnectControl.connected'})}>
-                        <DashConnectionIcon className='DeviceConnectControl__dash-icon connected' />
+                        <DashConnectionIcon className='DeviceConnectControl__dash-icon DeviceConnectControl__dash-icon--connected' />
                     </span>
                 );
             case 'connecting':
