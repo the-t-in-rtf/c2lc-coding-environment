@@ -192,7 +192,9 @@ export default class App extends React.Component<{}, AppState> {
                                 <FormattedMessage id='App.appHeading'/>
                             </h1>
                             <DeviceConnectControl
-                                disabled={!this.appContext.bluetoothApiIsAvailable}
+                                disabled={
+                                    !this.appContext.bluetoothApiIsAvailable ||
+                                    this.state.dashConnectionStatus === 'connected' }
                                 connectionStatus={this.state.dashConnectionStatus}
                                 onClickConnect={this.handleClickConnectDash}>
                                 <FormattedMessage id='App.connectToDash' />

@@ -54,9 +54,7 @@ class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}
                 </span>
                 <AriaDisablingButton
                     className='DeviceConnectControl__button'
-                    disabled={
-                        this.props.disabled ||
-                        this.props.connectionStatus === 'connected'}
+                    disabled={this.props.disabled}
                     onClick={this.props.onClickConnect}>
                     {this.props.children}
                 </AriaDisablingButton>
