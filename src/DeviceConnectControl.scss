@@ -43,3 +43,8 @@ button.btn-primary.DeviceConnectControl__button {
 .DeviceConnectControl.DeviceConnectControl--disabled svg {
     stroke: $c2lc-disabled-color;
 }
+
+.DeviceConnectControl.DeviceConnectControl--disabled button {
+    background-color: $c2lc-disabled-color;
+    cursor: default;
+}
