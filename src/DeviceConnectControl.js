@@ -29,11 +29,13 @@ class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}
                 );
             case 'connecting':
                 return (
-                    <span
-                        role='status'
-                        aria-label={this.props.intl.formatMessage({id:'DeviceConnectControl.connecting'})}>
+                    <span>
                         <DashConnectionIcon className='DeviceConnectControl__dash-icon' />
-                        <ConnectingIcon className='DeviceConnectControl__status-icon' />
+                        <span
+                            role='img'
+                            aria-label={this.props.intl.formatMessage({id:'DeviceConnectControl.connecting'})}>
+                                <ConnectingIcon className='DeviceConnectControl__status-icon' />
+                        </span>
                     </span>
                 );
             default:
@@ -49,7 +51,7 @@ class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}
         }
         return (
             <div className={classNames.join(' ')}>
-                <span className='DeviceConnectControl__status-icon-container'>
+                <span role='status' className='DeviceConnectControl__status-icon-container'>
                     {this.connectionStatusIcon()}
                 </span>
                 <AriaDisablingButton
