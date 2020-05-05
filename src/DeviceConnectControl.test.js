@@ -18,10 +18,6 @@ function buttonIsDisabled(wrapper) {
     return wrapper.find('.DeviceConnectControl__button').getElement().props['disabled'];
 }
 
-function getStatusIconContainer(wrapper) {
-    return wrapper.find('.DeviceConnectControl__status-icon-container').childAt(0).getElement();
-}
-
 const intl = createIntl({
     locale: 'en',
     defaultLocale: 'en',
@@ -71,9 +67,14 @@ test('Checking icon and aria-label for connected status', () => {
             connectionStatus='connected'
             onClickConnect={() => {}}/>
     );
-    expect(getStatusIconContainer(wrapper).props['aria-label']).toBe(intl.messages['DeviceConnectControl.connected']);
-    expect(getStatusIconContainer(wrapper).props.role).toBe('img');
-    expect(getStatusIconContainer(wrapper).props.children.props.className.includes('connected')).toBe(true);
+    // There should be a single status element
+    let status = wrapper.find('[role="status"]');
+    expect(status).toHaveLength(1);
+    // With a single img
+    let img = status.find('[role="img"]');
+    expect(img).toHaveLength(1);
+    expect(img.prop('aria-label')).toBe(intl.messages['DeviceConnectControl.connected']);
+    expect(img.children().hasClass('DeviceConnectControl__dash-icon--connected')).toBe(true);
 });
 
 test('Checking icon and aria-label for connecting status', () => {
@@ -84,8 +85,11 @@ test('Checking icon and aria-label for connecting status', () => {
             connectionStatus='connecting'
             onClickConnect={() => {}}/>
     );
-    expect(getStatusIconContainer(wrapper).props.role).toBe('status');
-    expect(getStatusIconContainer(wrapper).props['aria-label']).toBe(intl.messages['DeviceConnectControl.connecting']);
-    expect(getStatusIconContainer(wrapper).props.children[0].props.className.includes('connected')).toBe(false);
-    expect(getStatusIconContainer(wrapper).props.children[1].type.render.name).toBe('SvgConnecting');
+    // There should be a single status element
+    let status = wrapper.find('[role="status"]');
+    expect(status).toHaveLength(1);
+    // With a single img
+    let img = status.find('[role="img"]');
+    expect(img).toHaveLength(1);
+    expect(img.prop('aria-label')).toBe(intl.messages['DeviceConnectControl.connecting']);
 });
