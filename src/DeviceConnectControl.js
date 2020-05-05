@@ -2,8 +2,8 @@
 
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
-import { Button } from 'react-bootstrap';
 import type {DeviceConnectionStatus} from './types';
+import AriaDisablingButton from './AriaDisablingButton';
 import { ReactComponent as DashConnectionIcon } from './svg/Dash-Small.svg';
 import { ReactComponent as ConnectingIcon } from './svg/Connecting.svg';
 import './DeviceConnectControl.scss';
@@ -52,14 +52,14 @@ class DeviceConnectControl extends React.Component<DeviceConnectControlProps, {}
                 <span className='DeviceConnectControl__status-icon-container'>
                     {this.connectionStatusIcon()}
                 </span>
-                <Button
+                <AriaDisablingButton
                     className='DeviceConnectControl__button'
                     disabled={
                         this.props.disabled ||
                         this.props.connectionStatus === 'connected'}
                     onClick={this.props.onClickConnect}>
                     {this.props.children}
-                </Button>
+                </AriaDisablingButton>
             </div>
         );
     }
