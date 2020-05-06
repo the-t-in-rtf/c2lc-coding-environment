@@ -182,33 +182,31 @@ export default class App extends React.Component<{}, AppState> {
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
-                <div role='banner' className='App__heading-section'>
+                <header className='App__header'>
                     <Container>
-                        <Row>
-                            <Col>
-                                <h1 className='App__app-heading'>
-                                    <FormattedMessage id='App.appHeading'/>
-                                </h1>
-                            </Col>
-                        </Row>
-                    </Container>
-                </div>
-                <Container role='main' className='mb-5'>
-                    <Row className='App__robot-connection-section'>
-                        <Col>
-                            {!this.appContext.bluetoothApiIsAvailable &&
-                                <BluetoothApiWarning/>
-                            }
-                        </Col>
-                        <Col md='auto'>
+                        <Row className='App__header-row'>
+                            <h1 className='App__app-heading'>
+                                <FormattedMessage id='App.appHeading'/>
+                            </h1>
                             <DeviceConnectControl
-                                    disabled={!this.appContext.bluetoothApiIsAvailable}
-                                    connectionStatus={this.state.dashConnectionStatus}
-                                    onClickConnect={this.handleClickConnectDash}>
+                                disabled={
+                                    !this.appContext.bluetoothApiIsAvailable ||
+                                    this.state.dashConnectionStatus === 'connected' }
+                                connectionStatus={this.state.dashConnectionStatus}
+                                onClickConnect={this.handleClickConnectDash}>
                                 <FormattedMessage id='App.connectToDash' />
                             </DeviceConnectControl>
-                        </Col>
-                    </Row>
+                        </Row>
+                    </Container>
+                </header>
+                <Container role='main' className='mb-5'>
+                    {!this.appContext.bluetoothApiIsAvailable &&
+                        <Row className='App__bluetooth-api-warning-section'>
+                            <Col>
+                                <BluetoothApiWarning/>
+                            </Col>
+                        </Row>
+                    }
                     <Row className='App__program-section' noGutters={true}>
                         <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
                             <div className='App__command-palette'>
