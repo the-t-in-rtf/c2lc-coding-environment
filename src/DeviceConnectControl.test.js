@@ -24,7 +24,7 @@ const intl = createIntl({
     messages: messages.en
 });
 
-test('Connect button should not have disabled class name when disabled prop is false', () => {
+test('When disabled is false, the Connect button should not have the disabled class name', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
@@ -36,7 +36,7 @@ test('Connect button should not have disabled class name when disabled prop is f
     expect(buttonIsDisabled(wrapper)).toBe(false);
 });
 
-test('Connect button should have disabled class name when disabled prop is true', () => {
+test('When disabled is true, the Connect button should have the disabled class name', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
@@ -48,7 +48,7 @@ test('Connect button should have disabled class name when disabled prop is true'
     expect(buttonIsDisabled(wrapper)).toBe(true);
 });
 
-test('There should be no status icon for notConnected status', () => {
+test('When not connected, the status area should be empty', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
@@ -56,10 +56,14 @@ test('There should be no status icon for notConnected status', () => {
             connectionStatus='notConnected'
             onClickConnect={() => {}}/>
     );
-    expect(wrapper.find('.DeviceConnectControl__status-icon-container').childAt(0)).toHaveLength(0);
+    // There should be a single status element
+    let status = wrapper.find('[role="status"]');
+    expect(status).toHaveLength(1);
+    // That is empty
+    expect(status.children()).toHaveLength(0);
 });
 
-test('Checking icon and aria-label for connected status', () => {
+test('When connected, the status area should have an img with the connected aria-label', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
@@ -77,7 +81,7 @@ test('Checking icon and aria-label for connected status', () => {
     expect(img.children().hasClass('DeviceConnectControl__dash-icon--connected')).toBe(true);
 });
 
-test('Checking icon and aria-label for connecting status', () => {
+test('When connecting, the status area should have an img with the connecting aria-label', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
