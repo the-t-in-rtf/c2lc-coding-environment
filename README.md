@@ -49,5 +49,13 @@ Accessibility is an important part of our project. If you have any questions abo
 Before submitting pull requests, please make sure all static type checks and test cases are passing.
 
 ## License
+
 The Inclusive Coding Environment is open source software, distributed under the [BSD-3](https://github.com/codelearncreate/c2lc-coding-environment/blob/master/LICENSE.txt) license.
 
+## Dependencies
+
+We would like to thank to these amazing open source projects and libraries that Inclusive Coding Environment uses:
+
+| Dependency | License |
+| :--------- | :------ |
+| [Loading.io](https://loading.io/) | [Loading.io Free License](https://loading.io/license/#free-license) |
