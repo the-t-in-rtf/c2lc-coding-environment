@@ -3,6 +3,7 @@
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
+import classNames from 'classnames';
 import BluetoothApiWarning from './BluetoothApiWarning';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
@@ -38,7 +39,8 @@ type AppState = {
     activeProgramStepNum: ?number,
     interpreterIsRunning: boolean,
     showDashConnectionError: boolean,
-    selectedAction: SelectedAction
+    selectedAction: SelectedAction,
+    draggingCommand: ?string
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -64,7 +66,8 @@ export default class App extends React.Component<{}, AppState> {
             activeProgramStepNum: null,
             interpreterIsRunning: false,
             showDashConnectionError: false,
-            selectedAction: null
+            selectedAction: null,
+            draggingCommand: null
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -164,6 +167,14 @@ export default class App extends React.Component<{}, AppState> {
         }
     };
 
+    handleDragStartCommand = (command: string) => {
+        this.setState({ draggingCommand: command });
+    };
+
+    handleDragEndCommand = () => {
+        this.setState({ draggingCommand: null });
+    };
+
     handleSelectAction = (action: SelectedAction) => {
         this.setState({
             selectedAction: action
@@ -178,10 +189,14 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     render() {
+        const appClasses = classNames(
+            this.state.draggingCommand && 'App--is-dragging-command'
+        );
         return (
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
+            <div className={appClasses}>
                 <div role='banner' className='App__heading-section'>
                     <Container>
                         <Row>
@@ -219,19 +234,25 @@ export default class App extends React.Component<{}, AppState> {
                                     <CommandPaletteCommand
                                         commandName='forward'
                                         selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}/>
+                                        onChange={this.handleCommandFromCommandPalette}
+                                        onDragStart={this.handleDragStartCommand}
+                                        onDragEnd={this.handleDragEndCommand}/>
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
                                         commandName='right'
                                         selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}/>
+                                        onChange={this.handleCommandFromCommandPalette}
+                                        onDragStart={this.handleDragStartCommand}
+                                        onDragEnd={this.handleDragEndCommand}/>
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
                                         commandName='left'
                                         selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}/>
+                                        onChange={this.handleCommandFromCommandPalette}
+                                        onDragStart={this.handleDragStartCommand}
+                                        onDragEnd={this.handleDragEndCommand}/>
                                 </div>
                             </div>
                         </Col>
@@ -242,6 +263,7 @@ export default class App extends React.Component<{}, AppState> {
                                 interpreterIsRunning={this.state.interpreterIsRunning}
                                 program={this.state.program}
                                 selectedAction={this.state.selectedAction}
+                                draggingCommand={this.state.draggingCommand}
                                 runButtonDisabled={
                                     this.state.dashConnectionStatus !== 'connected' ||
                                     this.state.interpreterIsRunning ||
@@ -282,11 +304,14 @@ export default class App extends React.Component<{}, AppState> {
                     show={this.state.showDashConnectionError}
                     onCancel={this.handleCancelDashConnection}
                     onRetry={this.handleClickConnectDash}/>
+            </div>
             </IntlProvider>
         );
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
+        //console.log(this.state.selectedAction);
+        console.log(this.state.draggingCommand);
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 

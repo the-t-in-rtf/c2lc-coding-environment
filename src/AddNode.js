@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import './AddNode.scss';
 
 type AddNodeProps = {
-    commandSelected: ?boolean,
+    isDraggingCommand: ?boolean,
     disabled: boolean,
     expandedMode: boolean,
     programStepNumber: number,
@@ -19,7 +19,7 @@ const AddNode = React.forwardRef<AddNodeProps, any>(
     // $FlowFixMe
     (props, ref) => {
         const {
-            commandSelected,
+            isDraggingCommand,
             disabled,
             expandedMode,
             programStepNumber,
@@ -82,7 +82,7 @@ const AddNode = React.forwardRef<AddNodeProps, any>(
                     <div className='AddNode__drop-area-container'>
                         <div className='AddNode__collapsed-drop-area'
                             onDragOver={
-                                commandSelected ?
+                                isDraggingCommand ?
                                     handleDragOver :
                                     undefined
                             }

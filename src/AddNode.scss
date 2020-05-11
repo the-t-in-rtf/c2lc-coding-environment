@@ -49,7 +49,7 @@ button.btn.AddNode__expanded-button svg {
     position: absolute;
 }
 
-.AddNode__expanded-drop-area {
+.App--is-dragging-command .AddNode__expanded-drop-area {
     top: -$addNodeDropMargin;
     position: relative;
     width: 6.25rem;
@@ -60,7 +60,7 @@ button.btn.AddNode__expanded-button svg {
         + #{2 * $addNodeExpandedButtonPadding});
 }
 
-.AddNode__collapsed-drop-area {
+.App--is-dragging-command .AddNode__collapsed-drop-area {
     top: -$addNodeDropMargin;
     position: relative;
     width: 6.25rem;

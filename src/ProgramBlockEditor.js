@@ -24,6 +24,7 @@ type ProgramBlockEditorProps = {
     program: Program,
     // $FlowFixMe
     selectedAction: SelectedAction,
+    draggingCommand: ?string,
     runButtonDisabled: boolean,
     addModeDescriptionId: string,
     deleteModeDescriptionId: string,
@@ -87,6 +88,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
+    isDraggingCommand() {
+        return !!(this.props.draggingCommand);
+    }
+
     handleClickDelete = () => {
         this.toggleAction('delete');
     };
@@ -127,17 +132,25 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     handleClickAddNode = (e: SyntheticEvent<HTMLButtonElement>) => {
         if (this.props.selectedAction && this.props.selectedAction.type === 'command') {
             const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
-            this.focusCommandBlockIndex = index;
-            this.props.onChange(ProgramUtils.insert(this.props.program,
-                index, this.props.selectedAction.commandName, 'none'));
-            this.scrollToAddNodeIndex = index + 1;
+            this.insertStepIntoProgram(this.props.selectedAction.commandName,
+                index);
         }
     };
 
     hanldeDropCommand = (e: SyntheticDragEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        this.handleClickAddNode(e);
+        if (this.props.draggingCommand) {
+            const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
+            this.insertStepIntoProgram(this.props.draggingCommand, index);
+        }
     };
+
+    insertStepIntoProgram(command: string, index: number) {
+        this.focusCommandBlockIndex = index;
+        this.props.onChange(ProgramUtils.insert(this.props.program,
+            index, command, 'none'));
+        this.scrollToAddNodeIndex = index + 1;
+    }
 
     setCommandBlockRef = (programStepNumber: number, element: ?HTMLElement) => {
         if (element) {
@@ -230,11 +243,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             aria-label={this.makeNodeAriaLabel(programStepNumber)}
                             ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
                             expandedMode={false}
-                            commandSelected={this.commandIsSelected()}
+                            isDraggingCommand={this.isDraggingCommand()}
                             programStepNumber={programStepNumber}
                             disabled={
                                 this.props.editingDisabled ||
-                                !this.commandIsSelected()}
+                                (!this.commandIsSelected() && !this.isDraggingCommand())}
                             onClick={this.handleClickAddNode}
                             onDrop={this.hanldeDropCommand}
                         />
@@ -251,11 +264,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             {id: 'ProgramBlockEditor.blocks.noCommandSelected'})}
                         ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
                         expandedMode={true}
-                        commandSelected={this.commandIsSelected()}
+                        isDraggingCommand={this.isDraggingCommand()}
                         programStepNumber={programStepNumber}
                         disabled={
                             this.props.editingDisabled ||
-                            !this.commandIsSelected()}
+                            (!this.commandIsSelected() && !this.isDraggingCommand())}
                         onClick={this.handleClickAddNode}
                         onDrop={this.hanldeDropCommand}
                     />
