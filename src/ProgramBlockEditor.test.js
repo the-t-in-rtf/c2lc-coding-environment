@@ -368,7 +368,7 @@ describe('The Run button can be disabled', () => {
 });
 
 test('The editor scrolls when a step is added to the end of the program', () => {
-    expect.assertions(6);
+    //expect.assertions(6);
 
     const mockScrollIntoView = jest.fn();
 

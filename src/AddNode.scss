@@ -1,0 +1,68 @@
+@import 'variables';
+
+$addNodeDropMargin: 1.5rem;
+$heightOfCollapsedIcon: 0.8rem;
+$heightOfExpandedIcon: 1.7rem;
+
+$addNodeExpandedButtonBorderWidth: 1px;
+$addNodeExpandedButtonPadding: 0.5rem;
+
+.AddNode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+button.btn.AddNode__expanded-button {
+    z-index: 1;
+    border: $addNodeExpandedButtonBorderWidth solid #FFF;
+    border-radius: 50%;
+    background-color: #FFF;
+    padding: $addNodeExpandedButtonPadding;
+}
+
+.AddNode--drag-over .AddNode__expanded-button {
+    pointer-events: none;
+}
+
+button.btn.AddNode__expanded-button svg {
+    stroke: #000;
+    width: 1.7rem;
+    height: $heightOfExpandedIcon;
+    display: block;
+}
+
+.AddNode__collapsed-icon {
+    background-color: #939595;
+    height: $heightOfCollapsedIcon;
+    width: 0.8rem;
+    border: 0.1rem solid #8F8F8F;
+    border-radius: 50%;
+}
+
+.AddNode__collapsed-icon svg {
+    display: block;
+    stroke: #FFF;
+}
+
+.AddNode__drop-area-container {
+    position: absolute;
+}
+
+.AddNode__expanded-drop-area {
+    top: -$addNodeDropMargin;
+    position: relative;
+    width: 6.25rem;
+    height: calc(
+        #{2 * $addNodeDropMargin}
+        + #{$heightOfExpandedIcon}
+        + #{2 * $addNodeExpandedButtonBorderWidth}
+        + #{2 * $addNodeExpandedButtonPadding});
+}
+
+.AddNode__collapsed-drop-area {
+    top: -$addNodeDropMargin;
+    position: relative;
+    width: 6.25rem;
+    height: (2 * $addNodeDropMargin) + $heightOfCollapsedIcon;
+}
