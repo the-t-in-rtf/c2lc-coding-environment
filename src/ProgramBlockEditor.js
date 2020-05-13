@@ -1,6 +1,6 @@
 // @flow
 
-import { Col, Collapse, Container, Row } from 'react-bootstrap';
+import { Col, Collapse, Container, Form, Row } from 'react-bootstrap';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
@@ -34,7 +34,8 @@ type ProgramBlockEditorProps = {
 };
 
 type ProgramBlockEditorState = {
-    showConfirmDeleteAll: boolean
+    showConfirmDeleteAll: boolean,
+    addNodeExpandedMode: boolean
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
@@ -50,7 +51,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.focusCommandBlockIndex = null;
         this.scrollToAddNodeIndex = null;
         this.state = {
-            showConfirmDeleteAll : false
+            showConfirmDeleteAll : false,
+            addNodeExpandedMode : false
         }
     }
 
@@ -90,6 +92,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     isDraggingCommand() {
         return !!(this.props.draggingCommand);
+    }
+
+    handleToggleAddNodeExpandedMode = () => {
+        let AddNodeExpandedModeIsOn = this.state.addNodeExpandedMode;
+        this.setState({
+            addNodeExpandedMode: !AddNodeExpandedModeIsOn
+        });
     }
 
     handleClickDelete = () => {
@@ -242,7 +251,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         <AddNode
                             aria-label={this.makeNodeAriaLabel(programStepNumber)}
                             ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
-                            expandedMode={false}
+                            expandedMode={this.state.addNodeExpandedMode}
                             isDraggingCommand={this.isDraggingCommand()}
                             programStepNumber={programStepNumber}
                             disabled={
@@ -293,6 +302,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         </h2>
                     </Col>
                     <div className='ProgramBlockEditor__editor-actions'>
+                        <Form.Switch
+                            id='switch1'
+                            label=''
+                            onChange={this.handleToggleAddNodeExpandedMode}
+                        />
                         <AriaDisablingButton
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
                             aria-describedby={this.props.deleteModeDescriptionId}
@@ -356,6 +370,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     componentDidUpdate() {
+        console.log(this.state.addNodeExpandedMode);
         if (this.scrollToAddNodeIndex != null) {
             let element = this.addNodeRefs.get(this.scrollToAddNodeIndex);
             if (element && element.scrollIntoView) {
