@@ -47,7 +47,6 @@ const AddNode = React.forwardRef<AddNodeProps, any>(
 
         if (expandedMode || isDragOver) {
             const addNodeClasses = classNames(
-                'AddNode',
                 isDragOver && 'AddNode--drag-over'
             );
 
@@ -78,7 +77,7 @@ const AddNode = React.forwardRef<AddNodeProps, any>(
             )
         } else {
             return (
-                <div className='AddNode'>
+                <div>
                     <div className='AddNode__drop-area-container'>
                         <div className='AddNode__collapsed-drop-area'
                             onDragOver={

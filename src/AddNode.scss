@@ -1,17 +1,15 @@
 @import 'variables';
 
-$addNodeDropMargin: 1.5rem;
+$widthOfCollapsedIcon: 0.8rem;
 $heightOfCollapsedIcon: 0.8rem;
+$widthOfExpandedIcon: 1.7rem;
 $heightOfExpandedIcon: 1.7rem;
 
 $addNodeExpandedButtonBorderWidth: 1px;
 $addNodeExpandedButtonPadding: 0.5rem;
 
-.AddNode {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+$addNodeDropMargin: 1.5rem;
+$addNodeDropAreaWidth: 6.25rem;
 
 button.btn.AddNode__expanded-button {
     z-index: 1;
@@ -27,7 +25,7 @@ button.btn.AddNode__expanded-button {
 
 button.btn.AddNode__expanded-button svg {
     stroke: #000;
-    width: 1.7rem;
+    width: $widthOfExpandedIcon;
     height: $heightOfExpandedIcon;
     display: block;
 }
@@ -35,7 +33,7 @@ button.btn.AddNode__expanded-button svg {
 .AddNode__collapsed-icon {
     background-color: #939595;
     height: $heightOfCollapsedIcon;
-    width: 0.8rem;
+    width: $widthOfCollapsedIcon;
     border: 0.1rem solid #8F8F8F;
     border-radius: 50%;
 }
@@ -51,8 +49,13 @@ button.btn.AddNode__expanded-button svg {
 
 .App--is-dragging-command .AddNode__expanded-drop-area {
     top: -$addNodeDropMargin;
+    left: calc(
+        #{-$addNodeDropAreaWidth / 2}
+        + #{$widthOfExpandedIcon / 2}
+        + #{$addNodeExpandedButtonBorderWidth}
+        + #{$addNodeExpandedButtonPadding});
     position: relative;
-    width: 6.25rem;
+    width: $addNodeDropAreaWidth;
     height: calc(
         #{2 * $addNodeDropMargin}
         + #{$heightOfExpandedIcon}
@@ -62,7 +65,8 @@ button.btn.AddNode__expanded-button svg {
 
 .App--is-dragging-command .AddNode__collapsed-drop-area {
     top: -$addNodeDropMargin;
+    left: (-$addNodeDropAreaWidth / 2) + ($widthOfCollapsedIcon / 2);
     position: relative;
-    width: 6.25rem;
+    width: $addNodeDropAreaWidth;
     height: (2 * $addNodeDropMargin) + $heightOfCollapsedIcon;
 }
