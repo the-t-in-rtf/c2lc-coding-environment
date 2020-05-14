@@ -24,7 +24,7 @@ type ProgramBlockEditorProps = {
     program: Program,
     // $FlowFixMe
     selectedAction: SelectedAction,
-    draggingCommand: ?string,
+    isDraggingCommand: boolean,
     runButtonDisabled: boolean,
     addModeDescriptionId: string,
     deleteModeDescriptionId: string,
@@ -90,10 +90,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
-    isDraggingCommand() {
-        return !!(this.props.draggingCommand);
-    }
-
     handleToggleAddNodeExpandedMode = () => {
         let AddNodeExpandedModeIsOn = this.state.addNodeExpandedMode;
         this.setState({
@@ -139,26 +135,23 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     };
 
     handleClickAddNode = (e: SyntheticEvent<HTMLButtonElement>) => {
-        if (this.props.selectedAction && this.props.selectedAction.type === 'command') {
-            const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
-            this.insertStepIntoProgram(this.props.selectedAction.commandName,
-                index);
-        }
+        const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
+        this.insertSelectedCommandIntoProgram(index);
     };
 
-    hanldeDropCommand = (e: SyntheticDragEvent<HTMLButtonElement>) => {
+    handleDropCommand = (e: SyntheticDragEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        if (this.props.draggingCommand) {
-            const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
-            this.insertStepIntoProgram(this.props.draggingCommand, index);
-        }
+        const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
+        this.insertSelectedCommandIntoProgram(index);
     };
 
-    insertStepIntoProgram(command: string, index: number) {
-        this.focusCommandBlockIndex = index;
-        this.props.onChange(ProgramUtils.insert(this.props.program,
-            index, command, 'none'));
-        this.scrollToAddNodeIndex = index + 1;
+    insertSelectedCommandIntoProgram(index: number) {
+        if (this.props.selectedAction && this.props.selectedAction.type === 'command') {
+            this.focusCommandBlockIndex = index;
+            this.scrollToAddNodeIndex = index + 1;
+            this.props.onChange(ProgramUtils.insert(this.props.program,
+                index, this.props.selectedAction.commandName, 'none'));
+        }
     }
 
     setCommandBlockRef = (programStepNumber: number, element: ?HTMLElement) => {
@@ -252,13 +245,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             aria-label={this.makeNodeAriaLabel(programStepNumber)}
                             ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
                             expandedMode={this.state.addNodeExpandedMode}
-                            isDraggingCommand={this.isDraggingCommand()}
+                            isDraggingCommand={this.props.isDraggingCommand}
                             programStepNumber={programStepNumber}
                             disabled={
                                 this.props.editingDisabled ||
-                                (!this.commandIsSelected() && !this.isDraggingCommand())}
+                                (!this.commandIsSelected() && !this.props.isDraggingCommand)}
                             onClick={this.handleClickAddNode}
-                            onDrop={this.hanldeDropCommand}
+                            onDrop={this.handleDropCommand}
                         />
                         <div className='ProgramBlockEditor__program-block-connector' />
                         {this.makeProgramBlock(programStepNumber, command)}
@@ -273,13 +266,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             {id: 'ProgramBlockEditor.blocks.noCommandSelected'})}
                         ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
                         expandedMode={true}
-                        isDraggingCommand={this.isDraggingCommand()}
+                        isDraggingCommand={this.props.isDraggingCommand}
                         programStepNumber={programStepNumber}
                         disabled={
                             this.props.editingDisabled ||
-                            (!this.commandIsSelected() && !this.isDraggingCommand())}
+                            (!this.commandIsSelected() && !this.props.isDraggingCommand)}
                         onClick={this.handleClickAddNode}
-                        onDrop={this.hanldeDropCommand}
+                        onDrop={this.handleDropCommand}
                     />
                 }
             </React.Fragment>

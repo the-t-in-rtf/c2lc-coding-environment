@@ -19,7 +19,7 @@ button.btn.AddNode__expanded-button {
     padding: $addNodeExpandedButtonPadding;
 }
 
-.AddNode--drag-over .AddNode__expanded-button {
+.AddNode--is-dragging-command .AddNode__expanded-button {
     pointer-events: none;
 }
 
@@ -47,7 +47,7 @@ button.btn.AddNode__expanded-button svg {
     position: absolute;
 }
 
-.App--is-dragging-command .AddNode__expanded-drop-area {
+.AddNode--is-dragging-command .AddNode__expanded-drop-area {
     top: -$addNodeDropMargin;
     left: calc(
         #{-$addNodeDropAreaWidth / 2}
@@ -63,7 +63,7 @@ button.btn.AddNode__expanded-button svg {
         + #{2 * $addNodeExpandedButtonPadding});
 }
 
-.App--is-dragging-command .AddNode__collapsed-drop-area {
+.AddNode--is-dragging-command .AddNode__collapsed-drop-area {
     top: -$addNodeDropMargin;
     left: (-$addNodeDropAreaWidth / 2) + ($widthOfCollapsedIcon / 2);
     position: relative;

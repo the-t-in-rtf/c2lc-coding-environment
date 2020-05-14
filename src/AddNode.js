@@ -6,93 +6,83 @@ import { ReactComponent as AddIcon } from './svg/Add.svg';
 import classNames from 'classnames';
 import './AddNode.scss';
 
+// TODO: I think if we don't need to programmatically focus AddNode instances,
+//       we can make AddNode a regular component rather than React.forwardRef
+// TODO: When we add a command to the end of a program using the keyboard,
+//       should focus remain on the final add node, or should it be on the
+//       newly inserted command?
+
 type AddNodeProps = {
-    isDraggingCommand: ?boolean,
-    disabled: boolean,
     expandedMode: boolean,
     programStepNumber: number,
-    onDrop: (e: SyntheticDragEvent<HTMLButtonElement>) => void,
-    onClick: (e: SyntheticEvent<HTMLButtonElement>) => void
+    disabled: boolean,
+    'aria-label': string,
+    isDraggingCommand: boolean,
+    onClick: (e: SyntheticEvent<HTMLButtonElement>) => void,
+    onDrop: (e: SyntheticDragEvent<HTMLButtonElement>) => void
 };
 
-const AddNode = React.forwardRef<AddNodeProps, any>(
-    // $FlowFixMe
+const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
     (props, ref) => {
-        const {
-            isDraggingCommand,
-            disabled,
-            expandedMode,
-            programStepNumber,
-            onDrop,
-            onClick,
-            ...otherProps
-        } = props;
-
         const [isDragOver, setIsDragOver] = useState(false);
 
         const handleDragOver = (e: SyntheticDragEvent<HTMLButtonElement>) => {
-            e.preventDefault();
-            setIsDragOver(true);
-        }
+            if (props.isDraggingCommand) {
+                e.preventDefault();
+                setIsDragOver(true);
+            }
+        };
 
         const handleDrop = (e: SyntheticDragEvent<HTMLButtonElement>) => {
-            onDrop(e);
+            props.onDrop(e);
             setIsDragOver(false);
-        }
+        };
 
         const handleDragLeave = (e: SyntheticDragEvent<HTMLButtonElement>) => {
             e.preventDefault();
             setIsDragOver(false);
-        }
+        };
 
-        if (expandedMode || isDragOver) {
-            const addNodeClasses = classNames(
-                isDragOver && 'AddNode--drag-over'
-            );
+        const addNodeClasses = classNames(
+            props.isDraggingCommand && 'AddNode--is-dragging-command'
+        );
 
-            let button = React.createElement(
-                AriaDisablingButton,
-                Object.assign({
-                    'onClick': onClick,
-                    'disabled': disabled,
-                    'className': 'AddNode__expanded-button',
-                    'ref': ref,
-                    'data-stepnumber': programStepNumber
-                }, otherProps),
-                <AddIcon />
-            );
-
+        if (props.expandedMode || isDragOver) {
             return (
                 <div className={addNodeClasses}>
                     <div className='AddNode__drop-area-container'>
                         <div className='AddNode__expanded-drop-area'
-                            data-stepnumber={programStepNumber}
+                            data-stepnumber={props.programStepNumber}
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
                             onDrop={handleDrop}
                         />
                     </div>
-                    {button}
+                    <AriaDisablingButton
+                        className='AddNode__expanded-button'
+                        data-stepnumber={props.programStepNumber}
+                        ref={ref}
+                        disabled={props.disabled}
+                        aria-label={props['aria-label']}
+                        onClick={props.onClick}
+                    >
+                        <AddIcon />
+                    </AriaDisablingButton>
                 </div>
-            )
+            );
         } else {
             return (
-                <div>
+                <div className={addNodeClasses}>
                     <div className='AddNode__drop-area-container'>
                         <div className='AddNode__collapsed-drop-area'
-                            onDragOver={
-                                isDraggingCommand ?
-                                    handleDragOver :
-                                    undefined
-                            }
-                        >
-                        </div>
+                            onDragOver={handleDragOver}
+                        />
                     </div>
                     <div className='AddNode__collapsed-icon'>
                         <AddIcon />
                     </div>
                 </div>
-            )
+            );
         }
     }
 );
