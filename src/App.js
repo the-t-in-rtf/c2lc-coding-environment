@@ -3,7 +3,6 @@
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
-import classNames from 'classnames';
 import BluetoothApiWarning from './BluetoothApiWarning';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
@@ -40,7 +39,7 @@ type AppState = {
     interpreterIsRunning: boolean,
     showDashConnectionError: boolean,
     selectedAction: SelectedAction,
-    draggingCommand: ?string
+    isDraggingCommand: boolean
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -67,7 +66,7 @@ export default class App extends React.Component<{}, AppState> {
             interpreterIsRunning: false,
             showDashConnectionError: false,
             selectedAction: null,
-            draggingCommand: null
+            isDraggingCommand: false
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -168,11 +167,17 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleDragStartCommand = (command: string) => {
-        this.setState({ draggingCommand: command });
+        this.setState({
+            isDraggingCommand: true,
+            selectedAction: {
+                type: 'command',
+                commandName: command
+            }
+        });
     };
 
     handleDragEndCommand = () => {
-        this.setState({ draggingCommand: null });
+        this.setState({ isDraggingCommand: false });
     };
 
     handleSelectAction = (action: SelectedAction) => {
@@ -189,14 +194,10 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     render() {
-        const appClasses = classNames(
-            this.state.draggingCommand && 'App--is-dragging-command'
-        );
         return (
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
-            <div className={appClasses}>
                 <div role='banner' className='App__heading-section'>
                     <Container>
                         <Row>
@@ -263,7 +264,7 @@ export default class App extends React.Component<{}, AppState> {
                                 interpreterIsRunning={this.state.interpreterIsRunning}
                                 program={this.state.program}
                                 selectedAction={this.state.selectedAction}
-                                draggingCommand={this.state.draggingCommand}
+                                isDraggingCommand={this.state.isDraggingCommand}
                                 runButtonDisabled={
                                     this.state.dashConnectionStatus !== 'connected' ||
                                     this.state.interpreterIsRunning ||
@@ -304,14 +305,11 @@ export default class App extends React.Component<{}, AppState> {
                     show={this.state.showDashConnectionError}
                     onCancel={this.handleCancelDashConnection}
                     onRetry={this.handleClickConnectDash}/>
-            </div>
             </IntlProvider>
         );
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
-        //console.log(this.state.selectedAction);
-        console.log(this.state.draggingCommand);
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 
