@@ -21,7 +21,8 @@ const defaultProgramBlockEditorProps = {
     editingDisabled: false,
     runButtonDisabled: false,
     addModeDescriptionId: 'someAddModeDescriptionId',
-    deleteModeDescriptionId: 'someDeleteModeDescriptionId'
+    deleteModeDescriptionId: 'someDeleteModeDescriptionId',
+    isDraggingCommand: false
 };
 
 const addAction = {
@@ -141,7 +142,7 @@ function getRunButton(programBlockEditorWrapper) {
 }
 
 function getAddNodeButtonAtPosition(programBlockEditorWrapper, index: number) {
-    const addNodeButton = programBlockEditorWrapper.find({'data-stepnumber': index});
+    const addNodeButton = programBlockEditorWrapper.find('.AddNode__expanded-button');
     return addNodeButton.at(0);
 }
 
