@@ -14,6 +14,7 @@
         "App.instructions.deleteHeading": "Delete steps",
         "App.instructions.deleteText1": "You can delete steps from your program or delete all program steps and start fresh with a new empty program. Turn on Delete mode by clicking on the ",
         "App.instructions.deleteText2": " button. When Delete mode is on, click on a program step to delete it. Or click on the 'Delete All' button to delete all steps.",
+        "AddNodeToggleSwitch.toggleAddNodeExpandMode": "add node expanded mode",
         "BluetoothApiWarning.errorIconLabel": "Warning",
         "BluetoothApiWarning.message": "The Dash robot connection currently only works in Chrome.",
         "CommandPalette.movementsTitle": "Movements",
