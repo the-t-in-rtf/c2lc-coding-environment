@@ -1,12 +1,13 @@
 // @flow
 
-import { Col, Collapse, Container, Form, Row } from 'react-bootstrap';
+import { Col, Collapse, Container, Row } from 'react-bootstrap';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
 import React from 'react';
 import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
 import AddNode from './AddNode';
+import AddNodeToggleSwitch from './AddNodeToggleSwitch';
 import AriaDisablingButton from './AriaDisablingButton';
 import CommandBlock from './CommandBlock';
 import classNames from 'classnames';
@@ -95,6 +96,18 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     handleToggleAddNodeExpandedMode = () => {
+        this.toggleAddNodeExpandedMode();
+    }
+
+    handleKeyboardToggleAddNodeExpandedMode = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
+        const spaceKey = ' ';
+        if (e.key === spaceKey) {
+            e.preventDefault();
+            this.toggleAddNodeExpandedMode();
+        }
+    }
+
+    toggleAddNodeExpandedMode = () => {
         let AddNodeExpandedModeIsOn = this.state.addNodeExpandedMode;
         this.setState({
             addNodeExpandedMode: !AddNodeExpandedModeIsOn
@@ -302,10 +315,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         </h2>
                     </Col>
                     <div className='ProgramBlockEditor__editor-actions'>
-                        <Form.Switch
-                            id='switch1'
-                            label=''
-                            onChange={this.handleToggleAddNodeExpandedMode}
+                        <AddNodeToggleSwitch
+                            isAddNodeExpandedMode={this.state.addNodeExpandedMode}
+                            onClick={this.handleToggleAddNodeExpandedMode}
+                            onKeyDown={this.handleKeyboardToggleAddNodeExpandedMode}
                         />
                         <AriaDisablingButton
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
@@ -370,7 +383,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     componentDidUpdate() {
-        console.log(this.state.addNodeExpandedMode);
         if (this.scrollToAddNodeIndex != null) {
             let element = this.addNodeRefs.get(this.scrollToAddNodeIndex);
             if (element && element.scrollIntoView) {
