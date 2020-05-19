@@ -1,7 +1,7 @@
 // @flow
 
-const tabKeyCode = 9;
-const escKeyCode = 27;
+const tabKey = 'Tab';
+const escKey = 'Escape';
 
 export default class FocusTrapManager {
     active: boolean;
@@ -32,7 +32,7 @@ export default class FocusTrapManager {
 
     handleKeyDown(e: SyntheticKeyboardEvent<HTMLInputElement>) {
         if (this.active) {
-            if (e.keyCode === tabKeyCode) {
+            if (e.key === tabKey) {
                 // Find the elements in our focus trap
                 const elements = [];
                 for (const elementSelector of this.elementSelectors) {
@@ -59,7 +59,7 @@ export default class FocusTrapManager {
                         }
                     }
                 }
-            } else if (e.keyCode === escKeyCode) {
+            } else if (e.key === escKey) {
                 e.preventDefault();
                 this.onFocusTrapClosed();
                 if (this.returnElementSelector) {
