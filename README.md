@@ -54,7 +54,7 @@ The Inclusive Coding Environment is open source software, distributed under the 
 
 ## Dependencies
 
-We would like to thank to these amazing open source projects and libraries that Inclusive Coding Environment uses:
+We would like to thank these amazing open source projects and libraries that we use in the Inclusive Coding Environment:
 
 | Dependency | License |
 | :--------- | :------ |
