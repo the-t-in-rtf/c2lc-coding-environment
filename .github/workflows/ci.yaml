@@ -34,6 +34,6 @@ jobs:
       - name: Build
         run: npm run build
       - name: Flow
-        run: npx flow
+        run: npx flow check
       - name: Test
         run: npm test -- --verbose
