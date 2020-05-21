@@ -64,6 +64,6 @@ We would like to thank these amazing open source projects and libraries that we 
 | [github.com/airbnb/enzyme](https://github.com/airbnb/enzyme) | MIT License |
 | [github.com/sass/node-sass](https://github.com/sass/node-sass) | MIT License |
 | [github.com/facebook/react](https://github.com/facebook/react) | MIT License |
-| [github.com/LouisT/node-soundex](https://github.com/LouisT/node-soundex) | Unlicense |
 | [github.com/KyleAMathews/typefaces](https://github.com/KyleAMathews/typefaces) | MIT License |
+| [github.com/LouisT/node-soundex](https://github.com/LouisT/node-soundex) | Unlicense |
 
