@@ -91,18 +91,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
-    handleToggleAddNodeExpandedMode = () => {
-        this.toggleAddNodeExpandedMode();
-    }
-
-    handleKeyboardToggleAddNodeExpandedMode = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
-        const spaceKey = ' ';
-        if (e.key === spaceKey) {
-            e.preventDefault();
-            this.toggleAddNodeExpandedMode();
-        }
-    }
-
     toggleAddNodeExpandedMode = () => {
         let AddNodeExpandedModeIsOn = this.state.addNodeExpandedMode;
         this.setState({
@@ -248,37 +236,41 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         );
     }
 
+    makeEndOfProgramAddNodeSection(programStepNumber: number) {
+        return (
+            <React.Fragment key={programStepNumber}>
+                <div className='ProgramBlockEditor__program-block-connector'/>
+                <AddNode
+                    aria-label={
+                        this.commandIsSelected() ?
+                        this.props.intl.formatMessage(
+                        { id: 'ProgramBlockEditor.lastBlock' },
+                        { command: this.getSelectedCommandName() }) :
+                        this.props.intl.formatMessage(
+                        {id: 'ProgramBlockEditor.blocks.noCommandSelected'})}
+                    ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
+                    expandedMode={true}
+                    isDraggingCommand={this.props.isDraggingCommand}
+                    programStepNumber={programStepNumber}
+                    disabled={
+                        this.props.editingDisabled ||
+                        (!this.commandIsSelected() && !this.props.isDraggingCommand)}
+                    onClick={this.handleClickAddNode}
+                    onDrop={this.handleDropCommand}
+                />
+            </React.Fragment>
+        )
+    }
+
     makeProgramBlockSection(programStepNumber: number, command: string) {
         return (
             <React.Fragment key={programStepNumber}>
                 <div className='ProgramBlockEditor__program-block-connector'/>
-                {command !== 'addNode' ?
-                    <React.Fragment>
-                        <AddNode
-                            aria-label={this.makeNodeAriaLabel(programStepNumber)}
-                            ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
-                            expandedMode={this.state.addNodeExpandedMode}
-                            isDraggingCommand={this.props.isDraggingCommand}
-                            programStepNumber={programStepNumber}
-                            disabled={
-                                this.props.editingDisabled ||
-                                (!this.commandIsSelected() && !this.props.isDraggingCommand)}
-                            onClick={this.handleClickAddNode}
-                            onDrop={this.handleDropCommand}
-                        />
-                        <div className='ProgramBlockEditor__program-block-connector' />
-                        {this.makeProgramBlock(programStepNumber, command)}
-                    </React.Fragment> :
+                <React.Fragment>
                     <AddNode
-                        aria-label={
-                            this.commandIsSelected() ?
-                            this.props.intl.formatMessage(
-                            { id: 'ProgramBlockEditor.lastBlock' },
-                            { command: this.getSelectedCommandName() }) :
-                            this.props.intl.formatMessage(
-                            {id: 'ProgramBlockEditor.blocks.noCommandSelected'})}
+                        aria-label={this.makeNodeAriaLabel(programStepNumber)}
                         ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
-                        expandedMode={true}
+                        expandedMode={this.state.addNodeExpandedMode}
                         isDraggingCommand={this.props.isDraggingCommand}
                         programStepNumber={programStepNumber}
                         disabled={
@@ -287,7 +279,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         onClick={this.handleClickAddNode}
                         onDrop={this.handleDropCommand}
                     />
-                }
+                    <div className='ProgramBlockEditor__program-block-connector' />
+                    {this.makeProgramBlock(programStepNumber, command)}
+                </React.Fragment>
             </React.Fragment>
         );
     }
@@ -297,7 +291,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             return this.makeProgramBlockSection(stepNumber, command);
         });
 
-        contents.push(this.makeProgramBlockSection(this.props.program.length, 'addNode'));
+        contents.push(this.makeEndOfProgramAddNodeSection(this.props.program.length));
 
         return (
             <Container className='ProgramBlockEditor__container'>
@@ -310,8 +304,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <div className='ProgramBlockEditor__editor-actions'>
                         <AddNodeToggleSwitch
                             isAddNodeExpandedMode={this.state.addNodeExpandedMode}
-                            onClick={this.handleToggleAddNodeExpandedMode}
-                            onKeyDown={this.handleKeyboardToggleAddNodeExpandedMode}
+                            onChange={this.toggleAddNodeExpandedMode}
                         />
                         <AriaDisablingButton
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
