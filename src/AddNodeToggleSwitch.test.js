@@ -22,8 +22,7 @@ function createShallowAddNodeToggleSwitch(props) {
         messages: messages.en
     });
 
-    const mockClickHandler = jest.fn();
-    const mockKeyDownHandler = jest.fn();
+    const mockChangeHandler = jest.fn();
 
     const wrapper = shallow(
         React.createElement(
@@ -33,8 +32,7 @@ function createShallowAddNodeToggleSwitch(props) {
                 defaultAddNodeToggleSwitchProps,
                 {
                     intl: intl,
-                    onClick: mockClickHandler,
-                    onKeyDown: mockKeyDownHandler
+                    onChange: mockChangeHandler
                 },
                 props
             )
@@ -43,8 +41,7 @@ function createShallowAddNodeToggleSwitch(props) {
 
     return {
         wrapper,
-        mockClickHandler,
-        mockKeyDownHandler
+        mockChangeHandler
     };
 }
 
@@ -65,4 +62,13 @@ describe('AddNodeToggleSwitch', () => {
         expect(addNodeToggleSwitch.props['aria-checked']).toBe(true);
         expect(addNodeToggleSwitch.props.className.includes('--checked')).toBe(true);
     });
+
+    test('Should call the change handler on click and space keydown', () => {
+        const { wrapper, mockChangeHandler } = createShallowAddNodeToggleSwitch();
+        const addNodeToggleSwitch = getAddNodeToggleSwitch(wrapper).at(0);
+        addNodeToggleSwitch.simulate('click');
+        expect(mockChangeHandler.mock.calls.length).toBe(1);
+        addNodeToggleSwitch.simulate('keyDown', {key: ' ', preventDefault: ()=>{}});
+        expect(mockChangeHandler.mock.calls.length).toBe(2);
+    })
 });
