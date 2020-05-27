@@ -6,12 +6,6 @@ import { ReactComponent as AddIcon } from './svg/Add.svg';
 import classNames from 'classnames';
 import './AddNode.scss';
 
-// TODO: I think if we don't need to programmatically focus AddNode instances,
-//       we can make AddNode a regular component rather than React.forwardRef
-// TODO: When we add a command to the end of a program using the keyboard,
-//       should focus remain on the final add node, or should it be on the
-//       newly inserted command?
-
 type AddNodeProps = {
     expandedMode: boolean,
     programStepNumber: number,
