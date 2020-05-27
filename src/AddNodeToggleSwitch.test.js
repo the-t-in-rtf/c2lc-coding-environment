@@ -49,7 +49,7 @@ function createShallowAddNodeToggleSwitch(props) {
 }
 
 function getAddNodeToggleSwitch(addNodeToggleSwitchWrapper) {
-    return addNodeToggleSwitchWrapper.find('.AddNodeToggleSwitch__switch').at(0);
+    return addNodeToggleSwitchWrapper.find('.AddNodeToggleSwitch').at(0);
 }
 
 describe('AddNodeToggleSwitch', () => {

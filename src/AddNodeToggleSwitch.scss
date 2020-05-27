@@ -1,6 +1,6 @@
 @import 'variables';
 
-.AddNodeToggleSwitch__switch {
+.AddNodeToggleSwitch {
     float: left;
     margin-top: 1rem;
     margin-right: 0.5rem;
@@ -10,16 +10,16 @@
     padding: 0.2rem;
 }
 
-.AddNodeToggleSwitch__switch:focus {
+.AddNodeToggleSwitch:focus {
     box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
     outline: none;
 }
 
-.AddNodeToggleSwitch__switch--checked {
+.AddNodeToggleSwitch--checked {
     background: #000;
 }
 
-.AddNodeToggleSwitch__switch--checked > div {
+.AddNodeToggleSwitch--checked > div {
     margin-left: 1.6rem;
 }
 

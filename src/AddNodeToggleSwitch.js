@@ -18,8 +18,8 @@ class AddNodeToggleSwitch extends React.Component<AddNodeToggleSwitchProps, {}> 
             <div
                 className= {
                     this.props.isAddNodeExpandedMode ?
-                    'AddNodeToggleSwitch__switch AddNodeToggleSwitch__switch--checked' :
-                    'AddNodeToggleSwitch__switch'
+                    'AddNodeToggleSwitch AddNodeToggleSwitch--checked' :
+                    'AddNodeToggleSwitch'
                 }
                 role='switch'
                 aria-label={this.props.intl.formatMessage({id:'AddNodeToggleSwitch.toggleAddNodeExpandMode'})}
