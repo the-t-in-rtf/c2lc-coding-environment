@@ -18,7 +18,7 @@ type ActionPanelProps = {
     showActionPanel: boolean,
     position: {
         top: number,
-        left: number
+        right: number
     },
     intl: any,
     onDelete: () => void,
@@ -112,7 +112,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
         const positionStyles = {
             position: 'absolute',
             top: this.props.position.top,
-            left: this.props.position.left
+            right: this.props.position.right
         }
         const stepInfoMessage = Object.assign({
             'stepNumber': 0,
