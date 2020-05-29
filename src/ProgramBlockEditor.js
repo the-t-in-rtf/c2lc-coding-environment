@@ -1,6 +1,5 @@
 // @flow
 
-import { Col, Container, Row } from 'react-bootstrap';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program} from './types';
@@ -37,7 +36,7 @@ type ProgramBlockEditorState = {
     showActionPanel: boolean,
     actionPanelPosition: {
         top: number,
-        left: number
+        right: number
     },
     pressedStepIndex: ?number,
     actionPanelItemFocusIndex: ?number
@@ -58,7 +57,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             showActionPanel: false,
             actionPanelPosition: {
                 top: 0,
-                left: 0
+                right: 0
             },
             pressedStepIndex: null,
             actionPanelItemFocusIndex: null
@@ -148,7 +147,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         if (currentStepButton) {
             let actionPanelPositionObj = {
                 top: 0,
-                left: 0
+                right: 0
             };
 
             if (
@@ -157,9 +156,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 )
             {
                 actionPanelPositionObj.top =
-                    currentStepButton.getBoundingClientRect().height/2 -
-                    currentStepButton.getBoundingClientRect().height*2;
-                actionPanelPositionObj.left = currentStepButton.getBoundingClientRect().width/3;
+                    -currentStepButton.getBoundingClientRect().height/2 -
+                    currentStepButton.getBoundingClientRect().height*2.1;
+                actionPanelPositionObj.right = -currentStepButton.getBoundingClientRect().width/1.25;
                 this.setState({
                     showActionPanel: true,
                     actionPanelPosition: actionPanelPositionObj,
@@ -249,7 +248,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     {this.state.pressedStepIndex === programStepNumber ?
                         <div style={{
                         position: 'relative',
-                        float: 'right'
+                        float: 'top'
                         }}>
                             <ActionPanel
                                 focusIndex={this.state.actionPanelItemFocusIndex}
@@ -283,26 +282,22 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
 
         return (
-            <Container className='ProgramBlockEditor__container'>
-                <Row className='ProgramBlockEditor__header'>
-                    <Col>
-                        <h2 className='ProgramBlockEditor__heading'>
-                            <FormattedMessage id='ProgramBlockEditor.programHeading' />
-                        </h2>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col className='ProgramBlockEditor__program-sequence-scroll-container' id='programSequenceContainer'>
-                        <div className='ProgramBlockEditor__program-sequence'>
-                            <div className='ProgramBlockEditor__start-indicator'>
-                                {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
-                            </div>
-                            {contents}
+            <div className='ProgramBlockEditor__container'>
+                <div className='ProgramBlockEditor__header'>
+                    <h2 className='ProgramBlockEditor__heading'>
+                        <FormattedMessage id='ProgramBlockEditor.programHeading' />
+                    </h2>
+                </div>
+                <div className='ProgramBlockEditor__program-sequence-scroll-container' id='programSequenceContainer'>
+                    <div className='ProgramBlockEditor__program-sequence'>
+                        <div className='ProgramBlockEditor__start-indicator'>
+                            {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
                         </div>
-                    </Col>
-                </Row>
-                <Row className='ProgramBlockEditor__footer'>
-                    <Col>
+                        {contents}
+                    </div>
+                </div>
+                <div className='ProgramBlockEditor__footer'>
+                    <div className='ProgramBlockEditor__run'>
                         <AriaDisablingButton
                             aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
                             className={this.props.interpreterIsRunning ?
@@ -314,25 +309,25 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         >
                             <PlayIcon className='ProgramBlockEditor__play-svg' />
                         </AriaDisablingButton>
-                        <div className='ProgramBlockEditor__editor-actions'>
-                            <AriaDisablingButton
-                                aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.clear'})}
-                                className='ProgramBlockEditor__editor-action-button'
-                                disabledClassName='ProgramBlockEditor__editor-action-button--disabled'
-                                disabled={this.props.editingDisabled}
-                                onClick={this.handleClickDeleteAll}
-                                key='deleteButton'
-                            >
-                                <RefreshIcon className='ProgramBlockEditor__editor-action-button-svg'/>
-                            </AriaDisablingButton>
-                        </div>
-                    </Col>
-                </Row>
+                    </div>
+                    <div className='ProgramBlockEditor__editor-actions'>
+                        <AriaDisablingButton
+                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.clear'})}
+                            className='ProgramBlockEditor__editor-action-button'
+                            disabledClassName='ProgramBlockEditor__editor-action-button--disabled'
+                            disabled={this.props.editingDisabled}
+                            onClick={this.handleClickDeleteAll}
+                            key='deleteButton'
+                        >
+                            <RefreshIcon className='ProgramBlockEditor__editor-action-button-svg'/>
+                        </AriaDisablingButton>
+                    </div>
+                </div>
                 <ConfirmDeleteAllModal
                     show={this.state.showConfirmDeleteAll}
                     onCancel={this.handleCancelDeleteAll}
                     onConfirm={this.handleConfirmDeleteAll}/>
-            </Container>
+            </div>
         );
     }
 
