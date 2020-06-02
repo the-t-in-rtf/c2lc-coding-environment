@@ -37,7 +37,6 @@ type AppState = {
     activeProgramStepNum: ?number,
     interpreterIsRunning: boolean,
     showDashConnectionError: boolean,
-    showNoticeMessage: boolean,
     selectedAction: ?string,
     replaceIsActive: boolean
 };
@@ -65,7 +64,6 @@ export default class App extends React.Component<{}, AppState> {
             activeProgramStepNum: null,
             interpreterIsRunning: false,
             showDashConnectionError: false,
-            showNoticeMessage: false,
             selectedAction: null,
             replaceIsActive: false
         };
@@ -252,15 +250,6 @@ export default class App extends React.Component<{}, AppState> {
                             onChange={this.handleChangeProgram}
                         />
                     </div>
-                    {/* <Row>
-                        <Col>
-                            <h4 className='App__notice'
-                                id={this.toCommandPaletteNoticeId}
-                                hidden={!this.state.showNoticeMessage}>
-                                <FormattedMessage id='App.notice.focusTrap'/>
-                            </h4>
-                        </Col>
-                    </Row> */}
                 </Container>
                 <DashConnectionErrorModal
                     show={this.state.showDashConnectionError}
@@ -271,24 +260,6 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
-        if (this.state.replaceIsActive !== prevState.replaceIsActive) {
-            const noticeMessage = document.getElementById(this.toCommandPaletteNoticeId);
-            if (this.state.replaceIsActive) {
-                if (noticeMessage) {
-                    noticeMessage.setAttribute('aria-live', 'assertive');
-                }
-                this.setState({
-                    showNoticeMessage: true
-                });
-            } else {
-                if (noticeMessage) {
-                    noticeMessage.setAttribute('aria-live', 'off');
-                }
-                this.setState({
-                    showNoticeMessage: false
-                });
-            }
-        }
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 
