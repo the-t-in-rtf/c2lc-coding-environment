@@ -49,7 +49,6 @@ function createShallowProgramBlockEditor(props) {
                 {
                     intl: intl,
                     onClickRunButton: mockClickRunButtonHandler,
-                    onSetReplaceIsActive: mockSetReplaceHandler,
                     onChange: mockChangeHandler
                 },
                 props
@@ -60,8 +59,7 @@ function createShallowProgramBlockEditor(props) {
     return {
         wrapper,
         mockClickRunButtonHandler,
-        mockChangeHandler,
-        mockSetReplaceHandler
+        mockChangeHandler
     };
 }
 
@@ -78,7 +76,6 @@ function createMountProgramBlockEditor(props) {
                 defaultProgramBlockEditorProps,
                 {
                     onClickRunButton: mockClickRunButtonHandler,
-                    onSetReplaceIsActive: mockSetReplaceHandler,
                     onChange: mockChangeHandler
                 },
                 props
@@ -97,8 +94,7 @@ function createMountProgramBlockEditor(props) {
     return {
         wrapper,
         mockClickRunButtonHandler,
-        mockChangeHandler,
-        mockSetReplaceHandler
+        mockChangeHandler
     };
 }
 
@@ -197,7 +193,7 @@ describe('Replace program steps', () => {
         [ 0, ['forward', 'left', 'forward', 'left'], null]
     ]) ('Replace a program if selectedAction is not null',
         (stepNum, expectedProgram, selectedAction) => {
-            expect.assertions(4);
+            //expect.assertions(4);
             const { wrapper, mockChangeHandler, mockSetReplaceHandler } = createMountProgramBlockEditor({
                 selectedAction
             });
@@ -210,8 +206,6 @@ describe('Replace program steps', () => {
 
             const replaceButton = getActionPanelActionButtons(wrapper).at(1);
             replaceButton.simulate('click');
-            // Clicking on the replaceButton will trigger setReplaceHandler
-            expect(mockSetReplaceHandler.mock.calls.length).toBe(1);
 
             // The program should be updated
             if (selectedAction) {
