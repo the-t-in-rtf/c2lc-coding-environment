@@ -1,7 +1,7 @@
 @import 'variables';
 
 body {
-    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .App__header {
@@ -47,10 +47,27 @@ body {
     grid-row-end: 3;
 }
 
+.App__program-section--no-bluetooth-warning {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
+
 .App__command-palette {
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 2;
+    grid-row-end: 3;
+    padding: 1rem 0;
+    background-color: #F1F1F1;
+    text-align: center;
+}
+
+.App__command-palette--no-bluetooth-warning {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
     grid-row-end: 3;
     padding: 1rem 0;
     background-color: #F1F1F1;
