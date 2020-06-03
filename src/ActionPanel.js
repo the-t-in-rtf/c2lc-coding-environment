@@ -11,7 +11,7 @@ import { ReactComponent as ReplaceIcon } from './svg/replace.svg';
 import './ActionPanel.scss';
 
 type ActionPanelProps = {
-    focusIndex: ?number,
+    focusedOptionName: ?string,
     selectedCommandName: ?string,
     program: Program,
     pressedStepIndex: ?number,
@@ -127,24 +127,28 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                 style={positionStyles}
                 ref={this.actionPanelRef}>
                 <Button
+                    name='actionPanelDelete'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.delete'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
                     onClick={this.props.onDelete}>
                     <DeleteIcon className='ActionPanel__action-button-svg' />
                 </Button>
                 <Button
+                    name='actionPanelReplace'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.replace'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons replace-action-button'
                     onClick={this.props.onReplace}>
                     <ReplaceIcon className='ActionPanel__action-button-svg' />
                 </Button>
                 <Button
+                    name='actionPanelMoveUp'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveUp'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
                     onClick={this.props.onMoveUpPosition}>
                     <MoveUpIcon className='ActionPanel__action-button-svg' />
                 </Button>
                 <Button
+                    name='actionPanelMoveDown'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveDown'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
                     onClick={this.props.onMoveDownPosition}>
@@ -158,8 +162,11 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
         const element = this.actionPanelRef.current;
         if (element && element.scrollIntoView) {
             element.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
-            if (this.props.focusIndex != null) {
-                element.children[this.props.focusIndex].focus();
+            if (this.props.focusedOptionName != null) {
+                const optionButtonRef = document.querySelector(`[name="${this.props.focusedOptionName}"]`);
+                if(optionButtonRef) {
+                    optionButtonRef.focus();
+                }
             } else {
                 element.focus();
             }
