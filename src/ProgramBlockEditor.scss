@@ -84,12 +84,13 @@ button.btn.ProgramBlockEditor__editor-action-button--pressed.ProgramBlockEditor_
     background: #FFF;
     overflow: scroll;
     padding-left: 2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    display: grid;
+    grid-template-rows: 5rem auto;
 }
 
 .ProgramBlockEditor__program-sequence {
+    grid-row-start: 2;
+    grid-row-end: 3;
     display: flex;
     justify-content: flex-start;
     align-items: center;
