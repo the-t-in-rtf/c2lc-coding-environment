@@ -15,7 +15,6 @@ type ActionPanelProps = {
     selectedCommandName: ?string,
     program: Program,
     pressedStepIndex: ?number,
-    showActionPanel: boolean,
     position: {
         top: number,
         right: number
