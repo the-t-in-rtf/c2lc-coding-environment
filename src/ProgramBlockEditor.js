@@ -23,11 +23,9 @@ type ProgramBlockEditorProps = {
     interpreterIsRunning: boolean,
     program: Program,
     selectedAction: ?string,
-    replaceIsActive: boolean,
     runButtonDisabled: boolean,
     focusTrapManager: FocusTrapManager,
     onClickRunButton: () => void,
-    onSetReplaceIsActive: (booleanValue: boolean) => void,
     onChange: (Program) => void
 };
 
@@ -39,7 +37,8 @@ type ProgramBlockEditorState = {
         right: number
     },
     pressedStepIndex: ?number,
-    actionPanelItemFocusIndex: ?number
+    focusedActionPanelOptionName: ?string,
+    replaceIsActive: boolean
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
@@ -60,7 +59,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 right: 0
             },
             pressedStepIndex: null,
-            actionPanelItemFocusIndex: null
+            focusedActionPanelOptionName: null,
+            replaceIsActive: false
         }
     }
 
@@ -96,7 +96,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             const pressedStepIndex = this.state.pressedStepIndex;
             this.setState({
                 pressedStepIndex: pressedStepIndex-1,
-                actionPanelItemFocusIndex: 2
+                focusedActionPanelOptionName: 'actionPanelMoveUp'
             });
             this.props.onChange(
                 ProgramUtils.moveUpPosition(
@@ -117,10 +117,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             );
             this.setState({
                 pressedStepIndex: this.state.pressedStepIndex+1,
-                actionPanelItemFocusIndex: 3
+                focusedActionPanelOptionName: 'actionPanelMoveDown'
             });
         }
     }
+
+    handleSetReplaceIsActive = (booleanValue: boolean) => {
+        this.setState({
+            replaceIsActive: booleanValue
+        });
+    };
 
     handleReplaceStep = () => {
         let index = this.state.pressedStepIndex;
@@ -129,14 +135,14 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 if (this.props.program[index] !== this.props.selectedAction) {
                     this.props.onChange(ProgramUtils.overwrite(this.props.program,
                             index, this.props.selectedAction, 'none'));
-                    this.props.onSetReplaceIsActive(false);
+                    this.handleSetReplaceIsActive(false);
                     this.focusIndex = index;
                     this.scrollToIndex = index + 1;
                 } else {
-                    this.props.onSetReplaceIsActive(true);
+                    this.handleSetReplaceIsActive(true);
                 }
             } else {
-                this.props.onSetReplaceIsActive(true);
+                this.handleSetReplaceIsActive(true);
             }
         }
     }
@@ -171,7 +177,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     showActionPanel: false,
                     actionPanelPosition: actionPanelPositionObj,
                     pressedStepIndex: null,
-                    actionPanelItemFocusIndex: null
+                    focusedActionPanelOptionName: null
                 });
             }
         }
@@ -191,13 +197,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     handleCloseActionPanelFocusTrap = () => {
         this.setState({
             showActionPanel: false,
-            actionPanelItemFocusIndex: null,
+            focusedActionPanelOptionName: null,
             pressedStepIndex: null
         });
     };
 
     handleCloseReplaceFocusTrap = () => {
-        this.props.onSetReplaceIsActive(false);
+        this.handleSetReplaceIsActive(false);
     };
 
     setCommandBlockRef = (programStepNumber: number, element: ?HTMLElement) => {
@@ -251,11 +257,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         float: 'top'
                         }}>
                             <ActionPanel
-                                focusIndex={this.state.actionPanelItemFocusIndex}
+                                focusedOptionName={this.state.focusedActionPanelOptionName}
                                 selectedCommandName={this.props.selectedAction}
                                 program={this.props.program}
                                 pressedStepIndex={this.state.pressedStepIndex}
-                                showActionPanel={this.state.showActionPanel}
                                 position={this.state.actionPanelPosition}
                                 onDelete={this.handleClickDelete}
                                 onReplace={this.handleReplaceStep}
@@ -353,10 +358,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             }
         }
         if (this.state.showActionPanel && (this.state.pressedStepIndex != null)) {
-            if (this.props.replaceIsActive) {
+            if (this.state.replaceIsActive) {
                 this.props.focusTrapManager.setFocusTrap(
                     this.handleCloseReplaceFocusTrap,
-                    ['.replace-action-button', '.App__command-palette button'],
+                    ['.replace-action-button', '.App__command-palette-command button'],
                     '.replace-action-button'
                 );
             } else {
