@@ -38,13 +38,10 @@
 
 button.btn.ActionPanel__action-buttons {
     background-color: #8F8F8F;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 1.84rem;
-    height: 1.84rem;
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
+    padding: 0.3rem;
 }
 
 .ActionPanel__action-button-svg {
