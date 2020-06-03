@@ -37,8 +37,7 @@ type AppState = {
     activeProgramStepNum: ?number,
     interpreterIsRunning: boolean,
     showDashConnectionError: boolean,
-    selectedAction: ?string,
-    replaceIsActive: boolean
+    selectedAction: ?string
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -64,8 +63,7 @@ export default class App extends React.Component<{}, AppState> {
             activeProgramStepNum: null,
             interpreterIsRunning: false,
             showDashConnectionError: false,
-            selectedAction: null,
-            replaceIsActive: false
+            selectedAction: null
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -138,12 +136,6 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
-    handleSetReplaceIsActive = (booleanValue: boolean) => {
-        this.setState({
-            replaceIsActive: booleanValue
-        });
-    };
-
     handleCancelDashConnection = () => {
         this.setState({
             showDashConnectionError: false
@@ -209,7 +201,10 @@ export default class App extends React.Component<{}, AppState> {
                             </Col>
                         </Row>
                     }
-                    <div className='App__command-palette'>
+                    <div className={
+                        this.appContext.bluetoothApiIsAvailable ?
+                        'App__command-palette--no-bluetooth-warning' :
+                        'App__command-palette'}>
                         <h2 className='App__command-palette-heading'>
                             <FormattedMessage id='CommandPalette.movementsTitle' />
                         </h2>
@@ -232,21 +227,22 @@ export default class App extends React.Component<{}, AppState> {
                                 onChange={this.handleCommandFromCommandPalette}/>
                         </div>
                     </div>
-                    <div className='App__program-section'>
+                    <div className={
+                        this.appContext.bluetoothApiIsAvailable ?
+                        'App__program-section--no-bluetooth-warning':
+                        'App__program-section'}>
                         <ProgramBlockEditor
                             activeProgramStepNum={this.state.activeProgramStepNum}
                             editingDisabled={this.state.interpreterIsRunning === true}
                             interpreterIsRunning={this.state.interpreterIsRunning}
                             program={this.state.program}
                             selectedAction={this.state.selectedAction}
-                            replaceIsActive={this.state.replaceIsActive}
                             runButtonDisabled={
                                 this.state.dashConnectionStatus !== 'connected' ||
                                 this.state.interpreterIsRunning ||
                                 programIsEmpty(this.state.program)}
                             focusTrapManager={this.focusTrapManager}
                             onClickRunButton={this.handleClickRun}
-                            onSetReplaceIsActive={this.handleSetReplaceIsActive}
                             onChange={this.handleChangeProgram}
                         />
                     </div>
