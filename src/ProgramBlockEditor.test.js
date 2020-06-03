@@ -193,8 +193,8 @@ describe('Replace program steps', () => {
         [ 0, ['forward', 'left', 'forward', 'left'], null]
     ]) ('Replace a program if selectedAction is not null',
         (stepNum, expectedProgram, selectedAction) => {
-            //expect.assertions(4);
-            const { wrapper, mockChangeHandler, mockSetReplaceHandler } = createMountProgramBlockEditor({
+            expect.assertions(3);
+            const { wrapper, mockChangeHandler } = createMountProgramBlockEditor({
                 selectedAction
             });
             const programBlock = getProgramBlockAtPosition(wrapper, stepNum);
