@@ -4,16 +4,10 @@ import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
 import { configure, shallow } from 'enzyme';
 import { createIntl } from 'react-intl';
-import App from './App';
-import AriaDisablingButton from './AriaDisablingButton';
 import messages from './messages.json';
 import AddNodeToggleSwitch from './AddNodeToggleSwitch';
 
 configure({ adapter: new Adapter()});
-
-const defaultAddNodeToggleSwitchProps = {
-    isAddNodeExpandedMode: false
-};
 
 function createShallowAddNodeToggleSwitch(props) {
     const intl = createIntl({
@@ -28,10 +22,9 @@ function createShallowAddNodeToggleSwitch(props) {
         React.createElement(
             AddNodeToggleSwitch.WrappedComponent,
             Object.assign(
-                {},
-                defaultAddNodeToggleSwitchProps,
                 {
                     intl: intl,
+                    isAddNodeExpandedMode: false,
                     onChange: mockChangeHandler
                 },
                 props
@@ -49,26 +42,62 @@ function getAddNodeToggleSwitch(addNodeToggleSwitchWrapper) {
     return addNodeToggleSwitchWrapper.find('.AddNodeToggleSwitch').at(0);
 }
 
-describe('AddNodeToggleSwitch', () => {
-    test('Should be unchecked when isAddNodeExpandedMode prop is false', () => {
-        const { wrapper } = createShallowAddNodeToggleSwitch();
-        const addNodeToggleSwitch = getAddNodeToggleSwitch(wrapper).get(0);
-        expect(addNodeToggleSwitch.props['aria-checked']).toBe(false);
+describe('Given isAddNodeExpandedMode is false', () => {
+    let wrapper, mockChangeHandler;
+
+    beforeEach(() => {
+        ({ wrapper, mockChangeHandler } = createShallowAddNodeToggleSwitch({
+            isAddNodeExpandedMode: false
+        }));
     });
 
-    test('Should be checked when isAddNodeExpandedMode prop is true', () => {
-        const { wrapper } = createShallowAddNodeToggleSwitch({isAddNodeExpandedMode: true});
-        const addNodeToggleSwitch = getAddNodeToggleSwitch(wrapper).get(0);
-        expect(addNodeToggleSwitch.props['aria-checked']).toBe(true);
-        expect(addNodeToggleSwitch.props.className.includes('--checked')).toBe(true);
+    test('It should be unchecked', () => {
+        const addNodeToggleSwitch = getAddNodeToggleSwitch(wrapper);
+        expect(addNodeToggleSwitch.prop('aria-checked')).toBe(false);
+        expect(addNodeToggleSwitch.hasClass('AddNodeToggleSwitch--checked')).toBe(false);
     });
 
-    test('Should call the change handler on click and space keydown', () => {
-        const { wrapper, mockChangeHandler } = createShallowAddNodeToggleSwitch();
-        const addNodeToggleSwitch = getAddNodeToggleSwitch(wrapper).at(0);
+    test('When clicked, then onChange should be called with true', () => {
+        const addNodeToggleSwitch = getAddNodeToggleSwitch(wrapper);
         addNodeToggleSwitch.simulate('click');
         expect(mockChangeHandler.mock.calls.length).toBe(1);
+        expect(mockChangeHandler.mock.calls[0][0]).toBe(true);
+    });
+
+    test('When type space key, then onChange should be called with true', () => {
+        const addNodeToggleSwitch = getAddNodeToggleSwitch(wrapper);
         addNodeToggleSwitch.simulate('keyDown', {key: ' ', preventDefault: ()=>{}});
-        expect(mockChangeHandler.mock.calls.length).toBe(2);
-    })
+        expect(mockChangeHandler.mock.calls.length).toBe(1);
+        expect(mockChangeHandler.mock.calls[0][0]).toBe(true);
+    });
+});
+
+describe('Given isAddNodeExpandedMode is true', () => {
+    let wrapper, mockChangeHandler;
+
+    beforeEach(() => {
+        ({ wrapper, mockChangeHandler } = createShallowAddNodeToggleSwitch({
+            isAddNodeExpandedMode: true
+        }));
+    });
+
+    test('It should be checked', () => {
+        const addNodeToggleSwitch = getAddNodeToggleSwitch(wrapper);
+        expect(addNodeToggleSwitch.prop('aria-checked')).toBe(true);
+        expect(addNodeToggleSwitch.hasClass('AddNodeToggleSwitch--checked')).toBe(true);
+    });
+
+    test('When clicked, then onChange should be called with false', () => {
+        const addNodeToggleSwitch = getAddNodeToggleSwitch(wrapper);
+        addNodeToggleSwitch.simulate('click');
+        expect(mockChangeHandler.mock.calls.length).toBe(1);
+        expect(mockChangeHandler.mock.calls[0][0]).toBe(false);
+    });
+
+    test('When type space key, then onChange should be called with false', () => {
+        const addNodeToggleSwitch = getAddNodeToggleSwitch(wrapper);
+        addNodeToggleSwitch.simulate('keyDown', {key: ' ', preventDefault: ()=>{}});
+        expect(mockChangeHandler.mock.calls.length).toBe(1);
+        expect(mockChangeHandler.mock.calls[0][0]).toBe(false);
+    });
 });

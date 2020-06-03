@@ -91,10 +91,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
-    toggleAddNodeExpandedMode = () => {
-        let AddNodeExpandedModeIsOn = this.state.addNodeExpandedMode;
+    handleChangeAddNodeExpandedMode = (isAddNodeExpandedMode: boolean) => {
         this.setState({
-            addNodeExpandedMode: !AddNodeExpandedModeIsOn
+            addNodeExpandedMode: isAddNodeExpandedMode
         });
     }
 
@@ -304,7 +303,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <div className='ProgramBlockEditor__editor-actions'>
                         <AddNodeToggleSwitch
                             isAddNodeExpandedMode={this.state.addNodeExpandedMode}
-                            onChange={this.toggleAddNodeExpandedMode}
+                            onChange={this.handleChangeAddNodeExpandedMode}
                         />
                         <AriaDisablingButton
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}

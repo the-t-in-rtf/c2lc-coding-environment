@@ -8,20 +8,24 @@ import './AddNodeToggleSwitch.scss';
 type AddNodeToggleSwitchProps = {
     intl: any,
     isAddNodeExpandedMode: boolean,
-    onChange: () => void
+    onChange: (isAddNodeExpandedMode: boolean) => void
 };
 
 class AddNodeToggleSwitch extends React.Component<AddNodeToggleSwitchProps, {}> {
-    handleToggleAddNodeExpandedMode = () => {
-        this.props.onChange();
+    handleClick = () => {
+        this.toggleAddNodeExpandedMode();
     }
 
-    handleKeyboardToggleAddNodeExpandedMode = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
+    handleKeyDown = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
         const spaceKey = ' ';
         if (e.key === spaceKey) {
             e.preventDefault();
-            this.props.onChange();
+            this.toggleAddNodeExpandedMode();
         }
+    }
+
+    toggleAddNodeExpandedMode() {
+        this.props.onChange(!this.props.isAddNodeExpandedMode);
     }
 
     render() {
@@ -36,8 +40,8 @@ class AddNodeToggleSwitch extends React.Component<AddNodeToggleSwitchProps, {}> 
                 aria-label={this.props.intl.formatMessage({id:'AddNodeToggleSwitch.toggleAddNodeExpandMode'})}
                 aria-checked={this.props.isAddNodeExpandedMode}
                 tabIndex='0'
-                onClick={this.handleToggleAddNodeExpandedMode}
-                onKeyDown={this.handleKeyboardToggleAddNodeExpandedMode}>
+                onClick={this.handleClick}
+                onKeyDown={this.handleKeyDown}>
                 <div className='AddNodeToggleSwitch__switch-inner-circle'>
                     <AddIcon />
                 </div>
