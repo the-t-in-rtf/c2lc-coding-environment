@@ -234,25 +234,14 @@ export default class App extends React.Component<{}, AppState> {
                                 interpreterIsRunning={this.state.interpreterIsRunning}
                                 program={this.state.program}
                                 selectedAction={this.state.selectedAction}
-                                replaceIsActive={this.state.replaceIsActive}
                                 runButtonDisabled={
                                     this.state.dashConnectionStatus !== 'connected' ||
                                     this.state.interpreterIsRunning ||
                                     programIsEmpty(this.state.program)}
                                 focusTrapManager={this.focusTrapManager}
                                 onClickRunButton={this.handleClickRun}
-                                onSetReplaceIsActive={this.handleSetReplaceIsActive}
                                 onChange={this.handleChangeProgram}
                             />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <h4 className='App__notice'
-                                id={this.toCommandPaletteNoticeId}
-                                hidden={!this.state.showNoticeMessage}>
-                                <FormattedMessage id='App.notice.focusTrap'/>
-                            </h4>
                         </Col>
                     </Row>
                 </Container>
