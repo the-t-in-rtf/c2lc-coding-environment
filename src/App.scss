@@ -5,19 +5,17 @@ body {
 }
 
 .App__header {
+    display: flex;
     background: #000;
     color: #FFF;
     padding: 0.5rem 3rem;
 }
 
 .App__header-row {
-    display: grid;
-    grid-template-columns: auto auto;
+    justify-content: space-between;
 }
 
 .App__app-heading {
-    grid-column-start: 1;
-    grid-column-end: 2;
     font-weight: normal;
     font-size: 1.3rem;
     margin: 1rem 0;
