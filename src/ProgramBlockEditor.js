@@ -23,7 +23,6 @@ type ProgramBlockEditorProps = {
     editingDisabled: boolean,
     interpreterIsRunning: boolean,
     program: Program,
-    // $FlowFixMe
     selectedAction: SelectedAction,
     isDraggingCommand: boolean,
     runButtonDisabled: boolean,
@@ -86,8 +85,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     getSelectedCommandName() {
-        if (this.commandIsSelected()) {
+        if (this.props.selectedAction
+                && this.props.selectedAction.type === 'command') {
             return this.props.selectedAction.commandName;
+        } else {
+            return null;
         }
     }
 
