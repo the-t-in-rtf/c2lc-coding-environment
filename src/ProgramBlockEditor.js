@@ -93,11 +93,42 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
+    insertSelectedCommandIntoProgram(index: number) {
+        if (this.props.selectedAction && this.props.selectedAction.type === 'command') {
+            this.focusCommandBlockIndex = index;
+            this.scrollToAddNodeIndex = index + 1;
+            this.props.onChange(ProgramUtils.insert(this.props.program,
+                index, this.props.selectedAction.commandName, 'none'));
+        }
+    }
+
+    setCommandBlockRef(programStepNumber: number, element: ?HTMLElement) {
+        if (element) {
+            this.commandBlockRefs.set(programStepNumber, element);
+        }
+    }
+
+    setAddNodeRef(programStepNumber: number, element: ?HTMLElement) {
+        if (element) {
+            this.addNodeRefs.set(programStepNumber, element);
+        }
+    }
+
+    programIsActive(programStepNumber: number) {
+        if (this.props.interpreterIsRunning && this.props.activeProgramStepNum != null) {
+            return (this.props.activeProgramStepNum) === programStepNumber;
+        } else {
+            return false;
+        }
+    }
+
+    // Handlers
+
     handleChangeAddNodeExpandedMode = (isAddNodeExpandedMode: boolean) => {
         this.setState({
             addNodeExpandedMode: isAddNodeExpandedMode
         });
-    }
+    };
 
     handleClickDelete = () => {
         this.toggleAction('delete');
@@ -107,20 +138,20 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.setState({
             showConfirmDeleteAll : true
         });
-    }
+    };
 
     handleCancelDeleteAll = () => {
         this.setState({
             showConfirmDeleteAll : false
         });
-    }
+    };
 
     handleConfirmDeleteAll = () => {
         this.props.onChange([]);
         this.setState({
             showConfirmDeleteAll : false
         });
-    }
+    };
 
     handleClickStep = (e: SyntheticEvent<HTMLButtonElement>) => {
         const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
@@ -147,34 +178,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.insertSelectedCommandIntoProgram(index);
     };
 
-    insertSelectedCommandIntoProgram(index: number) {
-        if (this.props.selectedAction && this.props.selectedAction.type === 'command') {
-            this.focusCommandBlockIndex = index;
-            this.scrollToAddNodeIndex = index + 1;
-            this.props.onChange(ProgramUtils.insert(this.props.program,
-                index, this.props.selectedAction.commandName, 'none'));
-        }
-    }
-
-    setCommandBlockRef = (programStepNumber: number, element: ?HTMLElement) => {
-        if (element) {
-            this.commandBlockRefs.set(programStepNumber, element);
-        }
-    };
-
-    setAddNodeRef = (programStepNumber: number, element: ?HTMLElement) => {
-        if (element) {
-            this.addNodeRefs.set(programStepNumber, element);
-        }
-    };
-
-    programIsActive = (programStepNumber: number) => {
-        if (this.props.interpreterIsRunning && this.props.activeProgramStepNum != null) {
-            return (this.props.activeProgramStepNum) === programStepNumber;
-        } else {
-            return false;
-        }
-    }
+    // Rendering
 
     makeProgramBlock(programStepNumber: number, command: string) {
         const active = this.programIsActive(programStepNumber);
@@ -183,13 +187,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             'ProgramBlockEditor__program-block',
             active && 'ProgramBlockEditor__program-block--active'
         );
-        let ariaLabel = '';
-        if (command !== 'addNode') {
-            ariaLabel = this.props.intl.formatMessage(
-                { id: `ProgramBlockEditor.command.${command}` },
-                { index: programStepNumber + 1 }
-            );
-        }
+        let ariaLabel = this.props.intl.formatMessage(
+            { id: `ProgramBlockEditor.command.${command}` },
+            { index: programStepNumber + 1 }
+        );
 
         if (this.deleteIsSelected()) {
             ariaLabel += `. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}`;
@@ -210,30 +211,33 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         );
     }
 
-    makeNodeAriaLabel = (programStepNumber: number) => {
-        const isBeginningBlock = (programStepNumber === 0);
-        if (isBeginningBlock) {
-            if (this.commandIsSelected()) {
+    makeAddNodeAriaLabel(programStepNumber: number, isEndOfProgramAddNode: boolean) {
+        if (this.commandIsSelected()) {
+            if (isEndOfProgramAddNode) {
                 return this.props.intl.formatMessage(
-                    {id: 'ProgramBlockEditor.beginningBlock'},
-                    {
-                        command: this.getSelectedCommandName()
-                    });
+                    { id: 'ProgramBlockEditor.lastBlock' },
+                    { command: this.getSelectedCommandName() }
+                );
+            } else if (programStepNumber === 0) {
+                // The add node before the start of the program
+                return this.props.intl.formatMessage(
+                    { id: 'ProgramBlockEditor.beginningBlock' },
+                    { command: this.getSelectedCommandName() }
+                );
             } else {
-                return this.props.intl.formatMessage({id: 'ProgramBlockEditor.blocks.noCommandSelected'});
-            }
-        } else {
-            if (this.commandIsSelected()) {
                 return this.props.intl.formatMessage(
-                    {id: 'ProgramBlockEditor.betweenBlocks'},
+                    { id: 'ProgramBlockEditor.betweenBlocks' },
                     {
                         command: this.getSelectedCommandName(),
                         prevCommand: `${programStepNumber}, ${this.props.program[programStepNumber-1]}`,
                         postCommand: `${programStepNumber+1}, ${this.props.program[programStepNumber]}`
-                    });
-            } else {
-                return this.props.intl.formatMessage({id: 'ProgramBlockEditor.blocks.noCommandSelected'});
+                    }
+                );
             }
+        } else {
+            return this.props.intl.formatMessage(
+                { id: 'ProgramBlockEditor.blocks.noCommandSelected'}
+            );
         }
     }
 
@@ -243,7 +247,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 <div className='ProgramBlockEditor__program-block-connector'/>
                 <React.Fragment>
                     <AddNode
-                        aria-label={this.makeNodeAriaLabel(programStepNumber)}
+                        aria-label={this.makeAddNodeAriaLabel(programStepNumber, false)}
                         ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
                         expandedMode={this.state.addNodeExpandedMode}
                         isDraggingCommand={this.props.isDraggingCommand}
@@ -266,13 +270,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             <React.Fragment key={programStepNumber}>
                 <div className='ProgramBlockEditor__program-block-connector'/>
                 <AddNode
-                    aria-label={
-                        this.commandIsSelected() ?
-                        this.props.intl.formatMessage(
-                        { id: 'ProgramBlockEditor.lastBlock' },
-                        { command: this.getSelectedCommandName() }) :
-                        this.props.intl.formatMessage(
-                        {id: 'ProgramBlockEditor.blocks.noCommandSelected'})}
+                    aria-label={this.makeAddNodeAriaLabel(programStepNumber, true)}
                     ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
                     expandedMode={true}
                     isDraggingCommand={this.props.isDraggingCommand}
