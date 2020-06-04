@@ -193,7 +193,7 @@ export default class App extends React.Component<{}, AppState> {
                         </Row>
                     </Container>
                 </header>
-                <Container role='main' className='App__main-container' onKeyDown={this.handleRootKeyDown}>
+                <Container role='main' className='mb-5' onKeyDown={this.handleRootKeyDown}>
                     {!this.appContext.bluetoothApiIsAvailable &&
                         <Row className='App__bluetooth-api-warning-section'>
                             <Col>
@@ -201,51 +201,60 @@ export default class App extends React.Component<{}, AppState> {
                             </Col>
                         </Row>
                     }
-                    <div className={
-                        this.appContext.bluetoothApiIsAvailable ?
-                        'App__command-palette--no-bluetooth-warning' :
-                        'App__command-palette'}>
-                        <h2 className='App__command-palette-heading'>
-                            <FormattedMessage id='CommandPalette.movementsTitle' />
-                        </h2>
-                        <div className='App__command-palette-command'>
-                            <CommandPaletteCommand
-                                commandName='forward'
-                                selectedCommandName={this.getSelectedCommandName()}
-                                onChange={this.handleCommandFromCommandPalette}/>
-                        </div>
-                        <div className='App__command-palette-command'>
-                            <CommandPaletteCommand
-                                commandName='right'
-                                selectedCommandName={this.getSelectedCommandName()}
-                                onChange={this.handleCommandFromCommandPalette}/>
-                        </div>
-                        <div className='App__command-palette-command'>
-                            <CommandPaletteCommand
-                                commandName='left'
-                                selectedCommandName={this.getSelectedCommandName()}
-                                onChange={this.handleCommandFromCommandPalette}/>
-                        </div>
-                    </div>
-                    <div className={
-                        this.appContext.bluetoothApiIsAvailable ?
-                        'App__program-section--no-bluetooth-warning':
-                        'App__program-section'}>
-                        <ProgramBlockEditor
-                            activeProgramStepNum={this.state.activeProgramStepNum}
-                            editingDisabled={this.state.interpreterIsRunning === true}
-                            interpreterIsRunning={this.state.interpreterIsRunning}
-                            program={this.state.program}
-                            selectedAction={this.state.selectedAction}
-                            runButtonDisabled={
-                                this.state.dashConnectionStatus !== 'connected' ||
-                                this.state.interpreterIsRunning ||
-                                programIsEmpty(this.state.program)}
-                            focusTrapManager={this.focusTrapManager}
-                            onClickRunButton={this.handleClickRun}
-                            onChange={this.handleChangeProgram}
-                        />
-                    </div>
+                    <Row className='App__program-section' noGutters={true}>
+                        <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
+                            <div className='App__command-palette'>
+                                <h2 className='App__command-palette-heading'>
+                                    <FormattedMessage id='CommandPalette.movementsTitle' />
+                                </h2>
+                                <div className='App__command-palette-command'>
+                                    <CommandPaletteCommand
+                                        commandName='forward'
+                                        selectedCommandName={this.getSelectedCommandName()}
+                                        onChange={this.handleCommandFromCommandPalette}/>
+                                </div>
+                                <div className='App__command-palette-command'>
+                                    <CommandPaletteCommand
+                                        commandName='right'
+                                        selectedCommandName={this.getSelectedCommandName()}
+                                        onChange={this.handleCommandFromCommandPalette}/>
+                                </div>
+                                <div className='App__command-palette-command'>
+                                    <CommandPaletteCommand
+                                        commandName='left'
+                                        selectedCommandName={this.getSelectedCommandName()}
+                                        onChange={this.handleCommandFromCommandPalette}/>
+                                </div>
+                            </div>
+                        </Col>
+                        <Col md={6} lg={6}>
+                            <ProgramBlockEditor
+                                activeProgramStepNum={this.state.activeProgramStepNum}
+                                editingDisabled={this.state.interpreterIsRunning === true}
+                                interpreterIsRunning={this.state.interpreterIsRunning}
+                                program={this.state.program}
+                                selectedAction={this.state.selectedAction}
+                                replaceIsActive={this.state.replaceIsActive}
+                                runButtonDisabled={
+                                    this.state.dashConnectionStatus !== 'connected' ||
+                                    this.state.interpreterIsRunning ||
+                                    programIsEmpty(this.state.program)}
+                                focusTrapManager={this.focusTrapManager}
+                                onClickRunButton={this.handleClickRun}
+                                onSetReplaceIsActive={this.handleSetReplaceIsActive}
+                                onChange={this.handleChangeProgram}
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <h4 className='App__notice'
+                                id={this.toCommandPaletteNoticeId}
+                                hidden={!this.state.showNoticeMessage}>
+                                <FormattedMessage id='App.notice.focusTrap'/>
+                            </h4>
+                        </Col>
+                    </Row>
                 </Container>
                 <DashConnectionErrorModal
                     show={this.state.showDashConnectionError}

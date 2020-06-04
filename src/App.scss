@@ -23,28 +23,12 @@ body {
     margin: 1rem 0;
 }
 
-.App__main-container {
-    height: calc(100vh - 3rem - 6vh);
-    padding: 3vh 2vw;
-    display: grid;
-    grid-template-columns: 15rem auto;
-    grid-template-rows: 3rem auto;
-    column-gap: 2vw;
-    row-gap: 3vh;
-}
-
 .App__bluetooth-api-warning-section {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 2;
+    margin-top: 1.5rem;
 }
 
 .App__program-section {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 2;
-    grid-row-end: 3;
+    margin-top: 1.5rem;
 }
 
 .App__program-section--no-bluetooth-warning {
@@ -55,10 +39,7 @@ body {
 }
 
 .App__command-palette {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 2;
-    grid-row-end: 3;
+    height: 100%;
     padding: 1rem 0;
     background-color: #F1F1F1;
     text-align: center;
