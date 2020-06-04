@@ -227,7 +227,7 @@ export default class App extends React.Component<{}, AppState> {
                                 </div>
                             </div>
                         </Col>
-                        <Col md={6} lg={6}>
+                        <Col md={8} lg={9}>
                             <ProgramBlockEditor
                                 activeProgramStepNum={this.state.activeProgramStepNum}
                                 editingDisabled={this.state.interpreterIsRunning === true}
