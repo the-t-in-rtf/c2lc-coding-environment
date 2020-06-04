@@ -174,33 +174,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
-    makeNodeAriaLabel = (programStepNumber: number) => {
-        const isBeginningBlock = (programStepNumber === 0);
-        if (isBeginningBlock) {
-            if (this.commandIsSelected()) {
-                return this.props.intl.formatMessage(
-                    {id: 'ProgramBlockEditor.beginningBlock'},
-                    {
-                        command: this.getSelectedCommandName()
-                    });
-            } else {
-                return this.props.intl.formatMessage({id: 'ProgramBlockEditor.blocks.noCommandSelected'});
-            }
-        } else {
-            if (this.commandIsSelected()) {
-                return this.props.intl.formatMessage(
-                    {id: 'ProgramBlockEditor.betweenBlocks'},
-                    {
-                        command: this.getSelectedCommandName(),
-                        prevCommand: `${programStepNumber}, ${this.props.program[programStepNumber-1]}`,
-                        postCommand: `${programStepNumber+1}, ${this.props.program[programStepNumber]}`
-                    });
-            } else {
-                return this.props.intl.formatMessage({id: 'ProgramBlockEditor.blocks.noCommandSelected'});
-            }
-        }
-    }
-
     makeProgramBlock(programStepNumber: number, command: string) {
         const active = this.programIsActive(programStepNumber);
 
@@ -235,30 +208,31 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         );
     }
 
-    makeEndOfProgramAddNodeSection(programStepNumber: number) {
-        return (
-            <React.Fragment key={programStepNumber}>
-                <div className='ProgramBlockEditor__program-block-connector'/>
-                <AddNode
-                    aria-label={
-                        this.commandIsSelected() ?
-                        this.props.intl.formatMessage(
-                        { id: 'ProgramBlockEditor.lastBlock' },
-                        { command: this.getSelectedCommandName() }) :
-                        this.props.intl.formatMessage(
-                        {id: 'ProgramBlockEditor.blocks.noCommandSelected'})}
-                    ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
-                    expandedMode={true}
-                    isDraggingCommand={this.props.isDraggingCommand}
-                    programStepNumber={programStepNumber}
-                    disabled={
-                        this.props.editingDisabled ||
-                        (!this.commandIsSelected() && !this.props.isDraggingCommand)}
-                    onClick={this.handleClickAddNode}
-                    onDrop={this.handleDropCommand}
-                />
-            </React.Fragment>
-        )
+    makeNodeAriaLabel = (programStepNumber: number) => {
+        const isBeginningBlock = (programStepNumber === 0);
+        if (isBeginningBlock) {
+            if (this.commandIsSelected()) {
+                return this.props.intl.formatMessage(
+                    {id: 'ProgramBlockEditor.beginningBlock'},
+                    {
+                        command: this.getSelectedCommandName()
+                    });
+            } else {
+                return this.props.intl.formatMessage({id: 'ProgramBlockEditor.blocks.noCommandSelected'});
+            }
+        } else {
+            if (this.commandIsSelected()) {
+                return this.props.intl.formatMessage(
+                    {id: 'ProgramBlockEditor.betweenBlocks'},
+                    {
+                        command: this.getSelectedCommandName(),
+                        prevCommand: `${programStepNumber}, ${this.props.program[programStepNumber-1]}`,
+                        postCommand: `${programStepNumber+1}, ${this.props.program[programStepNumber]}`
+                    });
+            } else {
+                return this.props.intl.formatMessage({id: 'ProgramBlockEditor.blocks.noCommandSelected'});
+            }
+        }
     }
 
     makeProgramBlockSection(programStepNumber: number, command: string) {
@@ -283,6 +257,32 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 </React.Fragment>
             </React.Fragment>
         );
+    }
+
+    makeEndOfProgramAddNodeSection(programStepNumber: number) {
+        return (
+            <React.Fragment key={programStepNumber}>
+                <div className='ProgramBlockEditor__program-block-connector'/>
+                <AddNode
+                    aria-label={
+                        this.commandIsSelected() ?
+                        this.props.intl.formatMessage(
+                        { id: 'ProgramBlockEditor.lastBlock' },
+                        { command: this.getSelectedCommandName() }) :
+                        this.props.intl.formatMessage(
+                        {id: 'ProgramBlockEditor.blocks.noCommandSelected'})}
+                    ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
+                    expandedMode={true}
+                    isDraggingCommand={this.props.isDraggingCommand}
+                    programStepNumber={programStepNumber}
+                    disabled={
+                        this.props.editingDisabled ||
+                        (!this.commandIsSelected() && !this.props.isDraggingCommand)}
+                    onClick={this.handleClickAddNode}
+                    onDrop={this.handleDropCommand}
+                />
+            </React.Fragment>
+        )
     }
 
     render() {
