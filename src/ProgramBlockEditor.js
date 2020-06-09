@@ -167,15 +167,12 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     };
 
-    handleClickAddNode = (e: SyntheticEvent<HTMLButtonElement>) => {
-        const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
-        this.insertSelectedCommandIntoProgram(index);
+    handleClickAddNode = (stepNumber: number) => {
+        this.insertSelectedCommandIntoProgram(stepNumber);
     };
 
-    handleDropCommand = (e: SyntheticDragEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
-        this.insertSelectedCommandIntoProgram(index);
+    handleDropCommand = (stepNumber: number) => {
+        this.insertSelectedCommandIntoProgram(stepNumber);
     };
 
     // Rendering
@@ -245,22 +242,20 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         return (
             <React.Fragment key={programStepNumber}>
                 <div className='ProgramBlockEditor__program-block-connector'/>
-                <React.Fragment>
-                    <AddNode
-                        aria-label={this.makeAddNodeAriaLabel(programStepNumber, false)}
-                        ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
-                        expandedMode={this.state.addNodeExpandedMode}
-                        isDraggingCommand={this.props.isDraggingCommand}
-                        programStepNumber={programStepNumber}
-                        disabled={
-                            this.props.editingDisabled ||
-                            (!this.commandIsSelected() && !this.props.isDraggingCommand)}
-                        onClick={this.handleClickAddNode}
-                        onDrop={this.handleDropCommand}
-                    />
-                    <div className='ProgramBlockEditor__program-block-connector' />
-                    {this.makeProgramBlock(programStepNumber, command)}
-                </React.Fragment>
+                <AddNode
+                    aria-label={this.makeAddNodeAriaLabel(programStepNumber, false)}
+                    ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
+                    expandedMode={this.state.addNodeExpandedMode}
+                    isDraggingCommand={this.props.isDraggingCommand}
+                    programStepNumber={programStepNumber}
+                    disabled={
+                        this.props.editingDisabled ||
+                        (!this.commandIsSelected() && !this.props.isDraggingCommand)}
+                    onClick={this.handleClickAddNode}
+                    onDrop={this.handleDropCommand}
+                />
+                <div className='ProgramBlockEditor__program-block-connector' />
+                {this.makeProgramBlock(programStepNumber, command)}
             </React.Fragment>
         );
     }

@@ -12,8 +12,8 @@ type AddNodeProps = {
     disabled: boolean,
     'aria-label': string,
     isDraggingCommand: boolean,
-    onClick: (e: SyntheticEvent<HTMLButtonElement>) => void,
-    onDrop: (e: SyntheticDragEvent<HTMLButtonElement>) => void
+    onClick: (stepNumber: number) => void,
+    onDrop: (stepNumber: number) => void
 };
 
 const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
@@ -27,8 +27,15 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
             }
         };
 
+        const handleClick = (e: SyntheticEvent<HTMLButtonElement>) => {
+            const stepNumber = parseInt(e.currentTarget.dataset.stepnumber, 10);
+            props.onClick(stepNumber);
+        };
+
         const handleDrop = (e: SyntheticDragEvent<HTMLButtonElement>) => {
-            props.onDrop(e);
+            e.preventDefault();
+            const stepNumber = parseInt(e.currentTarget.dataset.stepnumber, 10);
+            props.onDrop(stepNumber);
             setIsDragOver(false);
         };
 
@@ -58,7 +65,7 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
                         ref={ref}
                         disabled={props.disabled}
                         aria-label={props['aria-label']}
-                        onClick={props.onClick}
+                        onClick={handleClick}
                     >
                         <AddIcon />
                     </AriaDisablingButton>
