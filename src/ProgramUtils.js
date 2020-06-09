@@ -49,29 +49,17 @@ function programIsEmpty(program: Program): boolean {
     return true;
 };
 
-function moveUpPosition(program: Program, indexFrom: number): Program {
+function swapPosition(program: Program, indexFrom: number, indexTo: number): Program {
     // Make a shallow copy before we add to the program
     program = program.slice();
-    let indexTo = indexFrom - 1;
-    if (program[indexTo] != null && program.length >= indexFrom ) {
-        let temp = program[indexTo];
-        program[indexTo] = program[indexFrom];
-        program[indexFrom] = temp;
+    if (program[indexFrom] == null || program[indexTo] == null) {
+        return program;
     }
+    let currentStep = program[indexFrom];
+    program[indexFrom] = program[indexTo];
+    program[indexTo] = currentStep;
     return program;
-};
-
-function moveDownPosition(program: Program, indexFrom: number): Program {
-    // Make a shallow copy before we add to the program
-    program = program.slice();
-    let indexTo = indexFrom + 1;
-    if (program[indexTo] != null && program.length >= indexTo) {
-        let temp = program[indexTo];
-        program[indexTo] = program[indexFrom];
-        program[indexFrom] = temp;
-    }
-    return program;
-};
+}
 
 export {
     deleteStep,
@@ -80,6 +68,5 @@ export {
     overwrite,
     trimEnd,
     programIsEmpty,
-    moveUpPosition,
-    moveDownPosition
+    swapPosition
 };
