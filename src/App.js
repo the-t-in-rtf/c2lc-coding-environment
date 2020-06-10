@@ -38,7 +38,8 @@ type AppState = {
     activeProgramStepNum: ?number,
     interpreterIsRunning: boolean,
     showDashConnectionError: boolean,
-    selectedAction: SelectedAction
+    selectedAction: SelectedAction,
+    isDraggingCommand: boolean
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -64,7 +65,8 @@ export default class App extends React.Component<{}, AppState> {
             activeProgramStepNum: null,
             interpreterIsRunning: false,
             showDashConnectionError: false,
-            selectedAction: null
+            selectedAction: null,
+            isDraggingCommand: false
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -164,6 +166,20 @@ export default class App extends React.Component<{}, AppState> {
         }
     };
 
+    handleDragStartCommand = (command: string) => {
+        this.setState({
+            isDraggingCommand: true,
+            selectedAction: {
+                type: 'command',
+                commandName: command
+            }
+        });
+    };
+
+    handleDragEndCommand = () => {
+        this.setState({ isDraggingCommand: false });
+    };
+
     handleSelectAction = (action: SelectedAction) => {
         this.setState({
             selectedAction: action
@@ -217,19 +233,25 @@ export default class App extends React.Component<{}, AppState> {
                                     <CommandPaletteCommand
                                         commandName='forward'
                                         selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}/>
+                                        onChange={this.handleCommandFromCommandPalette}
+                                        onDragStart={this.handleDragStartCommand}
+                                        onDragEnd={this.handleDragEndCommand}/>
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
                                         commandName='right'
                                         selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}/>
+                                        onChange={this.handleCommandFromCommandPalette}
+                                        onDragStart={this.handleDragStartCommand}
+                                        onDragEnd={this.handleDragEndCommand}/>
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
                                         commandName='left'
                                         selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}/>
+                                        onChange={this.handleCommandFromCommandPalette}
+                                        onDragStart={this.handleDragStartCommand}
+                                        onDragEnd={this.handleDragEndCommand}/>
                                 </div>
                             </div>
                         </Col>
@@ -240,6 +262,7 @@ export default class App extends React.Component<{}, AppState> {
                                 interpreterIsRunning={this.state.interpreterIsRunning}
                                 program={this.state.program}
                                 selectedAction={this.state.selectedAction}
+                                isDraggingCommand={this.state.isDraggingCommand}
                                 runButtonDisabled={
                                     this.state.dashConnectionStatus !== 'connected' ||
                                     this.state.interpreterIsRunning ||
