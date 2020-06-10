@@ -114,7 +114,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
-    programIsActive(programStepNumber: number) {
+    programStepIsActive(programStepNumber: number) {
         if (this.props.interpreterIsRunning && this.props.activeProgramStepNum != null) {
             return (this.props.activeProgramStepNum) === programStepNumber;
         } else {
@@ -178,7 +178,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     // Rendering
 
     makeProgramBlock(programStepNumber: number, command: string) {
-        const active = this.programIsActive(programStepNumber);
+        const active = this.programStepIsActive(programStepNumber);
 
         const classes = classNames(
             'ProgramBlockEditor__program-block',

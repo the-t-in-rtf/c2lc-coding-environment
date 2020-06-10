@@ -25,11 +25,6 @@ const defaultProgramBlockEditorProps = {
     isDraggingCommand: false
 };
 
-const addAction = {
-    type: 'editorAction',
-    action: 'add'
-};
-
 const deleteAction = {
     type: 'editorAction',
     action: 'delete'
@@ -230,7 +225,7 @@ describe('Delete All button', () => {
 });
 
 describe('Program rendering', () => {
-    test('Blocks should be rendered for the test program, with a none block at the end', () => {
+    test('Blocks should be rendered for the test program', () => {
         expect.assertions(5);
         const { wrapper } = createMountProgramBlockEditor();
         expect(getProgramBlocks(wrapper).length).toBe(4);
@@ -369,7 +364,7 @@ describe('The Run button can be disabled', () => {
 });
 
 test('The editor scrolls when a step is added to the end of the program', () => {
-    //expect.assertions(6);
+    expect.assertions(6);
 
     const mockScrollIntoView = jest.fn();
 
@@ -384,7 +379,7 @@ test('The editor scrolls when a step is added to the end of the program', () => 
         }
     });
 
-    // When the empty block at the end of the program is replaced by 'forward'
+    // When 'forward' is added to the end of the program
     const addNode = getAddNodeButtonAtPosition(wrapper, 5);
     addNode.simulate('click');
 
