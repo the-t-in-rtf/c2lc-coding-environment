@@ -4,8 +4,8 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import { injectIntl } from 'react-intl';
 import type { Program } from './types';
-import { ReactComponent as MoveUpIcon } from './svg/up.svg';
-import { ReactComponent as MoveDownIcon } from './svg/down.svg';
+import { ReactComponent as MovePreviousIcon } from './svg/MovePrevious.svg';
+import { ReactComponent as MoveNextIcon } from './svg/MoveNext.svg';
 import { ReactComponent as DeleteIcon } from './svg/Delete.svg';
 import { ReactComponent as ReplaceIcon } from './svg/replace.svg';
 import './ActionPanel.scss';
@@ -22,8 +22,8 @@ type ActionPanelProps = {
     intl: any,
     onDelete: () => void,
     onReplace: () => void,
-    onMoveUpPosition: () => void,
-    onMoveDownPosition: () => void
+    onMoveToPreviousStep: () => void,
+    onMoveToNextStep: () => void
 };
 
 class ActionPanel extends React.Component<ActionPanelProps, {}> {
@@ -33,14 +33,14 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
         this.actionPanelRef = React.createRef();
     }
 
-    setStepInfoMessage = () => {
+    makeStepInfoMessage = () => {
         if (this.props.pressedStepIndex != null) {
             const currentStepName = this.props.program[this.props.pressedStepIndex];
             const prevStepName =
                 this.props.program[this.props.pressedStepIndex - 1] ?
                 this.props.program[this.props.pressedStepIndex - 1] :
                 undefined;
-            const postStepName =
+            const nextStepName =
                 this.props.program[this.props.pressedStepIndex + 1] ?
                 this.props.program[this.props.pressedStepIndex + 1] :
                 undefined;
@@ -55,53 +55,22 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     );
             }
 
-            if (currentStepName === 'forward') {
-                ariaLabelObj['stepName'] =
-                    this.props.intl.formatMessage({id:'ActionPanel.commandName.forward'});
-            } else if (currentStepName === 'right' || currentStepName === 'left') {
-                ariaLabelObj['stepName'] =
+            ariaLabelObj['stepName'] = this.props.intl.formatMessage({id:`CommandInfo.${currentStepName}`});
+
+            if (prevStepName != null && this.props.pressedStepIndex) {
+                ariaLabelObj['previousStepInfo'] =
                     this.props.intl.formatMessage(
-                        { id: 'ActionPanel.commandName.turn' },
-                        { stepName: currentStepName }
+                        { id: `CommandInfo.previousStep.${prevStepName}`},
+                        { previousStepNumber: this.props.pressedStepIndex }
                     );
             }
 
-            if (prevStepName !== null && this.props.pressedStepIndex) {
-                if (prevStepName === 'forward') {
-                    ariaLabelObj['prevStepInfo'] =
-                        this.props.intl.formatMessage(
-                            { id: 'ActionPanel.prevStepInfo.forward' },
-                            { prevStepNumber: this.props.pressedStepIndex }
-                        );
-                } else if (prevStepName === 'right' || prevStepName === 'left') {
-                    ariaLabelObj['prevStepInfo'] =
-                        this.props.intl.formatMessage(
-                            { id: 'ActionPanel.prevStepInfo.turn' },
-                            {
-                                prevStepNumber: this.props.pressedStepIndex,
-                                prevStepName
-                            }
-                        );
-                }
-            }
-
-            if (postStepName !== null) {
-                if (postStepName === 'forward') {
-                    ariaLabelObj['postStepInfo'] =
-                        this.props.intl.formatMessage(
-                            { id: 'ActionPanel.postStepInfo.forward' },
-                            { postStepNumber: this.props.pressedStepIndex + 2 }
-                        );
-                } else if (postStepName === 'right' || postStepName === 'left') {
-                    ariaLabelObj['postStepInfo'] =
-                        this.props.intl.formatMessage(
-                            { id: 'ActionPanel.postStepInfo.turn' },
-                            {
-                                postStepNumber: this.props.pressedStepIndex + 2 ,
-                                postStepName
-                            }
-                        )
-                }
+            if (nextStepName != null) {
+                ariaLabelObj['nextStepInfo'] =
+                    this.props.intl.formatMessage(
+                        { id: `CommandInfo.nextStep.${nextStepName}`},
+                        { nextStepNumber: this.props.pressedStepIndex + 2}
+                    );
             }
             return ariaLabelObj;
         }
@@ -117,9 +86,9 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
             'stepNumber': 0,
             'stepName': '',
             'selectedCommandName': '',
-            'prevStepInfo': '',
-            'postStepInfo': ''
-        }, this.setStepInfoMessage());
+            'previousStepInfo': '',
+            'nextStepInfo': ''
+        }, this.makeStepInfoMessage());
         return (
             <div
                 id='ActionPanel'
@@ -127,32 +96,32 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                 style={positionStyles}
                 ref={this.actionPanelRef}>
                 <Button
-                    name='actionPanelDelete'
+                    name='deleteCurrentStep'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.delete'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
                     onClick={this.props.onDelete}>
                     <DeleteIcon className='ActionPanel__action-button-svg' />
                 </Button>
                 <Button
-                    name='actionPanelReplace'
+                    name='replaceCurrentStep'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.replace'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons replace-action-button'
                     onClick={this.props.onReplace}>
                     <ReplaceIcon className='ActionPanel__action-button-svg' />
                 </Button>
                 <Button
-                    name='actionPanelMoveUp'
-                    aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveUp'}, stepInfoMessage)}
+                    name='moveToPreviousStep'
+                    aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToPreviousStep'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
-                    onClick={this.props.onMoveUpPosition}>
-                    <MoveUpIcon className='ActionPanel__action-button-svg' />
+                    onClick={this.props.onMoveToPreviousStep}>
+                    <MovePreviousIcon className='ActionPanel__action-button-svg' />
                 </Button>
                 <Button
-                    name='actionPanelMoveDown'
-                    aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveDown'}, stepInfoMessage)}
+                    name='moveToNextStep'
+                    aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToNextStep'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
-                    onClick={this.props.onMoveDownPosition}>
-                    <MoveDownIcon className='ActionPanel__action-button-svg' />
+                    onClick={this.props.onMoveToNextStep}>
+                    <MoveNextIcon className='ActionPanel__action-button-svg' />
                 </Button>
             </div>
         )
