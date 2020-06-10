@@ -91,34 +91,39 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         });
     }
 
-    handleMoveUpPosition = () => {
-        if (this.state.pressedStepIndex != null && this.props.program[this.state.pressedStepIndex-1] != null) {
-            const pressedStepIndex = this.state.pressedStepIndex;
+    handleMoveToPreviousStep = () => {
+        const currentStepIndex = this.state.pressedStepIndex;
+        const previousStepIndex = currentStepIndex-1;
+        if (currentStepIndex != null && this.props.program[previousStepIndex] != null) {
             this.setState({
-                pressedStepIndex: pressedStepIndex-1,
-                focusedActionPanelOptionName: 'actionPanelMoveUp'
+                pressedStepIndex: previousStepIndex,
+                focusedActionPanelOptionName: 'moveToPreviousStep'
             });
             this.props.onChange(
-                ProgramUtils.moveUpPosition(
+                ProgramUtils.swapPosition(
                     this.props.program,
-                    pressedStepIndex
+                    currentStepIndex,
+                    previousStepIndex
                 )
             );
         }
     }
 
-    handleMoveDownPosition = () => {
-        if (this.state.pressedStepIndex != null && this.props.program[this.state.pressedStepIndex+1] != null) {
+    handleMoveToNextStep = () => {
+        const currentStepIndex = this.state.pressedStepIndex;
+        const nextStepIndex = currentStepIndex+1;
+        if (currentStepIndex != null && this.props.program[nextStepIndex] != null) {
+            this.setState({
+                pressedStepIndex: nextStepIndex,
+                focusedActionPanelOptionName: 'moveToNextStep'
+            });
             this.props.onChange(
-                ProgramUtils.moveDownPosition(
+                ProgramUtils.swapPosition(
                     this.props.program,
-                    this.state.pressedStepIndex
+                    currentStepIndex,
+                    nextStepIndex
                 )
             );
-            this.setState({
-                pressedStepIndex: this.state.pressedStepIndex+1,
-                focusedActionPanelOptionName: 'actionPanelMoveDown'
-            });
         }
     }
 
@@ -264,8 +269,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 position={this.state.actionPanelPosition}
                                 onDelete={this.handleClickDelete}
                                 onReplace={this.handleReplaceStep}
-                                onMoveUpPosition={this.handleMoveUpPosition}
-                                onMoveDownPosition={this.handleMoveDownPosition}/>
+                                onMoveToPreviousStep={this.handleMoveToPreviousStep}
+                                onMoveToNextStep={this.handleMoveToNextStep}/>
                         </div> :
                         <></>
                     }
@@ -315,16 +320,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             <PlayIcon className='ProgramBlockEditor__play-svg' />
                         </AriaDisablingButton>
                     </div>
-                    <div className='ProgramBlockEditor__editor-actions'>
+                    <div className='ProgramBlockEditor__program-reset'>
                         <AriaDisablingButton
-                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.clear'})}
-                            className='ProgramBlockEditor__editor-action-button'
-                            disabledClassName='ProgramBlockEditor__editor-action-button--disabled'
+                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.program.reset'})}
+                            className='ProgramBlockEditor__program-reset-button'
+                            disabledClassName='ProgramBlockEditor__program-reset-button--disabled'
                             disabled={this.props.editingDisabled}
                             onClick={this.handleClickDeleteAll}
                             key='deleteButton'
                         >
-                            <RefreshIcon className='ProgramBlockEditor__editor-action-button-svg'/>
+                            <RefreshIcon className='ProgramBlockEditor__program-reset-button-svg'/>
                         </AriaDisablingButton>
                     </div>
                 </div>
