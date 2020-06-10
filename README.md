@@ -58,12 +58,13 @@ We would like to thank these amazing open source projects and libraries that we 
 
 | Dependency | License |
 | :--------- | :------ |
-| [github.com/loadingio](https://github.com/loadingio) | [Loading.io Free License](https://loading.io/license/#free-license) |
-| [github.com/react-bootstrap/react-bootstrap](https://github.com/react-bootstrap/react-bootstrap) | MIT License |
-| [github.com/JedWatson/classnames](https://github.com/JedWatson/classnames) | MIT License |
 | [github.com/airbnb/enzyme](https://github.com/airbnb/enzyme) | MIT License |
-| [github.com/sass/node-sass](https://github.com/sass/node-sass) | MIT License |
 | [github.com/facebook/react](https://github.com/facebook/react) | MIT License |
-| [github.com/KyleAMathews/typefaces](https://github.com/KyleAMathews/typefaces) | MIT License |
+| [github.com/googlefonts/roboto](https://github.com/googlefonts/roboto) | Apache License 2.0 |
+| [github.com/react-bootstrap/react-bootstrap](https://github.com/react-bootstrap/react-bootstrap) | MIT License |
+| [github.com/sass/node-sass](https://github.com/sass/node-sass) | MIT License |
+| [github.com/JedWatson/classnames](https://github.com/JedWatson/classnames) | MIT License |
+| [github.com/KyleAMathews/typefaces/tree/master/packages/roboto](https://github.com/KyleAMathews/typefaces/tree/master/packages/roboto) | MIT License |
 | [github.com/LouisT/node-soundex](https://github.com/LouisT/node-soundex) | Unlicense |
+| [loading.io/](https://loading.io/) | [Loading.io Free License](https://loading.io/license/#free-license) |
 
