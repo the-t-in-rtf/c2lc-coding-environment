@@ -6,10 +6,11 @@ import * as ProgramUtils from './ProgramUtils';
 import type {Program, SelectedAction} from './types';
 import React from 'react';
 import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
+import AddNode from './AddNode';
+import AddNodeToggleSwitch from './AddNodeToggleSwitch';
 import AriaDisablingButton from './AriaDisablingButton';
 import CommandBlock from './CommandBlock';
 import classNames from 'classnames';
-import { ReactComponent as AddIcon } from './svg/Add.svg';
 import { ReactComponent as DeleteIcon } from './svg/Delete.svg';
 import { ReactComponent as PlayIcon } from './svg/Play.svg';
 import './ProgramBlockEditor.scss';
@@ -23,6 +24,7 @@ type ProgramBlockEditorProps = {
     interpreterIsRunning: boolean,
     program: Program,
     selectedAction: SelectedAction,
+    isDraggingCommand: boolean,
     runButtonDisabled: boolean,
     addModeDescriptionId: string,
     deleteModeDescriptionId: string,
@@ -32,25 +34,29 @@ type ProgramBlockEditorProps = {
 };
 
 type ProgramBlockEditorState = {
-    showConfirmDeleteAll: boolean
+    showConfirmDeleteAll: boolean,
+    addNodeExpandedMode: boolean
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
     commandBlockRefs: Map<number, HTMLElement>;
-    focusIndex: ?number;
-    scrollToIndex: ?number;
+    addNodeRefs: Map<number, HTMLElement>;
+    focusCommandBlockIndex: ?number;
+    scrollToAddNodeIndex: ?number;
 
     constructor(props: ProgramBlockEditorProps) {
         super(props);
         this.commandBlockRefs = new Map();
-        this.focusIndex = null;
-        this.scrollToIndex = null;
+        this.addNodeRefs = new Map();
+        this.focusCommandBlockIndex = null;
+        this.scrollToAddNodeIndex = null;
         this.state = {
-            showConfirmDeleteAll : false
+            showConfirmDeleteAll : false,
+            addNodeExpandedMode : false
         }
     }
 
-    toggleAction(action: 'add' | 'delete') {
+    toggleAction(action: 'delete') {
         if (this.props.selectedAction
                 && this.props.selectedAction.type === 'editorAction'
                 && this.props.selectedAction.action === action) {
@@ -69,16 +75,59 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             && this.props.selectedAction.action === action);
     }
 
-    addIsSelected() {
-        return this.actionIsSelected('add');
-    }
-
     deleteIsSelected() {
         return this.actionIsSelected('delete');
     }
 
-    handleClickAdd = () => {
-        this.toggleAction('add');
+    commandIsSelected() {
+        return (this.props.selectedAction
+            && this.props.selectedAction.type === 'command');
+    }
+
+    getSelectedCommandName() {
+        if (this.props.selectedAction
+                && this.props.selectedAction.type === 'command') {
+            return this.props.selectedAction.commandName;
+        } else {
+            return null;
+        }
+    }
+
+    insertSelectedCommandIntoProgram(index: number) {
+        if (this.props.selectedAction && this.props.selectedAction.type === 'command') {
+            this.focusCommandBlockIndex = index;
+            this.scrollToAddNodeIndex = index + 1;
+            this.props.onChange(ProgramUtils.insert(this.props.program,
+                index, this.props.selectedAction.commandName, 'none'));
+        }
+    }
+
+    setCommandBlockRef(programStepNumber: number, element: ?HTMLElement) {
+        if (element) {
+            this.commandBlockRefs.set(programStepNumber, element);
+        }
+    }
+
+    setAddNodeRef(programStepNumber: number, element: ?HTMLElement) {
+        if (element) {
+            this.addNodeRefs.set(programStepNumber, element);
+        }
+    }
+
+    programStepIsActive(programStepNumber: number) {
+        if (this.props.interpreterIsRunning && this.props.activeProgramStepNum != null) {
+            return (this.props.activeProgramStepNum) === programStepNumber;
+        } else {
+            return false;
+        }
+    }
+
+    // Handlers
+
+    handleChangeAddNodeExpandedMode = (isAddNodeExpandedMode: boolean) => {
+        this.setState({
+            addNodeExpandedMode: isAddNodeExpandedMode
+        });
     };
 
     handleClickDelete = () => {
@@ -89,69 +138,58 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.setState({
             showConfirmDeleteAll : true
         });
-    }
+    };
 
     handleCancelDeleteAll = () => {
         this.setState({
             showConfirmDeleteAll : false
         });
-    }
+    };
 
     handleConfirmDeleteAll = () => {
         this.props.onChange([]);
         this.setState({
             showConfirmDeleteAll : false
         });
-    }
+    };
 
     handleClickStep = (e: SyntheticEvent<HTMLButtonElement>) => {
         const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
 
         if (this.props.selectedAction && this.props.selectedAction.type === 'editorAction') {
-            if (this.props.selectedAction.action === 'add') {
-                this.focusIndex = index;
-                this.props.onChange(ProgramUtils.insert(this.props.program,
-                    index, 'none', 'none'));
-                this.scrollToIndex = index + 1;
-            } else if (this.props.selectedAction.action === 'delete') {
-                this.focusIndex = index;
+            if (this.props.selectedAction.action === 'delete') {
+                this.focusCommandBlockIndex = index;
                 this.props.onChange(ProgramUtils.trimEnd(
                     ProgramUtils.deleteStep(this.props.program, index),
                     'none'));
-                this.scrollToIndex = null;
+                this.scrollToAddNodeIndex = null;
             }
-        } else if (this.props.selectedAction && this.props.selectedAction.type === 'command'){
-            this.focusIndex = index;
-            this.props.onChange(ProgramUtils.overwrite(this.props.program,
-                    index, this.props.selectedAction.commandName, 'none'));
-            this.scrollToIndex = index + 1;
         }
     };
 
-    setCommandBlockRef = (programStepNumber: number, element: ?HTMLElement) => {
-        if (element) {
-            this.commandBlockRefs.set(programStepNumber, element);
-        } else {
-            this.commandBlockRefs.delete(programStepNumber);
-        }
+    handleClickAddNode = (stepNumber: number) => {
+        this.insertSelectedCommandIntoProgram(stepNumber);
     };
+
+    handleDropCommand = (stepNumber: number) => {
+        this.insertSelectedCommandIntoProgram(stepNumber);
+    };
+
+    // Rendering
 
     makeProgramBlock(programStepNumber: number, command: string) {
-        const active = this.props.activeProgramStepNum === programStepNumber;
+        const active = this.programStepIsActive(programStepNumber);
 
         const classes = classNames(
             'ProgramBlockEditor__program-block',
             active && 'ProgramBlockEditor__program-block--active'
         );
-
         let ariaLabel = this.props.intl.formatMessage(
             { id: `ProgramBlockEditor.command.${command}` },
             { index: programStepNumber + 1 }
         );
 
-        if (this.addIsSelected()) {
-            ariaLabel += `. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnAdd'})}`;
-        } else if (this.deleteIsSelected()) {
+        if (this.deleteIsSelected()) {
             ariaLabel += `. ${this.props.intl.formatMessage({id:'ProgramBlockEditor.commandOnDelete'})}`;
         }
 
@@ -170,26 +208,84 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         );
     }
 
+    makeAddNodeAriaLabel(programStepNumber: number, isEndOfProgramAddNode: boolean) {
+        if (this.commandIsSelected()) {
+            if (isEndOfProgramAddNode) {
+                return this.props.intl.formatMessage(
+                    { id: 'ProgramBlockEditor.lastBlock' },
+                    { command: this.getSelectedCommandName() }
+                );
+            } else if (programStepNumber === 0) {
+                // The add node before the start of the program
+                return this.props.intl.formatMessage(
+                    { id: 'ProgramBlockEditor.beginningBlock' },
+                    { command: this.getSelectedCommandName() }
+                );
+            } else {
+                return this.props.intl.formatMessage(
+                    { id: 'ProgramBlockEditor.betweenBlocks' },
+                    {
+                        command: this.getSelectedCommandName(),
+                        prevCommand: `${programStepNumber}, ${this.props.program[programStepNumber-1]}`,
+                        postCommand: `${programStepNumber+1}, ${this.props.program[programStepNumber]}`
+                    }
+                );
+            }
+        } else {
+            return this.props.intl.formatMessage(
+                { id: 'ProgramBlockEditor.blocks.noCommandSelected'}
+            );
+        }
+    }
+
     makeProgramBlockSection(programStepNumber: number, command: string) {
         return (
             <React.Fragment key={programStepNumber}>
                 <div className='ProgramBlockEditor__program-block-connector'/>
+                <AddNode
+                    aria-label={this.makeAddNodeAriaLabel(programStepNumber, false)}
+                    ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
+                    expandedMode={this.state.addNodeExpandedMode}
+                    isDraggingCommand={this.props.isDraggingCommand}
+                    programStepNumber={programStepNumber}
+                    disabled={
+                        this.props.editingDisabled ||
+                        (!this.commandIsSelected() && !this.props.isDraggingCommand)}
+                    onClick={this.handleClickAddNode}
+                    onDrop={this.handleDropCommand}
+                />
+                <div className='ProgramBlockEditor__program-block-connector' />
                 {this.makeProgramBlock(programStepNumber, command)}
             </React.Fragment>
         );
     }
 
-    render() {
-        var noneAtEnd = this.props.program[this.props.program.length - 1] === 'none';
+    makeEndOfProgramAddNodeSection(programStepNumber: number) {
+        return (
+            <React.Fragment key={programStepNumber}>
+                <div className='ProgramBlockEditor__program-block-connector'/>
+                <AddNode
+                    aria-label={this.makeAddNodeAriaLabel(programStepNumber, true)}
+                    ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
+                    expandedMode={true}
+                    isDraggingCommand={this.props.isDraggingCommand}
+                    programStepNumber={programStepNumber}
+                    disabled={
+                        this.props.editingDisabled ||
+                        (!this.commandIsSelected() && !this.props.isDraggingCommand)}
+                    onClick={this.handleClickAddNode}
+                    onDrop={this.handleDropCommand}
+                />
+            </React.Fragment>
+        )
+    }
 
+    render() {
         const contents = this.props.program.map((command, stepNumber) => {
             return this.makeProgramBlockSection(stepNumber, command);
         });
 
-        // Ensure that the last block is 'none'
-        if (!noneAtEnd) {
-            contents.push(this.makeProgramBlockSection(this.props.program.length, 'none'));
-        }
+        contents.push(this.makeEndOfProgramAddNodeSection(this.props.program.length));
 
         return (
             <Container className='ProgramBlockEditor__container'>
@@ -200,21 +296,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         </h2>
                     </Col>
                     <div className='ProgramBlockEditor__editor-actions'>
-                        <AriaDisablingButton
-                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.add'})}
-                            aria-describedby={this.props.addModeDescriptionId}
-                            className={this.addIsSelected() ?
-                                        'ProgramBlockEditor__editor-action-button ProgramBlockEditor__editor-action-button--pressed' :
-                                        'ProgramBlockEditor__editor-action-button'}
-                            disabledClassName='ProgramBlockEditor__editor-action-button--disabled'
-                            disabled={this.props.editingDisabled}
-                            onClick={this.handleClickAdd}
-                            aria-pressed={this.addIsSelected() ? 'true' : 'false'}
-                            key='addButton'
-                        >
-                            <AddIcon className='ProgramBlockEditor__editor-action-button-svg'/>
-                        </AriaDisablingButton>
-
+                        <AddNodeToggleSwitch
+                            isAddNodeExpandedMode={this.state.addNodeExpandedMode}
+                            onChange={this.handleChangeAddNodeExpandedMode}
+                        />
                         <AriaDisablingButton
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.editorAction.delete'})}
                             aria-describedby={this.props.deleteModeDescriptionId}
@@ -278,19 +363,19 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     componentDidUpdate() {
-        if (this.scrollToIndex != null) {
-            let element = this.commandBlockRefs.get(this.scrollToIndex);
+        if (this.scrollToAddNodeIndex != null) {
+            let element = this.addNodeRefs.get(this.scrollToAddNodeIndex);
             if (element && element.scrollIntoView) {
                 element.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
             }
-            this.scrollToIndex = null;
+            this.scrollToAddNodeIndex = null;
         }
-        if (this.focusIndex != null) {
-            let element = this.commandBlockRefs.get(this.focusIndex);
+        if (this.focusCommandBlockIndex != null) {
+            let element = this.commandBlockRefs.get(this.focusCommandBlockIndex);
             if (element) {
                 element.focus();
             }
-            this.focusIndex = null;
+            this.focusCommandBlockIndex = null;
         }
         if (this.props.activeProgramStepNum != null) {
             let element = this.commandBlockRefs.get(this.props.activeProgramStepNum);

@@ -54,8 +54,9 @@ button.command-block {
     min-height: 4rem;
 }
 
-button.command-block--pressed,
-button.command-block--pressed:hover {
+button.btn.command-block.command-block--pressed,
+button.btn.command-block.command-block--pressed:hover,
+button.btn.command-block.command-block--pressed:active {
     border: $c2lc-button-border-width dashed #000000;
 }
 
