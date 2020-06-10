@@ -24,7 +24,9 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
                 commandName='forward'
                 icon={null}
                 selectedCommandName={null}
-                onChange={() => {}}/>
+                onChange={() => {}}
+                onDragStart={() => {}}
+                onDragEnd={() => {}}/>
         </CommandPaletteCategory>
     );
     commands = oneCommandsWrapper.find(CommandPaletteCommand);
@@ -36,17 +38,23 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
                 commandName='forward'
                 icon={null}
                 selectedCommandName={null}
-                onChange={() => {}}/>
+                onChange={() => {}}
+                onDragStart={() => {}}
+                onDragEnd={() => {}}/>
             <CommandPaletteCommand
                 commandName='left'
                 icon={null}
                 selectedCommandName={null}
-                onChange={() => {}}/>
+                onChange={() => {}}
+                onDragStart={() => {}}
+                onDragEnd={() => {}}/>
             <CommandPaletteCommand
                 commandName='right'
                 icon={null}
                 selectedCommandName={null}
-                onChange={() => {}}/>
+                onChange={() => {}}
+                onDragStart={() => {}}
+                onDragEnd={() => {}}/>
         </CommandPaletteCategory>
     );
 

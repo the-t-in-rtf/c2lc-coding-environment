@@ -8,7 +8,9 @@ type CommandPaletteCommandProps = {
     commandName: string,
     intl: any,
     selectedCommandName: ?string,
-    onChange: (commandName: ?string) => void
+    onChange: (commandName: ?string) => void,
+    onDragStart: (commandName: string) => void,
+    onDragEnd: () => void
 };
 
 class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, {}> {
@@ -16,6 +18,14 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
         this.props.onChange(
             this.props.commandName === this.props.selectedCommandName ? null : this.props.commandName
         );
+    };
+
+    handleDragStart = () => {
+        this.props.onDragStart(this.props.commandName);
+    };
+
+    handleDragEnd = () => {
+        this.props.onDragEnd();
     };
 
     render() {
@@ -27,6 +37,10 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
 
         return (
             <CommandBlock
+                draggable='true'
+                id={`command-block--${this.props.commandName}`}
+                onDragStart={this.handleDragStart}
+                onDragEnd={this.handleDragEnd}
                 commandName={this.props.commandName}
                 className={pressed ? 'command-block--pressed' : undefined}
                 aria-label={ariaLabel}
