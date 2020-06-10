@@ -101,12 +101,10 @@ describe('Given expandedMode is true and disabled is false', () => {
 
 describe('Given expandedMode is true and disabled is true', () => {
     let wrapper, mockClickHandler, mockDropHandler;
-    const expectedProgramStepNumber = 3;
 
     beforeEach(() => {
         ({ wrapper, mockClickHandler, mockDropHandler } = mountAddNode({
             expandedMode: true,
-            programStepNumber: expectedProgramStepNumber,
             disabled: true
         }));
     });
