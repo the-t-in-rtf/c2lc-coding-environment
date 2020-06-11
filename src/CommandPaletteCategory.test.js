@@ -25,6 +25,8 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
                 icon={null}
                 selectedCommandName={null}
                 onChange={() => {}}
+                onDragStart={() => {}}
+                onDragEnd={() => {}}
                 onKeyDown={() => {}}/>
         </CommandPaletteCategory>
     );
@@ -38,18 +40,24 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
                 icon={null}
                 selectedCommandName={null}
                 onChange={() => {}}
+                onDragStart={() => {}}
+                onDragEnd={() => {}}
                 onKeyDown={() => {}}/>
             <CommandPaletteCommand
                 commandName='left'
                 icon={null}
                 selectedCommandName={null}
                 onChange={() => {}}
+                onDragStart={() => {}}
+                onDragEnd={() => {}}
                 onKeyDown={() => {}}/>
             <CommandPaletteCommand
                 commandName='right'
                 icon={null}
                 selectedCommandName={null}
                 onChange={() => {}}
+                onDragStart={() => {}}
+                onDragEnd={() => {}}
                 onKeyDown={() => {}}/>
         </CommandPaletteCategory>
     );

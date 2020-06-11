@@ -25,7 +25,7 @@ const defaultProgramBlockEditorProps = {
     editingDisabled: false,
     replaceIsActive: false,
     runButtonDisabled: false,
-    deleteModeDescriptionId: 'someDeleteModeDescriptionId',
+    isDraggingCommand: false,
     focusTrapManager: new FocusTrapManager()
 };
 
@@ -127,22 +127,20 @@ function getRunButton(programBlockEditorWrapper) {
         .filter('.ProgramBlockEditor__run-button');
 }
 
-describe('Render Action Panel', () => {
-    test.each([
-        [0, true],
-        [1, true],
-        [2, true],
-        [3, true],
-        [4, false]
-    ])('When a step is clicked, action panel should render next to the step',
-        (stepNum, actionPanelIsRendered) => {
-            const { wrapper } = createMountProgramBlockEditor();
-            const programBlock = getProgramBlockAtPosition(wrapper, stepNum);
-            programBlock.simulate('click');
-            const actionPanelContainer = getProgramBlockWithActionPanel(wrapper).at(stepNum).childAt(1);
-            expect(actionPanelContainer.contains(ActionPanel)).toBe(actionPanelIsRendered);
-        }
-    );
+function getAddNodeButtonAtPosition(programBlockEditorWrapper, index: number) {
+    const addNodeButton = programBlockEditorWrapper.find('.AddNode__expanded-button');
+    return addNodeButton.at(0);
+}
+
+test('When a step is clicked, action panel should render next to the step', () => {
+    expect.assertions(4);
+    for (let stepNum = 0; stepNum < 4; stepNum++) {
+        const { wrapper } = createMountProgramBlockEditor();
+        const programBlock = getProgramBlockAtPosition(wrapper, stepNum);
+        programBlock.simulate('click');
+        const actionPanelContainer = getProgramBlockWithActionPanel(wrapper).at(stepNum).childAt(1);
+        expect(actionPanelContainer.contains(ActionPanel)).toBe(true);
+    }
 });
 
 describe('Delete All button', () => {
@@ -249,15 +247,14 @@ describe('Move up a program steps from a program sequence', () => {
 });
 
 describe('Program rendering', () => {
-    test('Blocks should be rendered for the test program, with a none block at the end', () => {
-        expect.assertions(6);
+    test('Blocks should be rendered for the test program', () => {
+        expect.assertions(5);
         const { wrapper } = createMountProgramBlockEditor();
-        expect(getProgramBlocks(wrapper).length).toBe(5);
+        expect(getProgramBlocks(wrapper).length).toBe(4);
         expect(getProgramBlocks(wrapper).at(0).prop('data-command')).toBe('forward');
         expect(getProgramBlocks(wrapper).at(1).prop('data-command')).toBe('left');
         expect(getProgramBlocks(wrapper).at(2).prop('data-command')).toBe('forward');
         expect(getProgramBlocks(wrapper).at(3).prop('data-command')).toBe('left');
-        expect(getProgramBlocks(wrapper).at(4).prop('data-command')).toBe('none');
     });
 });
 
@@ -400,9 +397,9 @@ test('The editor scrolls when a step is added to the end of the program', () => 
         selectedAction: 'forward'
     });
 
-    // When the empty block at the end of the program is replaced by 'forward'
-    const emptyBlock = wrapper.find({'data-stepnumber': 5}).at(0);
-    emptyBlock.simulate('click');
+    // When 'forward' is added to the end of the program
+    const addNode = getAddNodeButtonAtPosition(wrapper, 5);
+    addNode.simulate('click');
 
     // Then the program should be changed
     expect(mockChangeHandler.mock.calls.length).toBe(1);
@@ -418,5 +415,5 @@ test('The editor scrolls when a step is added to the end of the program', () => 
         inline: 'nearest'
     });
     expect(mockScrollIntoView.mock.instances.length).toBe(1);
-    expect(mockScrollIntoView.mock.instances[0]).toBe(getProgramBlockAtPosition(wrapper, 6).getDOMNode());
+    expect(mockScrollIntoView.mock.instances[0]).toBe(getAddNodeButtonAtPosition(wrapper, 6).getDOMNode());
 });
