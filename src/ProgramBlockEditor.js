@@ -93,8 +93,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     handleMoveToPreviousStep = () => {
         const currentStepIndex = this.state.pressedStepIndex;
-        const previousStepIndex = currentStepIndex-1;
-        if (currentStepIndex != null && this.props.program[previousStepIndex] != null) {
+        if (currentStepIndex != null && this.props.program[currentStepIndex - 1] != null) {
+            const previousStepIndex = currentStepIndex - 1;
             this.setState({
                 pressedStepIndex: previousStepIndex,
                 focusedActionPanelOptionName: 'moveToPreviousStep'
@@ -111,8 +111,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     handleMoveToNextStep = () => {
         const currentStepIndex = this.state.pressedStepIndex;
-        const nextStepIndex = currentStepIndex+1;
-        if (currentStepIndex != null && this.props.program[nextStepIndex] != null) {
+        if (currentStepIndex != null && this.props.program[currentStepIndex + 1] != null) {
+            const nextStepIndex = currentStepIndex + 1;
             this.setState({
                 pressedStepIndex: nextStepIndex,
                 focusedActionPanelOptionName: 'moveToNextStep'
