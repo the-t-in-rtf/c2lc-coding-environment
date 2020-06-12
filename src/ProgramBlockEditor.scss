@@ -8,16 +8,76 @@
 }
 
 .ProgramBlockEditor__header {
-    display: flex;
-    justify-content: center;
     grid-row-start: 1;
     grid-row-end: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 .ProgramBlockEditor__heading {
     margin-top: 1.5rem;
     font-weight: bold;
     font-size: inherit;
+    justify-self: center;
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+.ProgramBlockEditor__options {
+    justify-self: end;
+    grid-column-start: 3;
+    grid-column-end: 4;
+    padding-right: 1rem;
+}
+
+button.btn.ProgramBlockEditor__program-deleteAll-button {
+    margin-top: 0.5rem;
+    border: 1px solid #FFF;
+    border-radius: 50%;
+    background-color: #FFF;
+    padding: 0.5rem;
+}
+
+button.btn.ProgramBlockEditor__program-deleteAll-button:not(:focus) {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+}
+
+button.btn.ProgramBlockEditor__program-deleteAll-button--pressed {
+    background-color: #000;
+}
+
+button.btn.ProgramBlockEditor__program-deleteAll-button--disabled {
+    background-color: $c2lc-primary-button-color;
+    cursor: default;
+}
+
+button.btn.ProgramBlockEditor__program-deleteAll-button.ProgramBlockEditor__program-deleteAll-button--disabled:active:focus {
+    background-color: $c2lc-primary-button-color;
+    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+}
+
+button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEditor__program-deleteAll-button--disabled,
+button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEditor__program-deleteAll-button--disabled:active:focus {
+    background-color: $c2lc-disabled-color;
+}
+
+.ProgramBlockEditor__program-deleteAll-button svg {
+    stroke: #000;
+}
+
+button.btn.ProgramBlockEditor__program-deleteAll-button--disabled svg {
+    stroke: $c2lc-disabled-color;
+}
+
+button.btn.ProgramBlockEditor__program-deleteAll-button--pressed svg,
+button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEditor__program-deleteAll-button--disabled svg {
+    stroke: #FFF;
+}
+
+.ProgramBlockEditor__program-deleteAll-button-svg {
+    width: 1.7rem;
+    height: 1.7rem;
+    display: block;
 }
 
 .ProgramBlockEditor__program-sequence-scroll-container {
@@ -53,7 +113,7 @@
 
 .ProgramBlockEditor__program-block-connector {
     background-color: #939595;
-    min-width: 2rem;
+    min-width: 0.5rem;
     height: 0.1rem;
 }
 
@@ -125,63 +185,6 @@ button.btn.ProgramBlockEditor__run-button.ProgramBlockEditor__run-button--disabl
 }
 
 .ProgramBlockEditor__play-svg {
-    width: 1.7rem;
-    height: 1.7rem;
-    display: block;
-}
-
-.ProgramBlockEditor__program-reset {
-    grid-column-start: 4;
-    grid-column-end: 5;
-    margin-left: -2rem;
-}
-
-button.btn.ProgramBlockEditor__program-reset-button {
-    margin-top: 0.5rem;
-    margin-right: 1.3rem;
-    border: 1px solid #FFF;
-    border-radius: 50%;
-    background-color: #FFF;
-    padding: 0.5rem;
-}
-
-button.btn.ProgramBlockEditor__program-reset-button:not(:focus) {
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
-}
-
-button.btn.ProgramBlockEditor__program-reset-button--pressed {
-    background-color: #000;
-}
-
-button.btn.ProgramBlockEditor__program-reset-button--disabled {
-    background-color: $c2lc-primary-button-color;
-    cursor: default;
-}
-
-button.btn.ProgramBlockEditor__program-reset-button.ProgramBlockEditor__program-reset-button--disabled:active:focus {
-    background-color: $c2lc-primary-button-color;
-    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
-}
-
-button.btn.ProgramBlockEditor__program-reset-button--pressed.ProgramBlockEditor__program-reset-button--disabled,
-button.btn.ProgramBlockEditor__program-reset-button--pressed.ProgramBlockEditor__program-reset-button--disabled:active:focus {
-    background-color: $c2lc-disabled-color;
-}
-
-.ProgramBlockEditor__program-reset-button svg {
-    stroke: #000;
-}
-
-button.btn.ProgramBlockEditor__program-reset-button--disabled svg {
-    stroke: $c2lc-disabled-color;
-}
-
-button.btn.ProgramBlockEditor__program-reset-button--pressed svg,
-button.btn.ProgramBlockEditor__program-reset-button--pressed.ProgramBlockEditor__program-reset-button--disabled svg {
-    stroke: #FFF;
-}
-
-.ProgramBlockEditor__program-reset-button-svg {
     width: 1.7rem;
     height: 1.7rem;
     display: block;

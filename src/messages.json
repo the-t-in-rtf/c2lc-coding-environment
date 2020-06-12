@@ -51,7 +51,7 @@
         "ProgramBlockEditor.command.left": "Left, position {index} of current program",
         "ProgramBlockEditor.command.none": "Empty block, position {index} of current program",
         "ProgramBlockEditor.command.right": "Right, position {index} of current program",
-        "ProgramBlockEditor.program.reset": "Clear and start new program",
+        "ProgramBlockEditor.program.deleteAll": "Clear and start new program",
         "ProgramBlockEditor.programHeading": "Program",
         "ProgramBlockEditor.startIndicator": "Start",
         "ProgramTextEditor.programLabel": "Program:"

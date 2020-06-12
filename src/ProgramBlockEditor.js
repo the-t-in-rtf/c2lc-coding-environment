@@ -13,7 +13,7 @@ import FocusTrapManager from './FocusTrapManager';
 import CommandBlock from './CommandBlock';
 import classNames from 'classnames';
 import { ReactComponent as PlayIcon } from './svg/Play.svg';
-import { ReactComponent as RefreshIcon } from './svg/Refresh.svg';
+import { ReactComponent as DeleteAllIcon } from './svg/DeleteAll.svg';
 import './ProgramBlockEditor.scss';
 
 // TODO: Send focus to Delete toggle button on close of Delete All confirmation dialog
@@ -406,10 +406,24 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <h2 className='ProgramBlockEditor__heading'>
                         <FormattedMessage id='ProgramBlockEditor.programHeading' />
                     </h2>
-                    <AddNodeToggleSwitch
-                        isAddNodeExpandedMode={this.state.addNodeExpandedMode}
-                        onChange={this.handleChangeAddNodeExpandedMode}
-                    />
+                    <div className='ProgramBlockEditor__options'>
+                        <AddNodeToggleSwitch
+                            isAddNodeExpandedMode={this.state.addNodeExpandedMode}
+                            onChange={this.handleChangeAddNodeExpandedMode}
+                        />
+                        <span className='ProgramBlockEditor__program-deleteAll'>
+                            <AriaDisablingButton
+                                aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.program.deleteAll'})}
+                                className='ProgramBlockEditor__program-deleteAll-button'
+                                disabledClassName='ProgramBlockEditor__program-deleteAll-button--disabled'
+                                disabled={this.props.editingDisabled}
+                                onClick={this.handleClickDeleteAll}
+                                key='deleteButton'
+                            >
+                                <DeleteAllIcon className='ProgramBlockEditor__program-deleteAll-button-svg'/>
+                            </AriaDisablingButton>
+                        </span>
+                    </div>
                 </div>
                 <div className='ProgramBlockEditor__program-sequence-scroll-container' id='programSequenceContainer'>
                     <div className='ProgramBlockEditor__program-sequence'>
@@ -431,18 +445,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             onClick={this.props.onClickRunButton}
                         >
                             <PlayIcon className='ProgramBlockEditor__play-svg' />
-                        </AriaDisablingButton>
-                    </div>
-                    <div className='ProgramBlockEditor__program-reset'>
-                        <AriaDisablingButton
-                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.program.reset'})}
-                            className='ProgramBlockEditor__program-reset-button'
-                            disabledClassName='ProgramBlockEditor__program-reset-button--disabled'
-                            disabled={this.props.editingDisabled}
-                            onClick={this.handleClickDeleteAll}
-                            key='deleteButton'
-                        >
-                            <RefreshIcon className='ProgramBlockEditor__program-reset-button-svg'/>
                         </AriaDisablingButton>
                     </div>
                 </div>

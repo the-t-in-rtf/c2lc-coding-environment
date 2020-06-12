@@ -98,9 +98,9 @@ function createMountProgramBlockEditor(props) {
     };
 }
 
-function getProgramResetButton(programBlockEditorWrapper) {
+function getProgramDeleteAllButton(programBlockEditorWrapper) {
     return programBlockEditorWrapper.find(AriaDisablingButton)
-        .filter('.ProgramBlockEditor__program-reset-button');
+        .filter('.ProgramBlockEditor__program-deleteAll-button');
 }
 
 function getProgramBlockWithActionPanel(programBlockEditorWrapper) {
@@ -152,7 +152,7 @@ describe('Delete All button', () => {
         // Initially, check that the modal is not showing
         expect(wrapper.state().showConfirmDeleteAll).toBe(false);
         // When the Delete All button is clicked
-        const deleteAllButton = getProgramResetButton(wrapper).at(0);
+        const deleteAllButton = getProgramDeleteAllButton(wrapper).at(0);
         deleteAllButton.simulate('click');
         // Then the dialog should be shown
         expect(wrapper.state().showConfirmDeleteAll).toBe(true);
@@ -294,7 +294,7 @@ describe('Delete All button can be disabled', () => {
             const { wrapper } = createMountProgramBlockEditor({
                 editingDisabled: false
             });
-            expect(getProgramResetButton(wrapper).get(0).props.disabled).toBe(false);
+            expect(getProgramDeleteAllButton(wrapper).get(0).props.disabled).toBe(false);
         });
     });
 
@@ -304,7 +304,7 @@ describe('Delete All button can be disabled', () => {
             const { wrapper } = createMountProgramBlockEditor({
                 editingDisabled: true
             });
-            expect(getProgramResetButton(wrapper).get(0).props.disabled).toBe(true);
+            expect(getProgramDeleteAllButton(wrapper).get(0).props.disabled).toBe(true);
         });
     });
 });
