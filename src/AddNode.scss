@@ -44,7 +44,7 @@ button.btn.AddNode__expanded-button svg {
 }
 
 .AddNode__drop-area-container {
-    position: absolute;
+    position: relative;
 }
 
 .AddNode--is-dragging-command .AddNode__expanded-drop-area {
@@ -54,7 +54,7 @@ button.btn.AddNode__expanded-button svg {
         + #{$widthOfExpandedIcon / 2}
         + #{$addNodeExpandedButtonBorderWidth}
         + #{$addNodeExpandedButtonPadding});
-    position: relative;
+    position: absolute;
     width: $addNodeDropAreaWidth;
     height: calc(
         #{2 * $addNodeDropMargin}
@@ -66,7 +66,7 @@ button.btn.AddNode__expanded-button svg {
 .AddNode--is-dragging-command .AddNode__collapsed-drop-area {
     top: -$addNodeDropMargin;
     left: (-$addNodeDropAreaWidth / 2) + ($widthOfCollapsedIcon / 2);
-    position: relative;
+    position: absolute;
     width: $addNodeDropAreaWidth;
     height: (2 * $addNodeDropMargin) + $heightOfCollapsedIcon;
 }
