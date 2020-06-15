@@ -101,3 +101,16 @@ describe('ActionPanel options', () => {
         expect(mockMoveToNextStep.mock.calls.length).toBe(1);
     });
 });
+
+test('When ActionPanel renders, auto scroll to show full ActionPanel', () => {
+    const mockScrollIntoView = jest.fn();
+    window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView
+    expect(mockScrollIntoView.mock.calls.length).toBe(0);
+    const { wrapper } = createMountActionPanel();
+    expect(mockScrollIntoView.mock.calls.length).toBe(1);
+    expect(mockScrollIntoView.mock.calls[0][0]).toStrictEqual({
+        behavior: 'auto',
+        block: 'nearest',
+        inline: 'nearest'
+    });
+});
