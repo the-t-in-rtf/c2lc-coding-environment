@@ -3,6 +3,9 @@
 import React from 'react';
 import CommandBlock from './CommandBlock';
 import { injectIntl } from 'react-intl';
+import forwardSound from './audio/Move.wav';
+import turnLeftSound from './audio/TurnLeft.wav';
+import turnRightSound from './audio/TurnRight.wav';
 
 type CommandPaletteCommandProps = {
     commandName: string,
@@ -14,7 +17,15 @@ type CommandPaletteCommandProps = {
 };
 
 class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, {}> {
+    audio = new Audio();
+    audioLookUpTable = {
+        forward: forwardSound,
+        left: turnLeftSound,
+        right: turnRightSound
+    };
     handleClick = () => {
+        this.audio.src = this.audioLookUpTable[this.props.commandName];
+        this.audio.play();
         this.props.onChange(
             this.props.commandName === this.props.selectedCommandName ? null : this.props.commandName
         );
