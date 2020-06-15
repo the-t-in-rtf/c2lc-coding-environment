@@ -11,27 +11,28 @@
     grid-row-start: 1;
     grid-row-end: 2;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: auto auto;
 }
 
 .ProgramBlockEditor__heading {
     margin-top: 1.5rem;
     font-weight: bold;
     font-size: inherit;
-    justify-self: center;
-    grid-column-start: 2;
-    grid-column-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    padding-left: 1rem;
 }
 
 .ProgramBlockEditor__options {
     justify-self: end;
-    grid-column-start: 3;
-    grid-column-end: 4;
+    grid-column-start: 2;
+    grid-column-end: 3;
     padding-right: 1rem;
+    padding-top: 1rem;
 }
 
 button.btn.ProgramBlockEditor__program-deleteAll-button {
-    margin-top: 0.5rem;
+    margin-left: 50px;
     border: 1px solid #FFF;
     border-radius: 50%;
     background-color: #FFF;
@@ -75,8 +76,8 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEdi
 }
 
 .ProgramBlockEditor__program-deleteAll-button-svg {
-    width: 1.7rem;
-    height: 1.7rem;
+    width: 1.4rem;
+    height: 1.4rem;
     display: block;
 }
 
