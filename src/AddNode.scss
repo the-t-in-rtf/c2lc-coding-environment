@@ -8,8 +8,8 @@ $heightOfExpandedIcon: 1.7rem;
 $addNodeExpandedButtonBorderWidth: 1px;
 $addNodeExpandedButtonPadding: 0.5rem;
 
-$addNodeDropMargin: 1.5rem;
-$addNodeDropAreaWidth: 6.25rem;
+$addNodeDropMargin: 2.5rem;
+$addNodeDropAreaHeight: 6.25rem;
 
 button.btn.AddNode__expanded-button {
     z-index: 1;
@@ -48,25 +48,25 @@ button.btn.AddNode__expanded-button svg {
 }
 
 .AddNode--is-dragging-command .AddNode__expanded-drop-area {
-    top: -$addNodeDropMargin;
-    left: calc(
-        #{-$addNodeDropAreaWidth / 2}
-        + #{$widthOfExpandedIcon / 2}
+    top: calc(
+        #{-$addNodeDropAreaHeight / 2}
+        + #{$heightOfExpandedIcon / 2}
         + #{$addNodeExpandedButtonBorderWidth}
         + #{$addNodeExpandedButtonPadding});
+    left: -$addNodeDropMargin;
     position: absolute;
-    width: $addNodeDropAreaWidth;
-    height: calc(
+    width: calc(
         #{2 * $addNodeDropMargin}
-        + #{$heightOfExpandedIcon}
+        + #{$widthOfExpandedIcon}
         + #{2 * $addNodeExpandedButtonBorderWidth}
         + #{2 * $addNodeExpandedButtonPadding});
+    height: $addNodeDropAreaHeight;
 }
 
 .AddNode--is-dragging-command .AddNode__collapsed-drop-area {
-    top: -$addNodeDropMargin;
-    left: (-$addNodeDropAreaWidth / 2) + ($widthOfCollapsedIcon / 2);
+    top: (-$addNodeDropAreaHeight / 2) + ($heightOfCollapsedIcon / 2);
+    left: -$addNodeDropMargin;
     position: absolute;
-    width: $addNodeDropAreaWidth;
-    height: (2 * $addNodeDropMargin) + $heightOfCollapsedIcon;
+    width: (2 * $addNodeDropMargin) + $widthOfCollapsedIcon;
+    height: $addNodeDropAreaHeight;
 }

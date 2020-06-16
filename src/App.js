@@ -18,6 +18,7 @@ import * as Utils from './Utils';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import messages from './messages.json';
 import './App.scss';
+import './dragdroptouch/DragDropTouch.js';
 
 // Uncomment to use the FakeRobotDriver (see driver construction below also)
 //import FakeRobotDriver from './FakeRobotDriver';
