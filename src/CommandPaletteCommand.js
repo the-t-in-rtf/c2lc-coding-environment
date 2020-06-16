@@ -3,9 +3,6 @@
 import React from 'react';
 import CommandBlock from './CommandBlock';
 import { injectIntl } from 'react-intl';
-import forwardSound from './audio/Move.wav';
-import turnLeftSound from './audio/TurnLeft.wav';
-import turnRightSound from './audio/TurnRight.wav';
 
 type CommandPaletteCommandProps = {
     audioManager: Object,
