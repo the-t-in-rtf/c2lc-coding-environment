@@ -20,6 +20,7 @@ import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import messages from './messages.json';
 import './App.scss';
 import './dragdroptouch/DragDropTouch.js';
+import forwardSound from './audio/Move.wav';
 
 // Uncomment to use the FakeRobotDriver (see driver construction below also)
 //import FakeRobotDriver from './FakeRobotDriver';
@@ -194,6 +195,10 @@ export default class App extends React.Component<{}, AppState> {
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
+                <audio id='forwardSound' src='/Move.wav' />
+                <button id='forwardSoundButton'>
+                    Click me
+                </button>
                 <header className='App__header'>
                     <Container>
                         <Row className='App__header-row'>
@@ -300,6 +305,13 @@ export default class App extends React.Component<{}, AppState> {
                     this.interpreter.stop();
                 }
             }
+        }
+    }
+
+    componentDidMount() {
+        const forwardAudio = document.getElementById('forwardSound');
+        document.getElementById('forwardSoundButton').onclick = function(){
+            forwardAudio.play();
         }
     }
 }

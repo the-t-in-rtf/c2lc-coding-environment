@@ -19,7 +19,12 @@ type CommandPaletteCommandProps = {
 
 class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, {}> {
     handleClick = () => {
-        this.props.audioManager.playSound(this.props.commandName);
+        //this.props.audioManager.playSound(this.props.commandName);
+        if (this.props.commandName === 'forward') {
+            const forwardAudio = document.getElementById('forwardSound');
+            forwardAudio.src = forwardSound;
+            forwardAudio.play();
+        }
         this.props.onChange(
             this.props.commandName === this.props.selectedCommandName ? null : this.props.commandName
         );
