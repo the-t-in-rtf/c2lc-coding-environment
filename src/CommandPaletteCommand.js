@@ -8,6 +8,7 @@ import turnLeftSound from './audio/TurnLeft.wav';
 import turnRightSound from './audio/TurnRight.wav';
 
 type CommandPaletteCommandProps = {
+    audioManager: Object,
     commandName: string,
     intl: any,
     selectedCommandName: ?string,
@@ -17,15 +18,8 @@ type CommandPaletteCommandProps = {
 };
 
 class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, {}> {
-    audio = new Audio();
-    audioLookUpTable = {
-        forward: forwardSound,
-        left: turnLeftSound,
-        right: turnRightSound
-    };
     handleClick = () => {
-        this.audio.src = this.audioLookUpTable[this.props.commandName];
-        this.audio.play();
+        this.props.audioManager.playSound(this.props.commandName);
         this.props.onChange(
             this.props.commandName === this.props.selectedCommandName ? null : this.props.commandName
         );

@@ -3,6 +3,7 @@
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
+import AudioManager from './AudioManager';
 import BluetoothApiWarning from './BluetoothApiWarning';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
@@ -47,6 +48,7 @@ export default class App extends React.Component<{}, AppState> {
     dashDriver: RobotDriver;
     interpreter: Interpreter;
     toCommandPaletteNoticeId: string;
+    audioManager: AudioManager;
     focusTrapManager: FocusTrapManager;
 
     constructor(props: {}) {
@@ -83,6 +85,8 @@ export default class App extends React.Component<{}, AppState> {
         this.dashDriver = new DashDriver();
 
         this.toCommandPaletteNoticeId = Utils.generateId('toCommandPaletteNotice');
+
+        this.audioManager = new AudioManager();
 
         this.focusTrapManager = new FocusTrapManager();
     }
@@ -223,6 +227,7 @@ export default class App extends React.Component<{}, AppState> {
                                 </h2>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
+                                        audioManager={this.audioManager}
                                         commandName='forward'
                                         selectedCommandName={this.getSelectedCommandName()}
                                         onChange={this.handleCommandFromCommandPalette}
@@ -231,6 +236,7 @@ export default class App extends React.Component<{}, AppState> {
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
+                                        audioManager={this.audioManager}
                                         commandName='right'
                                         selectedCommandName={this.getSelectedCommandName()}
                                         onChange={this.handleCommandFromCommandPalette}
@@ -239,6 +245,7 @@ export default class App extends React.Component<{}, AppState> {
                                 </div>
                                 <div className='App__command-palette-command'>
                                     <CommandPaletteCommand
+                                        audioManager={this.audioManager}
                                         commandName='left'
                                         selectedCommandName={this.getSelectedCommandName()}
                                         onChange={this.handleCommandFromCommandPalette}
@@ -259,6 +266,7 @@ export default class App extends React.Component<{}, AppState> {
                                     this.state.dashConnectionStatus !== 'connected' ||
                                     this.state.interpreterIsRunning ||
                                     programIsEmpty(this.state.program)}
+                                audioManager={this.audioManager}
                                 focusTrapManager={this.focusTrapManager}
                                 onClickRunButton={this.handleClickRun}
                                 onChange={this.handleChangeProgram}

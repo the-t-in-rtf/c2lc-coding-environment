@@ -472,6 +472,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             this.focusCommandBlockIndex = null;
         }
         if (this.props.activeProgramStepNum != null) {
+            // this.audio.src = this.audioLookUpTable[this.props.program[this.props.activeProgramStepNum]];
+            // this.audio.play();
             let element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
