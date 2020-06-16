@@ -5,13 +5,19 @@ export default class AudioManager {
 
     constructor() {
         this.audioLookUpTable = {
-            forward: new Audio('/audio/Move.wav'),
-            left: new Audio('/audio/TurnLeft.wav'),
-            right: new Audio('/audio/TurnRight.wav')
+            forward: '/audio/Move.wav',
+            left: '/audio/TurnLeft.wav',
+            right: '/audio/TurnRight.wav',
+            add: './audio/AddMovement.wav',
+            deleteAll: '/audio/DeleteAll.wav',
+            delete: '/audio/DeleteMovement.wav',
+            moveToPrevious: '/audio/MoveToLeft.wav',
+            moveToNext: '/audio/MoveToRight.wav',
+            replace: '/audio/ReplaceMovement.wav'
         };
     }
 
     playSound = (soundName: string) => {
-        this.audioLookUpTable[soundName].play();
+        new Audio(this.audioLookUpTable[soundName]).play();
     }
 };
