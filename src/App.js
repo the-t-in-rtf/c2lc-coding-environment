@@ -78,7 +78,7 @@ export default class App extends React.Component<{}, AppState> {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
                     resolve();
-                }, 1500);
+                }, 1750);
             });
         };
 
