@@ -73,11 +73,36 @@ export default class App extends React.Component<{}, AppState> {
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
 
+        const playCommandAndWait = (commandName: string): Promise<void> => {
+            this.audioManager.playSound(commandName);
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve();
+                }, 1500);
+            });
+        };
+
         this.interpreter.addCommandHandler(
-            'none',
-            'noneHandler',
+            'forward',
+            'playCommandAndWait',
             () => {
-                return Promise.resolve();
+                return playCommandAndWait('forward');
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'left',
+            'playCommandAndWait',
+            () => {
+                return playCommandAndWait('left');
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'right',
+            'playCommandAndWait',
+            () => {
+                return playCommandAndWait('right');
             }
         );
 
@@ -263,7 +288,6 @@ export default class App extends React.Component<{}, AppState> {
                                 selectedAction={this.state.selectedAction}
                                 isDraggingCommand={this.state.isDraggingCommand}
                                 runButtonDisabled={
-                                    this.state.dashConnectionStatus !== 'connected' ||
                                     this.state.interpreterIsRunning ||
                                     programIsEmpty(this.state.program)}
                                 audioManager={this.audioManager}
