@@ -128,6 +128,11 @@ button.ProgramBlockEditor__program-block--active {
     box-shadow: 0 0 0 0.2rem #79F1CD;
 }
 
+.ProgramBlockEditor__action-panel-container {
+    position: relative;
+    float: top;
+}
+
 .ProgramBlockEditor__footer {
     grid-row-start: 3;
     grid-row-end: 4;

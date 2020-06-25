@@ -9,17 +9,6 @@ import messages from './messages.json';
 
 configure({ adapter: new Adapter()});
 
-const defaultActionPanelProps = {
-    focusedOptionName: null,
-    selectedCommandName: 'right',
-    program: ['forward', 'left', 'right'],
-    pressedStepIndex: 1,
-    position: {
-        top: 0,
-        right: 0
-    },
-};
-
 function createMountActionPanel(props) {
     const mockDeleteHandler = jest.fn();
     const mockReplaceHandler = jest.fn();
@@ -30,9 +19,15 @@ function createMountActionPanel(props) {
         React.createElement(
             ActionPanel,
             Object.assign(
-                {},
-                defaultActionPanelProps,
                 {
+                    focusedOptionName: null,
+                    selectedCommandName: 'right',
+                    program: ['forward', 'left', 'right'],
+                    pressedStepIndex: 1,
+                    position: {
+                        top: 0,
+                        right: 0
+                    },
                     onDelete: mockDeleteHandler,
                     onReplace: mockReplaceHandler,
                     onMoveToPreviousStep: mockMoveToPreviousStep,
@@ -92,10 +87,36 @@ describe('ActionPanel options', () => {
         expect(mockMoveToPreviousStep.mock.calls.length).toBe(1);
     });
 
+    test('When the moveToPreviousStep option is selected on first step of the program', () => {
+        const { wrapper, mockMoveToPreviousStep } = createMountActionPanel({
+            pressedStepIndex: 0
+        });
+        const moveToPreviousStepButton = getActionPanelOptionButtons(wrapper, 'moveToPreviousStep');
+        // TODO: The button should be disabled
+        // TODO: Change expectedAriaLabel to "Move Step before";
+        const expectedAriaLabel = 'Move Step 1 forward ';
+        expect(moveToPreviousStepButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
+        moveToPreviousStepButton.simulate('click');
+        expect(mockMoveToPreviousStep.mock.calls.length).toBe(1);
+    });
+
     test('When the moveToNextStep option is selected on second step turn left of the program', () => {
         const { wrapper, mockMoveToNextStep } = createMountActionPanel();
         const moveToNextStepButton = getActionPanelOptionButtons(wrapper, 'moveToNextStep');
         const expectedAriaLabel = 'Move Step 2 turn left after step 3 turn right';
+        expect(moveToNextStepButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
+        moveToNextStepButton.simulate('click');
+        expect(mockMoveToNextStep.mock.calls.length).toBe(1);
+    });
+
+    test('When the moveToNextStep option is selected on last step of the program', () => {
+        const { wrapper, mockMoveToNextStep } = createMountActionPanel({
+            pressedStepIndex: 2
+        });
+        const moveToNextStepButton = getActionPanelOptionButtons(wrapper, 'moveToNextStep');
+        // TODO: The button should be disabled
+        // TODO: Change expectedAriaLabel to "Move Step after";
+        const expectedAriaLabel = 'Move Step 3 turn right ';
         expect(moveToNextStepButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
         moveToNextStepButton.simulate('click');
         expect(mockMoveToNextStep.mock.calls.length).toBe(1);

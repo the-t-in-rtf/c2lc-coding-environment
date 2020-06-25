@@ -14,7 +14,7 @@ type ActionPanelProps = {
     focusedOptionName: ?string,
     selectedCommandName: ?string,
     program: Program,
-    pressedStepIndex: ?number,
+    pressedStepIndex: number,
     position: {
         top: number,
         right: number
@@ -28,52 +28,50 @@ type ActionPanelProps = {
 
 class ActionPanel extends React.Component<ActionPanelProps, {}> {
     actionPanelRef: { current: null | HTMLDivElement };
+
     constructor(props) {
         super(props);
         this.actionPanelRef = React.createRef();
     }
 
-    makeStepInfoMessage = () => {
-        if (this.props.pressedStepIndex != null) {
-            const currentStepName = this.props.program[this.props.pressedStepIndex];
-            const prevStepName =
-                this.props.program[this.props.pressedStepIndex - 1] ?
-                this.props.program[this.props.pressedStepIndex - 1] :
-                undefined;
-            const nextStepName =
-                this.props.program[this.props.pressedStepIndex + 1] ?
-                this.props.program[this.props.pressedStepIndex + 1] :
-                undefined;
-            let ariaLabelObj = {};
-            ariaLabelObj['stepNumber'] = this.props.pressedStepIndex + 1;
+    makeStepInfoMessage() {
+        const currentStepName = this.props.program[this.props.pressedStepIndex];
 
-            if (this.props.selectedCommandName) {
-                ariaLabelObj['selectedCommandName'] =
-                    this.props.intl.formatMessage(
-                        { id: 'ActionPanel.selectedCommandName' },
-                        { selectedCommandName: this.props.selectedCommandName }
-                    );
-            }
+        let ariaLabelObj = {
+            'stepNumber': this.props.pressedStepIndex + 1,
+            'stepName': this.props.intl.formatMessage({id:`CommandInfo.${currentStepName}`}),
+            'selectedCommandName': '',
+            'previousStepInfo': '',
+            'nextStepInfo': ''
+        };
 
-            ariaLabelObj['stepName'] = this.props.intl.formatMessage({id:`CommandInfo.${currentStepName}`});
-
-            if (prevStepName != null && this.props.pressedStepIndex) {
-                ariaLabelObj['previousStepInfo'] =
-                    this.props.intl.formatMessage(
-                        { id: `CommandInfo.previousStep.${prevStepName}`},
-                        { previousStepNumber: this.props.pressedStepIndex }
-                    );
-            }
-
-            if (nextStepName != null) {
-                ariaLabelObj['nextStepInfo'] =
-                    this.props.intl.formatMessage(
-                        { id: `CommandInfo.nextStep.${nextStepName}`},
-                        { nextStepNumber: this.props.pressedStepIndex + 2}
-                    );
-            }
-            return ariaLabelObj;
+        if (this.props.selectedCommandName) {
+            ariaLabelObj['selectedCommandName'] =
+                this.props.intl.formatMessage(
+                    { id: 'ActionPanel.selectedCommandName' },
+                    { selectedCommandName: this.props.selectedCommandName }
+                );
         }
+
+        if (this.props.pressedStepIndex > 0) {
+            const prevStepName = this.props.program[this.props.pressedStepIndex - 1];
+            ariaLabelObj['previousStepInfo'] =
+                this.props.intl.formatMessage(
+                    { id: `CommandInfo.previousStep.${prevStepName}`},
+                    { previousStepNumber: this.props.pressedStepIndex }
+                );
+        }
+
+        if (this.props.pressedStepIndex < (this.props.program.length - 1)) {
+            const nextStepName = this.props.program[this.props.pressedStepIndex + 1];
+            ariaLabelObj['nextStepInfo'] =
+                this.props.intl.formatMessage(
+                    { id: `CommandInfo.nextStep.${nextStepName}`},
+                    { nextStepNumber: this.props.pressedStepIndex + 2}
+                );
+        }
+
+        return ariaLabelObj;
     }
 
     render() {
@@ -82,13 +80,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
             top: this.props.position.top,
             right: this.props.position.right
         }
-        const stepInfoMessage = Object.assign({
-            'stepNumber': 0,
-            'stepName': '',
-            'selectedCommandName': '',
-            'previousStepInfo': '',
-            'nextStepInfo': ''
-        }, this.makeStepInfoMessage());
+        const stepInfoMessage = this.makeStepInfoMessage();
         return (
             <div
                 id='ActionPanel'

@@ -350,23 +350,19 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 <div className='ProgramBlockEditor__program-block-connector' />
                 <div className='ProgramBlockEditor__program-block-with-panel'>
                     {this.makeProgramBlock(programStepNumber, command)}
-                    {this.state.pressedStepIndex === programStepNumber ?
-                        <div style={{
-                        position: 'relative',
-                        float: 'top'
-                        }}>
+                    {this.state.pressedStepIndex === programStepNumber &&
+                        <div className='ProgramBlockEditor__action-panel-container'>
                             <ActionPanel
                                 focusedOptionName={this.state.focusedActionPanelOptionName}
                                 selectedCommandName={this.props.selectedAction}
                                 program={this.props.program}
-                                pressedStepIndex={this.state.pressedStepIndex}
+                                pressedStepIndex={programStepNumber}
                                 position={this.state.actionPanelPosition}
                                 onDelete={this.handleClickDelete}
                                 onReplace={this.handleReplaceStep}
                                 onMoveToPreviousStep={this.handleMoveToPreviousStep}
                                 onMoveToNextStep={this.handleMoveToNextStep}/>
-                        </div> :
-                        <></>
+                        </div>
                     }
                 </div>
             </React.Fragment>
