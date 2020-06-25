@@ -10,8 +10,13 @@
 }
 
 .AddNodeToggleSwitch:focus {
-    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+    box-shadow: 0 0 0 $c2lc-focus-indicator-width #299DCE;
     outline: none;
+}
+
+.AddNodeToggleSwitch:hover {
+    box-shadow: 0 0 0 $c2lc-focus-indicator-width #299DCE;
+    background-color: #299DCE;
 }
 
 .AddNodeToggleSwitch--checked {
