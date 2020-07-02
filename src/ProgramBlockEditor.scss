@@ -128,9 +128,31 @@ button.ProgramBlockEditor__program-block--active {
     box-shadow: 0 0 0 0.2rem #79F1CD;
 }
 
-.ProgramBlockEditor__action-panel-container {
+.ProgramBlockEditor__action-panel-container-outer {
     position: relative;
-    float: top;
+    left: 50%;
+}
+
+// TODO: Calculate vertical offset using the size of the arrow,
+//       rather than adding 30%
+
+// Note: An alternative to using left and top with actual lengths, would
+//       be to use CSS translation with percentages, as those percentages
+//       are relative to the object being translated. For example:
+//
+//       transform: translate(-50%, -130%);
+//
+//       However, when using the above translation, Firefox (version
+//       78 on Linux at least) does not align box-shadows properly (as
+//       we are using for hover and focus indication). This bug
+//       describes the situation but is closed:
+//
+//       https://bugzilla.mozilla.org/show_bug.cgi?id=766564
+
+.ProgramBlockEditor__action-panel-container-inner {
+    position: absolute;
+    left: #{-$c2lc-action-panel-width / 2};
+    top: #{-$c2lc-action-panel-height * 1.3};
 }
 
 .ProgramBlockEditor__footer {

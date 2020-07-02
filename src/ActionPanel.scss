@@ -1,8 +1,8 @@
 @import 'variables';
 
 .ActionPanel__panel {
-    height: 5rem;
-    width: 16rem;
+    width: $c2lc-action-panel-width;
+    height: $c2lc-action-panel-height;
     background-color: #F1F1F1;
     border: 0.1rem solid #939595;
     border-radius: 3rem;

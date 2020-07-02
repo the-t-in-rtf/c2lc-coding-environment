@@ -34,11 +34,6 @@ type ProgramBlockEditorProps = {
 
 type ProgramBlockEditorState = {
     showConfirmDeleteAll: boolean,
-    showActionPanel: boolean,
-    actionPanelPosition: {
-        top: number,
-        right: number
-    },
     pressedStepIndex: ?number,
     focusedActionPanelOptionName: ?string,
     replaceIsActive: boolean,
@@ -59,11 +54,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.scrollToAddNodeIndex = null;
         this.state = {
             showConfirmDeleteAll : false,
-            showActionPanel: false,
-            actionPanelPosition: {
-                top: 0,
-                right: 0
-            },
             pressedStepIndex: null,
             focusedActionPanelOptionName: null,
             replaceIsActive: false,
@@ -98,13 +88,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         } else {
             this.commandBlockRefs.delete(programStepNumber);
         }
-    };
+    }
 
     setAddNodeRef(programStepNumber: number, element: ?HTMLElement) {
         if (element) {
             this.addNodeRefs.set(programStepNumber, element);
         }
-    };
+    }
 
     // Handlers
 
@@ -202,56 +192,25 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     };
 
-    handleActionPanelDisplay = (index: number) => {
-        const currentStepButton = this.commandBlockRefs.get(index);
-
-        if (currentStepButton) {
-            let actionPanelPositionObj = {
-                top: 0,
-                right: 0
-            };
-
-            if (
-                (!this.state.showActionPanel || this.state.pressedStepIndex !== index) &&
-                this.props.program[index] != null
-                )
-            {
-                actionPanelPositionObj.top =
-                    -currentStepButton.getBoundingClientRect().height/2 -
-                    currentStepButton.getBoundingClientRect().height*2.1;
-                actionPanelPositionObj.right = -currentStepButton.getBoundingClientRect().width/1.25;
-                this.setState({
-                    showActionPanel: true,
-                    actionPanelPosition: actionPanelPositionObj,
-                    pressedStepIndex: index
-                });
-            } else if (
-                (this.state.showActionPanel && this.state.pressedStepIndex === index) ||
-                (this.state.showActionPanel && this.props.program[index] == null)){
-                this.setState({
-                    showActionPanel: false,
-                    actionPanelPosition: actionPanelPositionObj,
-                    pressedStepIndex: null,
-                    focusedActionPanelOptionName: null
-                });
-            }
-        }
-    };
-
     handleClickStep = (e: SyntheticEvent<HTMLButtonElement>) => {
         const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
-        this.handleActionPanelDisplay(index);
-        if (this.props.selectedAction && this.props.program[index] == null ){
-            this.focusCommandBlockIndex = index;
-            this.props.onChange(ProgramUtils.overwrite(this.props.program,
-                    index, this.props.selectedAction, 'none'));
-            this.scrollToAddNodeIndex = index + 1;
+        // Open or close the ActionPanel
+        if (this.state.pressedStepIndex === index) {
+            // The ActionPanel is already open for this program step, close it
+            this.setState({
+                pressedStepIndex: null,
+                focusedActionPanelOptionName: null
+            });
+        } else {
+            // Otherwise, open it
+            this.setState({
+                pressedStepIndex: index
+            });
         }
     };
 
     handleCloseActionPanelFocusTrap = () => {
         this.setState({
-            showActionPanel: false,
             focusedActionPanelOptionName: null,
             pressedStepIndex: null
         });
@@ -294,7 +253,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 className={classes}
                 aria-label={ariaLabel}
                 aria-controls={hasActionPanelControl ? 'ActionPanel' : undefined}
-                aria-expanded={hasActionPanelControl && this.state.showActionPanel}
+                aria-expanded={hasActionPanelControl}
                 disabled={this.props.editingDisabled}
                 onClick={this.handleClickStep}
             />
@@ -349,21 +308,22 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 />
                 <div className='ProgramBlockEditor__program-block-connector' />
                 <div className='ProgramBlockEditor__program-block-with-panel'>
-                    {this.makeProgramBlock(programStepNumber, command)}
                     {this.state.pressedStepIndex === programStepNumber &&
-                        <div className='ProgramBlockEditor__action-panel-container'>
-                            <ActionPanel
-                                focusedOptionName={this.state.focusedActionPanelOptionName}
-                                selectedCommandName={this.props.selectedAction}
-                                program={this.props.program}
-                                pressedStepIndex={programStepNumber}
-                                position={this.state.actionPanelPosition}
-                                onDelete={this.handleClickDelete}
-                                onReplace={this.handleReplaceStep}
-                                onMoveToPreviousStep={this.handleMoveToPreviousStep}
-                                onMoveToNextStep={this.handleMoveToNextStep}/>
+                        <div className='ProgramBlockEditor__action-panel-container-outer'>
+                            <div className='ProgramBlockEditor__action-panel-container-inner'>
+                                <ActionPanel
+                                    focusedOptionName={this.state.focusedActionPanelOptionName}
+                                    selectedCommandName={this.props.selectedAction}
+                                    program={this.props.program}
+                                    pressedStepIndex={programStepNumber}
+                                    onDelete={this.handleClickDelete}
+                                    onReplace={this.handleReplaceStep}
+                                    onMoveToPreviousStep={this.handleMoveToPreviousStep}
+                                    onMoveToNextStep={this.handleMoveToNextStep}/>
+                            </div>
                         </div>
                     }
+                    {this.makeProgramBlock(programStepNumber, command)}
                 </div>
             </React.Fragment>
         );
@@ -473,7 +433,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
             }
         }
-        if (this.state.showActionPanel && (this.state.pressedStepIndex != null)) {
+        if (this.state.pressedStepIndex != null) {
             if (this.state.replaceIsActive) {
                 this.props.focusTrapManager.setFocusTrap(
                     this.handleCloseReplaceFocusTrap,

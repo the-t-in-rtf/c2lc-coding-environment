@@ -10,15 +10,17 @@ import { ReactComponent as DeleteIcon } from './svg/Delete.svg';
 import { ReactComponent as ReplaceIcon } from './svg/replace.svg';
 import './ActionPanel.scss';
 
+// TODO: Pass the index to the onDelete, onReplace, onMoveToPreviousStep,
+//       and onMoveToNextStep callbacks.
+//       We can then update the callback implementation logic in
+//       ProgramBlockEditor to use the index parameter, rather than
+//       using the pressedStepIndex state variable.
+
 type ActionPanelProps = {
     focusedOptionName: ?string,
     selectedCommandName: ?string,
     program: Program,
     pressedStepIndex: number,
-    position: {
-        top: number,
-        right: number
-    },
     intl: any,
     onDelete: () => void,
     onReplace: () => void,
@@ -75,17 +77,11 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
     }
 
     render() {
-        const positionStyles = {
-            position: 'absolute',
-            top: this.props.position.top,
-            right: this.props.position.right
-        }
         const stepInfoMessage = this.makeStepInfoMessage();
         return (
             <div
                 id='ActionPanel'
                 className={'ActionPanel__panel'}
-                style={positionStyles}
                 ref={this.actionPanelRef}>
                 <Button
                     name='deleteCurrentStep'
