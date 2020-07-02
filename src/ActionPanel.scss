@@ -1,5 +1,8 @@
 @import 'variables';
 
+// TODO: Rework the arrow implementation. For example, it is not quite
+//       centered with respect to the action panel.
+
 .ActionPanel__panel {
     width: $c2lc-action-panel-width;
     height: $c2lc-action-panel-height;
