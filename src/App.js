@@ -38,7 +38,8 @@ type AppState = {
     interpreterIsRunning: boolean,
     showDashConnectionError: boolean,
     selectedAction: ?string,
-    isDraggingCommand: boolean
+    isDraggingCommand: boolean,
+    actionPanelStepIndex: ?number
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -65,7 +66,8 @@ export default class App extends React.Component<{}, AppState> {
             interpreterIsRunning: false,
             showDashConnectionError: false,
             selectedAction: null,
-            isDraggingCommand: false
+            isDraggingCommand: false,
+            actionPanelStepIndex: null
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -165,7 +167,8 @@ export default class App extends React.Component<{}, AppState> {
     handleDragStartCommand = (command: string) => {
         this.setState({
             isDraggingCommand: true,
-            selectedAction: command
+            selectedAction: command,
+            actionPanelStepIndex: null
         });
     };
 
@@ -180,6 +183,29 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
+    handleChangeActionPanelStepIndex = (index: ?number) => {
+        this.setState({
+            actionPanelStepIndex: index
+        });
+    };
+
+    handleRootClick = (e: SyntheticInputEvent<HTMLInputElement>) => {
+        var element = e.target;
+        // Walk up the document tree until we hit the top, or we find that
+        // we are within an action panel group area
+        while (element != null && element.dataset) {
+            if (element.dataset.actionpanelgroup) {
+                // We are within an action panel group area, stop looking
+                return;
+            }
+            element = element.parentElement;
+        }
+        // We hit the top, close the action panel
+        this.setState({
+            actionPanelStepIndex: null
+        });
+    };
+
     handleRootKeyDown = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
         this.focusTrapManager.handleKeyDown(e);
     };
@@ -189,82 +215,88 @@ export default class App extends React.Component<{}, AppState> {
             <IntlProvider
                     locale={this.state.settings.language}
                     messages={messages[this.state.settings.language]}>
-                <header className='App__header'>
-                    <Container>
-                        <Row className='App__header-row'>
-                            <h1 className='App__app-heading'>
-                                <FormattedMessage id='App.appHeading'/>
-                            </h1>
-                            <DeviceConnectControl
-                                disabled={
-                                    !this.appContext.bluetoothApiIsAvailable ||
-                                    this.state.dashConnectionStatus === 'connected' }
-                                connectionStatus={this.state.dashConnectionStatus}
-                                onClickConnect={this.handleClickConnectDash}>
-                                <FormattedMessage id='App.connectToDash' />
-                            </DeviceConnectControl>
-                        </Row>
-                    </Container>
-                </header>
-                <Container role='main' className='mb-5' onKeyDown={this.handleRootKeyDown}>
-                    {!this.appContext.bluetoothApiIsAvailable &&
-                        <Row className='App__bluetooth-api-warning-section'>
-                            <Col>
-                                <BluetoothApiWarning/>
+                <div
+                    onClick={this.handleRootClick}
+                    onKeyDown={this.handleRootKeyDown}>
+                    <header className='App__header'>
+                        <Container>
+                            <Row className='App__header-row'>
+                                <h1 className='App__app-heading'>
+                                    <FormattedMessage id='App.appHeading'/>
+                                </h1>
+                                <DeviceConnectControl
+                                    disabled={
+                                        !this.appContext.bluetoothApiIsAvailable ||
+                                        this.state.dashConnectionStatus === 'connected' }
+                                    connectionStatus={this.state.dashConnectionStatus}
+                                    onClickConnect={this.handleClickConnectDash}>
+                                    <FormattedMessage id='App.connectToDash' />
+                                </DeviceConnectControl>
+                            </Row>
+                        </Container>
+                    </header>
+                    <Container role='main' className='mb-5'>
+                        {!this.appContext.bluetoothApiIsAvailable &&
+                            <Row className='App__bluetooth-api-warning-section'>
+                                <Col>
+                                    <BluetoothApiWarning/>
+                                </Col>
+                            </Row>
+                        }
+                        <Row className='App__program-section' noGutters={true}>
+                            <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
+                                <div className='App__command-palette'>
+                                    <h2 className='App__command-palette-heading'>
+                                        <FormattedMessage id='CommandPalette.movementsTitle' />
+                                    </h2>
+                                    <div className='App__command-palette-command'>
+                                        <CommandPaletteCommand
+                                            commandName='forward'
+                                            selectedCommandName={this.getSelectedCommandName()}
+                                            onChange={this.handleCommandFromCommandPalette}
+                                            onDragStart={this.handleDragStartCommand}
+                                            onDragEnd={this.handleDragEndCommand}/>
+                                    </div>
+                                    <div className='App__command-palette-command'>
+                                        <CommandPaletteCommand
+                                            commandName='right'
+                                            selectedCommandName={this.getSelectedCommandName()}
+                                            onChange={this.handleCommandFromCommandPalette}
+                                            onDragStart={this.handleDragStartCommand}
+                                            onDragEnd={this.handleDragEndCommand}/>
+                                    </div>
+                                    <div className='App__command-palette-command'>
+                                        <CommandPaletteCommand
+                                            commandName='left'
+                                            selectedCommandName={this.getSelectedCommandName()}
+                                            onChange={this.handleCommandFromCommandPalette}
+                                            onDragStart={this.handleDragStartCommand}
+                                            onDragEnd={this.handleDragEndCommand}/>
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col md={8} lg={9}>
+                                <ProgramBlockEditor
+                                    activeProgramStepNum={this.state.activeProgramStepNum}
+                                    actionPanelStepIndex={this.state.actionPanelStepIndex}
+                                    editingDisabled={this.state.interpreterIsRunning === true}
+                                    interpreterIsRunning={this.state.interpreterIsRunning}
+                                    program={this.state.program}
+                                    selectedAction={this.state.selectedAction}
+                                    isDraggingCommand={this.state.isDraggingCommand}
+                                    runButtonDisabled={
+                                        this.state.dashConnectionStatus !== 'connected' ||
+                                        this.state.interpreterIsRunning ||
+                                        programIsEmpty(this.state.program)}
+                                    focusTrapManager={this.focusTrapManager}
+                                    onClickRunButton={this.handleClickRun}
+                                    onChangeProgram={this.handleChangeProgram}
+                                    onChangeActionPanelStepIndex={this.handleChangeActionPanelStepIndex}
+                                />
                             </Col>
                         </Row>
-                    }
-                    <Row className='App__program-section' noGutters={true}>
-                        <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
-                            <div className='App__command-palette'>
-                                <h2 className='App__command-palette-heading'>
-                                    <FormattedMessage id='CommandPalette.movementsTitle' />
-                                </h2>
-                                <div className='App__command-palette-command'>
-                                    <CommandPaletteCommand
-                                        commandName='forward'
-                                        selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}
-                                        onDragStart={this.handleDragStartCommand}
-                                        onDragEnd={this.handleDragEndCommand}/>
-                                </div>
-                                <div className='App__command-palette-command'>
-                                    <CommandPaletteCommand
-                                        commandName='right'
-                                        selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}
-                                        onDragStart={this.handleDragStartCommand}
-                                        onDragEnd={this.handleDragEndCommand}/>
-                                </div>
-                                <div className='App__command-palette-command'>
-                                    <CommandPaletteCommand
-                                        commandName='left'
-                                        selectedCommandName={this.getSelectedCommandName()}
-                                        onChange={this.handleCommandFromCommandPalette}
-                                        onDragStart={this.handleDragStartCommand}
-                                        onDragEnd={this.handleDragEndCommand}/>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col md={8} lg={9}>
-                            <ProgramBlockEditor
-                                activeProgramStepNum={this.state.activeProgramStepNum}
-                                editingDisabled={this.state.interpreterIsRunning === true}
-                                interpreterIsRunning={this.state.interpreterIsRunning}
-                                program={this.state.program}
-                                selectedAction={this.state.selectedAction}
-                                isDraggingCommand={this.state.isDraggingCommand}
-                                runButtonDisabled={
-                                    this.state.dashConnectionStatus !== 'connected' ||
-                                    this.state.interpreterIsRunning ||
-                                    programIsEmpty(this.state.program)}
-                                focusTrapManager={this.focusTrapManager}
-                                onClickRunButton={this.handleClickRun}
-                                onChange={this.handleChangeProgram}
-                            />
-                        </Col>
-                    </Row>
-                </Container>
+                    </Container>
+                </div>
                 <DashConnectionErrorModal
                     show={this.state.showDashConnectionError}
                     onCancel={this.handleCancelDashConnection}

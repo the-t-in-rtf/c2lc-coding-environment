@@ -82,6 +82,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
             <div
                 id='ActionPanel'
                 className={'ActionPanel__panel'}
+                data-actionpanelgroup={true}
                 ref={this.actionPanelRef}>
                 <Button
                     name='deleteCurrentStep'
