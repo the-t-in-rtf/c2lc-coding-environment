@@ -92,12 +92,12 @@ describe('ActionPanel options', () => {
             pressedStepIndex: 0
         });
         const moveToPreviousStepButton = getActionPanelOptionButtons(wrapper, 'moveToPreviousStep');
-        // TODO: The button should be disabled
-        // TODO: Change expectedAriaLabel to "Move Step before";
         const expectedAriaLabel = 'Move Step 1 forward ';
         expect(moveToPreviousStepButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
+        expect(moveToPreviousStepButton.get(0).props['disabled']).toBe(true);
         moveToPreviousStepButton.simulate('click');
-        expect(mockMoveToPreviousStep.mock.calls.length).toBe(1);
+        // Move to previous button is disabled when a block is the first block, clicking doesn't do anything
+        expect(mockMoveToPreviousStep.mock.calls.length).toBe(0);
     });
 
     test('When the moveToNextStep option is selected on second step turn left of the program', () => {
@@ -114,12 +114,12 @@ describe('ActionPanel options', () => {
             pressedStepIndex: 2
         });
         const moveToNextStepButton = getActionPanelOptionButtons(wrapper, 'moveToNextStep');
-        // TODO: The button should be disabled
-        // TODO: Change expectedAriaLabel to "Move Step after";
         const expectedAriaLabel = 'Move Step 3 turn right ';
         expect(moveToNextStepButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
+        expect(moveToNextStepButton.get(0).props['disabled']).toBe(true);
         moveToNextStepButton.simulate('click');
-        expect(mockMoveToNextStep.mock.calls.length).toBe(1);
+        // Move to next button is disabled when a block is the last block, clicking doesn't do anything
+        expect(mockMoveToNextStep.mock.calls.length).toBe(0);
     });
 });
 
