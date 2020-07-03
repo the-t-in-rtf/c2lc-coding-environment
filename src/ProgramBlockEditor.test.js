@@ -190,9 +190,6 @@ describe('Delete program steps', () => {
             // The program should be updated
             expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
             expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
-
-            // And focus should remain on the clicked block
-            expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, stepNum).getDOMNode());
         }
     );
 });

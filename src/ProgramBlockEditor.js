@@ -104,12 +104,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         });
     };
 
-    handleClickDelete = () => {
-        this.focusCommandBlockIndex = this.props.actionPanelStepIndex;
-        if (this.props.actionPanelStepIndex != null) {
-            this.props.onChangeProgram(ProgramUtils.deleteStep(this.props.program, this.props.actionPanelStepIndex));
-            this.handleCloseActionPanelFocusTrap();
-        }
+    handleClickDelete = (index: number) => {
+        this.props.onChangeProgram(ProgramUtils.deleteStep(this.props.program, index));
+        this.handleCloseActionPanelFocusTrap();
     };
 
     handleClickDeleteAll = () => {
@@ -131,10 +128,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         });
     };
 
-    handleMoveToPreviousStep = () => {
-        const currentStepIndex = this.props.actionPanelStepIndex;
-        if (currentStepIndex != null && this.props.program[currentStepIndex - 1] != null) {
-            const previousStepIndex = currentStepIndex - 1;
+    handleMoveToPreviousStep = (index: number) => {
+        if (this.props.program[index - 1] != null) {
+            const previousStepIndex = index - 1;
             this.setState({
                 focusedActionPanelOptionName: 'moveToPreviousStep'
             });
@@ -142,17 +138,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             this.props.onChangeProgram(
                 ProgramUtils.swapPosition(
                     this.props.program,
-                    currentStepIndex,
+                    index,
                     previousStepIndex
                 )
             );
         }
     };
 
-    handleMoveToNextStep = () => {
-        const currentStepIndex = this.props.actionPanelStepIndex;
-        if (currentStepIndex != null && this.props.program[currentStepIndex + 1] != null) {
-            const nextStepIndex = currentStepIndex + 1;
+    handleMoveToNextStep = (index: number) => {
+        if (this.props.program[index + 1] != null) {
+            const nextStepIndex = index + 1;
             this.setState({
                 focusedActionPanelOptionName: 'moveToNextStep'
             });
@@ -160,7 +155,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             this.props.onChangeProgram(
                 ProgramUtils.swapPosition(
                     this.props.program,
-                    currentStepIndex,
+                    index,
                     nextStepIndex
                 )
             );
@@ -173,22 +168,19 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         });
     };
 
-    handleReplaceStep = () => {
-        let index = this.props.actionPanelStepIndex;
-        if (index != null) {
-            if (this.props.selectedAction) {
-                if (this.props.program[index] !== this.props.selectedAction) {
-                    this.props.onChangeProgram(ProgramUtils.overwrite(this.props.program,
-                            index, this.props.selectedAction, 'none'));
-                    this.handleSetReplaceIsActive(false);
-                    this.focusCommandBlockIndex = index;
-                    this.scrollToAddNodeIndex = index + 1;
-                } else {
-                    this.handleSetReplaceIsActive(true);
-                }
+    handleReplaceStep = (index: number) => {
+        if (this.props.selectedAction) {
+            if (this.props.program[index] !== this.props.selectedAction) {
+                this.props.onChangeProgram(ProgramUtils.overwrite(this.props.program,
+                        index, this.props.selectedAction, 'none'));
+                this.handleSetReplaceIsActive(false);
+                this.focusCommandBlockIndex = index;
+                this.scrollToAddNodeIndex = index + 1;
             } else {
                 this.handleSetReplaceIsActive(true);
             }
+        } else {
+            this.handleSetReplaceIsActive(true);
         }
     };
 

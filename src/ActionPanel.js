@@ -10,22 +10,16 @@ import { ReactComponent as DeleteIcon } from './svg/Delete.svg';
 import { ReactComponent as ReplaceIcon } from './svg/replace.svg';
 import './ActionPanel.scss';
 
-// TODO: Pass the index to the onDelete, onReplace, onMoveToPreviousStep,
-//       and onMoveToNextStep callbacks.
-//       We can then update the callback implementation logic in
-//       ProgramBlockEditor to use the index parameter, rather than
-//       using the pressedStepIndex state variable.
-
 type ActionPanelProps = {
     focusedOptionName: ?string,
     selectedCommandName: ?string,
     program: Program,
     pressedStepIndex: number,
     intl: any,
-    onDelete: () => void,
-    onReplace: () => void,
-    onMoveToPreviousStep: () => void,
-    onMoveToNextStep: () => void
+    onDelete: (index: number) => void,
+    onReplace: (index: number) => void,
+    onMoveToPreviousStep: (index: number) => void,
+    onMoveToNextStep: (index: number) => void
 };
 
 class ActionPanel extends React.Component<ActionPanelProps, {}> {
@@ -88,28 +82,28 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     name='deleteCurrentStep'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.delete'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
-                    onClick={this.props.onDelete}>
+                    onClick={()=>{this.props.onDelete(this.props.pressedStepIndex)}}>
                     <DeleteIcon className='ActionPanel__action-button-svg' />
                 </Button>
                 <Button
                     name='replaceCurrentStep'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.replace'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons replace-action-button'
-                    onClick={this.props.onReplace}>
+                    onClick={()=>{this.props.onReplace(this.props.pressedStepIndex)}}>
                     <ReplaceIcon className='ActionPanel__action-button-svg' />
                 </Button>
                 <Button
                     name='moveToPreviousStep'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToPreviousStep'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
-                    onClick={this.props.onMoveToPreviousStep}>
+                    onClick={()=>{this.props.onMoveToPreviousStep(this.props.pressedStepIndex)}}>
                     <MovePreviousIcon className='ActionPanel__action-button-svg' />
                 </Button>
                 <Button
                     name='moveToNextStep'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToNextStep'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
-                    onClick={this.props.onMoveToNextStep}>
+                    onClick={()=>{this.props.onMoveToNextStep(this.props.pressedStepIndex)}}>
                     <MoveNextIcon className='ActionPanel__action-button-svg' />
                 </Button>
             </div>
