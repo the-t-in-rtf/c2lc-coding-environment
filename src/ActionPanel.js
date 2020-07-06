@@ -70,6 +70,24 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
         return ariaLabelObj;
     }
 
+    // handlers
+
+    handleClickDelete = () => {
+        this.props.onDelete(this.props.pressedStepIndex);
+    };
+
+    handleClickReplace = () => {
+        this.props.onReplace(this.props.pressedStepIndex);
+    };
+
+    handleClickMoveToPreviousStep = () => {
+        this.props.onMoveToPreviousStep(this.props.pressedStepIndex);
+    };
+
+    handleClickMoveToNextStep = () => {
+        this.props.onMoveToNextStep(this.props.pressedStepIndex);
+    };
+
     render() {
         const stepInfoMessage = this.makeStepInfoMessage();
         return (
@@ -83,7 +101,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     disabled={false}
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.delete'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
-                    onClick={()=>{this.props.onDelete(this.props.pressedStepIndex)}}>
+                    onClick={this.handleClickDelete}>
                     <DeleteIcon className='ActionPanel__action-button-svg' />
                 </AriaDisablingButton>
                 <AriaDisablingButton
@@ -91,7 +109,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     disabled={false}
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.replace'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons replace-action-button'
-                    onClick={()=>{this.props.onReplace(this.props.pressedStepIndex)}}>
+                    onClick={this.handleClickReplace}>
                     <ReplaceIcon className='ActionPanel__action-button-svg' />
                 </AriaDisablingButton>
                 <AriaDisablingButton
@@ -100,7 +118,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     disabledClassName='ActionPanel__action-buttons--disabled'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToPreviousStep'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
-                    onClick={()=>{this.props.onMoveToPreviousStep(this.props.pressedStepIndex)}}>
+                    onClick={this.handleClickMoveToPreviousStep}>
                     <MovePreviousIcon className='ActionPanel__action-button-svg' />
                 </AriaDisablingButton>
                 <AriaDisablingButton
@@ -109,7 +127,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     disabledClassName='ActionPanel__action-buttons--disabled'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToNextStep'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
-                    onClick={()=>{this.props.onMoveToNextStep(this.props.pressedStepIndex)}}>
+                    onClick={this.handleClickMoveToNextStep}>
                     <MoveNextIcon className='ActionPanel__action-button-svg' />
                 </AriaDisablingButton>
             </div>

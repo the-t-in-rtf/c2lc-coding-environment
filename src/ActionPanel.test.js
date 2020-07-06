@@ -61,30 +61,42 @@ function getActionPanelOptionButtons(actionPanelWrapper, controlName) {
 
 describe('ActionPanel options', () => {
     test('When the deleteCurrentStep option is selected on second step turn left of the program', () => {
-        const { wrapper, mockDeleteHandler } = createMountActionPanel();
+        const pressedStepIndex = 1;
+        const { wrapper, mockDeleteHandler } = createMountActionPanel({
+            pressedStepIndex: pressedStepIndex
+        });
         const deleteButton = getActionPanelOptionButtons(wrapper, 'deleteCurrentStep');
         const expectedAriaLabel = 'Delete Step 2 turn left';
         expect(deleteButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
         deleteButton.simulate('click');
         expect(mockDeleteHandler.mock.calls.length).toBe(1);
+        expect(mockDeleteHandler.mock.calls[0][0]).toBe(pressedStepIndex);
     });
 
     test('When the replaceCurrentStep option is selected on second step turn left of the program', () => {
-        const { wrapper, mockReplaceHandler } = createMountActionPanel();
+        const pressedStepIndex = 1;
+        const { wrapper, mockReplaceHandler } = createMountActionPanel({
+            pressedStepIndex: pressedStepIndex
+        });
         const replaceCurrentStepButton = getActionPanelOptionButtons(wrapper, 'replaceCurrentStep');
         const expectedAriaLabel = 'Replace Step 2 turn left with selected action right';
         expect(replaceCurrentStepButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
         replaceCurrentStepButton.simulate('click');
         expect(mockReplaceHandler.mock.calls.length).toBe(1);
-    })
+        expect(mockReplaceHandler.mock.calls[0][0]).toBe(pressedStepIndex);
+    });
 
     test('When the moveToPreviousStep option is selected on second step turn left of the program', () => {
-        const { wrapper, mockMoveToPreviousStep } = createMountActionPanel();
+        const pressedStepIndex = 1;
+        const { wrapper, mockMoveToPreviousStep } = createMountActionPanel({
+            pressedStepIndex: pressedStepIndex
+        });
         const moveToPreviousStepButton = getActionPanelOptionButtons(wrapper, 'moveToPreviousStep');
         const expectedAriaLabel = 'Move Step 2 turn left before step 1 forward';
         expect(moveToPreviousStepButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
         moveToPreviousStepButton.simulate('click');
         expect(mockMoveToPreviousStep.mock.calls.length).toBe(1);
+        expect(mockMoveToPreviousStep.mock.calls[0][0]).toBe(pressedStepIndex);
     });
 
     test('When the moveToPreviousStep option is selected on first step of the program', () => {
@@ -101,12 +113,16 @@ describe('ActionPanel options', () => {
     });
 
     test('When the moveToNextStep option is selected on second step turn left of the program', () => {
-        const { wrapper, mockMoveToNextStep } = createMountActionPanel();
+        const pressedStepIndex = 1;
+        const { wrapper, mockMoveToNextStep } = createMountActionPanel({
+            pressedStepIndex: pressedStepIndex
+        });
         const moveToNextStepButton = getActionPanelOptionButtons(wrapper, 'moveToNextStep');
         const expectedAriaLabel = 'Move Step 2 turn left after step 3 turn right';
         expect(moveToNextStepButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
         moveToNextStepButton.simulate('click');
         expect(mockMoveToNextStep.mock.calls.length).toBe(1);
+        expect(mockMoveToNextStep.mock.calls[0][0]).toBe(pressedStepIndex);
     });
 
     test('When the moveToNextStep option is selected on last step of the program', () => {
