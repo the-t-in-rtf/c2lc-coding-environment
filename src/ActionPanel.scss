@@ -1,0 +1,59 @@
+@import 'variables';
+
+// TODO: Rework the arrow implementation. For example, it is not quite
+//       centered with respect to the action panel.
+
+.ActionPanel__panel {
+    width: $c2lc-action-panel-width;
+    height: $c2lc-action-panel-height;
+    background-color: #F1F1F1;
+    border: 0.1rem solid #939595;
+    border-radius: 3rem;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.ActionPanel__panel::before {
+    content: '';
+    position: absolute;
+    left: 45%;
+    top: 100%;
+    border-left: 0.7rem solid transparent;
+    border-top: 1rem solid #F1F1F1;
+    border-right: 0.7rem solid transparent;
+    z-index: 1;
+}
+
+.ActionPanel__panel::after {
+    content: '';
+    position: absolute;
+    left: 43.8%;
+    top: 100%;
+    border-left: 0.9rem solid transparent;
+    border-top: 1.2rem solid #939595;
+    border-right: 0.9rem solid transparent;
+}
+
+.ActionPanel__panel--hidden {
+    display: none;
+}
+
+button.btn.ActionPanel__action-buttons {
+    background-color: #8F8F8F;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    padding: 0.3rem;
+}
+
+button.btn.ActionPanel__action-buttons--disabled {
+    opacity: 30%;
+}
+
+
+.ActionPanel__action-button-svg {
+    position: relative;
+    margin: auto;
+    display: block;
+}

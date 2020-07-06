@@ -1,6 +1,9 @@
 @import 'variables';
 
 .DeviceConnectControl {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    justify-self: end;
     z-index: inherit;
 }
 

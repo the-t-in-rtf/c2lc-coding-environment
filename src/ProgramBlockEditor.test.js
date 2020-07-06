@@ -6,34 +6,29 @@ import { configure, mount, shallow } from 'enzyme';
 import { Button } from 'react-bootstrap';
 import { createIntl, IntlProvider } from 'react-intl';
 import App from './App';
+import ActionPanel from './ActionPanel';
 import AriaDisablingButton from './AriaDisablingButton';
+import FocusTrapManager from './FocusTrapManager';
 import messages from './messages.json';
 import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
 import ProgramBlockEditor from './ProgramBlockEditor';
 
 configure({ adapter: new Adapter()});
 
+// TODO: Mock the FocusTrapManager
+
 const defaultProgramBlockEditorProps = {
     program: ['forward', 'left', 'forward', 'left'],
     interpreterIsRunning: false,
     activeProgramStepNum: null,
+    actionPanelStepIndex: null,
     selectedAction: null,
     editingDisabled: false,
+    replaceIsActive: false,
     runButtonDisabled: false,
-    addModeDescriptionId: 'someAddModeDescriptionId',
-    deleteModeDescriptionId: 'someDeleteModeDescriptionId',
-    isDraggingCommand: false
+    isDraggingCommand: false,
+    focusTrapManager: new FocusTrapManager()
 };
-
-const deleteAction = {
-    type: 'editorAction',
-    action: 'delete'
-}
-
-const rightCommandAction = {
-    type: 'command',
-    commandName: 'right'
-}
 
 function createShallowProgramBlockEditor(props) {
     const intl = createIntl({
@@ -43,8 +38,8 @@ function createShallowProgramBlockEditor(props) {
     });
 
     const mockClickRunButtonHandler = jest.fn();
-    const mockSelectActionHandler = jest.fn();
-    const mockChangeHandler = jest.fn();
+    const mockChangeProgramHandler = jest.fn();
+    const mockSetReplaceHandler = jest.fn();
 
     const wrapper = shallow(
         React.createElement(
@@ -55,8 +50,7 @@ function createShallowProgramBlockEditor(props) {
                 {
                     intl: intl,
                     onClickRunButton: mockClickRunButtonHandler,
-                    onSelectAction: mockSelectActionHandler,
-                    onChange: mockChangeHandler
+                    onChangeProgram: mockChangeProgramHandler
                 },
                 props
             )
@@ -66,15 +60,15 @@ function createShallowProgramBlockEditor(props) {
     return {
         wrapper,
         mockClickRunButtonHandler,
-        mockSelectActionHandler,
-        mockChangeHandler
+        mockChangeProgramHandler
     };
 }
 
 function createMountProgramBlockEditor(props) {
     const mockClickRunButtonHandler = jest.fn();
-    const mockSelectActionHandler = jest.fn();
-    const mockChangeHandler = jest.fn();
+    const mockChangeProgramHandler = jest.fn();
+    const mockSetReplaceHandler = jest.fn();
+    const mockChangeActionPanelStepIndex = jest.fn();
 
     const wrapper = mount(
         React.createElement(
@@ -84,8 +78,8 @@ function createMountProgramBlockEditor(props) {
                 defaultProgramBlockEditorProps,
                 {
                     onClickRunButton: mockClickRunButtonHandler,
-                    onSelectAction: mockSelectActionHandler,
-                    onChange: mockChangeHandler
+                    onChangeProgram: mockChangeProgramHandler,
+                    onChangeActionPanelStepIndex: mockChangeActionPanelStepIndex
                 },
                 props
             )
@@ -103,23 +97,24 @@ function createMountProgramBlockEditor(props) {
     return {
         wrapper,
         mockClickRunButtonHandler,
-        mockSelectActionHandler,
-        mockChangeHandler
+        mockChangeProgramHandler,
+        mockChangeActionPanelStepIndex
     };
 }
 
-function getEditorActionButtons(programBlockEditorWrapper) {
+function getProgramDeleteAllButton(programBlockEditorWrapper) {
     return programBlockEditorWrapper.find(AriaDisablingButton)
-        .filter('.ProgramBlockEditor__editor-action-button');
+        .filter('.ProgramBlockEditor__program-deleteAll-button');
 }
 
-function hasPressedClass(button) {
-    return button.hasClass('ProgramBlockEditor__editor-action-button--pressed');
+function getProgramBlockWithActionPanel(programBlockEditorWrapper) {
+    return programBlockEditorWrapper.find('div')
+        .filter('.ProgramBlockEditor__program-block-with-panel');
 }
 
-function getDeleteAllButton(programBlockEditorWrapper) {
-    return programBlockEditorWrapper.find(AriaDisablingButton)
-        .filter('.ProgramBlockEditor__delete-all-button');
+function getActionPanelActionButtons(programBlockEditorWrapper) {
+    return programBlockEditorWrapper.find(Button)
+        .filter('.ActionPanel__action-buttons');
 }
 
 function getProgramBlocks(programBlockEditorWrapper) {
@@ -128,7 +123,7 @@ function getProgramBlocks(programBlockEditorWrapper) {
 }
 
 function getProgramBlockAtPosition(programBlockEditorWrapper, index: number) {
-    return getProgramBlocks(programBlockEditorWrapper).at(index)
+    return getProgramBlocks(programBlockEditorWrapper).at(index);
 }
 
 function getRunButton(programBlockEditorWrapper) {
@@ -141,87 +136,132 @@ function getAddNodeButtonAtPosition(programBlockEditorWrapper, index: number) {
     return addNodeButton.at(0);
 }
 
-describe('Editor buttons', () => {
-    describe('Given no selected action', () => {
-        let wrapper, mockSelectActionHandler;
-
-        beforeEach(() => {
-            ({ wrapper, mockSelectActionHandler } = createShallowProgramBlockEditor({
-                selectedAction: null
-            }));
-        });
-
-        test('Then no editor buttons should have presssed state', () => {
-            expect.assertions(4);
-
-            expect(getEditorActionButtons(wrapper).length).toBe(1);
-
-            expect(getEditorActionButtons(wrapper).get(0).key).toBe('deleteButton');
-            expect(getEditorActionButtons(wrapper).get(0).props['aria-pressed']).toBe('false');
-            expect(hasPressedClass(getEditorActionButtons(wrapper).at(0))).toBe(false);
-        });
-
-        test('When Delete is clicked, then selected action should be set to Delete', () => {
-            expect.assertions(2);
-            getEditorActionButtons(wrapper).at(0).simulate('click');
-            expect(mockSelectActionHandler.mock.calls.length).toBe(1);
-            expect(mockSelectActionHandler.mock.calls[0][0]).toStrictEqual({
-                'type': 'editorAction',
-                'action': 'delete'
-            });
-        });
-    });
-
-    describe('Given selected action is Delete', () => {
-        let wrapper, mockSelectActionHandler;
-
-        beforeEach(() => {
-            ({ wrapper, mockSelectActionHandler } = createShallowProgramBlockEditor({
-                selectedAction: deleteAction
-            }));
-        });
-
-        test('Then the Delete button should have pressed state', () => {
-            expect.assertions(2);
-            expect(getEditorActionButtons(wrapper).get(0).props['aria-pressed']).toBe('true');
-            expect(hasPressedClass(getEditorActionButtons(wrapper).at(0))).toBe(true);
-        });
-
-        test('When Delete is clicked, then it should be toggled off', () => {
-            expect.assertions(2);
-            getEditorActionButtons(wrapper).at(0).simulate('click');
-            expect(mockSelectActionHandler.mock.calls.length).toBe(1);
-            expect(mockSelectActionHandler.mock.calls[0][0]).toBeNull();
-        });
-    });
-});
-
-describe('Editor buttons aria-describedby', () => {
-    test('Should be set to the provided ids', () => {
-        expect.assertions(1);
-        const { wrapper } = createMountProgramBlockEditor();
-        expect(getEditorActionButtons(wrapper).get(0).props['aria-describedby']).toBe('someDeleteModeDescriptionId');
-    });
+test('When a step is clicked, action panel should render next to the step', () => {
+    expect.assertions(12);
+    for (let stepNum = 0; stepNum < 4; stepNum++) {
+        const { wrapper, mockChangeActionPanelStepIndex } = createMountProgramBlockEditor();
+        const programBlock = getProgramBlockAtPosition(wrapper, stepNum);
+        programBlock.simulate('click');
+        expect(mockChangeActionPanelStepIndex.mock.calls.length).toBe(1);
+        const actionPanelStepIndex = mockChangeActionPanelStepIndex.mock.calls[0][0];
+        expect(actionPanelStepIndex).toBe(stepNum);
+        wrapper.setProps({actionPanelStepIndex});
+        const actionPanelContainer = getProgramBlockWithActionPanel(wrapper).at(stepNum).childAt(1);
+        expect(actionPanelContainer.contains(ActionPanel)).toBe(true);
+    }
 });
 
 describe('Delete All button', () => {
-    describe('Given selected action is Delete', () => {
-        test('When the Delete All button is clicked, then the dialog should be shown', () => {
-            expect.assertions(2);
+    test('When the Delete All button is clicked, then the dialog shoud be shown', () => {
+        expect.assertions(2);
 
-            const { wrapper } = createShallowProgramBlockEditor({
-                    selectedAction: deleteAction
-            });
+        const { wrapper } = createShallowProgramBlockEditor();
 
-            // Initially, check that the modal is not showing
-            expect(wrapper.state().showConfirmDeleteAll).toBe(false);
-            // When the Delete All button is clicked
-            const deleteAllButton = getDeleteAllButton(wrapper).at(0);
-            deleteAllButton.simulate('click');
-            // Then the dialog should be shown
-            expect(wrapper.state().showConfirmDeleteAll).toBe(true);
-        });
+        // Initially, check that the modal is not showing
+        expect(wrapper.state().showConfirmDeleteAll).toBe(false);
+        // When the Delete All button is clicked
+        const deleteAllButton = getProgramDeleteAllButton(wrapper).at(0);
+        deleteAllButton.simulate('click');
+        // Then the dialog should be shown
+        expect(wrapper.state().showConfirmDeleteAll).toBe(true);
     });
+});
+
+describe('Delete program steps', () => {
+    test.each([
+        [ 0, ['left', 'forward', 'left']],
+        [ 3, ['forward', 'left', 'forward']]
+    ])('While the action panel is open, when block %i is clicked, then program should be updated',
+        (stepNum, expectedProgram) => {
+            const { wrapper, mockChangeProgramHandler, mockChangeActionPanelStepIndex } = createMountProgramBlockEditor();
+            const programBlock = getProgramBlockAtPosition(wrapper, stepNum);
+            programBlock.simulate('click');
+
+            // ActionPanel should be rendered on click of a program block
+            expect(mockChangeActionPanelStepIndex.mock.calls.length).toBe(1);
+            const actionPanelStepIndex = mockChangeActionPanelStepIndex.mock.calls[0][0];
+            expect(actionPanelStepIndex).toBe(stepNum);
+            wrapper.setProps({actionPanelStepIndex});
+            const actionPanelContainer = getProgramBlockWithActionPanel(wrapper).at(stepNum).childAt(1);
+            expect(actionPanelContainer.containsMatchingElement(ActionPanel)).toBe(true);
+
+            const deleteStepButton = getActionPanelActionButtons(wrapper).at(0);
+            deleteStepButton.simulate('click');
+            // The program should be updated
+            expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
+            expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
+        }
+    );
+});
+
+describe('Replace program steps', () => {
+    test.each([
+        [ 0, ['right', 'left', 'forward', 'left'], 'right'],
+        [ 0, ['forward', 'left', 'forward', 'left'], null]
+    ]) ('Replace a program if selectedAction is not null',
+        (stepNum, expectedProgram, selectedAction) => {
+            expect.assertions(5);
+            const { wrapper, mockChangeProgramHandler, mockChangeActionPanelStepIndex } = createMountProgramBlockEditor({
+                selectedAction
+            });
+            const programBlock = getProgramBlockAtPosition(wrapper, stepNum);
+            programBlock.simulate('click');
+
+            // ActionPanel should be rendered on click of a program block
+            expect(mockChangeActionPanelStepIndex.mock.calls.length).toBe(1);
+            const actionPanelStepIndex = mockChangeActionPanelStepIndex.mock.calls[0][0];
+            expect(actionPanelStepIndex).toBe(stepNum);
+            wrapper.setProps({actionPanelStepIndex});
+            const actionPanelContainer = getProgramBlockWithActionPanel(wrapper).at(stepNum).childAt(1);
+            expect(actionPanelContainer.containsMatchingElement(ActionPanel)).toBe(true);
+
+            const replaceButton = getActionPanelActionButtons(wrapper).at(1);
+            replaceButton.simulate('click');
+
+            // The program should be updated
+            if (selectedAction) {
+                expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
+                expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
+            } else {
+                expect(mockChangeProgramHandler.mock.calls.length).toBe(0);
+                expect(wrapper.props().program).toStrictEqual(expectedProgram);
+            }
+        }
+    );
+});
+
+describe('Move up a program steps from a program sequence', () => {
+    test.each([
+        [ 0, ['forward', 'left', 'forward', 'left']],
+        [ 2, ['forward', 'forward', 'left', 'left']]
+    ]) ('Changes position with a step above, if there is a step',
+        (stepNum, expectedProgram) => {
+            expect.assertions(5);
+            const { wrapper, mockChangeProgramHandler, mockChangeActionPanelStepIndex } = createMountProgramBlockEditor();
+            const programBlock = getProgramBlockAtPosition(wrapper, stepNum);
+            programBlock.simulate('click');
+
+            // ActionPanel should be rendered on click of a program block
+            expect(mockChangeActionPanelStepIndex.mock.calls.length).toBe(1);
+            const actionPanelStepIndex = mockChangeActionPanelStepIndex.mock.calls[0][0];
+            expect(actionPanelStepIndex).toBe(stepNum);
+            wrapper.setProps({actionPanelStepIndex});
+            const actionPanelContainer = getProgramBlockWithActionPanel(wrapper).at(stepNum).childAt(1);
+            expect(actionPanelContainer.containsMatchingElement(ActionPanel)).toBe(true);
+
+            const moveUpAStepButton = getActionPanelActionButtons(wrapper).at(2);
+            moveUpAStepButton.simulate('click');
+
+            // The program should be updated
+            if (stepNum > 0) {
+                expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
+                expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
+            } else {
+                expect(mockChangeProgramHandler.mock.calls.length).toBe(0);
+                expect(wrapper.props().program).toStrictEqual(expectedProgram);
+            }
+        }
+    )
 });
 
 describe('Program rendering', () => {
@@ -236,44 +276,48 @@ describe('Program rendering', () => {
     });
 });
 
-describe('Delete program steps', () => {
+describe('Move down a program steps from a program sequence', () => {
     test.each([
-        ['Delete', 0, ['left', 'forward', 'left'], deleteAction],
-        ['Delete', 2, ['forward', 'left', 'left'], deleteAction]
-    ])('Given selected action is %s, when block %i is clicked, then program should be updated',
-        (actionName, stepNum, expectedProgram, action) => {
+        [ 0, ['left', 'forward', 'forward', 'left']],
+        [ 3, ['forward', 'left', 'forward', 'left']]
+    ]) ('Changes position with a step below, if there is a step',
+        (stepNum, expectedProgram) => {
+            expect.assertions(5);
+            const { wrapper, mockChangeProgramHandler, mockChangeActionPanelStepIndex } = createMountProgramBlockEditor();
+            const programBlock = getProgramBlockAtPosition(wrapper, stepNum);
+            programBlock.simulate('click');
 
-            expect.assertions(4);
+            // ActionPanel should be rendered on click of a program block
+            expect(mockChangeActionPanelStepIndex.mock.calls.length).toBe(1);
+            const actionPanelStepIndex = mockChangeActionPanelStepIndex.mock.calls[0][0];
+            expect(actionPanelStepIndex).toBe(stepNum);
+            wrapper.setProps({actionPanelStepIndex});
+            const actionPanelContainer = getProgramBlockWithActionPanel(wrapper).at(stepNum).childAt(1);
+            expect(actionPanelContainer.containsMatchingElement(ActionPanel)).toBe(true);
 
-            const { wrapper, mockSelectActionHandler, mockChangeHandler } =
-                createMountProgramBlockEditor({
-                    selectedAction: action
-                });
-
-            getProgramBlockAtPosition(wrapper, stepNum).simulate('click');
+            const moveUpAStepButton = getActionPanelActionButtons(wrapper).at(3);
+            moveUpAStepButton.simulate('click');
 
             // The program should be updated
-            expect(mockChangeHandler.mock.calls.length).toBe(1);
-            expect(mockChangeHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
-            wrapper.setProps({program: expectedProgram});
-
-            // And focus should remain on the clicked block
-            expect(document.activeElement).toBe(getProgramBlockAtPosition(wrapper, stepNum).getDOMNode());
-
-            // And the selected action should not have changed
-            expect(mockSelectActionHandler.mock.calls.length).toBe(0);
+            if (stepNum < wrapper.props().program.length-1) {
+                expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
+                expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
+            } else {
+                expect(mockChangeProgramHandler.mock.calls.length).toBe(0);
+                expect(wrapper.props().program).toStrictEqual(expectedProgram);
+            }
         }
-    );
+    )
 });
 
-describe('Editing can be disabled', () => {
+describe('Delete All button can be disabled', () => {
     describe('Given editing is enabled', () => {
         test('Then the buttons should not be disabled', () => {
             expect.assertions(1);
             const { wrapper } = createMountProgramBlockEditor({
                 editingDisabled: false
             });
-            expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(false);
+            expect(getProgramDeleteAllButton(wrapper).get(0).props.disabled).toBe(false);
         });
     });
 
@@ -283,7 +327,7 @@ describe('Editing can be disabled', () => {
             const { wrapper } = createMountProgramBlockEditor({
                 editingDisabled: true
             });
-            expect(getEditorActionButtons(wrapper).get(0).props.disabled).toBe(true);
+            expect(getProgramDeleteAllButton(wrapper).get(0).props.disabled).toBe(true);
         });
     });
 });
@@ -371,12 +415,9 @@ test('The editor scrolls when a step is added to the end of the program', () => 
     window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
 
     // Given a program of 5 forwards and 'forward' as the selected command
-    const { wrapper, mockChangeHandler } = createMountProgramBlockEditor({
+    const { wrapper, mockChangeProgramHandler } = createMountProgramBlockEditor({
         program: ['forward', 'forward', 'forward', 'forward', 'forward'],
-        selectedAction: {
-            'commandName': 'forward',
-            'type': 'command'
-        }
+        selectedAction: 'forward'
     });
 
     // When 'forward' is added to the end of the program
@@ -384,12 +425,12 @@ test('The editor scrolls when a step is added to the end of the program', () => 
     addNode.simulate('click');
 
     // Then the program should be changed
-    expect(mockChangeHandler.mock.calls.length).toBe(1);
-    expect(mockChangeHandler.mock.calls[0][0]).toStrictEqual(
+    expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
+    expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(
         ['forward', 'forward', 'forward', 'forward', 'forward', 'forward']);
 
     // And updating the program triggers auto scroll
-    wrapper.setProps({ program: mockChangeHandler.mock.calls[0][0] });
+    wrapper.setProps({ program: mockChangeProgramHandler.mock.calls[0][0] });
     expect(mockScrollIntoView.mock.calls.length).toBe(1);
     expect(mockScrollIntoView.mock.calls[0][0]).toStrictEqual({
         behavior: 'auto',

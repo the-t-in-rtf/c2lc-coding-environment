@@ -105,3 +105,18 @@ test.each([
         expect(result).toBe(expected);
     }
 );
+
+test.each([
+    [[], 0, 2, []],
+    [['command1'], 0, 1, ['command1']],
+    [['command1', 'command2', 'command3'], 1, 2, ['command1', 'command3', 'command2' ]],
+    [['command1', 'command2', 'command3'], 0, 2, ['command3', 'command2', 'command1']]
+
+]) ('swapPosition',
+    (input, indexFrom, indexTo, expected) => {
+        expect.assertions(2);
+        const inputValues = input.slice();
+        const result = ProgramUtils.swapPosition(inputValues, indexFrom, indexTo);
+        checkProgramEdit(input, expected, inputValues, result);
+    }
+);
