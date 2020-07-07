@@ -16,10 +16,19 @@ body {
     justify-content: space-between;
 }
 
+.App__header-right {
+    display: flex;
+    align-items: center;
+}
+
 .App__app-heading {
     font-weight: normal;
     font-size: 1.3rem;
     margin: 1rem 0;
+}
+
+.App__audio-toggle-switch {
+    margin-right: 1.5rem;
 }
 
 .App__bluetooth-api-warning-section {

@@ -1,7 +1,6 @@
 @import 'variables';
 
 .ToggleSwitch {
-    float: left;
     width: 4.2rem;
     max-height: 2.4rem;
     background: #c4c4c4;
@@ -14,23 +13,20 @@
     outline: none;
 }
 
-.ToggleSwitch--checked {
-    background: #000;
-}
-
 .ToggleSwitch--checked > div {
     margin-left: 1.8rem;
 }
 
 .ToggleSwitch__switch-inner-circle {
     background: #F1F1F1;
-    height: 2rem;
-    width: 2rem;
     border-radius: 50%;
-    padding: 0.1rem;
+    padding: 0.2rem;
+    display: inline-block;
 }
 
 .ToggleSwitch__switch-inner-circle svg {
+    height: 1.6rem;
+    width: 1.6rem;
     display: block;
     stroke: #000;
 }

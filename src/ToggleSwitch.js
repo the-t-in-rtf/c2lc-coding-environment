@@ -1,17 +1,19 @@
 // @flow
 
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import classNames from 'classnames';
 import './ToggleSwitch.scss';
 
 type ToggleSwitchProps = {
-    intl: any,
-    ariaLabelId: string,
-    toggleState: boolean,
-    onChange: () => void
+    ariaLabel: string,
+    value: boolean,
+    className?: string,
+    contentsTrue: any,
+    contentsFalse: any,
+    onChange: (value: boolean) => void
 };
 
-class ToggleSwitch extends React.Component<ToggleSwitchProps, {}> {
+export default class ToggleSwitch extends React.Component<ToggleSwitchProps, {}> {
     handleClick = () => {
         this.toggleStateChange();
     }
@@ -25,27 +27,34 @@ class ToggleSwitch extends React.Component<ToggleSwitchProps, {}> {
     }
 
     toggleStateChange() {
-        this.props.onChange();
+        this.props.onChange(!this.props.value);
     }
 
     render() {
+        const classes = classNames(
+            this.props.className,
+            'ToggleSwitch'
+        );
         return (
             <div
                 className= {
-                    this.props.toggleState ?
-                    'ToggleSwitch ToggleSwitch--checked' :
-                    'ToggleSwitch'
+                    this.props.value ?
+                    `${classes} ToggleSwitch--checked` :
+                    classes
                 }
                 role='switch'
-                aria-label={this.props.intl.formatMessage({id: `ToggleSwitch.${this.props.ariaLabelId}`})}
-                aria-checked={this.props.toggleState}
+                aria-label={this.props.ariaLabel}
+                aria-checked={this.props.value}
                 tabIndex='0'
                 onClick={this.handleClick}
                 onKeyDown={this.handleKeyDown}>
-                <div className='ToggleSwitch__switch-inner-circle' />
+                <div className='ToggleSwitch__switch-inner-circle' >
+                    {this.props.value ?
+                        this.props.contentsTrue :
+                        this.props.contentsFalse
+                    }
+                </div>
             </div>
         )
     }
 }
-
-export default injectIntl(ToggleSwitch);

@@ -1,9 +1,11 @@
 // @flow
 
 export default class AudioManager {
+    audioEnabled: boolean;
     audioLookUpTable: Object;
 
-    constructor() {
+    constructor(audioEnabled: boolean) {
+        this.audioEnabled = audioEnabled;
         this.audioLookUpTable = {
             forward: new Audio('/audio/Move.wav'),
             left: new Audio('/audio/TurnLeft.wav'),
@@ -18,6 +20,12 @@ export default class AudioManager {
     }
 
     playSound = (soundName: string) => {
-        this.audioLookUpTable[soundName].play();
+        if (this.audioEnabled) {
+            this.audioLookUpTable[soundName].play();
+        }
+    }
+
+    setAudioEnabled = (value: boolean) => {
+        this.audioEnabled = value;
     }
 };
