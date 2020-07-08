@@ -59,6 +59,7 @@ We would like to thank these amazing open source projects and libraries that we 
 | Dependency | License |
 | :--------- | :------ |
 | [github.com/airbnb/enzyme](https://github.com/airbnb/enzyme) | MIT License |
+| [github.com/Bernardo-Castilho/dragdroptouch](https://github.com/Bernardo-Castilho/dragdroptouch) | MIT License |
 | [github.com/facebook/react](https://github.com/facebook/react) | MIT License |
 | [github.com/googlefonts/roboto](https://github.com/googlefonts/roboto) | Apache License 2.0 |
 | [github.com/JedWatson/classnames](https://github.com/JedWatson/classnames) | MIT License |
