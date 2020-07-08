@@ -6,11 +6,17 @@
     background: #c4c4c4;
     border-radius: 1.2rem;
     padding: 0.2rem;
+    display: inline-block;
 }
 
 .ToggleSwitch:focus {
     box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
     outline: none;
+}
+
+.ToggleSwitch:hover {
+    box-shadow: 0 0 0 $c2lc-focus-indicator-width #299DCE;
+    background-color: #299DCE;
 }
 
 .ToggleSwitch--checked > div {

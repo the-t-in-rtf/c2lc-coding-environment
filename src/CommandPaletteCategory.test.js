@@ -22,8 +22,8 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
         <CommandPaletteCategory eventKey='movements' title='Movements'>
             <CommandPaletteCommand
                 commandName='forward'
-                icon={null}
                 selectedCommandName={null}
+                audioManager={{}}
                 onChange={() => {}}
                 onDragStart={() => {}}
                 onDragEnd={() => {}}
@@ -37,24 +37,24 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
         <CommandPaletteCategory eventKey='movements' title='Movements'>
             <CommandPaletteCommand
                 commandName='forward'
-                icon={null}
                 selectedCommandName={null}
+                audioManager={{}}
                 onChange={() => {}}
                 onDragStart={() => {}}
                 onDragEnd={() => {}}
                 onKeyDown={() => {}}/>
             <CommandPaletteCommand
                 commandName='left'
-                icon={null}
                 selectedCommandName={null}
+                audioManager={{}}
                 onChange={() => {}}
                 onDragStart={() => {}}
                 onDragEnd={() => {}}
                 onKeyDown={() => {}}/>
             <CommandPaletteCommand
                 commandName='right'
-                icon={null}
                 selectedCommandName={null}
+                audioManager={{}}
                 onChange={() => {}}
                 onDragStart={() => {}}
                 onDragEnd={() => {}}

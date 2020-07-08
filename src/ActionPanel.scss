@@ -1,8 +1,11 @@
 @import 'variables';
 
+// TODO: Rework the arrow implementation. For example, it is not quite
+//       centered with respect to the action panel.
+
 .ActionPanel__panel {
-    height: 5rem;
-    width: 16rem;
+    width: $c2lc-action-panel-width;
+    height: $c2lc-action-panel-height;
     background-color: #F1F1F1;
     border: 0.1rem solid #939595;
     border-radius: 3rem;
@@ -43,6 +46,11 @@ button.btn.ActionPanel__action-buttons {
     border-radius: 50%;
     padding: 0.3rem;
 }
+
+button.btn.ActionPanel__action-buttons--disabled {
+    opacity: 30%;
+}
+
 
 .ActionPanel__action-button-svg {
     position: relative;

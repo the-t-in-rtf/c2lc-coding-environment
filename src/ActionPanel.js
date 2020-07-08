@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import AriaDisablingButton from './AriaDisablingButton';
 import { injectIntl } from 'react-intl';
 import type { Program } from './types';
 import { ReactComponent as MovePreviousIcon } from './svg/MovePrevious.svg';
@@ -14,115 +14,122 @@ type ActionPanelProps = {
     focusedOptionName: ?string,
     selectedCommandName: ?string,
     program: Program,
-    pressedStepIndex: ?number,
-    position: {
-        top: number,
-        right: number
-    },
+    pressedStepIndex: number,
     intl: any,
-    onDelete: () => void,
-    onReplace: () => void,
-    onMoveToPreviousStep: () => void,
-    onMoveToNextStep: () => void
+    onDelete: (index: number) => void,
+    onReplace: (index: number) => void,
+    onMoveToPreviousStep: (index: number) => void,
+    onMoveToNextStep: (index: number) => void
 };
 
 class ActionPanel extends React.Component<ActionPanelProps, {}> {
     actionPanelRef: { current: null | HTMLDivElement };
+
     constructor(props) {
         super(props);
         this.actionPanelRef = React.createRef();
     }
 
-    makeStepInfoMessage = () => {
-        if (this.props.pressedStepIndex != null) {
-            const currentStepName = this.props.program[this.props.pressedStepIndex];
-            const prevStepName =
-                this.props.program[this.props.pressedStepIndex - 1] ?
-                this.props.program[this.props.pressedStepIndex - 1] :
-                undefined;
-            const nextStepName =
-                this.props.program[this.props.pressedStepIndex + 1] ?
-                this.props.program[this.props.pressedStepIndex + 1] :
-                undefined;
-            let ariaLabelObj = {};
-            ariaLabelObj['stepNumber'] = this.props.pressedStepIndex + 1;
+    makeStepInfoMessage() {
+        const currentStepName = this.props.program[this.props.pressedStepIndex];
 
-            if (this.props.selectedCommandName) {
-                ariaLabelObj['selectedCommandName'] =
-                    this.props.intl.formatMessage(
-                        { id: 'ActionPanel.selectedCommandName' },
-                        { selectedCommandName: this.props.selectedCommandName }
-                    );
-            }
-
-            ariaLabelObj['stepName'] = this.props.intl.formatMessage({id:`CommandInfo.${currentStepName}`});
-
-            if (prevStepName != null && this.props.pressedStepIndex) {
-                ariaLabelObj['previousStepInfo'] =
-                    this.props.intl.formatMessage(
-                        { id: `CommandInfo.previousStep.${prevStepName}`},
-                        { previousStepNumber: this.props.pressedStepIndex }
-                    );
-            }
-
-            if (nextStepName != null) {
-                ariaLabelObj['nextStepInfo'] =
-                    this.props.intl.formatMessage(
-                        { id: `CommandInfo.nextStep.${nextStepName}`},
-                        { nextStepNumber: this.props.pressedStepIndex + 2}
-                    );
-            }
-            return ariaLabelObj;
-        }
-    }
-
-    render() {
-        const positionStyles = {
-            position: 'absolute',
-            top: this.props.position.top,
-            right: this.props.position.right
-        }
-        const stepInfoMessage = Object.assign({
-            'stepNumber': 0,
-            'stepName': '',
+        let ariaLabelObj = {
+            'stepNumber': this.props.pressedStepIndex + 1,
+            'stepName': this.props.intl.formatMessage({id:`CommandInfo.${currentStepName}`}),
             'selectedCommandName': '',
             'previousStepInfo': '',
             'nextStepInfo': ''
-        }, this.makeStepInfoMessage());
+        };
+
+        if (this.props.selectedCommandName) {
+            ariaLabelObj['selectedCommandName'] =
+                this.props.intl.formatMessage(
+                    { id: 'ActionPanel.selectedCommandName' },
+                    { selectedCommandName: this.props.selectedCommandName }
+                );
+        }
+
+        if (this.props.pressedStepIndex > 0) {
+            const prevStepName = this.props.program[this.props.pressedStepIndex - 1];
+            ariaLabelObj['previousStepInfo'] =
+                this.props.intl.formatMessage(
+                    { id: `CommandInfo.previousStep.${prevStepName}`},
+                    { previousStepNumber: this.props.pressedStepIndex }
+                );
+        }
+
+        if (this.props.pressedStepIndex < (this.props.program.length - 1)) {
+            const nextStepName = this.props.program[this.props.pressedStepIndex + 1];
+            ariaLabelObj['nextStepInfo'] =
+                this.props.intl.formatMessage(
+                    { id: `CommandInfo.nextStep.${nextStepName}`},
+                    { nextStepNumber: this.props.pressedStepIndex + 2}
+                );
+        }
+
+        return ariaLabelObj;
+    }
+
+    // handlers
+
+    handleClickDelete = () => {
+        this.props.onDelete(this.props.pressedStepIndex);
+    };
+
+    handleClickReplace = () => {
+        this.props.onReplace(this.props.pressedStepIndex);
+    };
+
+    handleClickMoveToPreviousStep = () => {
+        this.props.onMoveToPreviousStep(this.props.pressedStepIndex);
+    };
+
+    handleClickMoveToNextStep = () => {
+        this.props.onMoveToNextStep(this.props.pressedStepIndex);
+    };
+
+    render() {
+        const stepInfoMessage = this.makeStepInfoMessage();
         return (
             <div
                 id='ActionPanel'
                 className={'ActionPanel__panel'}
-                style={positionStyles}
+                data-actionpanelgroup={true}
                 ref={this.actionPanelRef}>
-                <Button
+                <AriaDisablingButton
                     name='deleteCurrentStep'
+                    disabled={false}
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.delete'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
-                    onClick={this.props.onDelete}>
+                    onClick={this.handleClickDelete}>
                     <DeleteIcon className='ActionPanel__action-button-svg' />
-                </Button>
-                <Button
+                </AriaDisablingButton>
+                <AriaDisablingButton
                     name='replaceCurrentStep'
+                    disabled={false}
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.replace'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons replace-action-button'
-                    onClick={this.props.onReplace}>
+                    onClick={this.handleClickReplace}>
                     <ReplaceIcon className='ActionPanel__action-button-svg' />
-                </Button>
-                <Button
+                </AriaDisablingButton>
+                <AriaDisablingButton
                     name='moveToPreviousStep'
+                    disabled={this.props.pressedStepIndex === 0}
+                    disabledClassName='ActionPanel__action-buttons--disabled'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToPreviousStep'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
-                    onClick={this.props.onMoveToPreviousStep}>
+                    onClick={this.handleClickMoveToPreviousStep}>
                     <MovePreviousIcon className='ActionPanel__action-button-svg' />
-                </Button>
-                <Button
+                </AriaDisablingButton>
+                <AriaDisablingButton
                     name='moveToNextStep'
+                    disabled={this.props.pressedStepIndex === this.props.program.length-1}
+                    disabledClassName='ActionPanel__action-buttons--disabled'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToNextStep'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
-                    onClick={this.props.onMoveToNextStep}>
+                    onClick={this.handleClickMoveToNextStep}>
                     <MoveNextIcon className='ActionPanel__action-button-svg' />
-                </Button>
+                </AriaDisablingButton>
             </div>
         )
     }

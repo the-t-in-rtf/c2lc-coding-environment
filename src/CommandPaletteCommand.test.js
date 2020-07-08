@@ -6,7 +6,11 @@ import { shallow, configure } from 'enzyme';
 import CommandBlock from './CommandBlock';
 import { createIntl } from 'react-intl';
 import App from './App';
+import AudioManager from './AudioManager';
 import CommandPaletteCommand from './CommandPaletteCommand';
+
+// Mocks
+jest.mock('./AudioManager');
 
 configure({ adapter: new Adapter()});
 
@@ -62,7 +66,10 @@ test('Pressed state is true when selecedCommandName is this command', () => {
     expect(getAriaPressedValue(wrapper)).toBe(true);
 });
 
-test('Clicking the button toggles selectedCommandName', () => {
+test('Clicking the button toggles selectedCommandName and plays its sound', () => {
+    const audioManagerInstance = new AudioManager(true);
+    // $FlowFixMe: Flow doesn't know about the Jest mock API
+    const audioManagerMock = AudioManager.mock.instances[0];
     const mockChangeHandler = jest.fn();
 
     const wrapper = shallow(
@@ -70,6 +77,7 @@ test('Clicking the button toggles selectedCommandName', () => {
             intl={intl}
             commandName='forward'
             selectedCommandName={null}
+            audioManager={audioManagerInstance}
             onChange={mockChangeHandler}/>
     );
 
@@ -77,6 +85,9 @@ test('Clicking the button toggles selectedCommandName', () => {
 
     // Initially the command is not selected
     button.simulate('click');
+    // Verify that the audioManager playSound is called
+    expect(audioManagerMock.playSound.mock.calls.length).toBe(1);
+    expect(audioManagerMock.playSound.mock.calls[0][0]).toBe('forward');
     // Verify that onChange is called with the commandName
     expect(mockChangeHandler.mock.calls.length).toBe(1);
     expect(mockChangeHandler.mock.calls[0][0]).toBe('forward');
@@ -85,6 +96,9 @@ test('Clicking the button toggles selectedCommandName', () => {
     wrapper.update();
     // Click again
     button.simulate('click');
+    // Verify that the audioManager playSound is called again
+    expect(audioManagerMock.playSound.mock.calls.length).toBe(2);
+    expect(audioManagerMock.playSound.mock.calls[1][0]).toBe('forward');
     // And verify that the command is toggled off
     expect(mockChangeHandler.mock.calls.length).toBe(2);
     expect(mockChangeHandler.mock.calls[1][0]).toBe(null);

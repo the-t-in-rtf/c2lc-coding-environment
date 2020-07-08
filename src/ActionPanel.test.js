@@ -9,17 +9,6 @@ import messages from './messages.json';
 
 configure({ adapter: new Adapter()});
 
-const defaultActionPanelProps = {
-    focusedOptionName: null,
-    selectedCommandName: 'right',
-    program: ['forward', 'left', 'right'],
-    pressedStepIndex: 1,
-    position: {
-        top: 0,
-        right: 0
-    },
-};
-
 function createMountActionPanel(props) {
     const mockDeleteHandler = jest.fn();
     const mockReplaceHandler = jest.fn();
@@ -30,9 +19,15 @@ function createMountActionPanel(props) {
         React.createElement(
             ActionPanel,
             Object.assign(
-                {},
-                defaultActionPanelProps,
                 {
+                    focusedOptionName: null,
+                    selectedCommandName: 'right',
+                    program: ['forward', 'left', 'right'],
+                    pressedStepIndex: 1,
+                    position: {
+                        top: 0,
+                        right: 0
+                    },
                     onDelete: mockDeleteHandler,
                     onReplace: mockReplaceHandler,
                     onMoveToPreviousStep: mockMoveToPreviousStep,
@@ -66,39 +61,81 @@ function getActionPanelOptionButtons(actionPanelWrapper, controlName) {
 
 describe('ActionPanel options', () => {
     test('When the deleteCurrentStep option is selected on second step turn left of the program', () => {
-        const { wrapper, mockDeleteHandler } = createMountActionPanel();
+        const pressedStepIndex = 1;
+        const { wrapper, mockDeleteHandler } = createMountActionPanel({
+            pressedStepIndex: pressedStepIndex
+        });
         const deleteButton = getActionPanelOptionButtons(wrapper, 'deleteCurrentStep');
         const expectedAriaLabel = 'Delete Step 2 turn left';
         expect(deleteButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
         deleteButton.simulate('click');
         expect(mockDeleteHandler.mock.calls.length).toBe(1);
+        expect(mockDeleteHandler.mock.calls[0][0]).toBe(pressedStepIndex);
     });
 
     test('When the replaceCurrentStep option is selected on second step turn left of the program', () => {
-        const { wrapper, mockReplaceHandler } = createMountActionPanel();
+        const pressedStepIndex = 1;
+        const { wrapper, mockReplaceHandler } = createMountActionPanel({
+            pressedStepIndex: pressedStepIndex
+        });
         const replaceCurrentStepButton = getActionPanelOptionButtons(wrapper, 'replaceCurrentStep');
         const expectedAriaLabel = 'Replace Step 2 turn left with selected action right';
         expect(replaceCurrentStepButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
         replaceCurrentStepButton.simulate('click');
         expect(mockReplaceHandler.mock.calls.length).toBe(1);
-    })
+        expect(mockReplaceHandler.mock.calls[0][0]).toBe(pressedStepIndex);
+    });
 
     test('When the moveToPreviousStep option is selected on second step turn left of the program', () => {
-        const { wrapper, mockMoveToPreviousStep } = createMountActionPanel();
+        const pressedStepIndex = 1;
+        const { wrapper, mockMoveToPreviousStep } = createMountActionPanel({
+            pressedStepIndex: pressedStepIndex
+        });
         const moveToPreviousStepButton = getActionPanelOptionButtons(wrapper, 'moveToPreviousStep');
         const expectedAriaLabel = 'Move Step 2 turn left before step 1 forward';
         expect(moveToPreviousStepButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
         moveToPreviousStepButton.simulate('click');
         expect(mockMoveToPreviousStep.mock.calls.length).toBe(1);
+        expect(mockMoveToPreviousStep.mock.calls[0][0]).toBe(pressedStepIndex);
+    });
+
+    test('When the moveToPreviousStep option is selected on first step of the program', () => {
+        const { wrapper, mockMoveToPreviousStep } = createMountActionPanel({
+            pressedStepIndex: 0
+        });
+        const moveToPreviousStepButton = getActionPanelOptionButtons(wrapper, 'moveToPreviousStep');
+        const expectedAriaLabel = 'Move Step 1 forward ';
+        expect(moveToPreviousStepButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
+        expect(moveToPreviousStepButton.get(0).props['disabled']).toBe(true);
+        moveToPreviousStepButton.simulate('click');
+        // Move to previous button is disabled when a block is the first block, clicking doesn't do anything
+        expect(mockMoveToPreviousStep.mock.calls.length).toBe(0);
     });
 
     test('When the moveToNextStep option is selected on second step turn left of the program', () => {
-        const { wrapper, mockMoveToNextStep } = createMountActionPanel();
+        const pressedStepIndex = 1;
+        const { wrapper, mockMoveToNextStep } = createMountActionPanel({
+            pressedStepIndex: pressedStepIndex
+        });
         const moveToNextStepButton = getActionPanelOptionButtons(wrapper, 'moveToNextStep');
         const expectedAriaLabel = 'Move Step 2 turn left after step 3 turn right';
         expect(moveToNextStepButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
         moveToNextStepButton.simulate('click');
         expect(mockMoveToNextStep.mock.calls.length).toBe(1);
+        expect(mockMoveToNextStep.mock.calls[0][0]).toBe(pressedStepIndex);
+    });
+
+    test('When the moveToNextStep option is selected on last step of the program', () => {
+        const { wrapper, mockMoveToNextStep } = createMountActionPanel({
+            pressedStepIndex: 2
+        });
+        const moveToNextStepButton = getActionPanelOptionButtons(wrapper, 'moveToNextStep');
+        const expectedAriaLabel = 'Move Step 3 turn right ';
+        expect(moveToNextStepButton.get(0).props['aria-label']).toBe(expectedAriaLabel);
+        expect(moveToNextStepButton.get(0).props['disabled']).toBe(true);
+        moveToNextStepButton.simulate('click');
+        // Move to next button is disabled when a block is the last block, clicking doesn't do anything
+        expect(mockMoveToNextStep.mock.calls.length).toBe(0);
     });
 });
 

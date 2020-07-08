@@ -27,8 +27,7 @@
     justify-self: end;
     grid-column-start: 2;
     grid-column-end: 3;
-    padding-right: 1rem;
-    padding-top: 1rem;
+    margin: auto 1rem auto 0;
 }
 
 .ProgramBlockEditor__addNode {
@@ -40,6 +39,7 @@
 }
 
 button.btn.ProgramBlockEditor__program-deleteAll-button {
+    vertical-align: top;
     margin-left: 50px;
     border: 1px solid #FFF;
     border-radius: 50%;
@@ -49,6 +49,12 @@ button.btn.ProgramBlockEditor__program-deleteAll-button {
 
 button.btn.ProgramBlockEditor__program-deleteAll-button:not(:focus) {
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+}
+
+button.btn.ProgramBlockEditor__program-deleteAll-button:hover {
+    box-shadow: 0 0 0 $c2lc-hover-indicator-width $c2lc-focus-indicator-color;
+    z-index: 1;
+    background-color: #e5e5e5;
 }
 
 button.btn.ProgramBlockEditor__program-deleteAll-button--pressed {
@@ -128,6 +134,33 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEdi
 
 button.ProgramBlockEditor__program-block--active {
     box-shadow: 0 0 0 0.2rem #79F1CD;
+}
+
+.ProgramBlockEditor__action-panel-container-outer {
+    position: relative;
+    left: 50%;
+}
+
+// TODO: Calculate vertical offset using the size of the arrow,
+//       rather than adding 30%
+
+// Note: An alternative to using left and top with actual lengths, would
+//       be to use CSS translation with percentages, as those percentages
+//       are relative to the object being translated. For example:
+//
+//       transform: translate(-50%, -130%);
+//
+//       However, when using the above translation, Firefox (version
+//       78 on Linux at least) does not align box-shadows properly (as
+//       we are using for hover and focus indication). This bug
+//       describes the situation but is closed:
+//
+//       https://bugzilla.mozilla.org/show_bug.cgi?id=766564
+
+.ProgramBlockEditor__action-panel-container-inner {
+    position: absolute;
+    left: #{-$c2lc-action-panel-width / 2};
+    top: #{-$c2lc-action-panel-height * 1.3};
 }
 
 .ProgramBlockEditor__footer {
