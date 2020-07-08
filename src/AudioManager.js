@@ -17,7 +17,7 @@ export default class AudioManager {
         };
     }
 
-    playSound = (soundName: string) => {
+    playSound(soundName: string) {
         this.audioLookUpTable[soundName].play();
     }
 };

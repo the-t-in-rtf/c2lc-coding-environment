@@ -5,10 +5,10 @@ import CommandBlock from './CommandBlock';
 import { injectIntl } from 'react-intl';
 
 type CommandPaletteCommandProps = {
-    audioManager: Object,
     commandName: string,
     intl: any,
     selectedCommandName: ?string,
+    audioManager: Object,
     onChange: (commandName: ?string) => void,
     onDragStart: (commandName: string) => void,
     onDragEnd: () => void

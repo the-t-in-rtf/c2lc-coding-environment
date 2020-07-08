@@ -281,27 +281,27 @@ export default class App extends React.Component<{}, AppState> {
                                     </h2>
                                     <div className='App__command-palette-command'>
                                         <CommandPaletteCommand
-                                            audioManager={this.audioManager}
                                             commandName='forward'
                                             selectedCommandName={this.getSelectedCommandName()}
+                                            audioManager={this.audioManager}
                                             onChange={this.handleCommandFromCommandPalette}
                                             onDragStart={this.handleDragStartCommand}
                                             onDragEnd={this.handleDragEndCommand}/>
                                     </div>
                                     <div className='App__command-palette-command'>
                                         <CommandPaletteCommand
-                                            audioManager={this.audioManager}
                                             commandName='right'
                                             selectedCommandName={this.getSelectedCommandName()}
+                                            audioManager={this.audioManager}
                                             onChange={this.handleCommandFromCommandPalette}
                                             onDragStart={this.handleDragStartCommand}
                                             onDragEnd={this.handleDragEndCommand}/>
                                     </div>
                                     <div className='App__command-palette-command'>
                                         <CommandPaletteCommand
-                                            audioManager={this.audioManager}
                                             commandName='left'
                                             selectedCommandName={this.getSelectedCommandName()}
+                                            audioManager={this.audioManager}
                                             onChange={this.handleCommandFromCommandPalette}
                                             onDragStart={this.handleDragStartCommand}
                                             onDragEnd={this.handleDragEndCommand}/>
