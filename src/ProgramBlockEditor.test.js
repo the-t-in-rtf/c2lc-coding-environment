@@ -450,14 +450,14 @@ describe('The Run button can be disabled', () => {
 });
 
 test('The editor scrolls when a step is added to the end of the program', () => {
-    //expect.assertions(6);
+    expect.assertions(8);
 
     const mockScrollIntoView = jest.fn();
 
     window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
 
     // Given a program of 5 forwards and 'forward' as the selected command
-    const { wrapper, mockChangeProgramHandler } = createMountProgramBlockEditor({
+    const { wrapper, audioManagerMock, mockChangeProgramHandler } = createMountProgramBlockEditor({
         program: ['forward', 'forward', 'forward', 'forward', 'forward'],
         selectedAction: 'forward'
     });
@@ -466,7 +466,11 @@ test('The editor scrolls when a step is added to the end of the program', () => 
     const addNode = getAddNodeButtonAtPosition(wrapper, 5);
     addNode.simulate('click');
 
-    // Then the program should be changed
+    // Then the 'add' sound should be played
+    expect(audioManagerMock.playSound.mock.calls.length).toBe(1);
+    expect(audioManagerMock.playSound.mock.calls[0][0]).toBe('add');
+
+    // And the program should be changed
     expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
     expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(
         ['forward', 'forward', 'forward', 'forward', 'forward', 'forward']);
