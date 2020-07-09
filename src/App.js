@@ -3,6 +3,7 @@
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
+import AudioManager from './AudioManager';
 import BluetoothApiWarning from './BluetoothApiWarning';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
@@ -18,6 +19,7 @@ import * as Utils from './Utils';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import messages from './messages.json';
 import './App.scss';
+import './vendor/dragdroptouch/DragDropTouch.js';
 
 // Uncomment to use the FakeRobotDriver (see driver construction below also)
 //import FakeRobotDriver from './FakeRobotDriver';
@@ -47,6 +49,7 @@ export default class App extends React.Component<{}, AppState> {
     dashDriver: RobotDriver;
     interpreter: Interpreter;
     toCommandPaletteNoticeId: string;
+    audioManager: AudioManager;
     focusTrapManager: FocusTrapManager;
 
     constructor(props: {}) {
@@ -72,11 +75,36 @@ export default class App extends React.Component<{}, AppState> {
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
 
+        const playCommandAndWait = (commandName: string): Promise<void> => {
+            this.audioManager.playSound(commandName);
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve();
+                }, 1750);
+            });
+        };
+
         this.interpreter.addCommandHandler(
-            'none',
-            'noneHandler',
+            'forward',
+            'playCommandAndWait',
             () => {
-                return Promise.resolve();
+                return playCommandAndWait('forward');
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'left',
+            'playCommandAndWait',
+            () => {
+                return playCommandAndWait('left');
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'right',
+            'playCommandAndWait',
+            () => {
+                return playCommandAndWait('right');
             }
         );
 
@@ -84,6 +112,8 @@ export default class App extends React.Component<{}, AppState> {
         this.dashDriver = new DashDriver();
 
         this.toCommandPaletteNoticeId = Utils.generateId('toCommandPaletteNotice');
+
+        this.audioManager = new AudioManager();
 
         this.focusTrapManager = new FocusTrapManager();
     }
@@ -253,6 +283,7 @@ export default class App extends React.Component<{}, AppState> {
                                         <CommandPaletteCommand
                                             commandName='forward'
                                             selectedCommandName={this.getSelectedCommandName()}
+                                            audioManager={this.audioManager}
                                             onChange={this.handleCommandFromCommandPalette}
                                             onDragStart={this.handleDragStartCommand}
                                             onDragEnd={this.handleDragEndCommand}/>
@@ -261,6 +292,7 @@ export default class App extends React.Component<{}, AppState> {
                                         <CommandPaletteCommand
                                             commandName='right'
                                             selectedCommandName={this.getSelectedCommandName()}
+                                            audioManager={this.audioManager}
                                             onChange={this.handleCommandFromCommandPalette}
                                             onDragStart={this.handleDragStartCommand}
                                             onDragEnd={this.handleDragEndCommand}/>
@@ -269,6 +301,7 @@ export default class App extends React.Component<{}, AppState> {
                                         <CommandPaletteCommand
                                             commandName='left'
                                             selectedCommandName={this.getSelectedCommandName()}
+                                            audioManager={this.audioManager}
                                             onChange={this.handleCommandFromCommandPalette}
                                             onDragStart={this.handleDragStartCommand}
                                             onDragEnd={this.handleDragEndCommand}/>
@@ -285,9 +318,9 @@ export default class App extends React.Component<{}, AppState> {
                                     selectedAction={this.state.selectedAction}
                                     isDraggingCommand={this.state.isDraggingCommand}
                                     runButtonDisabled={
-                                        this.state.dashConnectionStatus !== 'connected' ||
                                         this.state.interpreterIsRunning ||
                                         programIsEmpty(this.state.program)}
+                                    audioManager={this.audioManager}
                                     focusTrapManager={this.focusTrapManager}
                                     onClickRunButton={this.handleClickRun}
                                     onChangeProgram={this.handleChangeProgram}

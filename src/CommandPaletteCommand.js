@@ -2,12 +2,14 @@
 
 import React from 'react';
 import CommandBlock from './CommandBlock';
+import AudioManager from './AudioManager';
 import { injectIntl } from 'react-intl';
 
 type CommandPaletteCommandProps = {
     commandName: string,
     intl: any,
     selectedCommandName: ?string,
+    audioManager: AudioManager,
     onChange: (commandName: ?string) => void,
     onDragStart: (commandName: string) => void,
     onDragEnd: () => void
@@ -15,6 +17,7 @@ type CommandPaletteCommandProps = {
 
 class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, {}> {
     handleClick = () => {
+        this.props.audioManager.playSound(this.props.commandName);
         this.props.onChange(
             this.props.commandName === this.props.selectedCommandName ? null : this.props.commandName
         );
