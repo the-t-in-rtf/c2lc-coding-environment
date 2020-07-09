@@ -6,6 +6,10 @@ import { configure, shallow } from 'enzyme';
 import { Row } from 'react-bootstrap';
 import CommandPaletteCategory from './CommandPaletteCategory';
 import CommandPaletteCommand from './CommandPaletteCommand';
+import AudioManager from './AudioManager';
+
+// Mocks
+jest.mock('./AudioManager');
 
 configure({ adapter: new Adapter()});
 
@@ -23,7 +27,7 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
             <CommandPaletteCommand
                 commandName='forward'
                 selectedCommandName={null}
-                audioManager={{}}
+                audioManager={new AudioManager()}
                 onChange={() => {}}
                 onDragStart={() => {}}
                 onDragEnd={() => {}}
@@ -38,7 +42,7 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
             <CommandPaletteCommand
                 commandName='forward'
                 selectedCommandName={null}
-                audioManager={{}}
+                audioManager={new AudioManager()}
                 onChange={() => {}}
                 onDragStart={() => {}}
                 onDragEnd={() => {}}
@@ -46,7 +50,7 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
             <CommandPaletteCommand
                 commandName='left'
                 selectedCommandName={null}
-                audioManager={{}}
+                audioManager={new AudioManager()}
                 onChange={() => {}}
                 onDragStart={() => {}}
                 onDragEnd={() => {}}
@@ -54,7 +58,7 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
             <CommandPaletteCommand
                 commandName='right'
                 selectedCommandName={null}
-                audioManager={{}}
+                audioManager={new AudioManager()}
                 onChange={() => {}}
                 onDragStart={() => {}}
                 onDragEnd={() => {}}
