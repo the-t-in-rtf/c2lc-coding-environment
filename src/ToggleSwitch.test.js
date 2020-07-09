@@ -51,17 +51,20 @@ describe('Given value property is false', () => {
     });
 
     test('It should be unchecked', () => {
+        expect.assertions(2);
         const toggleSwitch = getToggleSwitch(wrapper);
         expect(toggleSwitch.prop('aria-checked')).toBe(false);
         expect(toggleSwitch.hasClass('ToggleSwitch--checked')).toBe(false);
     });
 
     test('When the value property is false, contentsFalse should be rendered', () => {
+        expect.assertions(1);
         const toggleSwitch = getToggleSwitch(wrapper);
         expect(toggleSwitch.children().props().children).toBe('contentsFalse');
     });
 
     test('When clicked, then onChange handler should be called with negation of the value property', () => {
+        expect.assertions(2);
         const toggleSwitch = getToggleSwitch(wrapper);
         toggleSwitch.simulate('click');
         expect(mockChangeHandler.mock.calls.length).toBe(1);
@@ -69,6 +72,7 @@ describe('Given value property is false', () => {
     });
 
     test('When space key is pressed, then onChange handler should be called with negation of the value property', () => {
+        expect.assertions(2);
         const toggleSwitch = getToggleSwitch(wrapper);
         toggleSwitch.simulate('keyDown', {key: ' ', preventDefault: ()=>{}});
         expect(mockChangeHandler.mock.calls.length).toBe(1);
@@ -89,17 +93,20 @@ describe('Given value property is true', () => {
     });
 
     test('It should be checked', () => {
+        expect.assertions(2);
         const toggleSwitch = getToggleSwitch(wrapper);
         expect(toggleSwitch.prop('aria-checked')).toBe(true);
         expect(toggleSwitch.hasClass('ToggleSwitch--checked')).toBe(true);
     });
 
     test('When the value property is true, contentsTrue should be rendered', () => {
+        expect.assertions(1);
         const toggleSwitch = getToggleSwitch(wrapper);
         expect(toggleSwitch.children().props().children).toBe('contentsTrue');
     });
 
     test('When clicked, then onChange handler should be called with negation of the value property', () => {
+        expect.assertions(2);
         const toggleSwitch = getToggleSwitch(wrapper);
         toggleSwitch.simulate('click');
         expect(mockChangeHandler.mock.calls.length).toBe(1);
@@ -107,6 +114,7 @@ describe('Given value property is true', () => {
     });
 
     test('When space key is pressed, then onChange handler should be called with negation of the value property', () => {
+        expect.assertions(2);
         const toggleSwitch = getToggleSwitch(wrapper);
         toggleSwitch.simulate('keyDown', {key: ' ', preventDefault: ()=>{}});
         expect(mockChangeHandler.mock.calls.length).toBe(1);
@@ -115,8 +123,11 @@ describe('Given value property is true', () => {
 });
 
 describe('When there is className property', () => {
-    const className = 'testing';
-    const { wrapper } = createShallowToggleSwitch({ className: className });
-    const toggleSwitch = getToggleSwitch(wrapper);
-    expect(toggleSwitch.prop('className').includes(className)).toBe(true);
+    test('className should include the property', () => {
+        expect.assertions(1);
+        const className = 'testing';
+        const { wrapper } = createShallowToggleSwitch({ className: className });
+        const toggleSwitch = getToggleSwitch(wrapper);
+        expect(toggleSwitch.prop('className').includes(className)).toBe(true);
+    });
 });
