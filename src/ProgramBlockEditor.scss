@@ -30,11 +30,11 @@
     margin: auto 1rem auto 0;
 }
 
-.ProgramBlockEditor__addNode {
+.ProgramBlockEditor__add-node-toggle-switch {
     float: left;
 }
 
-.ProgramBlockEditor__addNode--checked {
+.ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch--checked {
     background: #000;
 }
 

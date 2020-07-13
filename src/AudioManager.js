@@ -25,7 +25,7 @@ export default class AudioManager {
         }
     }
 
-    setAudioEnabled = (value: boolean) => {
+    setAudioEnabled(value: boolean) {
         this.audioEnabled = value;
     }
 };

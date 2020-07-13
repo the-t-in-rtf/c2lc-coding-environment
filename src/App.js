@@ -243,7 +243,7 @@ export default class App extends React.Component<{}, AppState> {
         this.focusTrapManager.handleKeyDown(e);
     };
 
-    hanldeToggleAudioFeedback = (audioEnabled: boolean) => {
+    handleToggleAudioFeedback = (audioEnabled: boolean) => {
         this.setState({
             audioEnabled: audioEnabled
         });
@@ -267,7 +267,7 @@ export default class App extends React.Component<{}, AppState> {
                                     <div className='App__audio-toggle-switch'>
                                         <AudioFeedbackToggleSwitch
                                             value={this.state.audioEnabled}
-                                            onChange={this.hanldeToggleAudioFeedback} />
+                                            onChange={this.handleToggleAudioFeedback} />
                                     </div>
                                     <DeviceConnectControl
                                         disabled={

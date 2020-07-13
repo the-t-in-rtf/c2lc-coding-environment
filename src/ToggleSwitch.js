@@ -33,15 +33,12 @@ export default class ToggleSwitch extends React.Component<ToggleSwitchProps, {}>
     render() {
         const classes = classNames(
             this.props.className,
-            'ToggleSwitch'
+            'ToggleSwitch',
+            { 'ToggleSwitch--checked': this.props.value }
         );
         return (
             <div
-                className= {
-                    this.props.value ?
-                    `${classes} ToggleSwitch--checked` :
-                    classes
-                }
+                className= {classes}
                 role='switch'
                 aria-label={this.props.ariaLabel}
                 aria-checked={this.props.value}

@@ -369,11 +369,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             onChange={this.handleChangeAddNodeExpandedMode}
                             contentsTrue={<AddIcon />}
                             contentsFalse={<AddIcon />}
-                            className={
-                                this.state.addNodeExpandedMode ?
-                                    'ProgramBlockEditor__addNode ProgramBlockEditor__addNode--checked' :
-                                    'ProgramBlockEditor__addNode'
-                            }
+                            className='ProgramBlockEditor__add-node-toggle-switch'
                         />
                         <span className='ProgramBlockEditor__program-deleteAll'>
                             <AriaDisablingButton
