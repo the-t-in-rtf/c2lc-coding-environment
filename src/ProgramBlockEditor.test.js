@@ -43,7 +43,7 @@ function createShallowProgramBlockEditor(props) {
 
     // $FlowFixMe: Flow doesn't know about the Jest mock API
     AudioManager.mockClear();
-    const audioManagerInstance = new AudioManager();
+    const audioManagerInstance = new AudioManager(true);
     // $FlowFixMe: Flow doesn't know about the Jest mock API
     const audioManagerMock = AudioManager.mock.instances[0];
 
@@ -79,7 +79,7 @@ function createShallowProgramBlockEditor(props) {
 function createMountProgramBlockEditor(props) {
     // $FlowFixMe: Flow doesn't know about the Jest mock API
     AudioManager.mockClear();
-    const audioManagerInstance = new AudioManager();
+    const audioManagerInstance = new AudioManager(true);
     // $FlowFixMe: Flow doesn't know about the Jest mock API
     const audioManagerMock = AudioManager.mock.instances[0];
 

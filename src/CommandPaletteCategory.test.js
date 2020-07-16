@@ -27,7 +27,7 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
             <CommandPaletteCommand
                 commandName='forward'
                 selectedCommandName={null}
-                audioManager={new AudioManager()}
+                audioManager={new AudioManager(true)}
                 onChange={() => {}}
                 onDragStart={() => {}}
                 onDragEnd={() => {}}
@@ -42,7 +42,7 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
             <CommandPaletteCommand
                 commandName='forward'
                 selectedCommandName={null}
-                audioManager={new AudioManager()}
+                audioManager={new AudioManager(true)}
                 onChange={() => {}}
                 onDragStart={() => {}}
                 onDragEnd={() => {}}
@@ -50,7 +50,7 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
             <CommandPaletteCommand
                 commandName='left'
                 selectedCommandName={null}
-                audioManager={new AudioManager()}
+                audioManager={new AudioManager(true)}
                 onChange={() => {}}
                 onDragStart={() => {}}
                 onDragEnd={() => {}}
@@ -58,7 +58,7 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
             <CommandPaletteCommand
                 commandName='right'
                 selectedCommandName={null}
-                audioManager={new AudioManager()}
+                audioManager={new AudioManager(true)}
                 onChange={() => {}}
                 onDragStart={() => {}}
                 onDragEnd={() => {}}

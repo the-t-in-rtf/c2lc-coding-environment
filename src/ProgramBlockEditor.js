@@ -6,13 +6,14 @@ import type {Program} from './types';
 import React from 'react';
 import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
 import AddNode from './AddNode';
-import AddNodeToggleSwitch from './AddNodeToggleSwitch';
 import ActionPanel from './ActionPanel';
 import AriaDisablingButton from './AriaDisablingButton';
 import AudioManager from './AudioManager';
 import FocusTrapManager from './FocusTrapManager';
 import CommandBlock from './CommandBlock';
 import classNames from 'classnames';
+import ToggleSwitch from './ToggleSwitch';
+import { ReactComponent as AddIcon } from './svg/Add.svg';
 import { ReactComponent as PlayIcon } from './svg/Play.svg';
 import { ReactComponent as DeleteAllIcon } from './svg/DeleteAll.svg';
 import './ProgramBlockEditor.scss';
@@ -362,9 +363,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         <FormattedMessage id='ProgramBlockEditor.programHeading' />
                     </h2>
                     <div className='ProgramBlockEditor__options'>
-                        <AddNodeToggleSwitch
-                            isAddNodeExpandedMode={this.state.addNodeExpandedMode}
+                        <ToggleSwitch
+                            ariaLabel={this.props.intl.formatMessage({id:'ProgramBlockEditor.toggleAddNodeExpandMode'})}
+                            value={this.state.addNodeExpandedMode}
                             onChange={this.handleChangeAddNodeExpandedMode}
+                            contentsTrue={<AddIcon />}
+                            contentsFalse={<AddIcon />}
+                            className='ProgramBlockEditor__add-node-toggle-switch'
                         />
                         <span className='ProgramBlockEditor__program-deleteAll'>
                             <AriaDisablingButton

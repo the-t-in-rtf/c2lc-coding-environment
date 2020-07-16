@@ -30,6 +30,14 @@
     margin: auto 1rem auto 0;
 }
 
+.ProgramBlockEditor__add-node-toggle-switch {
+    float: left;
+}
+
+.ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch--checked {
+    background: #000;
+}
+
 button.btn.ProgramBlockEditor__program-deleteAll-button {
     vertical-align: top;
     margin-left: 50px;

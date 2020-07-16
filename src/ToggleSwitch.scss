@@ -1,6 +1,6 @@
 @import 'variables';
 
-.AddNodeToggleSwitch {
+.ToggleSwitch {
     width: 4.2rem;
     max-height: 2.4rem;
     background: #c4c4c4;
@@ -9,32 +9,28 @@
     display: inline-block;
 }
 
-.AddNodeToggleSwitch:focus {
-    box-shadow: 0 0 0 $c2lc-focus-indicator-width #299DCE;
+.ToggleSwitch:focus {
+    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
     outline: none;
 }
 
-.AddNodeToggleSwitch:hover {
+.ToggleSwitch:hover {
     box-shadow: 0 0 0 $c2lc-focus-indicator-width #299DCE;
     background-color: #299DCE;
 }
 
-.AddNodeToggleSwitch--checked {
-    background: #000;
-}
-
-.AddNodeToggleSwitch--checked > div {
+.ToggleSwitch--checked > div {
     margin-left: 1.8rem;
 }
 
-.AddNodeToggleSwitch__switch-inner-circle {
+.ToggleSwitch__switch-inner-circle {
     background: #F1F1F1;
     border-radius: 50%;
     padding: 0.2rem;
     display: inline-block;
 }
 
-.AddNodeToggleSwitch__switch-inner-circle svg {
+.ToggleSwitch__switch-inner-circle svg {
     height: 1.6rem;
     width: 1.6rem;
     display: block;

@@ -14,6 +14,7 @@ import FocusTrapManager from './FocusTrapManager';
 import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
+import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import { programIsEmpty } from './ProgramUtils';
 import * as Utils from './Utils';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
@@ -41,6 +42,7 @@ type AppState = {
     showDashConnectionError: boolean,
     selectedAction: ?string,
     isDraggingCommand: boolean,
+    audioEnabled: boolean,
     actionPanelStepIndex: ?number
 };
 
@@ -70,6 +72,7 @@ export default class App extends React.Component<{}, AppState> {
             showDashConnectionError: false,
             selectedAction: null,
             isDraggingCommand: false,
+            audioEnabled: true,
             actionPanelStepIndex: null
         };
 
@@ -113,7 +116,7 @@ export default class App extends React.Component<{}, AppState> {
 
         this.toCommandPaletteNoticeId = Utils.generateId('toCommandPaletteNotice');
 
-        this.audioManager = new AudioManager();
+        this.audioManager = new AudioManager(this.state.audioEnabled);
 
         this.focusTrapManager = new FocusTrapManager();
     }
@@ -240,6 +243,12 @@ export default class App extends React.Component<{}, AppState> {
         this.focusTrapManager.handleKeyDown(e);
     };
 
+    handleToggleAudioFeedback = (audioEnabled: boolean) => {
+        this.setState({
+            audioEnabled: audioEnabled
+        });
+    }
+
     render() {
         return (
             <IntlProvider
@@ -254,14 +263,21 @@ export default class App extends React.Component<{}, AppState> {
                                 <h1 className='App__app-heading'>
                                     <FormattedMessage id='App.appHeading'/>
                                 </h1>
-                                <DeviceConnectControl
-                                    disabled={
-                                        !this.appContext.bluetoothApiIsAvailable ||
-                                        this.state.dashConnectionStatus === 'connected' }
-                                    connectionStatus={this.state.dashConnectionStatus}
-                                    onClickConnect={this.handleClickConnectDash}>
-                                    <FormattedMessage id='App.connectToDash' />
-                                </DeviceConnectControl>
+                                <div className='App__header-right'>
+                                    <div className='App__audio-toggle-switch'>
+                                        <AudioFeedbackToggleSwitch
+                                            value={this.state.audioEnabled}
+                                            onChange={this.handleToggleAudioFeedback} />
+                                    </div>
+                                    <DeviceConnectControl
+                                        disabled={
+                                            !this.appContext.bluetoothApiIsAvailable ||
+                                            this.state.dashConnectionStatus === 'connected' }
+                                        connectionStatus={this.state.dashConnectionStatus}
+                                        onClickConnect={this.handleClickConnectDash}>
+                                        <FormattedMessage id='App.connectToDash' />
+                                    </DeviceConnectControl>
+                                </div>
                             </Row>
                         </Container>
                     </header>
@@ -339,6 +355,9 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
+        if (this.state.audioEnabled !== prevState.audioEnabled) {
+            this.audioManager.setAudioEnabled(this.state.audioEnabled);
+        }
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 
