@@ -14,6 +14,7 @@ import FocusTrapManager from './FocusTrapManager';
 import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
+import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import { programIsEmpty } from './ProgramUtils';
 import * as Utils from './Utils';
@@ -53,6 +54,7 @@ export default class App extends React.Component<{}, AppState> {
     toCommandPaletteNoticeId: string;
     audioManager: AudioManager;
     focusTrapManager: FocusTrapManager;
+    sceneRef: { current: null | Scene };
 
     constructor(props: {}) {
         super(props);
@@ -76,9 +78,20 @@ export default class App extends React.Component<{}, AppState> {
             actionPanelStepIndex: null
         };
 
+        this.sceneRef = React.createRef<Scene>();
+
         this.interpreter = new Interpreter(this.handleRunningStateChange);
 
-        const playCommandAndWait = (commandName: string): Promise<void> => {
+        const moveCharacter = (commandName: string): Promise<void> => {
+            if (this.sceneRef.current !== null) {
+                if (commandName === 'forward') {
+                    this.sceneRef.current.forward(40);
+                } else if (commandName === 'left') {
+                    this.sceneRef.current.turnLeft(90);
+                } else if (commandName === 'right') {
+                    this.sceneRef.current.turnRight(90);
+                }
+            }
             this.audioManager.playSound(commandName);
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
@@ -89,25 +102,25 @@ export default class App extends React.Component<{}, AppState> {
 
         this.interpreter.addCommandHandler(
             'forward',
-            'playCommandAndWait',
+            'moveCharacter',
             () => {
-                return playCommandAndWait('forward');
+                return moveCharacter('forward');
             }
         );
 
         this.interpreter.addCommandHandler(
             'left',
-            'playCommandAndWait',
+            'moveCharacter',
             () => {
-                return playCommandAndWait('left');
+                return moveCharacter('left');
             }
         );
 
         this.interpreter.addCommandHandler(
             'right',
-            'playCommandAndWait',
+            'moveCharacter',
             () => {
-                return playCommandAndWait('right');
+                return moveCharacter('right');
             }
         );
 
@@ -289,6 +302,9 @@ export default class App extends React.Component<{}, AppState> {
                                 </Col>
                             </Row>
                         }
+                        <div className='App__scene-container'>
+                            <Scene ref={this.sceneRef} />
+                        </div>
                         <Row className='App__program-section' noGutters={true}>
                             <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
                                 <div className='App__command-palette'>
