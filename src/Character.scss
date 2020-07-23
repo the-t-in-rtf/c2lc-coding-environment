@@ -1,0 +1,14 @@
+@import 'variables';
+
+.Character {
+    x: calc(#{$c2lc-character-container-width/2 - $c2lc-character-width/2});
+    y: calc(#{$c2lc-character-container-height/2 - $c2lc-character-width/2});
+    width: $c2lc-character-width;
+    height: $c2lc-character-height;
+}
+
+.Character__container {
+    r: $c2lc-character-container-width/2;
+    stroke: #777777;
+    stroke-width: 0.05rem;
+}
