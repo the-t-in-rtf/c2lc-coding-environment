@@ -2,23 +2,18 @@
 
 import React from 'react';
 import * as C2lcMath from './C2lcMath';
-import './TurtleGraphics.css';
+import Character from './Character';
+import './Scene.scss';
 
-type TurtleGraphicsState = {
+type SceneState = {
     location: {
         x: number,
         y: number
     },
-    directionDegrees: number,
-    path: Array<{
-        x1: number,
-        y1: number,
-        x2: number,
-        y2: number
-    }>
+    directionDegrees: number
 };
 
-export default class TurtleGraphics extends React.Component<{}, TurtleGraphicsState> {
+export default class Scene extends React.Component<{}, SceneState> {
     constructor(props: {}) {
         super(props);
         this.state = {
@@ -26,8 +21,7 @@ export default class TurtleGraphics extends React.Component<{}, TurtleGraphicsSt
                 x: 0,
                 y: 0
             },
-            directionDegrees: 0,
-            path: []
+            directionDegrees: 90 // 0 is North, 90 is East
         }
     }
 
@@ -39,19 +33,12 @@ export default class TurtleGraphics extends React.Component<{}, TurtleGraphicsSt
 
             const newX = state.location.x + xOffset;
             const newY = state.location.y - yOffset;
-            const newPathSegment = {
-                x1: state.location.x,
-                y1: state.location.y,
-                x2: newX,
-                y2: newY
-            };
 
             return {
                 location: {
                     x: newX,
                     y: newY
-                },
-                path: state.path.concat([newPathSegment])
+                }
             }
         });
 
@@ -90,37 +77,20 @@ export default class TurtleGraphics extends React.Component<{}, TurtleGraphicsSt
         });
     }
 
-    clear(): void {
-        this.setState({
-            path: []
-        });
-    }
-
     render() {
         const turtleTransform = `translate(${this.state.location.x} ${this.state.location.y}) rotate(${this.state.directionDegrees} 0 0)`;
 
         return (
             <div>
                 <span
-                    className='TurtleGraphics__drawing-area'
+                    className='Scene__drawing-area'
                     role='img'
                     aria-label='Drawing area'>
                     <svg
-                        className='TurtleGraphics__svg'
+                        className='Scene__svg'
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox='-100 -100 200 200'>
-                        {this.state.path.map((pathSegment, i) => {
-                            return <line
-                                x1={pathSegment.x1}
-                                y1={pathSegment.y1}
-                                x2={pathSegment.x2}
-                                y2={pathSegment.y2}
-                                key={i} />
-                        })}
-                        <polygon
-                            className='TurtleGraphics__turtle'
-                            transform={turtleTransform}
-                            points='-6 4 6 4 0 -9'/>
+                        <Character turtleTransform={turtleTransform}/>
                     </svg>
                 </span>
             </div>
