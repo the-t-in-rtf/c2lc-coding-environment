@@ -198,11 +198,13 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleDragStartCommand = (command: string) => {
-        this.setState({
-            isDraggingCommand: true,
-            selectedAction: command,
-            actionPanelStepIndex: null
-        });
+        if (!this.state.interpreterIsRunning) {
+            this.setState({
+                isDraggingCommand: true,
+                selectedAction: command,
+                actionPanelStepIndex: null
+            });
+        }
     };
 
     handleDragEndCommand = () => {
