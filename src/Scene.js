@@ -78,7 +78,7 @@ export default class Scene extends React.Component<{}, SceneState> {
     }
 
     render() {
-        const turtleTransform = `translate(${this.state.location.x} ${this.state.location.y}) rotate(${this.state.directionDegrees} 0 0)`;
+        const characterTransform = `translate(${this.state.location.x} ${this.state.location.y}) rotate(${this.state.directionDegrees} 0 0)`;
 
         return (
             <div>
@@ -90,7 +90,7 @@ export default class Scene extends React.Component<{}, SceneState> {
                         className='Scene__svg'
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox='-100 -100 200 200'>
-                        <Character turtleTransform={turtleTransform}/>
+                        <Character characterTransform={characterTransform}/>
                     </svg>
                 </span>
             </div>

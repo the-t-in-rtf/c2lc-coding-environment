@@ -5,13 +5,13 @@ import RobotIcon from './svg/Robot.svg';
 import './Character.scss';
 
 type CharacterProps = {
-    turtleTransform: string
+    characterTransform: string
 };
 
 export default class Character extends React.Component<CharacterProps, {}> {
     render() {
         return (
-            <g transform={this.props.turtleTransform}>
+            <g transform={this.props.characterTransform}>
                 <defs>
                     <pattern id="character" width='1' height='1'>
                         <image className='Character' href={RobotIcon} />
