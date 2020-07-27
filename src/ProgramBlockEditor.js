@@ -224,7 +224,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     };
 
     handleDropCommand = (stepNumber: number) => {
-        this.insertSelectedCommandIntoProgram(stepNumber);
+        if (!this.props.editingDisabled) {
+            this.insertSelectedCommandIntoProgram(stepNumber);
+        }
     };
 
     // Rendering
@@ -298,7 +300,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     aria-label={this.makeAddNodeAriaLabel(programStepNumber, false)}
                     ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
                     expandedMode={this.state.addNodeExpandedMode}
-                    isDraggingCommand={this.props.isDraggingCommand}
+                    // Don't expand the AddNode when editing is disabled
+                    isDraggingCommand={
+                        this.props.isDraggingCommand &&
+                        !this.props.editingDisabled}
                     programStepNumber={programStepNumber}
                     disabled={
                         this.props.editingDisabled ||
@@ -337,7 +342,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     aria-label={this.makeAddNodeAriaLabel(programStepNumber, true)}
                     ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
                     expandedMode={true}
-                    isDraggingCommand={this.props.isDraggingCommand}
+                    // Don't expand the AddNode when editing is disabled
+                    isDraggingCommand={
+                        this.props.isDraggingCommand &&
+                        !this.props.editingDisabled}
                     programStepNumber={programStepNumber}
                     disabled={
                         this.props.editingDisabled ||
