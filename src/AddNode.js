@@ -34,8 +34,10 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
 
         const handleDrop = (e: SyntheticDragEvent<HTMLButtonElement>) => {
             e.preventDefault();
-            const stepNumber = parseInt(e.currentTarget.dataset.stepnumber, 10);
-            props.onDrop(stepNumber);
+            if (!props.disabled) {
+                const stepNumber = parseInt(e.currentTarget.dataset.stepnumber, 10);
+                props.onDrop(stepNumber);
+            }
             setIsDragOver(false);
         };
 
@@ -48,7 +50,7 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
             props.isDraggingCommand && 'AddNode--is-dragging-command'
         );
 
-        if (props.expandedMode || isDragOver) {
+        if (props.expandedMode || (isDragOver && !props.disabled)) {
             return (
                 <div className={addNodeClasses}>
                     <div className='AddNode__drop-area-container'>
