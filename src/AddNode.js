@@ -80,6 +80,7 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
                         <div className='AddNode__collapsed-drop-area'
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
+                            onDrop={handleDrop}
                         />
                     </div>
                     <div className='AddNode__collapsed-icon'>
