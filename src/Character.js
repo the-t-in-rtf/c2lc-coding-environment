@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import RobotIcon from './svg/Robot.svg';
+import { ReactComponent as RobotIcon } from './svg/Robot.svg';
 import './Character.scss';
 
 type CharacterProps = {
@@ -12,12 +12,8 @@ export default class Character extends React.Component<CharacterProps, {}> {
     render() {
         return (
             <g transform={this.props.characterTransform}>
-                <defs>
-                    <pattern id="character" width='1' height='1'>
-                        <image className='Character' href={RobotIcon} />
-                    </pattern>
-                </defs>
-                <circle className='Character__container' fill='url(#character)' />
+                <RobotIcon className='Character' x='-18' y='-18' width='36' height='36' />
+                <circle className='Character__container' r='20' />
             </g>
         );
     }
