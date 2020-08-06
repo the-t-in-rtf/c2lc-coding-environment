@@ -143,8 +143,6 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                 if(optionButtonRef) {
                     optionButtonRef.focus();
                 }
-            } else {
-                element.focus();
             }
         }
     }
