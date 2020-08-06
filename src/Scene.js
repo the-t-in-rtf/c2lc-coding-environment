@@ -78,7 +78,7 @@ export default class Scene extends React.Component<{}, SceneState> {
     }
 
     render() {
-        const characterTransform = `translate(${this.state.location.x} ${this.state.location.y}) rotate(${this.state.directionDegrees} 0 0)`;
+        const characterTransform = `translate(${this.state.location.x} ${this.state.location.y}) rotate(${this.state.directionDegrees - 90} 0 0)`;
 
         return (
             <div>
