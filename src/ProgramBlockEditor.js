@@ -48,6 +48,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     commandBlockRefs: Map<number, HTMLElement>;
     addNodeRefs: Map<number, HTMLElement>;
     focusCommandBlockIndex: ?number;
+    focusAddNodeIndex: ?number;
     scrollToAddNodeIndex: ?number;
 
     constructor(props: ProgramBlockEditorProps) {
@@ -55,6 +56,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.commandBlockRefs = new Map();
         this.addNodeRefs = new Map();
         this.focusCommandBlockIndex = null;
+        this.focusAddNodeIndex = null;
         this.scrollToAddNodeIndex = null;
         this.state = {
             showConfirmDeleteAll : false,
@@ -85,6 +87,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
+    closeActionPanel() {
+        // TODO: Can we set focusedActionPanelOptionName to null in response
+        //       to setting actionPanelStepIndex to null? So that we only need
+        //       to set actionPanelStepIndex.
+        this.setState({
+            focusedActionPanelOptionName: null
+        });
+        this.props.onChangeActionPanelStepIndex(null);
+    }
+
     setCommandBlockRef = (programStepNumber: number, element: ?HTMLElement) => {
         if (element) {
             this.commandBlockRefs.set(programStepNumber, element);
@@ -107,12 +119,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         });
     };
 
-    handleClickDelete = (index: number) => {
-        this.props.audioManager.playSound('delete');
-        this.props.onChangeProgram(ProgramUtils.deleteStep(this.props.program, index));
-        this.handleCloseActionPanelFocusTrap();
-    };
-
     handleClickDeleteAll = () => {
         this.props.audioManager.playSound('deleteAll');
         this.setState({
@@ -133,7 +139,43 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         });
     };
 
-    handleMoveToPreviousStep = (index: number) => {
+    handleActionPanelDeleteStep = (index: number) => {
+        this.props.audioManager.playSound('delete');
+        // If there are steps following the one being deleted, focus the
+        // next step. Otherwise, focus the final add node.
+        if (index < this.props.program.length - 1) {
+            this.focusCommandBlockIndex = index;
+        } else {
+            this.focusAddNodeIndex = index;
+        }
+        this.props.onChangeProgram(ProgramUtils.deleteStep(this.props.program, index));
+        this.closeActionPanel();
+    };
+
+    handleActionPanelReplaceStep = (index: number) => {
+        this.props.audioManager.playSound('replace');
+        if (this.props.selectedAction) {
+            if (this.props.program[index] !== this.props.selectedAction) {
+                this.props.onChangeProgram(ProgramUtils.overwrite(this.props.program,
+                        index, this.props.selectedAction, 'none'));
+                this.setState({
+                    replaceIsActive: false
+                });
+                this.focusCommandBlockIndex = index;
+                this.scrollToAddNodeIndex = index + 1;
+            } else {
+                this.setState({
+                    replaceIsActive: true
+                });
+            }
+        } else {
+            this.setState({
+                replaceIsActive: true
+            });
+        }
+    };
+
+    handleActionPanelMoveToPreviousStep = (index: number) => {
         this.props.audioManager.playSound('moveToPrevious');
         if (this.props.program[index - 1] != null) {
             const previousStepIndex = index - 1;
@@ -151,7 +193,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     };
 
-    handleMoveToNextStep = (index: number) => {
+    handleActionPanelMoveToNextStep = (index: number) => {
         this.props.audioManager.playSound('moveToNext');
         if (this.props.program[index + 1] != null) {
             const nextStepIndex = index + 1;
@@ -169,53 +211,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     };
 
-    handleSetReplaceIsActive = (booleanValue: boolean) => {
-        this.setState({
-            replaceIsActive: booleanValue
-        });
-    };
-
-    handleReplaceStep = (index: number) => {
-        this.props.audioManager.playSound('replace');
-        if (this.props.selectedAction) {
-            if (this.props.program[index] !== this.props.selectedAction) {
-                this.props.onChangeProgram(ProgramUtils.overwrite(this.props.program,
-                        index, this.props.selectedAction, 'none'));
-                this.handleSetReplaceIsActive(false);
-                this.focusCommandBlockIndex = index;
-                this.scrollToAddNodeIndex = index + 1;
-            } else {
-                this.handleSetReplaceIsActive(true);
-            }
-        } else {
-            this.handleSetReplaceIsActive(true);
-        }
-    };
-
     handleClickStep = (e: SyntheticEvent<HTMLButtonElement>) => {
         const index = parseInt(e.currentTarget.dataset.stepnumber, 10);
         // Open or close the ActionPanel
         if (this.props.actionPanelStepIndex === index) {
             // The ActionPanel is already open for this program step, close it
-            this.setState({
-                focusedActionPanelOptionName: null
-            });
-            this.props.onChangeActionPanelStepIndex(null);
+            this.closeActionPanel();
         } else {
             // Otherwise, open it
             this.props.onChangeActionPanelStepIndex(index);
         }
-    };
-
-    handleCloseActionPanelFocusTrap = () => {
-        this.setState({
-            focusedActionPanelOptionName: null
-        });
-        this.props.onChangeActionPanelStepIndex(null);
-    };
-
-    handleCloseReplaceFocusTrap = () => {
-        this.handleSetReplaceIsActive(false);
     };
 
     handleClickAddNode = (stepNumber: number) => {
@@ -225,6 +230,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     handleDropCommand = (stepNumber: number) => {
         this.insertSelectedCommandIntoProgram(stepNumber);
+    };
+
+    handleCloseActionPanelFocusTrap = () => {
+        this.closeActionPanel();
+    };
+
+    handleCloseReplaceFocusTrap = () => {
+        this.setState({
+            replaceIsActive: false
+        });
     };
 
     // Rendering
@@ -291,6 +306,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     makeProgramBlockSection(programStepNumber: number, command: string) {
+        const showActionPanel = (this.props.actionPanelStepIndex === programStepNumber);
         return (
             <React.Fragment key={programStepNumber}>
                 <div className='ProgramBlockEditor__program-block-connector'/>
@@ -308,21 +324,21 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 />
                 <div className='ProgramBlockEditor__program-block-connector' />
                 <div className='ProgramBlockEditor__program-block-with-panel'>
-                    {this.props.actionPanelStepIndex === programStepNumber &&
-                        <div className='ProgramBlockEditor__action-panel-container-outer'>
+                    <div className='ProgramBlockEditor__action-panel-container-outer'>
+                        {showActionPanel &&
                             <div className='ProgramBlockEditor__action-panel-container-inner'>
                                 <ActionPanel
                                     focusedOptionName={this.state.focusedActionPanelOptionName}
                                     selectedCommandName={this.props.selectedAction}
                                     program={this.props.program}
                                     pressedStepIndex={programStepNumber}
-                                    onDelete={this.handleClickDelete}
-                                    onReplace={this.handleReplaceStep}
-                                    onMoveToPreviousStep={this.handleMoveToPreviousStep}
-                                    onMoveToNextStep={this.handleMoveToNextStep}/>
+                                    onDelete={this.handleActionPanelDeleteStep}
+                                    onReplace={this.handleActionPanelReplaceStep}
+                                    onMoveToPreviousStep={this.handleActionPanelMoveToPreviousStep}
+                                    onMoveToNextStep={this.handleActionPanelMoveToNextStep}/>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                     {this.makeProgramBlock(programStepNumber, command)}
                 </div>
             </React.Fragment>
@@ -331,7 +347,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     makeEndOfProgramAddNodeSection(programStepNumber: number) {
         return (
-            <React.Fragment key={programStepNumber}>
+            <React.Fragment key={'endOfProgramAddNodeSection'}>
                 <div className='ProgramBlockEditor__program-block-connector'/>
                 <AddNode
                     aria-label={this.makeAddNodeAriaLabel(programStepNumber, true)}
@@ -430,6 +446,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 element.focus();
             }
             this.focusCommandBlockIndex = null;
+        }
+        if (this.focusAddNodeIndex != null) {
+            let addNode = this.addNodeRefs.get(this.focusAddNodeIndex);
+            if (addNode) {
+                addNode.focus();
+            }
+            this.focusAddNodeIndex = null;
         }
         if (this.props.activeProgramStepNum != null) {
             let element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
