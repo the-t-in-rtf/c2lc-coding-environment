@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl';
 import ToggleSwitch from './ToggleSwitch';
 import { ReactComponent as AudioOnIcon } from './svg/AudioOn.svg';
 import { ReactComponent as AudioOffIcon } from './svg/AudioOff.svg';
+import './AudioFeedbackToggleSwitch.scss';
 
 type AudioFeedbackToggleSwitchProps = {
     intl: any,
@@ -20,7 +21,8 @@ class AudioFeedbackToggleSwitch extends React.Component<AudioFeedbackToggleSwitc
                 value={this.props.value}
                 contentsTrue={<AudioOnIcon />}
                 contentsFalse={<AudioOffIcon />}
-                onChange={this.props.onChange} />
+                onChange={this.props.onChange}
+                className='AudioFeedbackToggleSwitch'/>
         );
     }
 };
