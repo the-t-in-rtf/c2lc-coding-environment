@@ -47,6 +47,18 @@ function programIsEmpty(program: Program): boolean {
         }
     }
     return true;
+};
+
+function swapPosition(program: Program, indexFrom: number, indexTo: number): Program {
+    // Make a shallow copy before we add to the program
+    program = program.slice();
+    if (program[indexFrom] == null || program[indexTo] == null) {
+        return program;
+    }
+    let currentStep = program[indexFrom];
+    program[indexFrom] = program[indexTo];
+    program[indexTo] = currentStep;
+    return program;
 }
 
 export {
@@ -55,5 +67,6 @@ export {
     insert,
     overwrite,
     trimEnd,
-    programIsEmpty
+    programIsEmpty,
+    swapPosition
 };

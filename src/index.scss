@@ -29,7 +29,8 @@ button.btn {
 }
 
 button.btn:focus {
-    box-shadow: 0 0 0 $c2lc-focus-indicator-width #000;
+    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+    z-index: 1;
 }
 
 button.btn-primary,
@@ -37,6 +38,11 @@ button.btn-primary:hover {
     border: $c2lc-button-border-width solid #000000;
     font-weight: bold;
     padding: 1.15rem 1.25rem;
+}
+
+button.btn:hover {
+    box-shadow: 0 0 0 $c2lc-hover-indicator-width $c2lc-focus-indicator-color;
+    z-index: 1;
 }
 
 button.btn-primary:disabled {
@@ -53,8 +59,9 @@ button.command-block {
     min-height: 4rem;
 }
 
-button.command-block--pressed,
-button.command-block--pressed:hover {
+button.btn.command-block.command-block--pressed,
+button.btn.command-block.command-block--pressed:hover,
+button.btn.command-block.command-block--pressed:active {
     border: $c2lc-button-border-width dashed #000000;
 }
 

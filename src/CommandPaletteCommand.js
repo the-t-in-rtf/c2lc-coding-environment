@@ -1,41 +1,57 @@
 // @flow
 
 import React from 'react';
-import { Button } from 'react-bootstrap';
-import {injectIntl} from 'react-intl';
+import CommandBlock from './CommandBlock';
+import AudioManager from './AudioManager';
+import { injectIntl } from 'react-intl';
 
 type CommandPaletteCommandProps = {
     commandName: string,
-    icon: any,
     intl: any,
     selectedCommandName: ?string,
-    onChange: (commandName: ?string) => void
+    audioManager: AudioManager,
+    onChange: (commandName: ?string) => void,
+    onDragStart: (commandName: string) => void,
+    onDragEnd: () => void
 };
 
 class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, {}> {
     handleClick = () => {
+        this.props.audioManager.playSound(this.props.commandName);
         this.props.onChange(
             this.props.commandName === this.props.selectedCommandName ? null : this.props.commandName
         );
     };
 
+    handleDragStart = () => {
+        this.props.onDragStart(this.props.commandName);
+    };
+
+    handleDragEnd = () => {
+        this.props.onDragEnd();
+    };
+
     render() {
         const pressed = this.props.commandName === this.props.selectedCommandName;
-        let classNames = [
-            'command-block'
-        ];
-        if (pressed) {
-            classNames.push('command-block--pressed');
-        }
+
+        const ariaLabel = this.props.intl.formatMessage({
+            id: `CommandPaletteCommand.${this.props.commandName}`
+        });
+
         return (
-            <Button
-                className={classNames.join(' ')}
-                variant={`command-block--${this.props.commandName}`}
-                aria-label={this.props.intl.formatMessage({ id: `CommandPaletteCommand.${this.props.commandName}`})}
+            <CommandBlock
+                draggable='true'
+                id={`command-block--${this.props.commandName}`}
+                data-actionpanelgroup={true}
+                onDragStart={this.handleDragStart}
+                onDragEnd={this.handleDragEnd}
+                commandName={this.props.commandName}
+                className={pressed ? 'command-block--pressed' : undefined}
+                aria-label={ariaLabel}
                 aria-pressed={pressed}
-                onClick={this.handleClick}>
-                {this.props.icon}
-            </Button>
+                onClick={this.handleClick}
+                disabled={false}>
+            </CommandBlock>
         )
     }
 }

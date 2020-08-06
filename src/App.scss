@@ -1,8 +1,24 @@
 @import 'variables';
 
-.App__heading-section {
+body {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.App__header {
+    display: flex;
     background: #000;
     color: #FFF;
+    padding: 0.5rem 3rem;
+}
+
+.App__header-row {
+    justify-content: space-between;
+}
+
+.App__header-right {
+    display: flex;
+    align-items: center;
 }
 
 .App__app-heading {
@@ -11,7 +27,11 @@
     margin: 1rem 0;
 }
 
-.App__robot-connection-section {
+.App__audio-toggle-switch {
+    margin-right: 1.5rem;
+}
+
+.App__bluetooth-api-warning-section {
     margin-top: 1.5rem;
 }
 
@@ -34,34 +54,4 @@
 
 .App__command-palette-command {
     margin-top: 1rem;
-}
-
-.App__instructions-heading {
-    font-size: 1.5rem;
-    font-weight: normal;
-    margin: 2rem 0 1rem 0;
-}
-
-.App__instructions-section-heading {
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 1rem 0 0.5rem 0;
-}
-
-.App__instructions-text {
-    max-width: 32em;
-}
-
-.App__add-mode-image svg {
-    width: 1em;
-    height: 1em;
-    stroke: #000;
-    vertical-align: -0.1em;
-}
-
-.App__delete-mode-image svg {
-    width: 1em;
-    height: 1em;
-    stroke: #000;
-    vertical-align: -0.2em;
 }

@@ -18,17 +18,13 @@ function buttonIsDisabled(wrapper) {
     return wrapper.find('.DeviceConnectControl__button').getElement().props['disabled'];
 }
 
-function getStatusIconContainer(wrapper) {
-    return wrapper.find('.DeviceConnectControl__status-icon-container').childAt(0).getElement();
-}
-
 const intl = createIntl({
     locale: 'en',
     defaultLocale: 'en',
     messages: messages.en
 });
 
-test('Connect button should not have disabled class name when disabled prop is false', () => {
+test('When disabled is false, the Connect button should not have the disabled class name', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
@@ -40,7 +36,7 @@ test('Connect button should not have disabled class name when disabled prop is f
     expect(buttonIsDisabled(wrapper)).toBe(false);
 });
 
-test('Connect button should have disabled class name when disabled prop is true', () => {
+test('When disabled is true, the Connect button should have the disabled class name', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
@@ -52,7 +48,7 @@ test('Connect button should have disabled class name when disabled prop is true'
     expect(buttonIsDisabled(wrapper)).toBe(true);
 });
 
-test('Checking icon and aria-label for notConnected status', () => {
+test('When not connected, the status area should be empty', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
@@ -60,12 +56,14 @@ test('Checking icon and aria-label for notConnected status', () => {
             connectionStatus='notConnected'
             onClickConnect={() => {}}/>
     );
-    expect(getStatusIconContainer(wrapper).props['aria-label']).toBe(intl.messages['DeviceConnectControl.notConnected']);
-    expect(getStatusIconContainer(wrapper).props.role).toBe('img');
-    expect(getStatusIconContainer(wrapper).props.children.type.render.name).toBe('SvgStatusNotConnected')
+    // There should be a single status element
+    let status = wrapper.find('[role="status"]');
+    expect(status).toHaveLength(1);
+    // That is empty
+    expect(status.children()).toHaveLength(0);
 });
 
-test('Checking icon and aria-label for connected status', () => {
+test('When connected, the status area should have an img with the connected aria-label', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
@@ -73,12 +71,17 @@ test('Checking icon and aria-label for connected status', () => {
             connectionStatus='connected'
             onClickConnect={() => {}}/>
     );
-    expect(getStatusIconContainer(wrapper).props['aria-label']).toBe(intl.messages['DeviceConnectControl.connected']);
-    expect(getStatusIconContainer(wrapper).props.role).toBe('img');
-    expect(getStatusIconContainer(wrapper).props.children.type.render.name).toBe('SvgStatusConnected')
+    // There should be a single status element
+    let status = wrapper.find('[role="status"]');
+    expect(status).toHaveLength(1);
+    // With a single img
+    let img = status.find('[role="img"]');
+    expect(img).toHaveLength(1);
+    expect(img.prop('aria-label')).toBe(intl.messages['DeviceConnectControl.connected']);
+    expect(img.children().hasClass('DeviceConnectControl__dash-icon--connected')).toBe(true);
 });
 
-test('Checking icon and aria-label for connecting status', () => {
+test('When connecting, the status area should have an img with the connecting aria-label', () => {
     const wrapper = shallow(
         <DeviceConnectControl.WrappedComponent
             intl={intl}
@@ -86,8 +89,11 @@ test('Checking icon and aria-label for connecting status', () => {
             connectionStatus='connecting'
             onClickConnect={() => {}}/>
     );
-    expect(getStatusIconContainer(wrapper).type.displayName).toBe('Spinner');
-    expect(getStatusIconContainer(wrapper).props.role).toBe('status');
-    expect(getStatusIconContainer(wrapper).props.children.props.className).toBe('sr-only');
-    expect(getStatusIconContainer(wrapper).props.children.props.children).toBe(intl.messages['DeviceConnectControl.connecting']);
+    // There should be a single status element
+    let status = wrapper.find('[role="status"]');
+    expect(status).toHaveLength(1);
+    // With a single img
+    let img = status.find('[role="img"]');
+    expect(img).toHaveLength(1);
+    expect(img.prop('aria-label')).toBe(intl.messages['DeviceConnectControl.connecting']);
 });

@@ -6,6 +6,10 @@ import { configure, shallow } from 'enzyme';
 import { Row } from 'react-bootstrap';
 import CommandPaletteCategory from './CommandPaletteCategory';
 import CommandPaletteCommand from './CommandPaletteCommand';
+import AudioManager from './AudioManager';
+
+// Mocks
+jest.mock('./AudioManager');
 
 configure({ adapter: new Adapter()});
 
@@ -22,9 +26,12 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
         <CommandPaletteCategory eventKey='movements' title='Movements'>
             <CommandPaletteCommand
                 commandName='forward'
-                icon={null}
                 selectedCommandName={null}
-                onChange={() => {}}/>
+                audioManager={new AudioManager(true)}
+                onChange={() => {}}
+                onDragStart={() => {}}
+                onDragEnd={() => {}}
+                onKeyDown={() => {}}/>
         </CommandPaletteCategory>
     );
     commands = oneCommandsWrapper.find(CommandPaletteCommand);
@@ -34,19 +41,28 @@ test('number of commands rendered by CommandPaletteCategory should be equal to t
         <CommandPaletteCategory eventKey='movements' title='Movements'>
             <CommandPaletteCommand
                 commandName='forward'
-                icon={null}
                 selectedCommandName={null}
-                onChange={() => {}}/>
+                audioManager={new AudioManager(true)}
+                onChange={() => {}}
+                onDragStart={() => {}}
+                onDragEnd={() => {}}
+                onKeyDown={() => {}}/>
             <CommandPaletteCommand
                 commandName='left'
-                icon={null}
                 selectedCommandName={null}
-                onChange={() => {}}/>
+                audioManager={new AudioManager(true)}
+                onChange={() => {}}
+                onDragStart={() => {}}
+                onDragEnd={() => {}}
+                onKeyDown={() => {}}/>
             <CommandPaletteCommand
                 commandName='right'
-                icon={null}
                 selectedCommandName={null}
-                onChange={() => {}}/>
+                audioManager={new AudioManager(true)}
+                onChange={() => {}}
+                onDragStart={() => {}}
+                onDragEnd={() => {}}
+                onKeyDown={() => {}}/>
         </CommandPaletteCategory>
     );
 
