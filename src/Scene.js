@@ -2,7 +2,7 @@
 
 import React from 'react';
 import * as C2lcMath from './C2lcMath';
-import Character from './Character';
+import RobotCharacter from './RobotCharacter';
 import './Scene.scss';
 
 type SceneState = {
@@ -78,7 +78,8 @@ export default class Scene extends React.Component<{}, SceneState> {
     }
 
     render() {
-        const characterTransform = `translate(${this.state.location.x} ${this.state.location.y}) rotate(${this.state.directionDegrees - 90} 0 0)`;
+        // Substract 90 degrees from the character bearing as the character image is drawn upright when it is facing East
+        const robotCharacterTransform = `translate(${this.state.location.x} ${this.state.location.y}) rotate(${this.state.directionDegrees - 90} 0 0)`;
 
         return (
             <div>
@@ -89,8 +90,9 @@ export default class Scene extends React.Component<{}, SceneState> {
                     <svg
                         className='Scene__svg'
                         xmlns='http://www.w3.org/2000/svg'
-                        viewBox='-100 -100 200 200'>
-                        <Character characterTransform={characterTransform}/>
+                        // Scene will have 9x5 squares with 42 unit
+                        viewBox='-189 -105 378 210'>
+                        <RobotCharacter robotCharacterTransform={robotCharacterTransform}/>
                     </svg>
                 </span>
             </div>
