@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { ReactComponent as RobotIcon } from './svg/Robot.svg';
+import { characterRadius, characterWidth, characterHeight } from './RobotCharacter.scss'
 import './RobotCharacter.scss';
 
 type RobotCharacterProps = {
@@ -12,8 +13,13 @@ export default class RobotCharacter extends React.Component<RobotCharacterProps,
     render() {
         return (
             <g transform={this.props.robotCharacterTransform}>
-                <RobotIcon className='RobotCharacter' x='-15' y='-15' width='30' height='30' />
-                <circle className='RobotCharacter__container' r='20' />
+                <RobotIcon
+                    className='RobotCharacter'
+                    x={`${-characterWidth/2}`}
+                    y={`${-characterHeight/2}`}
+                    width={`${characterWidth}`}
+                    height={`${characterHeight}`} />
+                <circle className='RobotCharacter__container' r={`${characterRadius}`} />
             </g>
         );
     }

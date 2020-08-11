@@ -9,3 +9,9 @@
     stroke-width: 1;
     fill: none;
 }
+
+:export {
+    characterRadius: $c2lc-scene-tile-width * 0.8 / 2;
+    characterWidth: $c2lc-scene-tile-width * 0.6;
+    characterHeight: $c2lc-scene-tile-width * 0.6;
+}
