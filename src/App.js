@@ -20,6 +20,7 @@ import { programIsEmpty } from './ProgramUtils';
 import * as Utils from './Utils';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import messages from './messages.json';
+import { characterMovementLength } from './App.scss';
 import './App.scss';
 import './vendor/dragdroptouch/DragDropTouch.js';
 
@@ -85,7 +86,7 @@ export default class App extends React.Component<{}, AppState> {
         const moveCharacter = (commandName: string): Promise<void> => {
             if (this.sceneRef.current !== null) {
                 if (commandName === 'forward') {
-                    this.sceneRef.current.forward(40);
+                    this.sceneRef.current.forward(characterMovementLength);
                 } else if (commandName === 'left') {
                     this.sceneRef.current.turnLeft(90);
                 } else if (commandName === 'right') {

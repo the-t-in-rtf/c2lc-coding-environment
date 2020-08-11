@@ -59,3 +59,7 @@ body {
 .App__command-palette-command {
     margin-top: 1rem;
 }
+
+:export {
+    characterMovementLength: $c2lc-scene-tile-width;
+}
