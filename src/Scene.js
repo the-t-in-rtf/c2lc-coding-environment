@@ -85,11 +85,10 @@ export default class Scene extends React.Component<{}, SceneState> {
         return (
             <div>
                 <span
-                    className='Scene__drawing-area'
+                    className='Scene'
                     role='img'
-                    aria-label='Drawing area'>
+                    aria-label='Scene'>
                     <svg
-                        className='Scene__svg'
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox={`${sceneMinX} ${sceneMinY} ${sceneWidth} ${sceneHeight}`}>
                         <RobotCharacter robotCharacterTransform={robotCharacterTransform}/>

@@ -1,6 +1,6 @@
 @import 'variables';
 
-.Scene__drawing-area {
+.Scene {
     display: inline-block;
     box-sizing: border-box;
     width: 100%;
@@ -8,14 +8,9 @@
     border: 0.1rem solid #555;
 }
 
-.Scene__svg {
-    width: 100%;
-    height: 100%;
-}
-
 :export {
-    sceneMinX: -$c2lc-scene-tile-num-column * $c2lc-scene-tile-width / 2;
-    sceneMinY: -$c2lc-scene-tile-num-row * $c2lc-scene-tile-width / 2;
-    sceneWidth: $c2lc-scene-tile-num-column * $c2lc-scene-tile-width;
-    sceneHeight: $c2lc-scene-tile-num-row * $c2lc-scene-tile-width;
+    sceneMinX: -$c2lc-scene-grid-cell-num-column * $c2lc-scene-grid-cell-width / 2;
+    sceneMinY: -$c2lc-scene-grid-cell-num-row * $c2lc-scene-grid-cell-width / 2;
+    sceneWidth: $c2lc-scene-grid-cell-num-column * $c2lc-scene-grid-cell-width;
+    sceneHeight: $c2lc-scene-grid-cell-num-row * $c2lc-scene-grid-cell-width;
 }

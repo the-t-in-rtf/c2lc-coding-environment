@@ -11,7 +11,7 @@
 }
 
 :export {
-    characterRadius: $c2lc-scene-tile-width * 0.8 / 2;
-    characterWidth: $c2lc-scene-tile-width * 0.6;
-    characterHeight: $c2lc-scene-tile-width * 0.6;
+    characterRadius: $c2lc-scene-grid-cell-width * 0.8 / 2;
+    characterWidth: $c2lc-scene-grid-cell-width * 0.6;
+    characterHeight: $c2lc-scene-grid-cell-width * 0.6;
 }
