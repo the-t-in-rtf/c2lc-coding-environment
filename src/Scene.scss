@@ -12,3 +12,10 @@
     width: 100%;
     height: 100%;
 }
+
+:export {
+    sceneMinX: -$c2lc-scene-tile-num-column * $c2lc-scene-tile-width / 2;
+    sceneMinY: -$c2lc-scene-tile-num-row * $c2lc-scene-tile-width / 2;
+    sceneWidth: $c2lc-scene-tile-num-column * $c2lc-scene-tile-width;
+    sceneHeight: $c2lc-scene-tile-num-row * $c2lc-scene-tile-width;
+}

@@ -3,6 +3,7 @@
 import React from 'react';
 import * as C2lcMath from './C2lcMath';
 import RobotCharacter from './RobotCharacter';
+import { sceneMinX, sceneMinY, sceneWidth, sceneHeight } from './Scene.scss';
 import './Scene.scss';
 
 type SceneState = {
@@ -90,8 +91,7 @@ export default class Scene extends React.Component<{}, SceneState> {
                     <svg
                         className='Scene__svg'
                         xmlns='http://www.w3.org/2000/svg'
-                        // Scene will have 9x5 squares with 42 unit
-                        viewBox='-189 -105 378 210'>
+                        viewBox={`${sceneMinX} ${sceneMinY} ${sceneWidth} ${sceneHeight}`}>
                         <RobotCharacter robotCharacterTransform={robotCharacterTransform}/>
                     </svg>
                 </span>
