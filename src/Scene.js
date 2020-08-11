@@ -79,7 +79,7 @@ export default class Scene extends React.Component<{}, SceneState> {
     }
 
     render() {
-        // Substract 90 degrees from the character bearing as the character image is drawn upright when it is facing East
+        // Subtract 90 degrees from the character bearing as the character image is drawn upright when it is facing East
         const robotCharacterTransform = `translate(${this.state.location.x} ${this.state.location.y}) rotate(${this.state.directionDegrees - 90} 0 0)`;
 
         return (
