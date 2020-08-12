@@ -80,7 +80,6 @@ class Scene extends React.Component<SceneProps, SceneState> {
         return (
             <div>
                 <span
-                    tabIndex='0'
                     className='Scene'
                     role='img'
                     aria-label={this.props.intl.formatMessage({id: 'Scene'})}>
