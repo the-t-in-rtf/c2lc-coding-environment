@@ -55,7 +55,7 @@ export default class App extends React.Component<{}, AppState> {
     toCommandPaletteNoticeId: string;
     audioManager: AudioManager;
     focusTrapManager: FocusTrapManager;
-    sceneRef: { current: null | Scene };
+    sceneRef: { current: null | Scene.WrappedComponent };
 
     constructor(props: {}) {
         super(props);
@@ -79,7 +79,7 @@ export default class App extends React.Component<{}, AppState> {
             actionPanelStepIndex: null
         };
 
-        this.sceneRef = React.createRef<Scene>();
+        this.sceneRef = React.createRef<Scene.WrappedComponent>();
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
 

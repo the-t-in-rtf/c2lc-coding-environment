@@ -3,8 +3,13 @@
 import React from 'react';
 import * as C2lcMath from './C2lcMath';
 import RobotCharacter from './RobotCharacter';
+import { injectIntl } from 'react-intl';
 import { sceneMinX, sceneMinY, sceneWidth, sceneHeight } from './Scene.scss';
 import './Scene.scss';
+
+type SceneProps = {
+    intl: any
+};
 
 type SceneState = {
     location: {
@@ -14,8 +19,8 @@ type SceneState = {
     directionDegrees: number
 };
 
-export default class Scene extends React.Component<{}, SceneState> {
-    constructor(props: {}) {
+class Scene extends React.Component<SceneProps, SceneState> {
+    constructor(props: SceneProps) {
         super(props);
         this.state = {
             location: {
@@ -68,16 +73,6 @@ export default class Scene extends React.Component<{}, SceneState> {
         return Promise.resolve();
     }
 
-    home(): void {
-        this.setState({
-            location: {
-                x: 0,
-                y: 0
-            },
-            directionDegrees: 0
-        });
-    }
-
     render() {
         // Subtract 90 degrees from the character bearing as the character image is drawn upright when it is facing East
         const robotCharacterTransform = `translate(${this.state.location.x} ${this.state.location.y}) rotate(${this.state.directionDegrees - 90} 0 0)`;
@@ -85,9 +80,10 @@ export default class Scene extends React.Component<{}, SceneState> {
         return (
             <div>
                 <span
+                    tabIndex='0'
                     className='Scene'
                     role='img'
-                    aria-label='Scene'>
+                    aria-label={this.props.intl.formatMessage({id: 'Scene'})}>
                     <svg
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox={`${sceneMinX} ${sceneMinY} ${sceneWidth} ${sceneHeight}`}>
@@ -98,3 +94,5 @@ export default class Scene extends React.Component<{}, SceneState> {
         );
     }
 }
+
+export default injectIntl(Scene, { forwardRef: true });
