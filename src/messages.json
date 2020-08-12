@@ -53,6 +53,7 @@
         "ProgramBlockEditor.command.right": "Right, position {index} of current program",
         "ProgramBlockEditor.program.deleteAll": "Clear and start new program",
         "ProgramBlockEditor.programHeading": "Program",
+        "ProgramBlockEditor.robotCharacter": "Robot character",
         "ProgramBlockEditor.startIndicator": "Start",
         "ProgramTextEditor.programLabel": "Program:",
         "AudioFeedbackToggleSwitch.audioFeedback": "Audio feedback"
