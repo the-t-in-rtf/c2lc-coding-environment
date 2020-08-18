@@ -46,6 +46,10 @@ test('Given the character is facing South, then Forward movement should move Sou
     (expect(new CharacterState(0, 0, 180).forward(100)): any).toHaveCharacterState(0, 100, 180);
 });
 
+test('Given the character is facing 30 degrees N of E, then Forward should move in that direction', () => {
+    (expect(new CharacterState(0, 0, 60).forward(100)): any).toHaveCharacterState(86.6025, -50, 60);
+});
+
 test('Turn Left moves anti-clockwise and wraps at 0', () => {
     (expect(new CharacterState(0, 0, 90).turnLeft(60)): any).toHaveCharacterState(0, 0, 30);
     (expect(new CharacterState(0, 0, 90).turnLeft(90)): any).toHaveCharacterState(0, 0, 0);
