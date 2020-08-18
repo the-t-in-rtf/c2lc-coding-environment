@@ -3,8 +3,8 @@
 import * as C2lcMath from './C2lcMath';
 
 export default class CharacterState {
-    xPos: number;
-    yPos: number;
+    xPos: number; // Positive x is East
+    yPos: number; // Positive y is South
     directionDegrees: number; // 0 is North, 90 is East
 
     constructor(xPos: number, yPos: number, directionDegrees: number) {
