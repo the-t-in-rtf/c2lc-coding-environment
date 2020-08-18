@@ -5,6 +5,7 @@ import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
 import AudioManager from './AudioManager';
 import BluetoothApiWarning from './BluetoothApiWarning';
+import CharacterState from './CharacterState';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
@@ -14,6 +15,7 @@ import FocusTrapManager from './FocusTrapManager';
 import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
+import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import { programIsEmpty } from './ProgramUtils';
 import * as Utils from './Utils';
@@ -35,6 +37,7 @@ type AppSettings = {
 
 type AppState = {
     program: Program,
+    characterState: CharacterState,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
     activeProgramStepNum: ?number,
@@ -43,7 +46,10 @@ type AppState = {
     selectedAction: ?string,
     isDraggingCommand: boolean,
     audioEnabled: boolean,
-    actionPanelStepIndex: ?number
+    actionPanelStepIndex: ?number,
+    sceneNumRows: number,
+    sceneNumColumns: number,
+    sceneGridCellWidth: number
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -63,6 +69,7 @@ export default class App extends React.Component<{}, AppState> {
 
         this.state = {
             program: [],
+            characterState: new CharacterState(0, 0, 90), // Begin facing East
             settings: {
                 language: 'en'
             },
@@ -73,41 +80,65 @@ export default class App extends React.Component<{}, AppState> {
             selectedAction: null,
             isDraggingCommand: false,
             audioEnabled: true,
-            actionPanelStepIndex: null
+            actionPanelStepIndex: null,
+            sceneNumRows: 5,
+            sceneNumColumns: 9,
+            sceneGridCellWidth: 100
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
 
-        const playCommandAndWait = (commandName: string): Promise<void> => {
-            this.audioManager.playSound(commandName);
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    resolve();
-                }, 1750);
-            });
-        };
-
         this.interpreter.addCommandHandler(
             'forward',
-            'playCommandAndWait',
+            'moveCharacter',
             () => {
-                return playCommandAndWait('forward');
+                this.audioManager.playSound('forward');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.forward(this.state.sceneGridCellWidth)
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
             }
         );
 
         this.interpreter.addCommandHandler(
             'left',
-            'playCommandAndWait',
+            'moveCharacter',
             () => {
-                return playCommandAndWait('left');
+                this.audioManager.playSound('left');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnLeft(90)
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
             }
         );
 
         this.interpreter.addCommandHandler(
             'right',
-            'playCommandAndWait',
+            'moveCharacter',
             () => {
-                return playCommandAndWait('right');
+                this.audioManager.playSound('right');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnRight(90)
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
             }
         );
 
@@ -289,6 +320,14 @@ export default class App extends React.Component<{}, AppState> {
                                 </Col>
                             </Row>
                         }
+                        <div className='App__scene-container'>
+                            <Scene
+                                numRows={this.state.sceneNumRows}
+                                numColumns={this.state.sceneNumColumns}
+                                gridCellWidth={this.state.sceneGridCellWidth}
+                                characterState={this.state.characterState}
+                            />
+                        </div>
                         <Row className='App__program-section' noGutters={true}>
                             <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
                                 <div className='App__command-palette'>

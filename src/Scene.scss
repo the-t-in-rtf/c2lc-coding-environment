@@ -1,0 +1,9 @@
+@import 'variables';
+
+.Scene {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    border: 0.1rem solid #555;
+}
