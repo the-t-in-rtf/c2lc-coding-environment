@@ -4,10 +4,13 @@
     background: #F1F1F1;
     display: grid;
     height: 100%;
+    grid-template-columns: 6rem auto;
     grid-template-rows: 4rem auto 4rem;
 }
 
 .ProgramBlockEditor__header {
+    grid-column-start: 1;
+    grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 2;
     display: grid;
@@ -95,7 +98,34 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEdi
     display: block;
 }
 
+.ProgramBlockEditor__character-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    background: #FFF;
+    border-width: 0.1rem 0 0.1rem 0.1rem;
+    border-color: #8F8F8F;
+    border-style: solid;
+}
+
+.ProgramBlockEditor__character-column-character-container {
+    border-radius: 50%;
+    padding: 0.5rem;
+    background-color: #FFF;
+    box-shadow: 0 0 1rem rgba(70, 70, 70, 0.4);
+}
+
+.ProgramBlockEditor__chracter-column-character {
+    width: 3rem;
+    height: 3rem;
+}
+
 .ProgramBlockEditor__program-sequence-scroll-container {
+    grid-column-start: 2;
+    grid-column-end: 3;
     grid-row-start: 2;
     grid-row-end: 3;
     border: 0.1rem solid #8F8F8F;
@@ -164,6 +194,8 @@ button.ProgramBlockEditor__program-block--active {
 }
 
 .ProgramBlockEditor__footer {
+    grid-column-start: 1;
+    grid-column-end: 3;
     grid-row-start: 3;
     grid-row-end: 4;
     height: 100%;

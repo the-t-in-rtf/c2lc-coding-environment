@@ -16,6 +16,7 @@ import ToggleSwitch from './ToggleSwitch';
 import { ReactComponent as AddIcon } from './svg/Add.svg';
 import { ReactComponent as PlayIcon } from './svg/Play.svg';
 import { ReactComponent as DeleteAllIcon } from './svg/DeleteAll.svg';
+import { ReactComponent as RobotIcon } from './svg/Robot.svg';
 import './ProgramBlockEditor.scss';
 
 // TODO: Send focus to Delete toggle button on close of Delete All confirmation dialog
@@ -399,6 +400,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 <DeleteAllIcon className='ProgramBlockEditor__program-deleteAll-button-svg'/>
                             </AriaDisablingButton>
                         </span>
+                    </div>
+                </div>
+                <div className='ProgramBlockEditor__character-column'>
+                    <div className='ProgramBlockEditor__character-column-character-container'>
+                        <RobotIcon className='ProgramBlockEditor__chracter-column-character' />
                     </div>
                 </div>
                 <div className='ProgramBlockEditor__program-sequence-scroll-container' id='programSequenceContainer'>
