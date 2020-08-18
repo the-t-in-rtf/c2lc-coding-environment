@@ -7,10 +7,3 @@
     height: auto;
     border: 0.1rem solid #555;
 }
-
-:export {
-    sceneMinX: -$c2lc-scene-grid-cell-num-column * $c2lc-scene-grid-cell-width / 2;
-    sceneMinY: -$c2lc-scene-grid-cell-num-row * $c2lc-scene-grid-cell-width / 2;
-    sceneWidth: $c2lc-scene-grid-cell-num-column * $c2lc-scene-grid-cell-width;
-    sceneHeight: $c2lc-scene-grid-cell-num-row * $c2lc-scene-grid-cell-width;
-}

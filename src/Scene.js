@@ -4,17 +4,25 @@ import React from 'react';
 import CharacterState from './CharacterState';
 import RobotCharacter from './RobotCharacter';
 import { injectIntl } from 'react-intl';
-import { sceneMinX, sceneMinY, sceneWidth, sceneHeight } from './Scene.scss';
 import './Scene.scss';
 
 type SceneProps = {
     intl: any,
+    numRows: number,
+    numColumns: number,
+    gridCellWidth: number,
     characterState: CharacterState
 };
 
 class Scene extends React.Component<SceneProps, {}> {
     render() {
-        // Subtract 90 degrees from the character bearing as the character image is drawn upright when it is facing East
+        const width = this.props.numColumns * this.props.gridCellWidth;
+        const height = this.props.numRows * this.props.gridCellWidth;
+        const minX = -width / 2;
+        const minY = -height / 2;
+
+        // Subtract 90 degrees from the character bearing as the character
+        // image is drawn upright when it is facing East
         const robotCharacterTransform = `translate(${this.props.characterState.xPos} ${this.props.characterState.yPos}) rotate(${this.props.characterState.directionDegrees - 90} 0 0)`;
 
         return (
@@ -25,8 +33,11 @@ class Scene extends React.Component<SceneProps, {}> {
                     aria-label={this.props.intl.formatMessage({id: 'Scene'})}>
                     <svg
                         xmlns='http://www.w3.org/2000/svg'
-                        viewBox={`${sceneMinX} ${sceneMinY} ${sceneWidth} ${sceneHeight}`}>
-                        <RobotCharacter robotCharacterTransform={robotCharacterTransform}/>
+                        viewBox={`${minX} ${minY} ${width} ${height}`}>
+                        <RobotCharacter
+                            robotCharacterTransform={robotCharacterTransform}
+                            width={this.props.gridCellWidth * 0.8}
+                        />
                     </svg>
                 </span>
             </div>

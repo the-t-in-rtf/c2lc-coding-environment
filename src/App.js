@@ -21,7 +21,6 @@ import { programIsEmpty } from './ProgramUtils';
 import * as Utils from './Utils';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import messages from './messages.json';
-import { sceneGridCellWidth } from './App.scss';
 import './App.scss';
 import './vendor/dragdroptouch/DragDropTouch.js';
 
@@ -47,7 +46,10 @@ type AppState = {
     selectedAction: ?string,
     isDraggingCommand: boolean,
     audioEnabled: boolean,
-    actionPanelStepIndex: ?number
+    actionPanelStepIndex: ?number,
+    sceneNumRows: number,
+    sceneNumColumns: number,
+    sceneGridCellWidth: number
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -78,7 +80,10 @@ export default class App extends React.Component<{}, AppState> {
             selectedAction: null,
             isDraggingCommand: false,
             audioEnabled: true,
-            actionPanelStepIndex: null
+            actionPanelStepIndex: null,
+            sceneNumRows: 5,
+            sceneNumColumns: 9,
+            sceneGridCellWidth: 100
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -90,7 +95,7 @@ export default class App extends React.Component<{}, AppState> {
                 this.audioManager.playSound('forward');
                 this.setState((state) => {
                     return {
-                        characterState: state.characterState.forward(sceneGridCellWidth)
+                        characterState: state.characterState.forward(this.state.sceneGridCellWidth)
                     };
                 });
                 return new Promise((resolve, reject) => {
@@ -316,7 +321,12 @@ export default class App extends React.Component<{}, AppState> {
                             </Row>
                         }
                         <div className='App__scene-container'>
-                            <Scene characterState={this.state.characterState} />
+                            <Scene
+                                numRows={this.state.sceneNumRows}
+                                numColumns={this.state.sceneNumColumns}
+                                gridCellWidth={this.state.sceneGridCellWidth}
+                                characterState={this.state.characterState}
+                            />
                         </div>
                         <Row className='App__program-section' noGutters={true}>
                             <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
