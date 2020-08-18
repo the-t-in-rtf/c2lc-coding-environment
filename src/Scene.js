@@ -75,30 +75,53 @@ class Scene extends React.Component<SceneProps, SceneState> {
 
     drawGrid(numRow: number, numColumn: number, width: number) {
         const grid = [];
-        // importing scss variable returns string type
         let xOffset = parseInt(sceneMinX);
         let yOffset = parseInt(sceneMinY);
-        for (let i=1;i<numRow;i++) {
-            yOffset = yOffset + parseInt(width);
+        for (let i=1;i < numRow + 1;i++) {
+            yOffset = yOffset + width;
+            if (i < numRow) {
             grid.push(<line
                 className='Scene__grid-line'
-                key={`row-${i}`}
+                key={`grid-cell-row-${i}`}
                 x1={`${xOffset}`}
                 y1={`${yOffset}`}
-                x2={`${width * numColumn}`}
+                x2={`${-xOffset}`}
                 y2={`${yOffset}`} />);
+            }
+            grid.push(
+                <text
+                    className='Scene__grid-label'
+                    key={`grid-cell-label-${i}`}
+                    dominantBaseline='middle'
+                    x={`${xOffset * 1.05}`}
+                    y={`${yOffset - width / 2}`}>
+                    {i}
+                </text>
+            )
         }
         xOffset = parseInt(sceneMinX);
         yOffset = parseInt(sceneMinY);
-        for (let i=1;i<numColumn;i++) {
-            xOffset = xOffset + parseInt(width);
+        for (let i=1;i < numColumn + 1;i++) {
+            xOffset = xOffset + width;
+            if (i < numColumn) {
             grid.push(<line
                 className='Scene__grid-line'
-                key={`column-${i}`}
+                key={`grid-cell-column-${i}`}
                 x1={`${xOffset}`}
                 y1={`${yOffset}`}
                 x2={`${xOffset}`}
-                y2={`${width * numRow}`} />);
+                y2={`${-yOffset}`} />);
+            }
+            grid.push(
+                <text
+                    className='Scene__grid-label'
+                    key={`grid-cell-label-${String.fromCharCode(64+i)}`}
+                    textAnchor='middle'
+                    x={`${xOffset - width / 2}`}
+                    y={`${yOffset * 1.05}`}>
+                    {String.fromCharCode(64+i)}
+                </text>
+            )
         }
         return grid;
     }
@@ -116,7 +139,8 @@ class Scene extends React.Component<SceneProps, SceneState> {
                     <svg
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox={`${sceneMinX} ${sceneMinY} ${sceneWidth} ${sceneHeight}`}>
-                        {this.drawGrid(numRow, numColumn, gridCellWidth)}
+                        {/* Importing scss variable returns string type */}
+                        {this.drawGrid(parseInt(numRow), parseInt(numColumn), parseInt(gridCellWidth))}
                         <RobotCharacter robotCharacterTransform={robotCharacterTransform}/>
                     </svg>
                 </span>
