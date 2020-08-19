@@ -16,20 +16,24 @@ type SceneProps = {
 
 class Scene extends React.Component<SceneProps, {}> {
 
-    drawGrid(numRow: number, numColumn: number, width: number, minX: number, minY: number) {
+    drawGrid(sceneWidth: number, sceneHeight: number, minX: number, minY: number) {
         const grid = [];
-        let xOffset = minX;
+        const rowLabelOffset = sceneWidth * 0.025;
+        const columnLabelOffset = sceneHeight * 0.025;
         let yOffset = minY;
-        for (let i=1;i < numRow + 1;i++) {
-            yOffset = yOffset + width;
-            if (i < numRow) {
+        if (this.props.numRows === 0 || this.props.numColumns === 0) {
+            return grid;
+        }
+        for (let i=1;i < this.props.numRows + 1;i++) {
+            yOffset = yOffset + this.props.gridCellWidth;
+            if (i < this.props.numRows) {
             grid.push(<line
                 className='Scene__grid-line'
                 key={`grid-cell-row-${i}`}
-                x1={`${xOffset}`}
-                y1={`${yOffset}`}
-                x2={`${-xOffset}`}
-                y2={`${yOffset}`} />);
+                x1={minX}
+                y1={yOffset}
+                x2={minX + sceneWidth}
+                y2={yOffset} />);
             }
             grid.push(
                 <text
@@ -37,32 +41,31 @@ class Scene extends React.Component<SceneProps, {}> {
                     textAnchor='end'
                     key={`grid-cell-label-${i}`}
                     dominantBaseline='middle'
-                    x={`${xOffset * 1.05}`}
-                    y={`${yOffset - width / 2}`}>
+                    x={minX - rowLabelOffset}
+                    y={yOffset - this.props.gridCellWidth / 2}>
                     {i}
                 </text>
             )
         }
-        xOffset = minX;
-        yOffset = minY;
-        for (let i=1;i < numColumn + 1;i++) {
-            xOffset = xOffset + width;
-            if (i < numColumn) {
+        let xOffset = minX;
+        for (let i=1;i < this.props.numColumns + 1;i++) {
+            xOffset = xOffset + this.props.gridCellWidth;
+            if (i < this.props.numColumns) {
             grid.push(<line
                 className='Scene__grid-line'
                 key={`grid-cell-column-${i}`}
-                x1={`${xOffset}`}
-                y1={`${yOffset}`}
-                x2={`${xOffset}`}
-                y2={`${-yOffset}`} />);
+                x1={xOffset}
+                y1={minY}
+                x2={xOffset}
+                y2={minY + sceneHeight} />);
             }
             grid.push(
                 <text
                     className='Scene__grid-label'
                     key={`grid-cell-label-${String.fromCharCode(64+i)}`}
                     textAnchor='middle'
-                    x={`${xOffset - width / 2}`}
-                    y={`${yOffset * 1.05}`}>
+                    x={xOffset - this.props.gridCellWidth / 2}
+                    y={minY - columnLabelOffset}>
                     {String.fromCharCode(64+i)}
                 </text>
             )
@@ -90,15 +93,17 @@ class Scene extends React.Component<SceneProps, {}> {
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox={`${minX} ${minY} ${width} ${height}`}>
                         <defs>
-                            <clipPath id='Scene'>
+                            <clipPath id='Scene-clippath'>
                                 <rect x={minX} y={minY} width={width} height={height} />
                             </clipPath>
                         </defs>
-                        {this.drawGrid(this.props.numRows, this.props.numColumns, this.props.gridCellWidth, minX, minY)}
-                        <RobotCharacter
-                            robotCharacterTransform={robotCharacterTransform}
-                            width={this.props.gridCellWidth * 0.8}
-                        />
+                        {this.drawGrid(width, height, minX, minY)}
+                        <g clipPath='url(#Scene-clippath)'>
+                            <RobotCharacter
+                                robotCharacterTransform={robotCharacterTransform}
+                                width={this.props.gridCellWidth * 0.8}
+                            />
+                        </g>
                     </svg>
                 </span>
             </div>

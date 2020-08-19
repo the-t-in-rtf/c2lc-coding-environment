@@ -14,16 +14,14 @@ export default class RobotCharacter extends React.Component<RobotCharacterProps,
         const characterRadius = this.props.width / 2;
         const characterWidth = this.props.width * 0.75;
         return (
-            <g clipPath='url(#Scene)'>
-                <g transform={this.props.robotCharacterTransform}>
-                    <RobotIcon
-                        className='RobotCharacter'
-                        x={`${-characterWidth/2}`}
-                        y={`${-characterWidth/2}`}
-                        width={`${characterWidth}`}
-                        height={`${characterWidth}`} />
-                    <circle className='RobotCharacter__container' r={`${characterRadius}`} />
-                </g>
+            <g transform={this.props.robotCharacterTransform}>
+                <RobotIcon
+                    className='RobotCharacter'
+                    x={-characterWidth/2}
+                    y={-characterWidth/2}
+                    width={characterWidth}
+                    height={characterWidth} />
+                <circle className='RobotCharacter__container' r={characterRadius} />
             </g>
         );
     }
