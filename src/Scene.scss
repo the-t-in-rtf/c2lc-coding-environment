@@ -21,13 +21,3 @@
     fill: #555;
     font: bold 1rem sans-serif;
 }
-
-:export {
-    sceneMinX: -$c2lc-scene-grid-cell-num-column * $c2lc-scene-grid-cell-width / 2;
-    sceneMinY: -$c2lc-scene-grid-cell-num-row * $c2lc-scene-grid-cell-width / 2;
-    sceneWidth: $c2lc-scene-grid-cell-num-column * $c2lc-scene-grid-cell-width;
-    sceneHeight: $c2lc-scene-grid-cell-num-row * $c2lc-scene-grid-cell-width;
-    numRow: $c2lc-scene-grid-cell-num-row;
-    numColumn: $c2lc-scene-grid-cell-num-column;
-    gridCellWidth: $c2lc-scene-grid-cell-width;
-}

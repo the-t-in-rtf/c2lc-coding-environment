@@ -5,6 +5,7 @@ import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
 import AudioManager from './AudioManager';
 import BluetoothApiWarning from './BluetoothApiWarning';
+import CharacterState from './CharacterState';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
@@ -20,7 +21,6 @@ import { programIsEmpty } from './ProgramUtils';
 import * as Utils from './Utils';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import messages from './messages.json';
-import { sceneGridCellWidth } from './App.scss';
 import './App.scss';
 import './vendor/dragdroptouch/DragDropTouch.js';
 
@@ -37,6 +37,7 @@ type AppSettings = {
 
 type AppState = {
     program: Program,
+    characterState: CharacterState,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
     activeProgramStepNum: ?number,
@@ -45,7 +46,10 @@ type AppState = {
     selectedAction: ?string,
     isDraggingCommand: boolean,
     audioEnabled: boolean,
-    actionPanelStepIndex: ?number
+    actionPanelStepIndex: ?number,
+    sceneNumRows: number,
+    sceneNumColumns: number,
+    sceneGridCellWidth: number
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -55,7 +59,6 @@ export default class App extends React.Component<{}, AppState> {
     toCommandPaletteNoticeId: string;
     audioManager: AudioManager;
     focusTrapManager: FocusTrapManager;
-    sceneRef: { current: null | Scene.WrappedComponent };
 
     constructor(props: {}) {
         super(props);
@@ -66,6 +69,7 @@ export default class App extends React.Component<{}, AppState> {
 
         this.state = {
             program: [],
+            characterState: new CharacterState(0, 0, 90), // Begin facing East
             settings: {
                 language: 'en'
             },
@@ -76,36 +80,29 @@ export default class App extends React.Component<{}, AppState> {
             selectedAction: null,
             isDraggingCommand: false,
             audioEnabled: true,
-            actionPanelStepIndex: null
+            actionPanelStepIndex: null,
+            sceneNumRows: 5,
+            sceneNumColumns: 9,
+            sceneGridCellWidth: 100
         };
-
-        this.sceneRef = React.createRef<Scene.WrappedComponent>();
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
-
-        const moveCharacter = (commandName: string): Promise<void> => {
-            if (this.sceneRef.current !== null) {
-                if (commandName === 'forward') {
-                    this.sceneRef.current.forward(sceneGridCellWidth);
-                } else if (commandName === 'left') {
-                    this.sceneRef.current.turnLeft(90);
-                } else if (commandName === 'right') {
-                    this.sceneRef.current.turnRight(90);
-                }
-            }
-            this.audioManager.playSound(commandName);
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    resolve();
-                }, 1750);
-            });
-        };
 
         this.interpreter.addCommandHandler(
             'forward',
             'moveCharacter',
             () => {
-                return moveCharacter('forward');
+                this.audioManager.playSound('forward');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.forward(this.state.sceneGridCellWidth)
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
             }
         );
 
@@ -113,7 +110,17 @@ export default class App extends React.Component<{}, AppState> {
             'left',
             'moveCharacter',
             () => {
-                return moveCharacter('left');
+                this.audioManager.playSound('left');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnLeft(90)
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
             }
         );
 
@@ -121,7 +128,17 @@ export default class App extends React.Component<{}, AppState> {
             'right',
             'moveCharacter',
             () => {
-                return moveCharacter('right');
+                this.audioManager.playSound('right');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnRight(90)
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
             }
         );
 
@@ -304,7 +321,12 @@ export default class App extends React.Component<{}, AppState> {
                             </Row>
                         }
                         <div className='App__scene-container'>
-                            <Scene ref={this.sceneRef} />
+                            <Scene
+                                numRows={this.state.sceneNumRows}
+                                numColumns={this.state.sceneNumColumns}
+                                gridCellWidth={this.state.sceneGridCellWidth}
+                                characterState={this.state.characterState}
+                            />
                         </div>
                         <Row className='App__program-section' noGutters={true}>
                             <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
