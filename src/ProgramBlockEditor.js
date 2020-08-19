@@ -403,9 +403,14 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     </div>
                 </div>
                 <div className='ProgramBlockEditor__character-column'>
-                    <div className='ProgramBlockEditor__character-column-character-container'>
-                        <RobotIcon className='ProgramBlockEditor__chracter-column-character' />
-                    </div>
+                    <h3>
+                        <div
+                            className='ProgramBlockEditor__character-column-character-container'
+                            role='img'
+                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.robotCharacter'})}>
+                            <RobotIcon className='ProgramBlockEditor__chracter-column-character' />
+                        </div>
+                    </h3>
                 </div>
                 <div className='ProgramBlockEditor__program-sequence-scroll-container' id='programSequenceContainer'>
                     <div className='ProgramBlockEditor__program-sequence'>
