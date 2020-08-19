@@ -34,6 +34,7 @@ class Scene extends React.Component<SceneProps, {}> {
             grid.push(
                 <text
                     className='Scene__grid-label'
+                    textAnchor='end'
                     key={`grid-cell-label-${i}`}
                     dominantBaseline='middle'
                     x={`${xOffset * 1.05}`}
@@ -88,6 +89,11 @@ class Scene extends React.Component<SceneProps, {}> {
                     <svg
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox={`${minX} ${minY} ${width} ${height}`}>
+                        <defs>
+                            <clipPath id='Scene'>
+                                <rect x={minX} y={minY} width={width} height={height} />
+                            </clipPath>
+                        </defs>
                         {this.drawGrid(this.props.numRows, this.props.numColumns, this.props.gridCellWidth, minX, minY)}
                         <RobotCharacter
                             robotCharacterTransform={robotCharacterTransform}
