@@ -1,0 +1,36 @@
+// @flow
+
+import React from 'react';
+import AriaDisablingButton from './AriaDisablingButton';
+import { injectIntl } from 'react-intl';
+import { ReactComponent as PlayIcon } from './svg/Play.svg';
+import './PlayButton.scss';
+
+type PlayButtonProps = {
+    intl: any,
+    interpreterIsRunning: boolean,
+    runButtonDisabled: boolean,
+    onClickRunButton: () => void
+};
+
+class PlayButton extends React.Component<PlayButtonProps, {}> {
+    render() {
+        return (
+            <div className='PlayButton-container'>
+                <AriaDisablingButton
+                    aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})}`}
+                    className={this.props.interpreterIsRunning ?
+                        'PlayButton PlayButton--pressed' :
+                        'PlayButton'}
+                    disabledClassName='PlayButton--disabled'
+                    disabled={this.props.runButtonDisabled}
+                    onClick={this.props.onClickRunButton}
+                >
+                    <PlayIcon className='PlayButton-svg' />
+                </AriaDisablingButton>
+            </div>
+        );
+    }
+}
+
+export default injectIntl(PlayButton);
