@@ -14,7 +14,6 @@ import CommandBlock from './CommandBlock';
 import classNames from 'classnames';
 import ToggleSwitch from './ToggleSwitch';
 import { ReactComponent as AddIcon } from './svg/Add.svg';
-import { ReactComponent as PlayIcon } from './svg/Play.svg';
 import { ReactComponent as DeleteAllIcon } from './svg/DeleteAll.svg';
 import { ReactComponent as RobotIcon } from './svg/Robot.svg';
 import './ProgramBlockEditor.scss';
@@ -30,10 +29,8 @@ type ProgramBlockEditorProps = {
     program: Program,
     selectedAction: ?string,
     isDraggingCommand: boolean,
-    runButtonDisabled: boolean,
     audioManager: AudioManager,
     focusTrapManager: FocusTrapManager,
-    onClickRunButton: () => void,
     onChangeProgram: (Program) => void,
     onChangeActionPanelStepIndex: (index: ?number) => void
 };
@@ -413,21 +410,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
                         </div>
                         {contents}
-                    </div>
-                </div>
-                <div className='ProgramBlockEditor__footer'>
-                    <div className='ProgramBlockEditor__run'>
-                        <AriaDisablingButton
-                            aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
-                            className={this.props.interpreterIsRunning ?
-                                'ProgramBlockEditor__run-button ProgramBlockEditor__run-button--pressed' :
-                                'ProgramBlockEditor__run-button'}
-                            disabledClassName='ProgramBlockEditor__run-button--disabled'
-                            disabled={this.props.runButtonDisabled}
-                            onClick={this.props.onClickRunButton}
-                        >
-                            <PlayIcon className='ProgramBlockEditor__play-svg' />
-                        </AriaDisablingButton>
                     </div>
                 </div>
                 <ConfirmDeleteAllModal
