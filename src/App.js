@@ -14,6 +14,7 @@ import * as FeatureDetection from './FeatureDetection';
 import FocusTrapManager from './FocusTrapManager';
 import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
+import PlayButton from './PlayButton';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
@@ -328,6 +329,15 @@ export default class App extends React.Component<{}, AppState> {
                                 characterState={this.state.characterState}
                             />
                         </div>
+                        <div className='App__scene-controls'>
+                            <PlayButton
+                                interpreterIsRunning={this.state.interpreterIsRunning}
+                                runButtonDisabled={
+                                        this.state.interpreterIsRunning ||
+                                        programIsEmpty(this.state.program)}
+                                onClickRunButton={this.handleClickRun}
+                            />
+                        </div>
                         <Row className='App__program-section' noGutters={true}>
                             <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
                                 <div className='App__command-palette'>
@@ -372,12 +382,8 @@ export default class App extends React.Component<{}, AppState> {
                                     program={this.state.program}
                                     selectedAction={this.state.selectedAction}
                                     isDraggingCommand={this.state.isDraggingCommand}
-                                    runButtonDisabled={
-                                        this.state.interpreterIsRunning ||
-                                        programIsEmpty(this.state.program)}
                                     audioManager={this.audioManager}
                                     focusTrapManager={this.focusTrapManager}
-                                    onClickRunButton={this.handleClickRun}
                                     onChangeProgram={this.handleChangeProgram}
                                     onChangeActionPanelStepIndex={this.handleChangeActionPanelStepIndex}
                                 />
