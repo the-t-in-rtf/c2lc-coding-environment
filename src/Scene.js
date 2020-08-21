@@ -34,6 +34,15 @@ class Scene extends React.Component<SceneProps, {}> {
                     <svg
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox={`${minX} ${minY} ${width} ${height}`}>
+                        {this.props.characterState.path.map((pathSegment, i) => {
+                            return <line
+                                className='Scene__path-line'
+                                x1={pathSegment.x1}
+                                y1={pathSegment.y1}
+                                x2={pathSegment.x2}
+                                y2={pathSegment.y2}
+                                key={`path-${i}`} />
+                        })}
                         <RobotCharacter
                             robotCharacterTransform={robotCharacterTransform}
                             width={this.props.gridCellWidth * 0.8}
