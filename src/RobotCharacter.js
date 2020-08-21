@@ -15,13 +15,13 @@ export default class RobotCharacter extends React.Component<RobotCharacterProps,
         const characterWidth = this.props.width * 0.75;
         return (
             <g transform={this.props.robotCharacterTransform}>
+                <circle className='RobotCharacter__container' r={`${characterRadius}`} />
                 <RobotIcon
                     className='RobotCharacter'
                     x={`${-characterWidth/2}`}
                     y={`${-characterWidth/2}`}
                     width={`${characterWidth}`}
                     height={`${characterWidth}`} />
-                <circle className='RobotCharacter__container' r={`${characterRadius}`} />
             </g>
         );
     }
