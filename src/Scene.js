@@ -27,13 +27,13 @@ class Scene extends React.Component<SceneProps, {}> {
         for (let i=1;i < this.props.numRows + 1;i++) {
             yOffset = yOffset + this.props.gridCellWidth;
             if (i < this.props.numRows) {
-            grid.push(<line
-                className='Scene__grid-line'
-                key={`grid-cell-row-${i}`}
-                x1={minX}
-                y1={yOffset}
-                x2={minX + sceneWidth}
-                y2={yOffset} />);
+                grid.push(<line
+                    className='Scene__grid-line'
+                    key={`grid-cell-row-${i}`}
+                    x1={minX}
+                    y1={yOffset}
+                    x2={minX + sceneWidth}
+                    y2={yOffset} />);
             }
             grid.push(
                 <text
@@ -51,13 +51,13 @@ class Scene extends React.Component<SceneProps, {}> {
         for (let i=1;i < this.props.numColumns + 1;i++) {
             xOffset = xOffset + this.props.gridCellWidth;
             if (i < this.props.numColumns) {
-            grid.push(<line
-                className='Scene__grid-line'
-                key={`grid-cell-column-${i}`}
-                x1={xOffset}
-                y1={minY}
-                x2={xOffset}
-                y2={minY + sceneHeight} />);
+                grid.push(<line
+                    className='Scene__grid-line'
+                    key={`grid-cell-column-${i}`}
+                    x1={xOffset}
+                    y1={minY}
+                    x2={xOffset}
+                    y2={minY + sceneHeight} />);
             }
             grid.push(
                 <text
