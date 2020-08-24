@@ -16,14 +16,14 @@ type SceneProps = {
 
 class Scene extends React.Component<SceneProps, {}> {
 
-    drawGrid(sceneWidth: number, sceneHeight: number, minX: number, minY: number) {
+    drawGrid(minX: number, minY: number, sceneWidth: number, sceneHeight: number) {
         const grid = [];
-        const rowLabelOffset = sceneWidth * 0.025;
-        const columnLabelOffset = sceneHeight * 0.025;
-        let yOffset = minY;
         if (this.props.numRows === 0 || this.props.numColumns === 0) {
             return grid;
         }
+        const rowLabelOffset = sceneWidth * 0.025;
+        const columnLabelOffset = sceneHeight * 0.025;
+        let yOffset = minY;
         for (let i=1;i < this.props.numRows + 1;i++) {
             yOffset = yOffset + this.props.gridCellWidth;
             if (i < this.props.numRows) {
@@ -97,10 +97,10 @@ class Scene extends React.Component<SceneProps, {}> {
                                 <rect x={minX} y={minY} width={width} height={height} />
                             </clipPath>
                         </defs>
-                        {this.drawGrid(width, height, minX, minY)}
+                        {this.drawGrid(minX, minY, width, height)}
                         <g clipPath='url(#Scene-clippath)'>
                             <RobotCharacter
-                                robotCharacterTransform={robotCharacterTransform}
+                                transform={robotCharacterTransform}
                                 width={this.props.gridCellWidth * 0.8}
                             />
                         </g>
