@@ -9,7 +9,9 @@ import * as C2lcMath from './C2lcMath';
 expect.extend({
     toHaveCharacterState(received, xPos, yPos, directionDegrees, path) {
         const isEqualPath = received.path[0] != null && path[0] != null ?
-            C2lcMath.approxEqual(received.path[0].x2, path[0].x2, 0.0001)
+            C2lcMath.approxEqual(received.path[0].x1, path[0].x1, 0.0001)
+            && C2lcMath.approxEqual(received.path[0].y1, path[0].y1, 0.0001)
+            && C2lcMath.approxEqual(received.path[0].x2, path[0].x2, 0.0001)
             && C2lcMath.approxEqual(received.path[0].y2, path[0].y2, 0.0001) :
             received.path.length === path.length;
         const pass =
