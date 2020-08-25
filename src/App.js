@@ -321,22 +321,24 @@ export default class App extends React.Component<{}, AppState> {
                                 </Col>
                             </Row>
                         }
-                        <div className='App__scene-container'>
+                        <div className='App__scene-area'>
                             <Scene
                                 numRows={this.state.sceneNumRows}
                                 numColumns={this.state.sceneNumColumns}
                                 gridCellWidth={this.state.sceneGridCellWidth}
                                 characterState={this.state.characterState}
                             />
-                        </div>
-                        <div className='App__scene-controls'>
-                            <PlayButton
-                                interpreterIsRunning={this.state.interpreterIsRunning}
-                                runButtonDisabled={
-                                        this.state.interpreterIsRunning ||
-                                        programIsEmpty(this.state.program)}
-                                onClickRunButton={this.handleClickRun}
-                            />
+                            <div className='App__scene-controls'>
+                                <div className='App__playButton-container'>
+                                    <PlayButton
+                                        interpreterIsRunning={this.state.interpreterIsRunning}
+                                        runButtonDisabled={
+                                                this.state.interpreterIsRunning ||
+                                                programIsEmpty(this.state.program)}
+                                        onClickRunButton={this.handleClickRun}
+                                    />
+                                </div>
+                            </div>
                         </div>
                         <Row className='App__program-section' noGutters={true}>
                             <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>

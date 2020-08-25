@@ -16,19 +16,17 @@ type PlayButtonProps = {
 class PlayButton extends React.Component<PlayButtonProps, {}> {
     render() {
         return (
-            <div className='PlayButton-container'>
-                <AriaDisablingButton
-                    aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})}`}
-                    className={this.props.interpreterIsRunning ?
-                        'PlayButton PlayButton--pressed' :
-                        'PlayButton'}
-                    disabledClassName='PlayButton--disabled'
-                    disabled={this.props.runButtonDisabled}
-                    onClick={this.props.onClickRunButton}
-                >
-                    <PlayIcon className='PlayButton-svg' />
-                </AriaDisablingButton>
-            </div>
+            <AriaDisablingButton
+                aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})}`}
+                className={this.props.interpreterIsRunning ?
+                    'PlayButton PlayButton--pressed' :
+                    'PlayButton'}
+                disabledClassName='PlayButton--disabled'
+                disabled={this.props.runButtonDisabled}
+                onClick={this.props.onClickRunButton}
+            >
+                <PlayIcon className='PlayButton-svg' />
+            </AriaDisablingButton>
         );
     }
 }
