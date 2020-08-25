@@ -110,3 +110,9 @@ test('Turn Right moves clockwise and wraps at 360', () => {
     (expect(new CharacterState(0, 0, 270, []).turnRight(90)): any).toHaveCharacterState(0, 0, 0, []);
     (expect(new CharacterState(0, 0, 270, []).turnRight(120)): any).toHaveCharacterState(0, 0, 30, []);
 });
+
+test('Each Forward move should create a path segment', () => {
+    (expect(new CharacterState(0, 0, 90, []).forward(100).forward(100)): any).toHaveCharacterState(200, 0, 90, [{x1: 0, y1: 0, x2: 100, y2: 0}, {x1: 100, y1: 0, x2: 200, y2: 0}]);
+    (expect(new CharacterState(0, 0, 90, []).forward(100).turnLeft(90).forward(100)): any).toHaveCharacterState(100, -100, 0, [{x1: 0, y1: 0, x2: 100, y2: 0}, {x1: 100, y1: 0, x2: 100, y2: -100}]);
+    (expect(new CharacterState(0, 0, 90, []).forward(100).turnRight(90).forward(100)): any).toHaveCharacterState(100, 100, 180, [{x1: 0, y1: 0, x2: 100, y2: 0}, {x1: 100, y1: 0, x2: 100, y2: 100}]);
+});
