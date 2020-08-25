@@ -8,17 +8,11 @@ import * as C2lcMath from './C2lcMath';
 
 expect.extend({
     toHaveCharacterState(received, xPos, yPos, directionDegrees, path) {
-        const isEqualPath = received.path[0] != null && path[0] != null ?
-            C2lcMath.approxEqual(received.path[0].x1, path[0].x1, 0.0001)
-            && C2lcMath.approxEqual(received.path[0].y1, path[0].y1, 0.0001)
-            && C2lcMath.approxEqual(received.path[0].x2, path[0].x2, 0.0001)
-            && C2lcMath.approxEqual(received.path[0].y2, path[0].y2, 0.0001) :
-            received.path.length === path.length;
         const pass =
             C2lcMath.approxEqual(received.xPos, xPos, 0.0001)
             && C2lcMath.approxEqual(received.yPos, yPos, 0.0001)
             && received.directionDegrees === directionDegrees
-            && isEqualPath;
+            && received.pathEquals(path, 0.0001);
         if (pass) {
             return {
                 message: () => {
@@ -26,7 +20,7 @@ expect.extend({
                         + `    xPos: ${xPos}\n`
                         + `    yPos: ${yPos}\n`
                         + `    directionDegrees: ${directionDegrees}\n`
-                        + `    path: ${path}\n`
+                        + `    path: ${JSON.stringify(path)}\n`
                         + `Received: ${this.utils.printReceived(received)}`;
                 },
                 pass: true
@@ -38,13 +32,59 @@ expect.extend({
                         + `    xPos: ${xPos}\n`
                         + `    yPos: ${yPos}\n`
                         + `    directionDegrees: ${directionDegrees}\n`
-                        + `    path: ${path}\n`
+                        + `    path: ${JSON.stringify(path)}\n`
                         + `Received: ${this.utils.printReceived(received)}`;
                 },
                 pass: false
             };
         }
     }
+});
+
+test('CharacterState.pathEquals', () => {
+    const oneSegment = [{x1: 100, y1: 200, x2: 300, y2: 400}];
+    const twoSegments = [
+        {x1: 100, y1: 200, x2: 300, y2: 400},
+        {x1: 500, y1: 600, x2: 700, y2: 800}
+    ];
+
+    expect(new CharacterState(0, 0, 0, []).pathEquals([], 1)).toBeTruthy();
+
+    expect(new CharacterState(0, 0, 0, []).pathEquals(oneSegment, 1)).toBeFalsy();
+    expect(new CharacterState(0, 0, 0, []).pathEquals(twoSegments, 1)).toBeFalsy();
+    expect(new CharacterState(0, 0, 0, oneSegment).pathEquals([], 1)).toBeFalsy();
+    expect(new CharacterState(0, 0, 0, oneSegment).pathEquals(twoSegments, 1)).toBeFalsy();
+    expect(new CharacterState(0, 0, 0, twoSegments).pathEquals([], 1)).toBeFalsy();
+    expect(new CharacterState(0, 0, 0, twoSegments).pathEquals(oneSegment, 1)).toBeFalsy();
+
+    expect(new CharacterState(0, 0, 0, oneSegment).pathEquals([
+            {x1: 100, y1: 200, x2: 300, y2: 400}
+        ], 1)).toBeTruthy();
+
+    expect(new CharacterState(0, 0, 0, twoSegments).pathEquals([
+            {x1: 100, y1: 200, x2: 300, y2: 400},
+            {x1: 500, y1: 600, x2: 700, y2: 800}
+        ], 1)).toBeTruthy();
+
+    expect(new CharacterState(0, 0, 0, twoSegments).pathEquals([
+            {x1: 100, y1: 200, x2: 300, y2: 400},
+            {x1: 501, y1: 600, x2: 700, y2: 800}
+        ], 1)).toBeFalsy();
+
+    expect(new CharacterState(0, 0, 0, twoSegments).pathEquals([
+            {x1: 100, y1: 200, x2: 300, y2: 400},
+            {x1: 500, y1: 601, x2: 700, y2: 800}
+        ], 1)).toBeFalsy();
+
+    expect(new CharacterState(0, 0, 0, twoSegments).pathEquals([
+            {x1: 100, y1: 200, x2: 300, y2: 400},
+            {x1: 500, y1: 600, x2: 701, y2: 800}
+        ], 1)).toBeFalsy();
+
+    expect(new CharacterState(0, 0, 0, twoSegments).pathEquals([
+            {x1: 100, y1: 200, x2: 300, y2: 400},
+            {x1: 500, y1: 600, x2: 700, y2: 801}
+        ], 1)).toBeFalsy();
 });
 
 test('Given the character is facing East, then Forward movement should move East', () => {
