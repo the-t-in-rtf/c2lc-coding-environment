@@ -101,25 +101,33 @@ describe('When the Scene renders', () => {
         expect(findGridLines(sceneWrapper).length).toBe(0);
     });
 
-    test('With numRows = 1, numColumns = 1, gridCellWidth = 4', () => {
+    test('With numRows = 1, numColumns = 1, gridCellWidth = 100', () => {
         expect.assertions(7);
         const numRows = 1;
         const numColumns = 1;
-        const gridCellWidth = 4;
+        const gridCellWidth = 100;
         const gridDimensions = getGridDimensions(numRows, numColumns, gridCellWidth);
         const sceneWrapper = createMountScene({numRows, numColumns, gridCellWidth});
+        const expectedLabelOffset = 2.5
 
         // Scene viewbox
 
-        expect(findScene(sceneWrapper).get(0).props.children.props.viewBox).toBe(`${gridDimensions.minX} ${gridDimensions.minY} ${gridDimensions.width} ${gridDimensions.height}`);
+        expect(findScene(sceneWrapper).get(0).props.children.props.viewBox)
+            .toBe(`${gridDimensions.minX} ${gridDimensions.minY} ${gridDimensions.width} ${gridDimensions.height}`);
 
         // Grid labels
 
         expect(findGridLabels(sceneWrapper).length).toBe(2);
-        expect(findGridLabels(sceneWrapper).get(0).props.x).toBe(gridDimensions.minX - gridDimensions.width * 0.025);
-        expect(findGridLabels(sceneWrapper).get(0).props.y).toBe(gridDimensions.minY + gridCellWidth - gridCellWidth / 2);
-        expect(findGridLabels(sceneWrapper).get(1).props.x).toBe(gridDimensions.minX + gridCellWidth - gridCellWidth / 2);
-        expect(findGridLabels(sceneWrapper).get(1).props.y).toBe(gridDimensions.minY - gridDimensions.width * 0.025);
+
+        // Row labels
+
+        expect(findGridLabels(sceneWrapper).get(0).props.x).toBe(-50 - expectedLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(0).props.y).toBe(0);
+
+        // Column labels
+
+        expect(findGridLabels(sceneWrapper).get(1).props.x).toBe(0);
+        expect(findGridLabels(sceneWrapper).get(1).props.y).toBe(-50 - expectedLabelOffset);
 
         // Grid lines
 
@@ -130,38 +138,51 @@ describe('When the Scene renders', () => {
         expect.assertions(19);
         const numRows = 2;
         const numColumns = 2;
-        const gridCellWidth = 6;
+        const gridCellWidth = 100;
         const gridDimensions = getGridDimensions(numRows, numColumns, gridCellWidth);
         const sceneWrapper = createMountScene({numRows, numColumns, gridCellWidth});
+        const expectedLabelOffset = 5
 
         // Scene viewbox
 
-        expect(findScene(sceneWrapper).get(0).props.children.props.viewBox).toBe(`${gridDimensions.minX} ${gridDimensions.minY} ${gridDimensions.width} ${gridDimensions.height}`);
+        expect(findScene(sceneWrapper).get(0).props.children.props.viewBox)
+            .toBe(`${gridDimensions.minX} ${gridDimensions.minY} ${gridDimensions.width} ${gridDimensions.height}`);
 
         // Grid labels
 
         expect(findGridLabels(sceneWrapper).length).toBe(4);
-        expect(findGridLabels(sceneWrapper).get(0).props.x).toBe(gridDimensions.minX - gridDimensions.width * 0.025);
-        expect(findGridLabels(sceneWrapper).get(0).props.y).toBe(gridDimensions.minY + gridCellWidth - gridCellWidth / 2);
-        expect(findGridLabels(sceneWrapper).get(1).props.x).toBe(gridDimensions.minX - gridDimensions.width * 0.025);
-        expect(findGridLabels(sceneWrapper).get(1).props.y).toBe(gridDimensions.minY + gridCellWidth + gridCellWidth - gridCellWidth / 2);
-        expect(findGridLabels(sceneWrapper).get(2).props.x).toBe(gridDimensions.minX + gridCellWidth - gridCellWidth / 2);
-        expect(findGridLabels(sceneWrapper).get(2).props.y).toBe(gridDimensions.minY - gridDimensions.width * 0.025);
-        expect(findGridLabels(sceneWrapper).get(3).props.x).toBe(gridDimensions.minX + gridCellWidth + gridCellWidth - gridCellWidth / 2);
-        expect(findGridLabels(sceneWrapper).get(3).props.y).toBe(gridDimensions.minY - gridDimensions.width * 0.025);
+
+        // Row labels
+
+        expect(findGridLabels(sceneWrapper).get(0).props.x).toBe(-100 - expectedLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(0).props.y).toBe(-50);
+        expect(findGridLabels(sceneWrapper).get(1).props.x).toBe(-100 - expectedLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(1).props.y).toBe(50);
+
+        // Column labels
+
+        expect(findGridLabels(sceneWrapper).get(2).props.x).toBe(-50);
+        expect(findGridLabels(sceneWrapper).get(2).props.y).toBe(-100 - expectedLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(3).props.x).toBe(50);
+        expect(findGridLabels(sceneWrapper).get(3).props.y).toBe(-100 - expectedLabelOffset);
 
         // Grid lines
 
         expect(findGridLines(sceneWrapper).length).toBe(2);
-        expect(findGridLines(sceneWrapper).get(0).props.x1).toBe(gridDimensions.minX);
-        expect(findGridLines(sceneWrapper).get(0).props.y1).toBe(gridDimensions.minY + gridCellWidth);
-        expect(findGridLines(sceneWrapper).get(0).props.x2).toBe(gridDimensions.minX + gridCellWidth * numColumns);
-        expect(findGridLines(sceneWrapper).get(0).props.y2).toBe(gridDimensions.minY + gridCellWidth);
 
-        expect(findGridLines(sceneWrapper).get(1).props.x1).toBe(gridDimensions.minX + gridCellWidth);
-        expect(findGridLines(sceneWrapper).get(1).props.y1).toBe(gridDimensions.minY);
-        expect(findGridLines(sceneWrapper).get(1).props.x2).toBe(gridDimensions.minX + gridCellWidth);
-        expect(findGridLines(sceneWrapper).get(1).props.y2).toBe(gridDimensions.minY + gridCellWidth * numRows);
+        // Grid rows
+
+        expect(findGridLines(sceneWrapper).get(0).props.x1).toBe(-100);
+        expect(findGridLines(sceneWrapper).get(0).props.y1).toBe(0);
+        expect(findGridLines(sceneWrapper).get(0).props.x2).toBe(100);
+        expect(findGridLines(sceneWrapper).get(0).props.y2).toBe(0);
+
+        // Grid columns
+
+        expect(findGridLines(sceneWrapper).get(1).props.x1).toBe(0);
+        expect(findGridLines(sceneWrapper).get(1).props.y1).toBe(-100);
+        expect(findGridLines(sceneWrapper).get(1).props.x2).toBe(0);
+        expect(findGridLines(sceneWrapper).get(1).props.y2).toBe(100);
     })
 });
 
