@@ -35,22 +35,18 @@ body {
     margin-top: 1.5rem;
 }
 
-.App__scene-area {
+.App__scene-container {
     margin-top: 1.5rem;
-    border: 0.1rem solid #555;
 }
 
 .App__scene-controls {
     height: 4rem;
     background-color: #F1F1F1;
+    border-width: 0 0.1rem 0.1rem 0.1rem;
+    border-color: #555;
+    border-style: solid;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-}
-
-.App__playButton-container {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    justify-self: center;
 }
 
 .App__program-section {
