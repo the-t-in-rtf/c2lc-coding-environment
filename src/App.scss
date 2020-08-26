@@ -41,11 +41,6 @@ body {
 }
 
 .App__scene-controls {
-    // Set position relative and z-index to make sure background-color is
-    // rendered behind the border from App__scene-area, to address the issue in Chrome
-    // where the background-color was being rendered on top of the border at some zoom levels
-    position: relative;
-    z-index: -1;
     height: 4rem;
     background-color: #F1F1F1;
     display: grid;
