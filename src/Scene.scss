@@ -5,7 +5,7 @@
     box-sizing: border-box;
     width: 100%;
     height: auto;
-    border-width: 0.1rem 0.1rem 0 0.1rem;
-    border-color: #555;
-    border-style: solid;
+    border-width: $c2lc-scene-border-width $c2lc-scene-border-width 0 $c2lc-scene-border-width;
+    border-color: $c2lc-scene-border-color;
+    border-style: $c2lc-scene-border-style;
 }

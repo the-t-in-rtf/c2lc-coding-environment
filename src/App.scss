@@ -42,11 +42,17 @@ body {
 .App__scene-controls {
     height: 4rem;
     background-color: #F1F1F1;
-    border-width: 0 0.1rem 0.1rem 0.1rem;
-    border-color: #555;
-    border-style: solid;
+    border-width: 0 $c2lc-scene-border-width $c2lc-scene-border-width $c2lc-scene-border-width;
+    border-color: $c2lc-scene-border-color;
+    border-style: $c2lc-scene-border-style;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+}
+
+.App__playButton-container {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    justify-self: center;
 }
 
 .App__program-section {
