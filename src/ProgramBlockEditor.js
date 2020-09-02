@@ -67,6 +67,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
+    programSequenceIsInViewport() {
+        const programSequenceContainer = document.getElementById('programSequenceContainer').getBoundingClientRect();
+        return (
+            programSequenceContainer.top >= 0 &&
+            programSequenceContainer.left >= 0 &&
+            programSequenceContainer.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            programSequenceContainer.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+}
+
     commandIsSelected() {
         return this.props.selectedAction != null;
     }
@@ -467,7 +477,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
         if (this.props.activeProgramStepNum != null) {
             let element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
-            if (element) {
+            if (this.programSequenceIsInViewport() && element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
             }
         }
