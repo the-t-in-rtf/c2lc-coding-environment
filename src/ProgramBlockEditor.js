@@ -51,6 +51,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     focusCommandBlockIndex: ?number;
     focusAddNodeIndex: ?number;
     scrollToAddNodeIndex: ?number;
+    programSequenceContainerRef: { current: null | HTMLDivElement };
 
     constructor(props: ProgramBlockEditorProps) {
         super(props);
@@ -59,6 +60,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.focusCommandBlockIndex = null;
         this.focusAddNodeIndex = null;
         this.scrollToAddNodeIndex = null;
+        this.programSequenceContainerRef = React.createRef();
         this.state = {
             showConfirmDeleteAll : false,
             focusedActionPanelOptionName: null,
@@ -69,14 +71,14 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     programSequenceIsInViewport() {
         //$FlowFixMe
-        const programSequenceContainer = document.getElementById('programSequenceContainer').getBoundingClientRect();
+        const programSequenceContainer = this.programSequenceContainerRef.current.getBoundingClientRect();
         return (
             programSequenceContainer.top >= 0 &&
             programSequenceContainer.left >= 0 &&
             programSequenceContainer.bottom <= window.innerHeight &&
             programSequenceContainer.right <= window.innerWidth
         );
-}
+    }
 
     commandIsSelected() {
         return this.props.selectedAction != null;
@@ -423,7 +425,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         </div>
                     </h3>
                 </div>
-                <div className='ProgramBlockEditor__program-sequence-scroll-container' id='programSequenceContainer'>
+                <div className='ProgramBlockEditor__program-sequence-scroll-container' ref={this.programSequenceContainerRef}>
                     <div className='ProgramBlockEditor__program-sequence'>
                         <div className='ProgramBlockEditor__start-indicator'>
                             {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
