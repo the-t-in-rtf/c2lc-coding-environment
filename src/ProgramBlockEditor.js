@@ -68,12 +68,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     programSequenceIsInViewport() {
+        //$FlowFixMe
         const programSequenceContainer = document.getElementById('programSequenceContainer').getBoundingClientRect();
         return (
             programSequenceContainer.top >= 0 &&
             programSequenceContainer.left >= 0 &&
-            programSequenceContainer.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            programSequenceContainer.right <= (window.innerWidth || document.documentElement.clientWidth)
+            programSequenceContainer.bottom <= window.innerHeight &&
+            programSequenceContainer.right <= window.innerWidth
         );
 }
 
