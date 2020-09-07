@@ -9,15 +9,14 @@ import Scene from './Scene';
 import CharacterState from './CharacterState';
 import RobotCharacter from './RobotCharacter';
 
-configure({ adapter: new Adapter()});
+configure({ adapter: new Adapter() });
 
 const defaultSceneProps = {
     numRows: 1,
     numColumns: 1,
-    gridCellWidth: 10
+    gridCellWidth: 10,
+    characterState: new CharacterState(0, 0, 90)
 };
-
-const characterState = new CharacterState(0, 0, 90);
 
 function createMountScene(props) {
     const wrapper = mount(
@@ -26,9 +25,6 @@ function createMountScene(props) {
             Object.assign(
                 {},
                 defaultSceneProps,
-                {
-                    characterState
-                },
                 props
             )
         ),
@@ -65,15 +61,20 @@ function findRobotCharacterIcon(sceneWrapper) {
     return sceneWrapper.find('.RobotCharacter__icon');
 }
 
-function getGridDimensions(numRows, numColumns, gridCellWidth) {
+function calculateGridDimensions(numRows, numColumns, gridCellWidth) {
     const width = numColumns * gridCellWidth;
     const height = numRows * gridCellWidth;
     const minX = -width / 2;
     const minY = -height / 2;
-    return { width, height, minX, minY };
+    return { minX, minY, width, height };
 }
 
-function getCharacterDimensions(gridCellWidth) {
+
+// TODO: This function is reproducing logic from Scene (the 0.8) and
+//       RobotCharacter (everything else) and it will be easily
+//       broken. Is there a better approach here that tests that the
+//       character is rendered as expected, but it less brittle?
+function calculateCharacterDimensions(gridCellWidth) {
     const characterWidth = gridCellWidth * 0.8 * 0.75;
     const x = -characterWidth/2;
     const y = -characterWidth/2;
@@ -106,14 +107,14 @@ describe('When the Scene renders', () => {
         const numRows = 1;
         const numColumns = 1;
         const gridCellWidth = 100;
-        const gridDimensions = getGridDimensions(numRows, numColumns, gridCellWidth);
+        const expectedGridDimensions = calculateGridDimensions(numRows, numColumns, gridCellWidth);
         const sceneWrapper = createMountScene({numRows, numColumns, gridCellWidth});
         const expectedLabelOffset = 2.5
 
         // Scene viewbox
 
         expect(findScene(sceneWrapper).get(0).props.children.props.viewBox)
-            .toBe(`${gridDimensions.minX} ${gridDimensions.minY} ${gridDimensions.width} ${gridDimensions.height}`);
+            .toBe(`${expectedGridDimensions.minX} ${expectedGridDimensions.minY} ${expectedGridDimensions.width} ${expectedGridDimensions.height}`);
 
         // Grid labels
 
@@ -139,14 +140,14 @@ describe('When the Scene renders', () => {
         const numRows = 2;
         const numColumns = 2;
         const gridCellWidth = 100;
-        const gridDimensions = getGridDimensions(numRows, numColumns, gridCellWidth);
+        const expectedGridDimensions = calculateGridDimensions(numRows, numColumns, gridCellWidth);
         const sceneWrapper = createMountScene({numRows, numColumns, gridCellWidth});
         const expectedLabelOffset = 5
 
         // Scene viewbox
 
         expect(findScene(sceneWrapper).get(0).props.children.props.viewBox)
-            .toBe(`${gridDimensions.minX} ${gridDimensions.minY} ${gridDimensions.width} ${gridDimensions.height}`);
+            .toBe(`${expectedGridDimensions.minX} ${expectedGridDimensions.minY} ${expectedGridDimensions.width} ${expectedGridDimensions.height}`);
 
         // Grid labels
 
@@ -183,7 +184,7 @@ describe('When the Scene renders', () => {
         expect(findGridLines(sceneWrapper).get(1).props.y1).toBe(-100);
         expect(findGridLines(sceneWrapper).get(1).props.x2).toBe(0);
         expect(findGridLines(sceneWrapper).get(1).props.y2).toBe(100);
-    })
+    });
 });
 
 describe('When the Scene renders', () => {
@@ -191,36 +192,45 @@ describe('When the Scene renders', () => {
         expect.assertions(5);
         const gridCellWidth = 5;
         const sceneWrapper = createMountScene({gridCellWidth});
-        const characterDimensions = getCharacterDimensions(gridCellWidth);
+        const expectedCharacterDimensions = calculateCharacterDimensions(gridCellWidth);
         expect(findRobotCharacterIcon(sceneWrapper).hostNodes().length).toBe(1);
-        expect(findRobotCharacterIcon(sceneWrapper).get(0).props.x).toBe(characterDimensions.x);
-        expect(findRobotCharacterIcon(sceneWrapper).get(0).props.y).toBe(characterDimensions.y);
-        expect(findRobotCharacterIcon(sceneWrapper).get(0).props.width).toBe(characterDimensions.width);
-        expect(findRobotCharacterIcon(sceneWrapper).get(0).props.height).toBe(characterDimensions.height);
+        expect(findRobotCharacterIcon(sceneWrapper).get(0).props.x)
+            .toBe(expectedCharacterDimensions.x);
+        expect(findRobotCharacterIcon(sceneWrapper).get(0).props.y)
+            .toBe(expectedCharacterDimensions.y);
+        expect(findRobotCharacterIcon(sceneWrapper).get(0).props.width)
+            .toBe(expectedCharacterDimensions.width);
+        expect(findRobotCharacterIcon(sceneWrapper).get(0).props.height)
+            .toBe(expectedCharacterDimensions.height);
     });
 });
 
 describe('When the robot character renders, transform should apply', () => {
     test('When xPos = 0, yPos = 0, directionDegrees = 90', () => {
         expect.assertions(1);
-        const directionDegrees = 90;
-        const sceneWrapper = createMountScene({characterState: new CharacterState(0, 0, directionDegrees)});
+        const sceneWrapper = createMountScene({
+            characterState: new CharacterState(0, 0, 90)
+        });
         const robotCharacter = findRobotCharacter(sceneWrapper);
-        expect(robotCharacter.get(0).props.transform).toBe(`translate(0 0) rotate(${directionDegrees - 90} 0 0)`);
+        expect(robotCharacter.get(0).props.transform)
+            .toBe('translate(0 0) rotate(0 0 0)');
     });
     test('When xPos = 100, yPos = 80, directionDegrees = 180', () => {
         expect.assertions(1);
-        const directionDegrees = 180;
-        const sceneWrapper = createMountScene({characterState: new CharacterState(100, 80, directionDegrees)});
+        const sceneWrapper = createMountScene({
+            characterState: new CharacterState(100, 80, 180)
+        });
         const robotCharacter = findRobotCharacter(sceneWrapper);
-        expect(robotCharacter.get(0).props.transform).toBe(`translate(100 80) rotate(${directionDegrees - 90} 0 0)`);
+        expect(robotCharacter.get(0).props.transform)
+            .toBe('translate(100 80) rotate(90 0 0)');
     });
-    test('When xPos = 0, yPos = 90, directionDegrees = -90', () => {
+    test('When xPos = 0, yPos = 90, directionDegrees = 0', () => {
         expect.assertions(1);
-        const directionDegrees = -90;
-        const sceneWrapper = createMountScene({characterState: new CharacterState(0, 90, directionDegrees)});
+        const sceneWrapper = createMountScene({
+            characterState: new CharacterState(0, 90, 0)
+        });
         const robotCharacter = findRobotCharacter(sceneWrapper);
-        expect(robotCharacter.get(0).props.transform).toBe(`translate(0 90) rotate(${directionDegrees - 90} 0 0)`);
-    })
-})
-
+        expect(robotCharacter.get(0).props.transform)
+            .toBe('translate(0 90) rotate(-90 0 0)');
+    });
+});
