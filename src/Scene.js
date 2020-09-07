@@ -6,6 +6,9 @@ import RobotCharacter from './RobotCharacter';
 import { injectIntl } from 'react-intl';
 import './Scene.scss';
 
+// TODO: Replace numRows, numColumns, and gridCellWidth with a
+//       SceneDimensions instance
+
 type SceneProps = {
     intl: any,
     numRows: number,

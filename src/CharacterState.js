@@ -1,6 +1,7 @@
 // @flow
 
 import * as C2lcMath from './C2lcMath';
+import type { SceneBounds } from './types';
 
 export default class CharacterState {
     xPos: number; // Positive x is East
@@ -13,14 +14,14 @@ export default class CharacterState {
         this.directionDegrees = directionDegrees;
     }
 
-    forward(distance: number): CharacterState {
+    forward(distance: number, bounds: SceneBounds): CharacterState {
         const directionRadians = C2lcMath.degrees2radians(this.directionDegrees);
         const xOffset = Math.sin(directionRadians) * distance;
         const yOffset = Math.cos(directionRadians) * distance;
 
         return new CharacterState(
-            this.xPos + xOffset,
-            this.yPos - yOffset,
+            C2lcMath.clamp(this.xPos + xOffset, bounds.minX, bounds.maxX),
+            C2lcMath.clamp(this.yPos - yOffset, bounds.minY, bounds.maxY),
             this.directionDegrees
         );
     }

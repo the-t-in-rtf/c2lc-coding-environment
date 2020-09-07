@@ -16,6 +16,7 @@ import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import Scene from './Scene';
+import SceneDimensions from './SceneDimensions';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import { programIsEmpty } from './ProgramUtils';
 import * as Utils from './Utils';
@@ -47,6 +48,8 @@ type AppState = {
     isDraggingCommand: boolean,
     audioEnabled: boolean,
     actionPanelStepIndex: ?number,
+    sceneDimensions: SceneDimensions,
+    // TODO: Remove sceneNumRows, sceneNumColumns, and sceneGridCellWidth
     sceneNumRows: number,
     sceneNumColumns: number,
     sceneGridCellWidth: number
@@ -81,6 +84,8 @@ export default class App extends React.Component<{}, AppState> {
             isDraggingCommand: false,
             audioEnabled: true,
             actionPanelStepIndex: null,
+            sceneDimensions: new SceneDimensions(5, 9, 100),
+            // TODO: Remove sceneNumRows, sceneNumColumns, and sceneGridCellWidth
             sceneNumRows: 5,
             sceneNumColumns: 9,
             sceneGridCellWidth: 100
@@ -95,7 +100,9 @@ export default class App extends React.Component<{}, AppState> {
                 this.audioManager.playSound('forward');
                 this.setState((state) => {
                     return {
-                        characterState: state.characterState.forward(this.state.sceneGridCellWidth)
+                        characterState: state.characterState
+                            .forward(state.sceneGridCellWidth,
+                                     state.sceneDimensions.getBounds())
                     };
                 });
                 return new Promise((resolve, reject) => {

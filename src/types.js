@@ -12,3 +12,10 @@ export interface RobotDriver {
     left(): Promise<void>;
     right(): Promise<void>;
 };
+
+export type SceneBounds = {
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number
+};
