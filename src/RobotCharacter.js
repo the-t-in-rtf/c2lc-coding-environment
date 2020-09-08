@@ -17,13 +17,13 @@ export default class RobotCharacter extends React.Component<RobotCharacterProps,
             <g
                 className='RobotCharacter'
                 transform={this.props.transform}>
+                <circle className='RobotCharacter__container' r={characterRadius} />
                 <RobotIcon
                     className='RobotCharacter__icon'
                     x={-characterWidth/2}
                     y={-characterWidth/2}
                     width={characterWidth}
                     height={characterWidth} />
-                <circle className='RobotCharacter__container' r={characterRadius} />
             </g>
         );
     }

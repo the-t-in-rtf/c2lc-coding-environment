@@ -72,7 +72,7 @@ export default class App extends React.Component<{}, AppState> {
 
         this.state = {
             program: [],
-            characterState: new CharacterState(0, 0, 90), // Begin facing East
+            characterState: new CharacterState(0, 0, 90, []), // Begin facing East
             settings: {
                 language: 'en'
             },
