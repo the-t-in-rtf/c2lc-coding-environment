@@ -17,6 +17,7 @@ import type { InterpreterRunningState } from './Interpreter';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
+import PenDownToggleSwitch from './PenDownToggleSwitch';
 import { programIsEmpty } from './ProgramUtils';
 import * as Utils from './Utils';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
@@ -49,7 +50,8 @@ type AppState = {
     actionPanelStepIndex: ?number,
     sceneNumRows: number,
     sceneNumColumns: number,
-    sceneGridCellWidth: number
+    sceneGridCellWidth: number,
+    isPenDown: boolean
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -83,7 +85,8 @@ export default class App extends React.Component<{}, AppState> {
             actionPanelStepIndex: null,
             sceneNumRows: 5,
             sceneNumColumns: 9,
-            sceneGridCellWidth: 100
+            sceneGridCellWidth: 100,
+            isPenDown: false
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -280,6 +283,12 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
+    handleTogglePenDown = (isPenDown: boolean) => {
+        this.setState({
+            isPenDown: isPenDown
+        });
+    }
+
     render() {
         return (
             <IntlProvider
@@ -327,6 +336,9 @@ export default class App extends React.Component<{}, AppState> {
                                 gridCellWidth={this.state.sceneGridCellWidth}
                                 characterState={this.state.characterState}
                             />
+                            <PenDownToggleSwitch
+                                value={this.state.isPenDown}
+                                onChange={this.handleTogglePenDown}/>
                         </div>
                         <Row className='App__program-section' noGutters={true}>
                             <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
