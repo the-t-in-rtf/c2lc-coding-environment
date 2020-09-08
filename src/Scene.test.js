@@ -61,6 +61,10 @@ function findRobotCharacterIcon(sceneWrapper) {
     return sceneWrapper.find('.RobotCharacter__icon');
 }
 
+function findRobotCharacterPath(sceneWrapper) {
+    return sceneWrapper.find('.Scene__path-line');
+}
+
 function calculateGridDimensions(numRows, numColumns, gridCellWidth) {
     const width = numColumns * gridCellWidth;
     const height = numRows * gridCellWidth;
@@ -234,3 +238,48 @@ describe('When the robot character renders, transform should apply', () => {
             .toBe('translate(0 90) rotate(-90 0 0)');
     });
 });
+
+describe('When the robot charact moves, it will draw its moving path on the scene', () => {
+    test('When there is no path segment', () => {
+        expect.assertions(1);
+        const sceneWrapper = createMountScene({
+            characterState: new CharacterState(0, 0, 90, [])
+        });
+        const robotCharacterPath = findRobotCharacterPath(sceneWrapper);
+        expect(robotCharacterPath.length).toBe(0);
+    });
+
+    test('When there is one path segment', () => {
+        expect.assertions(5);
+        const sceneWrapper = createMountScene({
+            characterState: new CharacterState(0, 0, 90, [{x1: 100, y1: 200, x2: 300, y2: 400}])
+        });
+        const robotCharacterPath = findRobotCharacterPath(sceneWrapper);
+        expect(robotCharacterPath.length).toBe(1);
+        expect(robotCharacterPath.get(0).props.x1).toBe(100);
+        expect(robotCharacterPath.get(0).props.y1).toBe(200);
+        expect(robotCharacterPath.get(0).props.x2).toBe(300);
+        expect(robotCharacterPath.get(0).props.y2).toBe(400);
+    });
+
+    test('When there is two path segments', () => {
+        expect.assertions(9);
+        const sceneWrapper = createMountScene({
+            characterState:
+                new CharacterState(0, 0, 90, [
+                    {x1: 100, y1: 200, x2: 300, y2: 400},
+                    {x1: 500, y1: 600, x2: 700, y2: 800}
+                ])
+        });
+        const robotCharacterPath = findRobotCharacterPath(sceneWrapper);
+        expect(robotCharacterPath.length).toBe(2);
+        expect(robotCharacterPath.get(0).props.x1).toBe(100);
+        expect(robotCharacterPath.get(0).props.y1).toBe(200);
+        expect(robotCharacterPath.get(0).props.x2).toBe(300);
+        expect(robotCharacterPath.get(0).props.y2).toBe(400);
+        expect(robotCharacterPath.get(1).props.x1).toBe(500);
+        expect(robotCharacterPath.get(1).props.y1).toBe(600);
+        expect(robotCharacterPath.get(1).props.x2).toBe(700);
+        expect(robotCharacterPath.get(1).props.y2).toBe(800);
+    })
+})
