@@ -73,6 +73,18 @@ class Scene extends React.Component<SceneProps, {}> {
         return grid;
     }
 
+    drawCharacterPath() {
+        return this.props.characterState.path.map((pathSegment, i) => {
+            return <line
+                className='Scene__path-line'
+                key={`path-${i}`}
+                x1={pathSegment.x1}
+                y1={pathSegment.y1}
+                x2={pathSegment.x2}
+                y2={pathSegment.y2} />
+        });
+    }
+
     render() {
         const width = this.props.numColumns * this.props.gridCellWidth;
         const height = this.props.numRows * this.props.gridCellWidth;
@@ -99,6 +111,7 @@ class Scene extends React.Component<SceneProps, {}> {
                         </defs>
                         {this.drawGrid(minX, minY, width, height)}
                         <g clipPath='url(#Scene-clippath)'>
+                            {this.drawCharacterPath()}
                             <RobotCharacter
                                 transform={robotCharacterTransform}
                                 width={this.props.gridCellWidth * 0.8}
