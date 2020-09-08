@@ -239,7 +239,7 @@ describe('When the robot character renders, transform should apply', () => {
     });
 });
 
-describe('When the robot charact moves, it will draw its moving path on the scene', () => {
+describe('When the robot character moves, it will draw its moving path on the scene', () => {
     test('When there is no path segment', () => {
         expect.assertions(1);
         const sceneWrapper = createMountScene({
