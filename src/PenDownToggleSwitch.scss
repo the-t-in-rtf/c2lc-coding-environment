@@ -3,3 +3,7 @@
 .PenDownToggleSwitch:focus {
     box-shadow: 0 0 0 $c2lc-focus-indicator-width #299DCE;
 }
+
+.PenDownToggleSwitch.ToggleSwitch--checked {
+    background: #000;
+}
