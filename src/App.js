@@ -51,7 +51,7 @@ type AppState = {
     sceneNumRows: number,
     sceneNumColumns: number,
     sceneGridCellWidth: number,
-    isPenDown: boolean
+    drawingEnabled: boolean
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -86,7 +86,7 @@ export default class App extends React.Component<{}, AppState> {
             sceneNumRows: 5,
             sceneNumColumns: 9,
             sceneGridCellWidth: 100,
-            isPenDown: false
+            drawingEnabled: false
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -98,7 +98,10 @@ export default class App extends React.Component<{}, AppState> {
                 this.audioManager.playSound('forward');
                 this.setState((state) => {
                     return {
-                        characterState: state.characterState.forward(this.state.sceneGridCellWidth)
+                        characterState: state.characterState.forward(
+                            this.state.sceneGridCellWidth,
+                            this.state.drawingEnabled
+                        )
                     };
                 });
                 return new Promise((resolve, reject) => {
@@ -283,9 +286,9 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
-    handleTogglePenDown = (isPenDown: boolean) => {
+    handleTogglePenDown = (drawingEnabled: boolean) => {
         this.setState({
-            isPenDown: isPenDown
+            drawingEnabled: drawingEnabled
         });
     }
 
@@ -337,7 +340,7 @@ export default class App extends React.Component<{}, AppState> {
                                 characterState={this.state.characterState}
                             />
                             <PenDownToggleSwitch
-                                value={this.state.isPenDown}
+                                value={this.state.drawingEnabled}
                                 onChange={this.handleTogglePenDown}/>
                         </div>
                         <Row className='App__program-section' noGutters={true}>
@@ -408,6 +411,9 @@ export default class App extends React.Component<{}, AppState> {
     componentDidUpdate(prevProps: {}, prevState: AppState) {
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
+        }
+        if (this.state.drawingEnabled !== prevState.drawingEnabled) {
+            this.handleTogglePenDown(this.state.drawingEnabled);
         }
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
