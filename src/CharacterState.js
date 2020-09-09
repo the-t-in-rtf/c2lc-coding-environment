@@ -37,7 +37,7 @@ export default class CharacterState {
         return true;
     }
 
-    forward(distance: number): CharacterState {
+    forward(distance: number, drawingEnabled: boolean): CharacterState {
         const directionRadians = C2lcMath.degrees2radians(this.directionDegrees);
         const xOffset = Math.sin(directionRadians) * distance;
         const yOffset = Math.cos(directionRadians) * distance;
@@ -51,7 +51,9 @@ export default class CharacterState {
             this.xPos + xOffset,
             this.yPos - yOffset,
             this.directionDegrees,
-            this.path.concat([newPathSegment])
+            drawingEnabled ?
+                this.path.concat([newPathSegment]) :
+                this.path
         );
     }
 
