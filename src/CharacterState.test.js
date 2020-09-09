@@ -88,15 +88,15 @@ test('CharacterState.pathEquals', () => {
 });
 
 test('Given the character is facing East, then Forward movement should move East', () => {
-    (expect(new CharacterState(0, 0, 90, []).forward(100, false)): any).toHaveCharacterState(100, 0, 90, [{x1: 0, y1: 0, x2: 100, y2: 0}]);
+    (expect(new CharacterState(0, 0, 90, []).forward(100, true)): any).toHaveCharacterState(100, 0, 90, [{x1: 0, y1: 0, x2: 100, y2: 0}]);
 });
 
 test('Given the character is facing South, then Forward movement should move South', () => {
-    (expect(new CharacterState(0, 0, 180, []).forward(100, false)): any).toHaveCharacterState(0, 100, 180, [{x1: 0, y1: 0, x2: 0, y2: 100 }]);
+    (expect(new CharacterState(0, 0, 180, []).forward(100, true)): any).toHaveCharacterState(0, 100, 180, [{x1: 0, y1: 0, x2: 0, y2: 100 }]);
 });
 
 test('Given the character is facing 30 degrees N of E, then Forward should move in that direction', () => {
-    (expect(new CharacterState(0, 0, 60, []).forward(100, false)): any).toHaveCharacterState(86.6025, -50, 60, [{x1: 0, y1: 0, x2: 86.6025, y2: -50}]);
+    (expect(new CharacterState(0, 0, 60, []).forward(100, true)): any).toHaveCharacterState(86.6025, -50, 60, [{x1: 0, y1: 0, x2: 86.6025, y2: -50}]);
 });
 
 test('Turn Left moves anti-clockwise and wraps at 0', () => {
