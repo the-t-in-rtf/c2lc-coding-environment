@@ -3,6 +3,7 @@
 Flow needs help understanding dependencies that do not themselves use Flow.  For this purpose, we use `npx flow-typed <package@version>` to create files that describe the types used in a given package.  Thus far we have used this for three packages, as outlined in these commands:
 
 ```
+npx flow-typed install classnames@2
 npx flow-typed install enzyme@3
 npx flow-typed install jest@24
 npx flow-typed install react-bootstrap@0.32
