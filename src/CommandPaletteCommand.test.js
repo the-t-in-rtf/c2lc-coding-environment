@@ -18,6 +18,7 @@ function hasPressedClass(wrapper) {
 }
 
 function getAriaPressedValue(wrapper) {
+    // $FlowFixMe: The flow-typed definitions for enzyme introduce a type-checking error here.
     return wrapper.find(CommandBlock).getElement().props['aria-pressed'];
 }
 

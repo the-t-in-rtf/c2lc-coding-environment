@@ -43,12 +43,12 @@ function createShallowProgramBlockEditor(props) {
     AudioManager.mockClear();
     const audioManagerInstance = new AudioManager(true);
     // $FlowFixMe: Flow doesn't know about the Jest mock API
-    const audioManagerMock = AudioManager.mock.instances[0];
+    const audioManagerMock: any = AudioManager.mock.instances[0];
 
     const mockClickRunButtonHandler = jest.fn();
     const mockChangeProgramHandler = jest.fn();
 
-    const wrapper = shallow(
+    const wrapper: $FlowIgnoreType = shallow(
         React.createElement(
             ProgramBlockEditor.WrappedComponent,
             Object.assign(
@@ -175,6 +175,7 @@ test('When a step is clicked, action panel should render next to the step', () =
         expect(actionPanelStepIndex).toBe(stepNum);
         wrapper.setProps({actionPanelStepIndex});
         const actionPanelContainer = getProgramBlockWithActionPanel(wrapper).at(stepNum).childAt(1);
+        // $FlowFixMe: The flow-typed definitions for enzyme introduce a type-checking error here.
         expect(actionPanelContainer.contains(ActionPanel)).toBe(true);
     }
 });
@@ -214,6 +215,7 @@ describe('Delete program steps', () => {
             expect(actionPanelStepIndex).toBe(stepNum);
             wrapper.setProps({actionPanelStepIndex});
             const actionPanelContainer = getProgramBlockWithActionPanel(wrapper).at(stepNum).childAt(1);
+            // $FlowFixMe: The flow-typed definitions for enzyme introduce a type-checking error here.
             expect(actionPanelContainer.containsMatchingElement(ActionPanel)).toBe(true);
 
             const deleteStepButton = getActionPanelActionButtons(wrapper).at(0);
@@ -249,6 +251,7 @@ describe('Replace program steps', () => {
             expect(actionPanelStepIndex).toBe(stepNum);
             wrapper.setProps({actionPanelStepIndex});
             const actionPanelContainer = getProgramBlockWithActionPanel(wrapper).at(stepNum).childAt(1);
+            // $FlowFixMe: The flow-typed definitions for enzyme introduce a type-checking error here.
             expect(actionPanelContainer.containsMatchingElement(ActionPanel)).toBe(true);
 
             const replaceButton = getActionPanelActionButtons(wrapper).at(1);
@@ -286,6 +289,7 @@ describe('Move to previous program step', () => {
             expect(actionPanelStepIndex).toBe(stepNum);
             wrapper.setProps({actionPanelStepIndex});
             const actionPanelContainer = getProgramBlockWithActionPanel(wrapper).at(stepNum).childAt(1);
+            // $FlowFixMe: The flow-typed definitions for enzyme introduce a type-checking error here.
             expect(actionPanelContainer.containsMatchingElement(ActionPanel)).toBe(true);
 
             const moveToPreviousButton = getActionPanelActionButtons(wrapper).at(2);
@@ -325,6 +329,7 @@ describe('Move to next program step', () => {
             expect(actionPanelStepIndex).toBe(stepNum);
             wrapper.setProps({actionPanelStepIndex});
             const actionPanelContainer = getProgramBlockWithActionPanel(wrapper).at(stepNum).childAt(1);
+            // $FlowFixMe: The flow-typed definitions for enzyme introduce a type-checking error here.
             expect(actionPanelContainer.containsMatchingElement(ActionPanel)).toBe(true);
 
             const moveToNextButton = getActionPanelActionButtons(wrapper).at(3);

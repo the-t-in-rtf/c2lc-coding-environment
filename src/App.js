@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
+// $FlowFixMe: The flow-typed definitions for react-bootsrap introduce a type-checking error here.
 import { Col, Container, Row } from 'react-bootstrap';
 import AudioManager from './AudioManager';
 import BluetoothApiWarning from './BluetoothApiWarning';

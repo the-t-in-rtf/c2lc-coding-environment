@@ -4,10 +4,13 @@ import React from 'react';
 import CommandBlock from './CommandBlock';
 import AudioManager from './AudioManager';
 import { injectIntl } from 'react-intl';
+import type {IntlShape} from 'react-intl';
+
+export type CommandName = 'forward' | 'left' | 'right' | 'add' | 'deleteAll' | 'delete' | 'moveToPrevious' | 'moveToNext' | 'replace';
 
 type CommandPaletteCommandProps = {
-    commandName: string,
-    intl: any,
+    commandName: CommandName,
+    intl: IntlShape,
     selectedCommandName: ?string,
     audioManager: AudioManager,
     onChange: (commandName: ?string) => void,
@@ -34,7 +37,7 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
     render() {
         const pressed = this.props.commandName === this.props.selectedCommandName;
 
-        const ariaLabel = this.props.intl.formatMessage({
+        const ariaLabel: string = this.props.intl.formatMessage({
             id: `CommandPaletteCommand.${this.props.commandName}`
         });
 

@@ -1,8 +1,22 @@
 // @flow
 
+import type {CommandName} from "./CommandPaletteCommand"
+
+type AudioLookupTable = {
+    forward: Audio,
+    left: Audio,
+    right: Audio,
+    add: Audio,
+    deleteAll: Audio,
+    delete: Audio,
+    moveToPrevious: Audio,
+    moveToNext: Audio,
+    replace: Audio
+}
+
 export default class AudioManager {
     audioEnabled: boolean;
-    audioLookUpTable: Object;
+    audioLookUpTable: AudioLookupTable;
 
     constructor(audioEnabled: boolean) {
         this.audioEnabled = audioEnabled;
@@ -19,7 +33,7 @@ export default class AudioManager {
         };
     }
 
-    playSound(soundName: string) {
+    playSound(soundName: CommandName) {
         if (this.audioEnabled) {
             this.audioLookUpTable[soundName].play();
         }

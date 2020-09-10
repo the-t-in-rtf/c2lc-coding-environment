@@ -64,6 +64,7 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
                     <AriaDisablingButton
                         className='AddNode__expanded-button'
                         data-stepnumber={props.programStepNumber}
+                        // $FlowFixMe: The flow-typed definitions for react-bootsrap introduce a type-checking error here.
                         ref={ref}
                         disabled={props.disabled}
                         aria-label={props['aria-label']}

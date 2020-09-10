@@ -29,6 +29,8 @@
     "eslintConfig": {
         "extends": "react-app",
         "ignorePatterns": [
+            "flow-typed/",
+            "node_modules/",
             "src/vendor/"
         ],
         "rules": {
