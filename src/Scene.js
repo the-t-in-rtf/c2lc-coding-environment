@@ -4,13 +4,15 @@ import React from 'react';
 import CharacterState from './CharacterState';
 import RobotCharacter from './RobotCharacter';
 import { injectIntl } from 'react-intl';
+import type {IntlShape} from 'react-intl';
+
 import './Scene.scss';
 
-type SceneProps = {
-    intl: any,
+export type SceneProps = {
     numRows: number,
     numColumns: number,
     gridCellWidth: number,
+    intl: IntlShape,
     characterState: CharacterState
 };
 

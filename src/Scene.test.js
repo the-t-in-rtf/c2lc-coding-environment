@@ -6,6 +6,7 @@ import { configure, mount } from 'enzyme';
 import { IntlProvider } from 'react-intl';
 import messages from './messages.json';
 import Scene from './Scene';
+import type {SceneProps} from './Scene';
 import CharacterState from './CharacterState';
 
 configure({ adapter: new Adapter() });
@@ -21,11 +22,11 @@ function createMountScene(props) {
     const wrapper = mount(
         React.createElement(
             Scene,
-            Object.assign(
+            (Object.assign(
                 {},
                 defaultSceneProps,
                 props
-            )
+            ):SceneProps)
         ),
         {
             wrappingComponent: IntlProvider,

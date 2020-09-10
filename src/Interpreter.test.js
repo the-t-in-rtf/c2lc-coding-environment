@@ -4,7 +4,7 @@ import Interpreter from './Interpreter';
 import type {CommandHandler} from './Interpreter';
 
 function makeIncrement(varName: string): CommandHandler {
-    return (interpreter) => {
+    return (interpreter: Interpreter) => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 interpreter.memory[varName] = interpreter.memory[varName] + 1;

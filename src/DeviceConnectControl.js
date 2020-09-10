@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
+import type {IntlShape} from 'react-intl';
 import type {DeviceConnectionStatus} from './types';
 import AriaDisablingButton from './AriaDisablingButton';
 import { ReactComponent as DashConnectionIcon } from './svg/Dash-Small.svg';
@@ -9,7 +10,7 @@ import { ReactComponent as ConnectingIcon } from './svg/Connecting.svg';
 import './DeviceConnectControl.scss';
 
 type DeviceConnectControlProps = {
-    intl: any,
+    intl: IntlShape,
     children: React.Element<any>, // Button contents
     disabled: boolean,
     connectionStatus: DeviceConnectionStatus,

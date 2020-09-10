@@ -1,6 +1,7 @@
 // @flow
 
 import { injectIntl, FormattedMessage } from 'react-intl';
+import type {IntlShape} from 'react-intl';
 import * as ProgramUtils from './ProgramUtils';
 import type {Program} from './types';
 import React from 'react';
@@ -22,7 +23,7 @@ import './ProgramBlockEditor.scss';
 // TODO: Send focus to Delete toggle button on close of Delete All confirmation dialog
 
 type ProgramBlockEditorProps = {
-    intl: any,
+    intl: IntlShape,
     activeProgramStepNum: ?number,
     actionPanelStepIndex: ?number,
     editingDisabled: boolean,
