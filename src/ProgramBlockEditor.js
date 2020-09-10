@@ -253,7 +253,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             active && 'ProgramBlockEditor__program-block--active',
             hasActionPanelControl && 'ProgramBlockEditor__program-block--pressed'
         );
-        let ariaLabel = this.props.intl.formatMessage(
+        const ariaLabel = this.props.intl.formatMessage(
             { id: `ProgramBlockEditor.command.${command}` },
             { index: programStepNumber + 1 }
         );
@@ -445,28 +445,28 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     componentDidUpdate() {
         if (this.scrollToAddNodeIndex != null) {
-            let element = this.addNodeRefs.get(this.scrollToAddNodeIndex);
+            const element = this.addNodeRefs.get(this.scrollToAddNodeIndex);
             if (element && element.scrollIntoView) {
                 element.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
             }
             this.scrollToAddNodeIndex = null;
         }
         if (this.focusCommandBlockIndex != null) {
-            let element = this.commandBlockRefs.get(this.focusCommandBlockIndex);
+            const element = this.commandBlockRefs.get(this.focusCommandBlockIndex);
             if (element) {
                 element.focus();
             }
             this.focusCommandBlockIndex = null;
         }
         if (this.focusAddNodeIndex != null) {
-            let addNode = this.addNodeRefs.get(this.focusAddNodeIndex);
+            const addNode = this.addNodeRefs.get(this.focusAddNodeIndex);
             if (addNode) {
                 addNode.focus();
             }
             this.focusAddNodeIndex = null;
         }
         if (this.props.activeProgramStepNum != null) {
-            let element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
+            const element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
             }

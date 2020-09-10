@@ -30,7 +30,12 @@
         "extends": "react-app",
         "ignorePatterns": [
             "src/vendor/"
-        ]
+        ],
+        "rules": {
+            "no-unused-vars": "error",
+            "no-var": "error",
+            "prefer-const": "error"
+        }
     },
     "browserslist": {
         "production": [

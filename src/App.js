@@ -254,7 +254,7 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleRootClick = (e: SyntheticInputEvent<HTMLInputElement>) => {
-        var element = e.target;
+        let element = e.target;
         // Walk up the document tree until we hit the top, or we find that
         // we are within an action panel group area
         while (element != null && element.dataset) {

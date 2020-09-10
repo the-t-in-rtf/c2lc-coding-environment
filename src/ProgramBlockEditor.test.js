@@ -5,13 +5,11 @@ import Adapter from 'enzyme-adapter-react-16';
 import { configure, mount, shallow } from 'enzyme';
 import { Button } from 'react-bootstrap';
 import { createIntl, IntlProvider } from 'react-intl';
-import App from './App';
 import AudioManager from './AudioManager';
 import ActionPanel from './ActionPanel';
 import AriaDisablingButton from './AriaDisablingButton';
 import FocusTrapManager from './FocusTrapManager';
 import messages from './messages.json';
-import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
 import ProgramBlockEditor from './ProgramBlockEditor';
 
 // Mocks
@@ -49,7 +47,6 @@ function createShallowProgramBlockEditor(props) {
 
     const mockClickRunButtonHandler = jest.fn();
     const mockChangeProgramHandler = jest.fn();
-    const mockSetReplaceHandler = jest.fn();
 
     const wrapper = shallow(
         React.createElement(
@@ -85,7 +82,6 @@ function createMountProgramBlockEditor(props) {
 
     const mockClickRunButtonHandler = jest.fn();
     const mockChangeProgramHandler = jest.fn();
-    const mockSetReplaceHandler = jest.fn();
     const mockChangeActionPanelStepIndex = jest.fn();
 
     const wrapper = mount(

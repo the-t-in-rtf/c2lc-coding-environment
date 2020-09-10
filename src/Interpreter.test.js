@@ -2,7 +2,6 @@
 
 import Interpreter from './Interpreter';
 import type {CommandHandler} from './Interpreter';
-import type {InterpreterRunningState} from './Interpreter';
 
 function makeIncrement(varName: string): CommandHandler {
     return (interpreter) => {

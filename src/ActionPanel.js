@@ -33,7 +33,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
     makeStepInfoMessage() {
         const currentStepName = this.props.program[this.props.pressedStepIndex];
 
-        let ariaLabelObj = {
+        const ariaLabelObj = {
             'stepNumber': this.props.pressedStepIndex + 1,
             'stepName': this.props.intl.formatMessage({id:`CommandInfo.${currentStepName}`}),
             'selectedCommandName': '',

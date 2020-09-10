@@ -5,7 +5,6 @@ import Adapter from 'enzyme-adapter-react-16';
 import { shallow, configure } from 'enzyme';
 import CommandBlock from './CommandBlock';
 import { createIntl } from 'react-intl';
-import App from './App';
 import AudioManager from './AudioManager';
 import CommandPaletteCommand from './CommandPaletteCommand';
 

@@ -7,7 +7,6 @@ import { IntlProvider } from 'react-intl';
 import messages from './messages.json';
 import Scene from './Scene';
 import CharacterState from './CharacterState';
-import RobotCharacter from './RobotCharacter';
 
 configure({ adapter: new Adapter() });
 
