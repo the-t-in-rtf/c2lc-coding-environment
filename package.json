@@ -31,7 +31,8 @@
         "ignorePatterns": [
             "flow-typed/",
             "node_modules/",
-            "src/vendor/"
+            "src/vendor/",
+            "build/"
         ],
         "rules": {
             "no-unused-vars": "error",
