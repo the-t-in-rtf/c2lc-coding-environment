@@ -7,7 +7,7 @@ import type {IntlShape} from 'react-intl';
 import { ReactComponent as AddIcon } from './svg/Add.svg';
 
 type AddModeImageProps = {
-    className: any,
+    className: string,
     intl: IntlShape
 };
 
