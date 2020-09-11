@@ -178,7 +178,7 @@ export default class App extends React.Component<{}, AppState> {
     handleClickRun = () => {
         this.interpreter.run(this.state.program).then(
             () => {}, // Do nothing on successful resolution
-            (error) => {
+            (error: Error) => {
                 console.log(error.name);
                 console.log(error.message);
             }
@@ -194,7 +194,7 @@ export default class App extends React.Component<{}, AppState> {
             this.setState({
                 dashConnectionStatus: 'connected'
             });
-        }, (error) => {
+        }, (error: Error) => {
             console.log('ERROR');
             console.log(error.name);
             console.log(error.message);
