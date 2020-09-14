@@ -16,6 +16,11 @@ export interface RobotDriver {
 // Flow lacks its own types for the Speech Recognition API, so we define our own
 // TODO: remove when https://github.com/facebook/flow/issues/7361 is resolved.
 
+export type ArrayLike<T> = {
+    length: number,
+    item: (number:number) => T
+};
+
 // https://developer.mozilla.org/en-US/docs/Web/API/SpeechGrammar
 export type SpeechGrammar = {
     src: string,
@@ -23,7 +28,7 @@ export type SpeechGrammar = {
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/API/SpeechGrammarList
-export type SpeechGrammarList = Array<SpeechGrammar> & {
+export type SpeechGrammarList = ArrayLike<SpeechGrammar> & {
     addFromURI: (string:string) => null,
     addFromString: (string:string) => null
 };
@@ -35,12 +40,12 @@ export type SpeechRecognitionAlternative = {
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognitionResult
-export type SpeechRecognitionResult = Array<SpeechRecognitionAlternative> & {
+export type SpeechRecognitionResult = ArrayLike<SpeechRecognitionAlternative> & {
     isFinal: boolean
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognitionResultList
-export type SpeechRecognitionResultsList = Array<SpeechRecognitionResult>;
+export type SpeechRecognitionResultsList = ArrayLike<SpeechRecognitionResult>;
 
 // https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognitionEvent
 export type SpeechRecognitionEvent = {
