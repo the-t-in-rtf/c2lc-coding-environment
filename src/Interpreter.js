@@ -51,7 +51,7 @@ export default class Interpreter {
         });
     }
 
-    continueRun(resolve: any, reject: any): void {
+    continueRun(resolve: (result:any) => void, reject: (error: any) => void): void {
         if (this.isRunning) {
             if (this.atEnd()) {
                 this.isRunning = false;
