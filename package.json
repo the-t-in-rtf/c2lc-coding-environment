@@ -18,7 +18,8 @@
         "typeface-roboto": "0.0.75"
     },
     "devDependencies": {
-        "flow-bin": "0.133.0"
+        "flow-bin": "0.133.0",
+        "flow-coverage-report": "^0.7.0"
     },
     "scripts": {
         "start": "react-scripts start",
