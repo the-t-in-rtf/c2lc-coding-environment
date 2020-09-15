@@ -115,6 +115,13 @@ declare module "react-bootstrap" {
     static Caption: Class<CarouselCaption>;
   }
 
+  // Created manually based on a reading of: https://reactstrap.github.io/components/layout/
+  declare export class Container extends React$Component<{
+    fluid?: boolean | string,
+    ...
+  }>{}
+
+
   declare export class DropdownButton extends React$Component<{
     bsStyle?: string,
     bsSize?: string,
@@ -391,7 +398,10 @@ declare module "react-bootstrap" {
     bsStyle?: 'tabs' | 'pills',
     bsClass?: string,
     ...
-  }> {}
+  }> {
+    static Item: Class<NavItem>,
+    static Link: Class<NavLink>
+  }
 
   declare export class NavDropdown extends React$Component<{...}> {}
 
@@ -605,7 +615,11 @@ declare module "react-bootstrap" {
     tabClassName?: string,
     bsClass?: string,
     ...
-  }> {}
+  }> {
+    static Container: Class<Container>,
+    static Content: Class<Content>,
+    static Pane: Class<Pane>
+  }
 
   declare export class TabContainer extends React$Component<{
     id: string,

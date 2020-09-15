@@ -262,7 +262,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         return (
             <CommandBlock
                 commandName={command}
-                // $FlowFixMe: The flow-typed definitions for react-bootsrap introduce a type-checking error here.
+                // $FlowFixMe: We use a range of references that Flow can't quite figure out.
                 ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                 key={`${programStepNumber}-${command}`}
                 data-stepnumber={programStepNumber}
