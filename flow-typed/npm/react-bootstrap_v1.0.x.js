@@ -1,6 +1,4 @@
-// flow-typed signature: f260f7ad654ec985228339b5b6b551e5
-// flow-typed version: c6154227d1/react-bootstrap_v0.32.x/flow_>=v0.104.x
-
+// Manually hacked version of 0.32 flow typed definitions to cover the material we use from later versions.
 declare module "react-bootstrap" {
   import type { Node, Element, Component, ComponentType, Ref } from 'react';
   declare type BsSize = 'lg' | 'large' | 'sm' | 'small';

@@ -10,4 +10,6 @@ npx flow-typed install react-bootstrap@0.32
 npx flow-typed install react-intl@2
 ```
 
-Note that there have been local changes to the flow types for `react-intl`, those definitions cannot simply be regenerated or updated.
+Note that there have been local changes to the flow types for `react-intl` and `react-bootstrap`, those definitions cannot simply be regenerated or updated.
+
+We also have manually created types for packages that are not part of the flow-typed definitions, notably `soundex`.
