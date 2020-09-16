@@ -5,8 +5,8 @@ import CommandBlock from './CommandBlock';
 import AudioManager from './AudioManager';
 import { injectIntl } from 'react-intl';
 import type {IntlShape} from 'react-intl';
+import type {CommandName} from './types';
 
-export type CommandName = 'forward' | 'left' | 'right' | 'add' | 'deleteAll' | 'delete' | 'moveToPrevious' | 'moveToNext' | 'replace';
 
 type CommandPaletteCommandProps = {
     commandName: CommandName,

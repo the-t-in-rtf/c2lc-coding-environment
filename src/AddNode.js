@@ -64,7 +64,7 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
                     <AriaDisablingButton
                         className='AddNode__expanded-button'
                         data-stepnumber={props.programStepNumber}
-                        // $FlowFixMe: This is tangled up with other uses of ref to point to HtmlElements down the line.
+                        // $FlowFixMe: Use something less generic here.
                         ref={ref}
                         disabled={props.disabled}
                         aria-label={props['aria-label']}

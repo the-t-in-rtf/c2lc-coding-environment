@@ -20,7 +20,8 @@ import { ReactComponent as DeleteAllIcon } from './svg/DeleteAll.svg';
 import { ReactComponent as RobotIcon } from './svg/Robot.svg';
 import './ProgramBlockEditor.scss';
 
-// TODO: Send focus to Delete toggle button on close of Delete All confirmation dialog
+// TODO: Send focus to Delete toggle button on close of Delete All confirmation
+//       dialog
 
 type ProgramBlockEditorProps = {
     intl: IntlShape,
@@ -262,7 +263,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         return (
             <CommandBlock
                 commandName={command}
-                // $FlowFixMe: We use a range of references that Flow can't quite figure out.
+                // $FlowFixMe: Limit to specific types of ref.
                 ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
                 key={`${programStepNumber}-${command}`}
                 data-stepnumber={programStepNumber}
@@ -425,6 +426,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 <div className='ProgramBlockEditor__footer'>
                     <div className='ProgramBlockEditor__run'>
                         <AriaDisablingButton
+                            // eslint-disable-next-line max-len
                             aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
                             className={this.props.interpreterIsRunning ?
                                 'ProgramBlockEditor__run-button ProgramBlockEditor__run-button--pressed' :

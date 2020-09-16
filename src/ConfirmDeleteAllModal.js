@@ -25,6 +25,7 @@ class ConfrimDeleteAllModal extends React.Component<ConfrimDeleteAllModalProps, 
                 centered>
                 <Modal.Body className='ConfrimDeleteAllModal__content'>
                     <div className='ConfrimDeleteAllModal__header'>
+                        {/* eslint-disable-next-line max-len */}
                         <span role='img' aria-label={this.props.intl.formatMessage({id:'ConfrimDeleteAllModal.warning'})} >
                             <ErrorIcon className='ConfrimDeleteAllModal__warning-svg' />
                         </span>

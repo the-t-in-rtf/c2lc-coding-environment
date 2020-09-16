@@ -25,6 +25,7 @@ class DashConnectionErrorModal extends React.Component<DashConnectionErrorModalP
                 centered>
                 <Modal.Body className='DashConnectionErrorModal__content'>
                     <div className='DashConnectionErrorModal__header'>
+                        {/* eslint-disable-next-line max-len */}
                         <span role='img' aria-label={this.props.intl.formatMessage({id:'DashConnectionErrorModal.error'})} >
                             <ErrorIcon className='DashConnectionErrorModal__error-svg' />
                         </span>

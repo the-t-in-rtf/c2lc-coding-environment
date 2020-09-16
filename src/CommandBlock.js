@@ -15,7 +15,8 @@ type CommandBlockProps = {
     className?: string
 };
 
-// TODO: Revise this once there is a proper strategy for typing SVG-backed components.
+// TODO: Revise this once there is a proper strategy for typing SVG-backed
+//       components.
 const commandBlockIconTypes = new Map<string, any>([
     ['forward', ArrowForward],
     ['left', ArrowTurnLeft],
