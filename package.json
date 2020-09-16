@@ -42,6 +42,34 @@
             "prefer-const": "error"
         }
     },
+    "jest": {
+        "collectCoverageFrom": [
+            "src/**/*.{js,jsx,ts,tsx}",
+            "!src/**/*.test.js",
+            "!src/AddModeImage.js",
+            "!src/App.js",
+            "!src/AudioManager.js",
+            "!src/DashDriver.js",
+            "!src/DeleteModeImage.js",
+            "!src/FakeRobotDriver.js",
+            "!src/FeatureDetection.js",
+            "!src/FocusTrapManager.js",
+            "!src/MicMonitor.js",
+            "!src/index.js",
+            "!src/serviceWorker.js",
+            "!src/WebSpeechInput.js",
+            "!src/vendor/**/*"
+          ],
+          "coverageThreshold": {
+            "global": {
+              "branches": 85,
+              "functions": 95,
+              "lines": 95,
+              "statements": 95
+            }
+          },
+          "coverageReporters": ["text", "text-summary", "html"]
+    },
     "browserslist": {
         "production": [
             ">0.2%",

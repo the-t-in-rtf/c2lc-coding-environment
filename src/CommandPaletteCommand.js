@@ -26,10 +26,12 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
         );
     };
 
+    /* istanbul ignore next */
     handleDragStart = () => {
         this.props.onDragStart(this.props.commandName);
     };
 
+    /* istanbul ignore next */
     handleDragEnd = () => {
         this.props.onDragEnd();
     };

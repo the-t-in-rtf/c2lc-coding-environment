@@ -231,14 +231,17 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.insertSelectedCommandIntoProgram(stepNumber);
     };
 
+    /* istanbul ignore next */
     handleDropCommand = (stepNumber: number) => {
         this.insertSelectedCommandIntoProgram(stepNumber);
     };
 
+    /* istanbul ignore next */
     handleCloseActionPanelFocusTrap = () => {
         this.closeActionPanel();
     };
 
+    /* istanbul ignore next */
     handleCloseReplaceFocusTrap = () => {
         this.setState({
             replaceIsActive: false
