@@ -19,7 +19,7 @@
     },
     "devDependencies": {
         "flow-bin": "0.133.0",
-        "flow-coverage-report": "^0.7.0"
+        "flow-coverage-report": "0.7.0"
     },
     "scripts": {
         "start": "react-scripts start",
@@ -30,12 +30,13 @@
     "eslintConfig": {
         "extends": "react-app",
         "ignorePatterns": [
-            "flow-typed/",
+            "flow-typed/npm",
             "node_modules/",
             "src/vendor/",
             "build/"
         ],
         "rules": {
+            "max-len": ["warn", { "code": 120, "comments": 80 }],
             "no-unused-vars": "error",
             "no-var": "error",
             "prefer-const": "error"

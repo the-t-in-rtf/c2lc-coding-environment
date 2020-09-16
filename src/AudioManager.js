@@ -1,6 +1,6 @@
 // @flow
 
-import type {CommandName} from "./CommandPaletteCommand"
+import type {SoundName} from "./types"
 
 type AudioLookupTable = {
     forward: Audio,
@@ -33,7 +33,7 @@ export default class AudioManager {
         };
     }
 
-    playSound(soundName: CommandName) {
+    playSound(soundName: SoundName) {
         if (this.audioEnabled) {
             this.audioLookUpTable[soundName].play();
         }

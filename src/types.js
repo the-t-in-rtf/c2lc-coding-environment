@@ -1,5 +1,7 @@
 // @flow
 
+export type CommandName = 'forward' | 'left' | 'right';
+
 export type DeviceConnectionStatus = 'notConnected' | 'connecting' | 'connected';
 
 export type EditorMode = 'text' | 'block';
@@ -12,6 +14,8 @@ export interface RobotDriver {
     left(): Promise<void>;
     right(): Promise<void>;
 };
+
+export type SoundName = CommandName | 'add' | 'deleteAll' | 'delete' | 'moveToPrevious' | 'moveToNext' | 'replace';
 
 // Flow lacks its own types for the Speech Recognition API, so we define our own
 // TODO: remove when https://github.com/facebook/flow/issues/7361 is resolved.
@@ -66,12 +70,13 @@ export type SpeechRecognition = {
     serviceURI: string,
 
     // methods
-    // TODO: SpeechRecognition also inherits methods from its parent interface, EventTarget.
+    // TODO: Add inherited methods from the parent interface, EventTarget.
     abort: () => null,
     start: () => null,
     stop: () => SpeechRecognitionResult,
 
     // Event handling methods
     onresult: (SpeechRecognitionEvent) => null
-    // TODO: Add the rest from here https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Events
+    // TODO: Add remaining supported events.
+    //       https://developer.mozilla.org/docs/Web/API/SpeechRecognition#Events
 };

@@ -142,7 +142,8 @@ export default class App extends React.Component<{}, AppState> {
             }
         );
 
-        // For FakeRobotDriver, replace with: this.dashDriver = new FakeRobotDriver();
+        // For FakeRobotDriver, replace with:
+        // this.dashDriver = new FakeRobotDriver();
         this.dashDriver = new DashDriver();
 
         this.toCommandPaletteNoticeId = Utils.generateId('toCommandPaletteNotice');
