@@ -117,7 +117,6 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     name='moveToPreviousStep'
                     disabled={this.props.pressedStepIndex === 0}
                     disabledClassName='ActionPanel__action-buttons--disabled'
-                    // eslint-disable-next-line max-len
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToPreviousStep'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
                     onClick={this.handleClickMoveToPreviousStep}>
@@ -127,7 +126,6 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     name='moveToNextStep'
                     disabled={this.props.pressedStepIndex === this.props.program.length-1}
                     disabledClassName='ActionPanel__action-buttons--disabled'
-                    // eslint-disable-next-line max-len
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToNextStep'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons'
                     onClick={this.handleClickMoveToNextStep}>

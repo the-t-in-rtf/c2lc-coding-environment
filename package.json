@@ -36,7 +36,6 @@
             "build/"
         ],
         "rules": {
-            "max-len": ["warn", { "code": 120, "comments": 80}],
             "no-unused-vars": "error",
             "no-var": "error",
             "prefer-const": "error"

@@ -429,7 +429,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 <div className='ProgramBlockEditor__footer'>
                     <div className='ProgramBlockEditor__run'>
                         <AriaDisablingButton
-                            // eslint-disable-next-line max-len
                             aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
                             className={this.props.interpreterIsRunning ?
                                 'ProgramBlockEditor__run-button ProgramBlockEditor__run-button--pressed' :
