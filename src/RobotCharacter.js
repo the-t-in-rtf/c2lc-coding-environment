@@ -11,13 +11,11 @@ type RobotCharacterProps = {
 
 export default class RobotCharacter extends React.Component<RobotCharacterProps, {}> {
     render() {
-        const characterRadius = this.props.width / 2;
         const characterWidth = this.props.width * 0.75;
         return (
             <g
                 className='RobotCharacter'
                 transform={this.props.transform}>
-                <circle className='RobotCharacter__container' r={characterRadius} />
                 <RobotIcon
                     className='RobotCharacter__icon'
                     x={-characterWidth/2}
