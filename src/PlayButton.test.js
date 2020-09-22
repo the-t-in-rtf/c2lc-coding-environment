@@ -12,7 +12,7 @@ configure({ adapter: new Adapter()});
 
 const defaultPlayButtonProps = {
     interpreterIsRunning: false,
-    runButtonDisabled: false
+    disabled: false
 };
 
 function createShallowPlayButton(props) {
@@ -39,51 +39,51 @@ function createShallowPlayButton(props) {
     return wrapper;
 }
 
-function getRunButton(playButtonWrapper) {
+function getPlayButton(playButtonWrapper) {
     return playButtonWrapper.find(AriaDisablingButton)
         .filter('.PlayButton');
 }
 
-describe('The Run button class is changed when the program is running', () => {
+describe('The Play button class is changed when the program is running', () => {
     describe('Given the program is running', () => {
-        test('Then the Run button should have the pressed class', () => {
+        test('Then the Play button should have the pressed class', () => {
             expect.assertions(1);
             const wrapper = createShallowPlayButton({
                 interpreterIsRunning: true
             });
-            expect(getRunButton(wrapper).hasClass('PlayButton--pressed')).toBe(true);
+            expect(getPlayButton(wrapper).hasClass('PlayButton--pressed')).toBe(true);
         })
     });
 
     describe('Given the program is not running', () => {
-        test('Then the Run button should not have the pressed class', () => {
+        test('Then the Play button should not have the pressed class', () => {
             expect.assertions(1);
             const wrapper = createShallowPlayButton({
                 interpreterIsRunning: false
             });
-            expect(getRunButton(wrapper).hasClass('PlayButton--pressed')).toBe(false);
+            expect(getPlayButton(wrapper).hasClass('PlayButton--pressed')).toBe(false);
         })
     });
 });
 
-describe('The Run button can be disabled', () => {
-    describe('Given runButtonDisabled is true', () => {
-        test('Then the Run button should be disabled', () => {
+describe('The Play button can be disabled', () => {
+    describe('Given disabled is true', () => {
+        test('Then the Play button should be disabled', () => {
             expect.assertions(1);
             const wrapper = createShallowPlayButton({
-                runButtonDisabled: true
+                disabled: true
             });
-            expect(getRunButton(wrapper).props().disabled).toBe(true);
+            expect(getPlayButton(wrapper).props().disabled).toBe(true);
         })
     });
 
-    describe('Given runButtonDisabled is false', () => {
-        test('Then the Run button should not be disabled', () => {
+    describe('Given disabled is false', () => {
+        test('Then the Play button should not be disabled', () => {
             expect.assertions(1);
             const wrapper = createShallowPlayButton({
-                runButtonDisabled: false
+                disabled: false
             });
-            expect(getRunButton(wrapper).props().disabled).toBe(false);
+            expect(getPlayButton(wrapper).props().disabled).toBe(false);
         })
     });
 });

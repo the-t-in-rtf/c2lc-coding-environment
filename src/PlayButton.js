@@ -9,8 +9,8 @@ import './PlayButton.scss';
 type PlayButtonProps = {
     intl: any,
     interpreterIsRunning: boolean,
-    runButtonDisabled: boolean,
-    onClickRunButton: () => void
+    disabled: boolean,
+    onClick: () => void
 };
 
 class PlayButton extends React.Component<PlayButtonProps, {}> {
@@ -22,8 +22,8 @@ class PlayButton extends React.Component<PlayButtonProps, {}> {
                     'PlayButton PlayButton--pressed' :
                     'PlayButton'}
                 disabledClassName='PlayButton--disabled'
-                disabled={this.props.runButtonDisabled}
-                onClick={this.props.onClickRunButton}
+                disabled={this.props.disabled}
+                onClick={this.props.onClick}
             >
                 <PlayIcon className='PlayButton-svg' />
             </AriaDisablingButton>

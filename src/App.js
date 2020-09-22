@@ -332,10 +332,10 @@ export default class App extends React.Component<{}, AppState> {
                                 <div className='App__playButton-container'>
                                     <PlayButton
                                         interpreterIsRunning={this.state.interpreterIsRunning}
-                                        runButtonDisabled={
+                                        disabled={
                                                 this.state.interpreterIsRunning ||
                                                 programIsEmpty(this.state.program)}
-                                        onClickRunButton={this.handleClickRun}
+                                        onClick={this.handleClickRun}
                                     />
                                 </div>
                             </div>
