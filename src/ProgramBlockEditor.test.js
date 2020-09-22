@@ -27,7 +27,6 @@ const defaultProgramBlockEditorProps = {
     selectedAction: null,
     editingDisabled: false,
     replaceIsActive: false,
-    runButtonDisabled: false,
     isDraggingCommand: false,
     focusTrapManager: new FocusTrapManager()
 };
@@ -45,7 +44,6 @@ function createShallowProgramBlockEditor(props) {
     // $FlowFixMe: Flow doesn't know about the Jest mock API
     const audioManagerMock: any = AudioManager.mock.instances[0];
 
-    const mockClickRunButtonHandler = jest.fn();
     const mockChangeProgramHandler = jest.fn();
 
     const wrapper: $FlowIgnoreType = shallow(
@@ -57,7 +55,6 @@ function createShallowProgramBlockEditor(props) {
                 {
                     intl: intl,
                     audioManager: audioManagerInstance,
-                    onClickRunButton: mockClickRunButtonHandler,
                     onChangeProgram: mockChangeProgramHandler
                 },
                 props
@@ -68,7 +65,6 @@ function createShallowProgramBlockEditor(props) {
     return {
         wrapper,
         audioManagerMock,
-        mockClickRunButtonHandler,
         mockChangeProgramHandler
     };
 }
@@ -80,7 +76,6 @@ function createMountProgramBlockEditor(props) {
     // $FlowFixMe: Flow doesn't know about the Jest mock API
     const audioManagerMock = AudioManager.mock.instances[0];
 
-    const mockClickRunButtonHandler = jest.fn();
     const mockChangeProgramHandler = jest.fn();
     const mockChangeActionPanelStepIndex = jest.fn();
 
@@ -92,7 +87,6 @@ function createMountProgramBlockEditor(props) {
                 defaultProgramBlockEditorProps,
                 {
                     audioManager: audioManagerInstance,
-                    onClickRunButton: mockClickRunButtonHandler,
                     onChangeProgram: mockChangeProgramHandler,
                     onChangeActionPanelStepIndex: mockChangeActionPanelStepIndex
                 },
@@ -112,7 +106,6 @@ function createMountProgramBlockEditor(props) {
     return {
         wrapper,
         audioManagerMock,
-        mockClickRunButtonHandler,
         mockChangeProgramHandler,
         mockChangeActionPanelStepIndex
     };
@@ -140,11 +133,6 @@ function getProgramBlocks(programBlockEditorWrapper) {
 
 function getProgramBlockAtPosition(programBlockEditorWrapper, index: number) {
     return getProgramBlocks(programBlockEditorWrapper).at(index);
-}
-
-function getRunButton(programBlockEditorWrapper) {
-    return programBlockEditorWrapper.find(AriaDisablingButton)
-        .filter('.ProgramBlockEditor__run-button');
 }
 
 function getAddNodeButtonAtPosition(programBlockEditorWrapper, index: number) {
@@ -404,50 +392,6 @@ describe('Scroll to show the active program step', () => {
             expect(mockScrollIntoView.mock.instances[0]).toBe(getProgramBlockAtPosition(wrapper, stepNum).getDOMNode());
         }
     );
-});
-
-describe('The Run button class is changed when the program is running', () => {
-    describe('Given the program is running', () => {
-        test('Then the Run button should have the pressed class', () => {
-            expect.assertions(1);
-            const { wrapper } = createShallowProgramBlockEditor({
-                interpreterIsRunning: true
-            });
-            expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(true);
-        })
-    });
-
-    describe('Given the program is not running', () => {
-        test('Then the Run button should not have the pressed class', () => {
-            expect.assertions(1);
-            const { wrapper } = createShallowProgramBlockEditor({
-                interpreterIsRunning: false
-            });
-            expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(false);
-        })
-    });
-});
-
-describe('The Run button can be disabled', () => {
-    describe('Given runButtonDisabled is true', () => {
-        test('Then the Run button should be disabled', () => {
-            expect.assertions(1);
-            const { wrapper } = createShallowProgramBlockEditor({
-                runButtonDisabled: true
-            });
-            expect(getRunButton(wrapper).props().disabled).toBe(true);
-        })
-    });
-
-    describe('Given runButtonDisabled is false', () => {
-        test('Then the Run button should not be disabled', () => {
-            expect.assertions(1);
-            const { wrapper } = createShallowProgramBlockEditor({
-                runButtonDisabled: false
-            });
-            expect(getRunButton(wrapper).props().disabled).toBe(false);
-        })
-    });
 });
 
 test('The editor scrolls when a step is added to the end of the program', () => {
