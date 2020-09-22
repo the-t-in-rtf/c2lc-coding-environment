@@ -116,7 +116,7 @@ class Scene extends React.Component<SceneProps, {}> {
                             {this.drawCharacterPath()}
                             <RobotCharacter
                                 transform={robotCharacterTransform}
-                                width={this.props.gridCellWidth * 0.8}
+                                width={this.props.gridCellWidth * 0.6}
                             />
                         </g>
                     </svg>
