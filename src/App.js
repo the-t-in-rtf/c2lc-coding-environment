@@ -14,6 +14,7 @@ import * as FeatureDetection from './FeatureDetection';
 import FocusTrapManager from './FocusTrapManager';
 import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
+import PlayButton from './PlayButton';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
@@ -86,7 +87,7 @@ export default class App extends React.Component<{}, AppState> {
             sceneNumRows: 5,
             sceneNumColumns: 9,
             sceneGridCellWidth: 100,
-            drawingEnabled: false
+            drawingEnabled: true
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -148,7 +149,8 @@ export default class App extends React.Component<{}, AppState> {
             }
         );
 
-        // For FakeRobotDriver, replace with: this.dashDriver = new FakeRobotDriver();
+        // For FakeRobotDriver, replace with:
+        // this.dashDriver = new FakeRobotDriver();
         this.dashDriver = new DashDriver();
 
         this.toCommandPaletteNoticeId = Utils.generateId('toCommandPaletteNotice');
@@ -180,10 +182,10 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
-    handleClickRun = () => {
+    handleClickPlay = () => {
         this.interpreter.run(this.state.program).then(
             () => {}, // Do nothing on successful resolution
-            (error) => {
+            (error: Error) => {
                 console.log(error.name);
                 console.log(error.message);
             }
@@ -199,7 +201,7 @@ export default class App extends React.Component<{}, AppState> {
             this.setState({
                 dashConnectionStatus: 'connected'
             });
-        }, (error) => {
+        }, (error: Error) => {
             console.log('ERROR');
             console.log(error.name);
             console.log(error.message);
@@ -260,7 +262,7 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleRootClick = (e: SyntheticInputEvent<HTMLInputElement>) => {
-        var element = e.target;
+        let element = e.target;
         // Walk up the document tree until we hit the top, or we find that
         // we are within an action panel group area
         while (element != null && element.dataset) {
@@ -339,9 +341,23 @@ export default class App extends React.Component<{}, AppState> {
                                 gridCellWidth={this.state.sceneGridCellWidth}
                                 characterState={this.state.characterState}
                             />
-                            <PenDownToggleSwitch
-                                value={this.state.drawingEnabled}
-                                onChange={this.handleTogglePenDown}/>
+                            <div className='App__scene-controls'>
+                                <div className='App__playButton-container'>
+                                    <PlayButton
+                                        interpreterIsRunning={this.state.interpreterIsRunning}
+                                        disabled={
+                                                this.state.interpreterIsRunning ||
+                                                programIsEmpty(this.state.program)}
+                                        onClick={this.handleClickPlay}
+                                    />
+                                </div>
+                                <div className='App__penDown-toggle-switch-container'>
+                                    <PenDownToggleSwitch
+                                        className='App__penDown-toggle-switch'
+                                        value={this.state.drawingEnabled}
+                                        onChange={this.handleTogglePenDown}/>
+                                </div>
+                            </div>
                         </div>
                         <Row className='App__program-section' noGutters={true}>
                             <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
@@ -387,12 +403,8 @@ export default class App extends React.Component<{}, AppState> {
                                     program={this.state.program}
                                     selectedAction={this.state.selectedAction}
                                     isDraggingCommand={this.state.isDraggingCommand}
-                                    runButtonDisabled={
-                                        this.state.interpreterIsRunning ||
-                                        programIsEmpty(this.state.program)}
                                     audioManager={this.audioManager}
                                     focusTrapManager={this.focusTrapManager}
-                                    onClickRunButton={this.handleClickRun}
                                     onChangeProgram={this.handleChangeProgram}
                                     onChangeActionPanelStepIndex={this.handleChangeActionPanelStepIndex}
                                 />
