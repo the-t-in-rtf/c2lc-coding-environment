@@ -281,7 +281,7 @@ describe("Expand button and add nodes", () => {
 
         // Add in the middle when an action is selected
         const addAtMiddleLabel = middleAddButton.getDOMNode().getAttribute('aria-label');
-        expect(addAtMiddleLabel).toBe("Add selected action left to between position 1, forward and position 2, right");
+        expect(addAtMiddleLabel).toBe("Add selected action left between position 1, forward and position 2, right");
 
         // Add to the end when an action is selected
         const addAtEndLabel = trailingAddButton.getDOMNode().getAttribute('aria-label');
