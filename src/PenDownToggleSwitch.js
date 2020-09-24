@@ -4,10 +4,11 @@ import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import ToggleSwitch from './ToggleSwitch';
 import { ReactComponent as PenDownIcon } from './svg/PenDown.svg';
+import type {IntlShape} from 'react-intl';
 import './PenDownToggleSwitch.scss';
 
 type PenDownToggleSwitchProps = {
-    intl: any,
+    intl: IntlShape,
     value: boolean,
     onChange: (value: boolean) => void
 };

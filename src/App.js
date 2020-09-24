@@ -100,8 +100,8 @@ export default class App extends React.Component<{}, AppState> {
                 this.setState((state) => {
                     return {
                         characterState: state.characterState.forward(
-                            this.state.sceneGridCellWidth,
-                            this.state.drawingEnabled
+                            state.sceneGridCellWidth,
+                            state.drawingEnabled
                         )
                     };
                 });
@@ -423,9 +423,6 @@ export default class App extends React.Component<{}, AppState> {
     componentDidUpdate(prevProps: {}, prevState: AppState) {
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
-        }
-        if (this.state.drawingEnabled !== prevState.drawingEnabled) {
-            this.handleTogglePenDown(this.state.drawingEnabled);
         }
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
