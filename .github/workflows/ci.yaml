@@ -43,8 +43,10 @@ jobs:
         run: npx flow-coverage-report --config .flowcoverage-main
       - name: Flow Type Coverage (tests)
         run: npx flow-coverage-report --config .flowcoverage-tests
-      - name: Archive Test Code Coverage Report
+      - name: Flow Type Coverage (HTML report)
+        run: npx flow-coverage-report --config .flowcoverage-all
+      - name: Archive Code Coverage Reports
         uses: actions/upload-artifact@v2
         with:
-          name: Test Code Coverage
+          name: Code Coverage Reports
           path: coverage/

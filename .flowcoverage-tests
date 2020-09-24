@@ -3,7 +3,7 @@
   "globIncludePatterns": [
     "src/**/*.test.js"
   ],
-  "outputDir": "coverage/flow-tests",
+  "outputDir": "coverage/flow/tests",
   "threshold": 92,
   "reportTypes": "text"
 }
