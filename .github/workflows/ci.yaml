@@ -39,10 +39,6 @@ jobs:
         run: npx flow check
       - name: Test
         run: npm test -- --verbose --coverage
-      - name: Flow Type Coverage (main)
-        run: npx flow-coverage-report --config .flowcoverage-main
-      - name: Flow Type Coverage (tests)
-        run: npx flow-coverage-report --config .flowcoverage-tests
       - name: Flow Type Coverage (HTML report)
         run: npx flow-coverage-report --config .flowcoverage-all
       - name: Archive Code Coverage Reports
@@ -50,3 +46,8 @@ jobs:
         with:
           name: Code Coverage Reports
           path: coverage/
+      - name: Flow Type Coverage (main coverage threshold)
+        run: npx flow-coverage-report --config .flowcoverage-main
+      - name: Flow Type Coverage (test coverage threshold)
+        run: npx flow-coverage-report --config .flowcoverage-tests
+
