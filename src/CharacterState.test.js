@@ -128,3 +128,18 @@ test('Each Forward move should create a path segment', () => {
             {x1: 100, y1: 0, x2: 100, y2: 100}
         ]);
 });
+
+test('Forward move should not create a path segment, when drawingEnabled is false', () => {
+    (expect(new CharacterState(0, 0, 90, []).forward(100, false)): any)
+        .toHaveCharacterState(100, 0, 90, []);
+    (expect(new CharacterState(0, 0, 90, []).forward(100, false).forward(200, true)): any)
+        .toHaveCharacterState(300, 0, 90, [
+            {x1: 100, y1: 0, x2: 300, y2: 0}
+        ]);
+    (expect(new CharacterState(0, 0, 90, []).forward(100, true).forward(200, false)): any)
+        .toHaveCharacterState(300, 0, 90, [
+            {x1: 0, y1: 0, x2: 100, y2: 0}
+        ]);
+    (expect(new CharacterState(0, 0, 90, []).forward(100, false).forward(200, false)): any)
+        .toHaveCharacterState(300, 0, 90, []);
+});
