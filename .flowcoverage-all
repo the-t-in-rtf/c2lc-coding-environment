@@ -8,7 +8,7 @@
     "src/**/*.js"
   ],
   "outputDir": "coverage/flow",
-  "threshold": 0,
+  "threshold": 1,
   "reportTypes": "html"
 }
 
