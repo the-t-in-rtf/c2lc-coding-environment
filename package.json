@@ -59,6 +59,7 @@
             "!src/WebSpeechInput.js",
             "!src/vendor/**/*"
           ],
+          "coverageDirectory": "coverage/tests",
           "coverageThreshold": {
             "global": {
               "branches": 85,

@@ -8,7 +8,7 @@
   "globIncludePatterns": [
     "src/**/*.js"
   ],
-  "outputDir": "coverage/flow",
+  "outputDir": "flow-coverage-main",
   "threshold": 94,
   "reportTypes": "text"
 }
