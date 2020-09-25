@@ -158,7 +158,7 @@ function getEnabledAddNodeCount(programBlockEditorWrapper) {
     return addNodeButton.length;
 }
 
-function getAddNodeExpandButton(programBlockEditorWrapper) {
+function getExpandAddNodeToggleSwitch(programBlockEditorWrapper) {
     const addNodeButton = programBlockEditorWrapper.find(ToggleSwitch).filter('.ProgramBlockEditor__add-node-toggle-switch');
     return addNodeButton.at(0);
 }
@@ -192,8 +192,8 @@ test('When a step is clicked, action panel should render next to the step', () =
 });
 
 
-describe("Expand button and add nodes", () => {
-    test("The expand button should work when there are no program blocks.", () => {
+describe("Expand add nodes toggle switch and add nodes", () => {
+    test("The expand toggle switch should work when there are no program blocks.", () => {
         expect.assertions(2);
     
         const { wrapper } = createMountProgramBlockEditor({
@@ -202,13 +202,13 @@ describe("Expand button and add nodes", () => {
     
         expect(getEnabledAddNodeCount(wrapper)).toBe(1);
     
-        const expandNode = getAddNodeExpandButton(wrapper);
-        expandNode.simulate('click');
+        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
+        toggleSwitch.simulate('click');
     
         expect(getEnabledAddNodeCount(wrapper)).toBe(1);
     });
 
-    test("The expand button should work when there is one program block.", () => {
+    test("The expand toggle switch should work when there is one program block.", () => {
         expect.assertions(2);
     
         const { wrapper } = createMountProgramBlockEditor({
@@ -218,13 +218,13 @@ describe("Expand button and add nodes", () => {
     
         expect(getEnabledAddNodeCount(wrapper)).toBe(1);
     
-        const expandNode = getAddNodeExpandButton(wrapper);
-        expandNode.simulate('click');
+        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
+        toggleSwitch.simulate('click');
     
         expect(getEnabledAddNodeCount(wrapper)).toBe(2);
     });
 
-    test("The expand button should work when there are two program blocks.", () => {
+    test("The expand toggle switch should work when there are two program blocks.", () => {
         expect.assertions(2);
     
         const { wrapper } = createMountProgramBlockEditor({
@@ -234,8 +234,8 @@ describe("Expand button and add nodes", () => {
     
         expect(getEnabledAddNodeCount(wrapper)).toBe(1);
     
-        const expandNode = getAddNodeExpandButton(wrapper);
-        expandNode.simulate('click');
+        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
+        toggleSwitch.simulate('click');
     
         expect(getEnabledAddNodeCount(wrapper)).toBe(3);
     });
@@ -247,8 +247,8 @@ describe("Expand button and add nodes", () => {
             program: ['forward', 'right']
         });
         
-        const expandNode = getAddNodeExpandButton(wrapper);
-        expandNode.simulate('click');
+        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
+        toggleSwitch.simulate('click');
         
         const leadingAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
         const middleAddButton   = getAddNodeButtonAtPosition(wrapper, 1);
@@ -268,8 +268,8 @@ describe("Expand button and add nodes", () => {
             selectedAction: 'left'
         });
         
-        const expandNode = getAddNodeExpandButton(wrapper);
-        expandNode.simulate('click');
+        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
+        toggleSwitch.simulate('click');
         
         const leadingAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
         const middleAddButton   = getAddNodeButtonAtPosition(wrapper, 1);
@@ -287,8 +287,37 @@ describe("Expand button and add nodes", () => {
         const addAtEndLabel = trailingAddButton.getDOMNode().getAttribute('aria-label');
         expect(addAtEndLabel).toBe("Add selected action left to the end of the program");
     });
-});
 
+    test("The aria label for the add button should be correct when there are no program blocks and an action is selected.", () => {
+        expect.assertions(1);
+    
+        const { wrapper } = createMountProgramBlockEditor({
+            program: [],
+            selectedAction: 'left'
+        });
+        
+        const soleAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
+        
+        // Add to the end when an action is selected
+        const addButtonLabel = soleAddButton.getDOMNode().getAttribute('aria-label');
+        expect(addButtonLabel).toBe("Add selected action left to the end of the program");
+    });
+
+
+    test("The aria label for the add button should be correct when there are no program blocks and no action is selected.", () => {
+        expect.assertions(1);
+    
+        const { wrapper } = createMountProgramBlockEditor({
+            program: []
+        });
+        
+        const soleAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
+        
+        // Add to the end when an action is selected
+        const addButtonLabel = soleAddButton.getDOMNode().getAttribute('aria-label');
+        expect(addButtonLabel).toBe("Make sure an action is selected");
+    });
+});
 
 describe('Delete All button', () => {
     test('When the Delete All button is clicked, then the dialog shoud be shown', () => {
@@ -343,10 +372,11 @@ describe("Add program steps", () => {
             selectedAction: 'left'
         });
 
-        const expandNode = getAddNodeExpandButton(wrapper);
-        expandNode.simulate('click');
+        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
+        toggleSwitch.simulate('click');
 
         // When 'left' is added to the beginning of the program
+        // (The index is zero because the add nodes aren't expanded).
         const addNode = getAddNodeButtonAtPosition(wrapper, 0);
         addNode.simulate('click');
     
@@ -369,8 +399,8 @@ describe("Add program steps", () => {
             selectedAction: 'left'
         });
     
-        const expandNode = getAddNodeExpandButton(wrapper);
-        expandNode.simulate('click');
+        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
+        toggleSwitch.simulate('click');
 
         // When 'left' is added to the middle of the program
         const addNode = getAddNodeButtonAtPosition(wrapper, 3);
@@ -653,6 +683,7 @@ test('The editor scrolls when a step is added to the end of the program', () => 
     });
 
     // When 'forward' is added to the end of the program
+    // (The index is zero because the add nodes aren't expanded).
     const addNode = getAddNodeButtonAtPosition(wrapper, 0);
     addNode.simulate('click');
 
@@ -674,5 +705,7 @@ test('The editor scrolls when a step is added to the end of the program', () => 
         inline: 'nearest'
     });
     expect(mockScrollIntoView.mock.instances.length).toBe(1);
+
+    // (The index used to get the add note button position is zero because the add nodes aren't expanded).
     expect(mockScrollIntoView.mock.instances[0]).toBe(getAddNodeButtonAtPosition(wrapper, 0).getDOMNode());
 });
