@@ -194,6 +194,7 @@ describe('The expand add node toggle switch should be configurable via propertie
 
             toggleSwitch.simulate('click');
             expect(mockChangeAddNodeExpandedModeHandler.mock.calls.length).toBe(1);
+            expect(mockChangeAddNodeExpandedModeHandler.mock.calls[0][0]).toBe(true);
         });
     });
     describe('Given that addNodeExpandedMode is true', () => {
@@ -207,6 +208,7 @@ describe('The expand add node toggle switch should be configurable via propertie
 
             toggleSwitch.simulate('click');
             expect(mockChangeAddNodeExpandedModeHandler.mock.calls.length).toBe(1);
+            expect(mockChangeAddNodeExpandedModeHandler.mock.calls[0][0]).toBe(false);
         });
     });
 });
