@@ -55,6 +55,15 @@ body {
     justify-self: center;
 }
 
+.App__penDown-toggle-switch-container {
+    display: flex;
+    grid-column-start: 3;
+    grid-column-end: 4;
+    justify-self: end;
+    align-items: center;
+    padding-right: 1rem;
+}
+
 .App__program-section {
     margin-top: 1.5rem;
 }

@@ -18,6 +18,7 @@ import PlayButton from './PlayButton';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
+import PenDownToggleSwitch from './PenDownToggleSwitch';
 import { programIsEmpty } from './ProgramUtils';
 import * as Utils from './Utils';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
@@ -51,7 +52,8 @@ type AppState = {
     actionPanelStepIndex: ?number,
     sceneNumRows: number,
     sceneNumColumns: number,
-    sceneGridCellWidth: number
+    sceneGridCellWidth: number,
+    drawingEnabled: boolean
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -86,7 +88,8 @@ export default class App extends React.Component<{}, AppState> {
             actionPanelStepIndex: null,
             sceneNumRows: 5,
             sceneNumColumns: 9,
-            sceneGridCellWidth: 100
+            sceneGridCellWidth: 100,
+            drawingEnabled: true
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -98,7 +101,10 @@ export default class App extends React.Component<{}, AppState> {
                 this.audioManager.playSound('forward');
                 this.setState((state) => {
                     return {
-                        characterState: state.characterState.forward(this.state.sceneGridCellWidth)
+                        characterState: state.characterState.forward(
+                            state.sceneGridCellWidth,
+                            state.drawingEnabled
+                        )
                     };
                 });
                 return new Promise((resolve, reject) => {
@@ -290,6 +296,12 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
+    handleTogglePenDown = (drawingEnabled: boolean) => {
+        this.setState({
+            drawingEnabled: drawingEnabled
+        });
+    }
+
     render() {
         return (
             <IntlProvider
@@ -346,6 +358,12 @@ export default class App extends React.Component<{}, AppState> {
                                                 programIsEmpty(this.state.program)}
                                         onClick={this.handleClickPlay}
                                     />
+                                </div>
+                                <div className='App__penDown-toggle-switch-container'>
+                                    <PenDownToggleSwitch
+                                        className='App__penDown-toggle-switch'
+                                        value={this.state.drawingEnabled}
+                                        onChange={this.handleTogglePenDown}/>
                                 </div>
                             </div>
                         </div>

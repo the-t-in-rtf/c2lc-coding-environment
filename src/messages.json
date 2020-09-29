@@ -41,6 +41,7 @@
         "DeviceConnectControl.notConnected": "Not connected",
         "DeviceConnectControl.connecting": "Connecting",
         "DeviceConnectControl.connected": "Connected",
+        "PenDownToggleSwitch.penDown": "Pen down",
         "PlayButton.run": "Play",
         "ProgramBlockEditor.toggleAddNodeExpandMode": "add node expanded mode",
         "ProgramBlockEditor.beginningBlock": "Add selected action {command} to the beginning of the program",
