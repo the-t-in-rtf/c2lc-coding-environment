@@ -145,8 +145,8 @@ function getProgramBlockAtPosition(programBlockEditorWrapper, index: number) {
 }
 
 function getAddNodeButtonAtPosition(programBlockEditorWrapper, index: number) {
-    const addNodeButton = programBlockEditorWrapper.find('.AddNode__expanded-button');
-    return addNodeButton.at(0);
+    const addNodeButton = programBlockEditorWrapper.find(AriaDisablingButton).filter('.AddNode__expanded-button');
+    return addNodeButton.at(index);
 }
 
 function getExpandAddNodeToggleSwitch(programBlockEditorWrapper) {
@@ -182,26 +182,111 @@ test('When a step is clicked, action panel should render next to the step', () =
     }
 });
 
-describe('The expand add node toggle switch is wired up', () => {
+describe('The expand add node toggle switch should be configurable via properties', () => {
     describe('Given that addNodeExpandedMode is false', () => {
         test('Then the toggle switch should be off, and the change handler should be wired up', () => {
-            const { wrapper, mockChangeAddNodeExpandedModeHandler } = createShallowProgramBlockEditor({
+            const { wrapper, mockChangeAddNodeExpandedModeHandler } = createMountProgramBlockEditor({
                 addNodeExpandedMode: false
             });
             const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
             expect(toggleSwitch.props().value).toBe(false);
             expect(toggleSwitch.props().onChange).toBe(mockChangeAddNodeExpandedModeHandler);
+
+            toggleSwitch.simulate('click');
+            expect(mockChangeAddNodeExpandedModeHandler.mock.calls.length).toBe(1);
+            expect(mockChangeAddNodeExpandedModeHandler.mock.calls[0][0]).toBe(true);
         });
     });
     describe('Given that addNodeExpandedMode is true', () => {
         test('Then the toggle switch should be on, and the change handler should be wired up', () => {
-            const { wrapper, mockChangeAddNodeExpandedModeHandler } = createShallowProgramBlockEditor({
+            const { wrapper, mockChangeAddNodeExpandedModeHandler } = createMountProgramBlockEditor({
                 addNodeExpandedMode: true
             });
             const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
             expect(toggleSwitch.props().value).toBe(true);
             expect(toggleSwitch.props().onChange).toBe(mockChangeAddNodeExpandedModeHandler);
+
+            toggleSwitch.simulate('click');
+            expect(mockChangeAddNodeExpandedModeHandler.mock.calls.length).toBe(1);
+            expect(mockChangeAddNodeExpandedModeHandler.mock.calls[0][0]).toBe(false);
         });
+    });
+});
+
+
+describe("Add nodes", () => {
+    test("All aria labels for add buttons should be correct when no action is selected.", () => {
+        expect.assertions(3);
+    
+        const { wrapper } = createMountProgramBlockEditor({
+            program: ['forward', 'right'],
+            addNodeExpandedMode: true            
+        });
+        
+        const leadingAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
+        const middleAddButton   = getAddNodeButtonAtPosition(wrapper, 1);
+        const trailingAddButton = getAddNodeButtonAtPosition(wrapper, 2);
+        
+        [leadingAddButton, middleAddButton, trailingAddButton].forEach((button)=> {
+            const ariaLabel = button.getDOMNode().getAttribute('aria-label');
+            expect(ariaLabel).toBe("Make sure an action is selected");
+        });
+    });
+
+    test("All aria labels for add buttons should be correct when an action is selected.", () => {
+        expect.assertions(3);
+    
+        const { wrapper } = createMountProgramBlockEditor({
+            program: ['forward', 'right'],
+            selectedAction: 'left',
+            addNodeExpandedMode: true
+        });
+        
+        const leadingAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
+        const middleAddButton   = getAddNodeButtonAtPosition(wrapper, 1);
+        const trailingAddButton = getAddNodeButtonAtPosition(wrapper, 2);
+        
+        // Add to the begining when an action is selected
+        const addAtBeginningLabel = leadingAddButton.getDOMNode().getAttribute('aria-label');
+        expect(addAtBeginningLabel).toBe("Add selected action left to the beginning of the program");
+
+        // Add in the middle when an action is selected
+        const addAtMiddleLabel = middleAddButton.getDOMNode().getAttribute('aria-label');
+        expect(addAtMiddleLabel).toBe("Add selected action left between position 1, forward and position 2, right");
+
+        // Add to the end when an action is selected
+        const addAtEndLabel = trailingAddButton.getDOMNode().getAttribute('aria-label');
+        expect(addAtEndLabel).toBe("Add selected action left to the end of the program");
+    });
+
+    test("The aria label for the add button should be correct when there are no program blocks and an action is selected.", () => {
+        expect.assertions(1);
+    
+        const { wrapper } = createMountProgramBlockEditor({
+            program: [],
+            selectedAction: 'left'
+        });
+        
+        const soleAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
+        
+        // Add to the end when an action is selected
+        const addButtonLabel = soleAddButton.getDOMNode().getAttribute('aria-label');
+        expect(addButtonLabel).toBe("Add selected action left to the end of the program");
+    });
+
+
+    test("The aria label for the add button should be correct when there are no program blocks and no action is selected.", () => {
+        expect.assertions(1);
+    
+        const { wrapper } = createMountProgramBlockEditor({
+            program: []
+        });
+        
+        const soleAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
+        
+        // Add to the end when an action is selected
+        const addButtonLabel = soleAddButton.getDOMNode().getAttribute('aria-label');
+        expect(addButtonLabel).toBe("Make sure an action is selected");
     });
 });
 
@@ -223,6 +308,82 @@ describe('Delete All button', () => {
         expect(wrapper.state().showConfirmDeleteAll).toBe(true);
     });
 });
+
+describe("Add program steps", () => {
+    test('We should be able to add a step at the end of the program', () => {
+        expect.assertions(4);
+    
+        // Given a program of 5 forwards and 'left' as the selected command
+        const { wrapper, audioManagerMock, mockChangeProgramHandler } = createMountProgramBlockEditor({
+            program: ['forward', 'forward', 'forward', 'forward', 'forward'],
+            selectedAction: 'left'
+        });
+    
+        // When 'left' is added to the end of the program
+        // (The index is zero because the add nodes aren't expanded).
+        const addNode = getAddNodeButtonAtPosition(wrapper, 0);
+        addNode.simulate('click');
+    
+        // Then the 'add' sound should be played
+        expect(audioManagerMock.playSound.mock.calls.length).toBe(1);
+        expect(audioManagerMock.playSound.mock.calls[0][0]).toBe('add');
+    
+        // And the program should be changed
+        expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
+        expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(
+            ['forward', 'forward', 'forward', 'forward', 'forward', 'left']);
+    });
+
+    test('We should be able to add a step at the beginning of the program', () => {
+        expect.assertions(4);
+
+        // Given a program of 5 forwards and 'left' as the selected command
+        const { wrapper, audioManagerMock, mockChangeProgramHandler } = createMountProgramBlockEditor({
+            program: ['forward', 'forward', 'forward', 'forward', 'forward'],
+            selectedAction: 'left',
+            addNodeExpandedMode: true
+        });
+
+        // When 'left' is added to the beginning of the program
+        // (The index is zero because the add nodes aren't expanded).
+        const addNode = getAddNodeButtonAtPosition(wrapper, 0);
+        addNode.simulate('click');
+    
+        // Then the 'add' sound should be played
+        expect(audioManagerMock.playSound.mock.calls.length).toBe(1);
+        expect(audioManagerMock.playSound.mock.calls[0][0]).toBe('add');
+    
+        // And the program should be changed
+        expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
+        expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(
+            ['left', 'forward', 'forward', 'forward', 'forward', 'forward']);
+    });
+
+    test('We should be able to add a step in the middle of the program', () => {
+        expect.assertions(4);
+    
+        // Given a program of 5 forwards and 'left' as the selected command
+        const { wrapper, audioManagerMock, mockChangeProgramHandler } = createMountProgramBlockEditor({
+            program: ['forward', 'forward', 'forward', 'forward', 'forward'],
+            selectedAction: 'left',
+            addNodeExpandedMode: true
+        });
+    
+        // When 'left' is added to the middle of the program
+        const addNode = getAddNodeButtonAtPosition(wrapper, 3);
+        addNode.simulate('click');
+    
+        // Then the 'add' sound should be played
+        expect(audioManagerMock.playSound.mock.calls.length).toBe(1);
+        expect(audioManagerMock.playSound.mock.calls[0][0]).toBe('add');
+    
+        // And the program should be changed
+        expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
+        expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(
+            ['forward', 'forward', 'forward', "left", 'forward', 'forward']);
+    });
+});
+
 
 describe('Delete program steps', () => {
     test.each([
@@ -438,14 +599,15 @@ test('The editor scrolls when a step is added to the end of the program', () => 
 
     window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
 
-    // Given a program of 5 forwards and 'forward' as the selected command
+    // Given a program of 5 forwards and 'left' as the selected command
     const { wrapper, audioManagerMock, mockChangeProgramHandler } = createMountProgramBlockEditor({
         program: ['forward', 'forward', 'forward', 'forward', 'forward'],
-        selectedAction: 'forward'
+        selectedAction: 'left'
     });
 
     // When 'forward' is added to the end of the program
-    const addNode = getAddNodeButtonAtPosition(wrapper, 5);
+    // (The index is zero because the add nodes aren't expanded).
+    const addNode = getAddNodeButtonAtPosition(wrapper, 0);
     addNode.simulate('click');
 
     // Then the 'add' sound should be played
@@ -455,7 +617,7 @@ test('The editor scrolls when a step is added to the end of the program', () => 
     // And the program should be changed
     expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
     expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(
-        ['forward', 'forward', 'forward', 'forward', 'forward', 'forward']);
+        ['forward', 'forward', 'forward', 'forward', 'forward', 'left']);
 
     // And updating the program triggers auto scroll
     wrapper.setProps({ program: mockChangeProgramHandler.mock.calls[0][0] });
@@ -466,5 +628,7 @@ test('The editor scrolls when a step is added to the end of the program', () => 
         inline: 'nearest'
     });
     expect(mockScrollIntoView.mock.instances.length).toBe(1);
-    expect(mockScrollIntoView.mock.instances[0]).toBe(getAddNodeButtonAtPosition(wrapper, 6).getDOMNode());
+
+    // (The index used to get the add note button position is zero because the add nodes aren't expanded).
+    expect(mockScrollIntoView.mock.instances[0]).toBe(getAddNodeButtonAtPosition(wrapper, 0).getDOMNode());
 });
