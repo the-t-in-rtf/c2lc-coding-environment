@@ -28,9 +28,9 @@ const defaultProgramBlockEditorProps = {
     selectedAction: null,
     editingDisabled: false,
     replaceIsActive: false,
-    runButtonDisabled: false,
     isDraggingCommand: false,
-    focusTrapManager: new FocusTrapManager()
+    focusTrapManager: new FocusTrapManager(),
+    addNodeExpandedMode: false
 };
 
 function createShallowProgramBlockEditor(props) {
@@ -46,8 +46,9 @@ function createShallowProgramBlockEditor(props) {
     // $FlowFixMe: Flow doesn't know about the Jest mock API
     const audioManagerMock: any = AudioManager.mock.instances[0];
 
-    const mockClickRunButtonHandler = jest.fn();
     const mockChangeProgramHandler = jest.fn();
+
+    const mockChangeAddNodeExpandedModeHandler = jest.fn();
 
     const wrapper: $FlowIgnoreType = shallow(
         React.createElement(
@@ -58,8 +59,8 @@ function createShallowProgramBlockEditor(props) {
                 {
                     intl: intl,
                     audioManager: audioManagerInstance,
-                    onClickRunButton: mockClickRunButtonHandler,
-                    onChangeProgram: mockChangeProgramHandler
+                    onChangeProgram: mockChangeProgramHandler,
+                    onChangeAddNodeExpandedMode: mockChangeAddNodeExpandedModeHandler
                 },
                 props
             )
@@ -69,8 +70,8 @@ function createShallowProgramBlockEditor(props) {
     return {
         wrapper,
         audioManagerMock,
-        mockClickRunButtonHandler,
-        mockChangeProgramHandler
+        mockChangeProgramHandler,
+        mockChangeAddNodeExpandedModeHandler
     };
 }
 
@@ -81,9 +82,9 @@ function createMountProgramBlockEditor(props) {
     // $FlowFixMe: Flow doesn't know about the Jest mock API
     const audioManagerMock = AudioManager.mock.instances[0];
 
-    const mockClickRunButtonHandler = jest.fn();
     const mockChangeProgramHandler = jest.fn();
     const mockChangeActionPanelStepIndex = jest.fn();
+    const mockChangeAddNodeExpandedModeHandler = jest.fn();
 
     const wrapper = mount(
         React.createElement(
@@ -93,9 +94,9 @@ function createMountProgramBlockEditor(props) {
                 defaultProgramBlockEditorProps,
                 {
                     audioManager: audioManagerInstance,
-                    onClickRunButton: mockClickRunButtonHandler,
                     onChangeProgram: mockChangeProgramHandler,
-                    onChangeActionPanelStepIndex: mockChangeActionPanelStepIndex
+                    onChangeActionPanelStepIndex: mockChangeActionPanelStepIndex,
+                    onChangeAddNodeExpandedMode: mockChangeAddNodeExpandedModeHandler
                 },
                 props
             )
@@ -113,9 +114,9 @@ function createMountProgramBlockEditor(props) {
     return {
         wrapper,
         audioManagerMock,
-        mockClickRunButtonHandler,
         mockChangeProgramHandler,
-        mockChangeActionPanelStepIndex
+        mockChangeActionPanelStepIndex,
+        mockChangeAddNodeExpandedModeHandler
     };
 }
 
@@ -143,24 +144,14 @@ function getProgramBlockAtPosition(programBlockEditorWrapper, index: number) {
     return getProgramBlocks(programBlockEditorWrapper).at(index);
 }
 
-function getRunButton(programBlockEditorWrapper) {
-    return programBlockEditorWrapper.find(AriaDisablingButton)
-        .filter('.ProgramBlockEditor__run-button');
-}
-
 function getAddNodeButtonAtPosition(programBlockEditorWrapper, index: number) {
     const addNodeButton = programBlockEditorWrapper.find(AriaDisablingButton).filter('.AddNode__expanded-button');
     return addNodeButton.at(index);
 }
 
-function getEnabledAddNodeCount(programBlockEditorWrapper) {
-    const addNodeButton = programBlockEditorWrapper.find(AriaDisablingButton).filter('.AddNode__expanded-button');
-    return addNodeButton.length;
-}
-
 function getExpandAddNodeToggleSwitch(programBlockEditorWrapper) {
-    const addNodeButton = programBlockEditorWrapper.find(ToggleSwitch).filter('.ProgramBlockEditor__add-node-toggle-switch');
-    return addNodeButton.at(0);
+    const toggleSwitch = programBlockEditorWrapper.find(ToggleSwitch).filter('.ProgramBlockEditor__add-node-toggle-switch');
+    return toggleSwitch.at(0);
 }
 
 describe('Program rendering', () => {
@@ -191,64 +182,44 @@ test('When a step is clicked, action panel should render next to the step', () =
     }
 });
 
+describe('The expand add node toggle switch should be configurable via properties', () => {
+    describe('Given that addNodeExpandedMode is false', () => {
+        test('Then the toggle switch should be off, and the change handler should be wired up', () => {
+            const { wrapper, mockChangeAddNodeExpandedModeHandler } = createMountProgramBlockEditor({
+                addNodeExpandedMode: false
+            });
+            const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
+            expect(toggleSwitch.props().value).toBe(false);
+            expect(toggleSwitch.props().onChange).toBe(mockChangeAddNodeExpandedModeHandler);
 
-describe("Expand add nodes toggle switch and add nodes", () => {
-    test("The expand toggle switch should work when there are no program blocks.", () => {
-        expect.assertions(2);
-    
-        const { wrapper } = createMountProgramBlockEditor({
-            program: []
+            toggleSwitch.simulate('click');
+            expect(mockChangeAddNodeExpandedModeHandler.mock.calls.length).toBe(1);
         });
-    
-        expect(getEnabledAddNodeCount(wrapper)).toBe(1);
-    
-        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
-        toggleSwitch.simulate('click');
-    
-        expect(getEnabledAddNodeCount(wrapper)).toBe(1);
     });
+    describe('Given that addNodeExpandedMode is true', () => {
+        test('Then the toggle switch should be on, and the change handler should be wired up', () => {
+            const { wrapper, mockChangeAddNodeExpandedModeHandler } = createMountProgramBlockEditor({
+                addNodeExpandedMode: true
+            });
+            const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
+            expect(toggleSwitch.props().value).toBe(true);
+            expect(toggleSwitch.props().onChange).toBe(mockChangeAddNodeExpandedModeHandler);
 
-    test("The expand toggle switch should work when there is one program block.", () => {
-        expect.assertions(2);
-    
-        const { wrapper } = createMountProgramBlockEditor({
-            program: ['right'],
-            selectedAction: 'left'
+            toggleSwitch.simulate('click');
+            expect(mockChangeAddNodeExpandedModeHandler.mock.calls.length).toBe(1);
         });
-    
-        expect(getEnabledAddNodeCount(wrapper)).toBe(1);
-    
-        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
-        toggleSwitch.simulate('click');
-    
-        expect(getEnabledAddNodeCount(wrapper)).toBe(2);
     });
+});
 
-    test("The expand toggle switch should work when there are two program blocks.", () => {
-        expect.assertions(2);
-    
-        const { wrapper } = createMountProgramBlockEditor({
-            program: ['forward', 'right'],
-            selectedAction: 'left'
-        });
-    
-        expect(getEnabledAddNodeCount(wrapper)).toBe(1);
-    
-        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
-        toggleSwitch.simulate('click');
-    
-        expect(getEnabledAddNodeCount(wrapper)).toBe(3);
-    });
 
+describe("Add nodes", () => {
     test("All aria labels for add buttons should be correct when no action is selected.", () => {
         expect.assertions(3);
     
         const { wrapper } = createMountProgramBlockEditor({
-            program: ['forward', 'right']
+            program: ['forward', 'right'],
+            addNodeExpandedMode: true            
         });
-        
-        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
-        toggleSwitch.simulate('click');
         
         const leadingAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
         const middleAddButton   = getAddNodeButtonAtPosition(wrapper, 1);
@@ -265,11 +236,9 @@ describe("Expand add nodes toggle switch and add nodes", () => {
     
         const { wrapper } = createMountProgramBlockEditor({
             program: ['forward', 'right'],
-            selectedAction: 'left'
+            selectedAction: 'left',
+            addNodeExpandedMode: true
         });
-        
-        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
-        toggleSwitch.simulate('click');
         
         const leadingAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
         const middleAddButton   = getAddNodeButtonAtPosition(wrapper, 1);
@@ -369,11 +338,9 @@ describe("Add program steps", () => {
         // Given a program of 5 forwards and 'left' as the selected command
         const { wrapper, audioManagerMock, mockChangeProgramHandler } = createMountProgramBlockEditor({
             program: ['forward', 'forward', 'forward', 'forward', 'forward'],
-            selectedAction: 'left'
+            selectedAction: 'left',
+            addNodeExpandedMode: true
         });
-
-        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
-        toggleSwitch.simulate('click');
 
         // When 'left' is added to the beginning of the program
         // (The index is zero because the add nodes aren't expanded).
@@ -396,12 +363,10 @@ describe("Add program steps", () => {
         // Given a program of 5 forwards and 'left' as the selected command
         const { wrapper, audioManagerMock, mockChangeProgramHandler } = createMountProgramBlockEditor({
             program: ['forward', 'forward', 'forward', 'forward', 'forward'],
-            selectedAction: 'left'
+            selectedAction: 'left',
+            addNodeExpandedMode: true
         });
     
-        const toggleSwitch = getExpandAddNodeToggleSwitch(wrapper);
-        toggleSwitch.simulate('click');
-
         // When 'left' is added to the middle of the program
         const addNode = getAddNodeButtonAtPosition(wrapper, 3);
         addNode.simulate('click');
@@ -623,50 +588,6 @@ describe('Scroll to show the active program step', () => {
             expect(mockScrollIntoView.mock.instances[0]).toBe(getProgramBlockAtPosition(wrapper, stepNum).getDOMNode());
         }
     );
-});
-
-describe('The Run button class is changed when the program is running', () => {
-    describe('Given the program is running', () => {
-        test('Then the Run button should have the pressed class', () => {
-            expect.assertions(1);
-            const { wrapper } = createShallowProgramBlockEditor({
-                interpreterIsRunning: true
-            });
-            expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(true);
-        })
-    });
-
-    describe('Given the program is not running', () => {
-        test('Then the Run button should not have the pressed class', () => {
-            expect.assertions(1);
-            const { wrapper } = createShallowProgramBlockEditor({
-                interpreterIsRunning: false
-            });
-            expect(getRunButton(wrapper).hasClass('ProgramBlockEditor__run-button--pressed')).toBe(false);
-        })
-    });
-});
-
-describe('The Run button can be disabled', () => {
-    describe('Given runButtonDisabled is true', () => {
-        test('Then the Run button should be disabled', () => {
-            expect.assertions(1);
-            const { wrapper } = createShallowProgramBlockEditor({
-                runButtonDisabled: true
-            });
-            expect(getRunButton(wrapper).props().disabled).toBe(true);
-        })
-    });
-
-    describe('Given runButtonDisabled is false', () => {
-        test('Then the Run button should not be disabled', () => {
-            expect.assertions(1);
-            const { wrapper } = createShallowProgramBlockEditor({
-                runButtonDisabled: false
-            });
-            expect(getRunButton(wrapper).props().disabled).toBe(false);
-        })
-    });
 });
 
 test('The editor scrolls when a step is added to the end of the program', () => {

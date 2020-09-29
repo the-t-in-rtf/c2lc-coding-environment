@@ -14,6 +14,7 @@ import * as FeatureDetection from './FeatureDetection';
 import FocusTrapManager from './FocusTrapManager';
 import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
+import PlayButton from './PlayButton';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
@@ -32,7 +33,8 @@ type AppContext = {
 };
 
 type AppSettings = {
-    language: string
+    language: string,
+    addNodeExpandedMode: boolean
 };
 
 type AppState = {
@@ -71,7 +73,8 @@ export default class App extends React.Component<{}, AppState> {
             program: [],
             characterState: new CharacterState(0, 0, 90, []), // Begin facing East
             settings: {
-                language: 'en'
+                language: 'en',
+                addNodeExpandedMode: true
             },
             dashConnectionStatus: 'notConnected',
             activeProgramStepNum: null,
@@ -175,7 +178,7 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
-    handleClickRun = () => {
+    handleClickPlay = () => {
         this.interpreter.run(this.state.program).then(
             () => {}, // Do nothing on successful resolution
             (error: Error) => {
@@ -254,6 +257,12 @@ export default class App extends React.Component<{}, AppState> {
         });
     };
 
+    handleChangeAddNodeExpandedMode = (isAddNodeExpandedMode: boolean) => {
+        this.setStateSettings({
+            addNodeExpandedMode: isAddNodeExpandedMode
+        });
+    };
+
     handleRootClick = (e: SyntheticInputEvent<HTMLInputElement>) => {
         let element = e.target;
         // Walk up the document tree until we hit the top, or we find that
@@ -328,6 +337,17 @@ export default class App extends React.Component<{}, AppState> {
                                 gridCellWidth={this.state.sceneGridCellWidth}
                                 characterState={this.state.characterState}
                             />
+                            <div className='App__scene-controls'>
+                                <div className='App__playButton-container'>
+                                    <PlayButton
+                                        interpreterIsRunning={this.state.interpreterIsRunning}
+                                        disabled={
+                                                this.state.interpreterIsRunning ||
+                                                programIsEmpty(this.state.program)}
+                                        onClick={this.handleClickPlay}
+                                    />
+                                </div>
+                            </div>
                         </div>
                         <Row className='App__program-section' noGutters={true}>
                             <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
@@ -373,14 +393,12 @@ export default class App extends React.Component<{}, AppState> {
                                     program={this.state.program}
                                     selectedAction={this.state.selectedAction}
                                     isDraggingCommand={this.state.isDraggingCommand}
-                                    runButtonDisabled={
-                                        this.state.interpreterIsRunning ||
-                                        programIsEmpty(this.state.program)}
                                     audioManager={this.audioManager}
                                     focusTrapManager={this.focusTrapManager}
-                                    onClickRunButton={this.handleClickRun}
+                                    addNodeExpandedMode={this.state.settings.addNodeExpandedMode}
                                     onChangeProgram={this.handleChangeProgram}
                                     onChangeActionPanelStepIndex={this.handleChangeActionPanelStepIndex}
+                                    onChangeAddNodeExpandedMode={this.handleChangeAddNodeExpandedMode}
                                 />
                             </Col>
                         </Row>

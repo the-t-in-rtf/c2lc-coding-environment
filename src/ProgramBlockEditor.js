@@ -15,7 +15,6 @@ import CommandBlock from './CommandBlock';
 import classNames from 'classnames';
 import ToggleSwitch from './ToggleSwitch';
 import { ReactComponent as AddIcon } from './svg/Add.svg';
-import { ReactComponent as PlayIcon } from './svg/Play.svg';
 import { ReactComponent as DeleteAllIcon } from './svg/DeleteAll.svg';
 import { ReactComponent as RobotIcon } from './svg/Robot.svg';
 import './ProgramBlockEditor.scss';
@@ -32,19 +31,18 @@ type ProgramBlockEditorProps = {
     program: Program,
     selectedAction: ?string,
     isDraggingCommand: boolean,
-    runButtonDisabled: boolean,
     audioManager: AudioManager,
     focusTrapManager: FocusTrapManager,
-    onClickRunButton: () => void,
+    addNodeExpandedMode: boolean,
     onChangeProgram: (Program) => void,
-    onChangeActionPanelStepIndex: (index: ?number) => void
+    onChangeActionPanelStepIndex: (index: ?number) => void,
+    onChangeAddNodeExpandedMode: (boolean) => void
 };
 
 type ProgramBlockEditorState = {
     showConfirmDeleteAll: boolean,
     focusedActionPanelOptionName: ?string,
-    replaceIsActive: boolean,
-    addNodeExpandedMode: boolean
+    replaceIsActive: boolean
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
@@ -64,8 +62,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.state = {
             showConfirmDeleteAll : false,
             focusedActionPanelOptionName: null,
-            replaceIsActive: false,
-            addNodeExpandedMode : false
+            replaceIsActive: false
         }
     }
 
@@ -115,12 +112,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     // Handlers
-
-    handleChangeAddNodeExpandedMode = (isAddNodeExpandedMode: boolean) => {
-        this.setState({
-            addNodeExpandedMode: isAddNodeExpandedMode
-        });
-    };
 
     handleClickDeleteAll = () => {
         this.props.audioManager.playSound('deleteAll');
@@ -320,7 +311,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                 <AddNode
                     aria-label={this.makeAddNodeAriaLabel(programStepNumber, false)}
                     ref={ (element) => this.setAddNodeRef(programStepNumber, element) }
-                    expandedMode={this.state.addNodeExpandedMode}
+                    expandedMode={this.props.addNodeExpandedMode}
                     isDraggingCommand={this.props.isDraggingCommand}
                     programStepNumber={programStepNumber}
                     disabled={
@@ -388,8 +379,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     <div className='ProgramBlockEditor__options'>
                         <ToggleSwitch
                             ariaLabel={this.props.intl.formatMessage({id:'ProgramBlockEditor.toggleAddNodeExpandMode'})}
-                            value={this.state.addNodeExpandedMode}
-                            onChange={this.handleChangeAddNodeExpandedMode}
+                            value={this.props.addNodeExpandedMode}
+                            onChange={this.props.onChangeAddNodeExpandedMode}
                             contentsTrue={<AddIcon />}
                             contentsFalse={<AddIcon />}
                             className='ProgramBlockEditor__add-node-toggle-switch'
@@ -424,21 +415,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
                         </div>
                         {contents}
-                    </div>
-                </div>
-                <div className='ProgramBlockEditor__footer'>
-                    <div className='ProgramBlockEditor__run'>
-                        <AriaDisablingButton
-                            aria-label={`${this.props.intl.formatMessage({id:'PlayButton.run'})} ${this.props.program.join(' ')}`}
-                            className={this.props.interpreterIsRunning ?
-                                'ProgramBlockEditor__run-button ProgramBlockEditor__run-button--pressed' :
-                                'ProgramBlockEditor__run-button'}
-                            disabledClassName='ProgramBlockEditor__run-button--disabled'
-                            disabled={this.props.runButtonDisabled}
-                            onClick={this.props.onClickRunButton}
-                        >
-                            <PlayIcon className='ProgramBlockEditor__play-svg' />
-                        </AriaDisablingButton>
                     </div>
                 </div>
                 <ConfirmDeleteAllModal
