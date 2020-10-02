@@ -69,15 +69,23 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
-    programSequenceIsInViewport() {
-        //$FlowFixMe
-        const programSequenceContainer = this.programSequenceContainerRef.current.getBoundingClientRect();
-        return (
-            programSequenceContainer.top >= 0 &&
-            programSequenceContainer.left >= 0 &&
-            programSequenceContainer.bottom <= window.innerHeight &&
-            programSequenceContainer.right <= window.innerWidth
-        );
+    scrollProgramSequenceArea(activeProgramStep) {
+        if (
+            activeProgramStep.dataset.stepnumber === '0' &&
+            this.programSequenceContainerRef.current) {
+                this.programSequenceContainerRef.current.scrollTo(0,0);
+        } else if(
+            activeProgramStep.dataset.stepnumber !== '0' &&
+            this.programSequenceContainerRef.current) {
+                const programSequenceContainerRight = this.programSequenceContainerRef.current.getBoundingClientRect().right;
+                const activeProgramStepRight = activeProgramStep.getBoundingClientRect().right;
+                if (
+                    programSequenceContainerRight < activeProgramStepRight &&
+                    this.programSequenceContainerRef.current) {
+                        this.programSequenceContainerRef.current.scrollLeft
+                            += (activeProgramStepRight - programSequenceContainerRight);
+                }
+        }
     }
 
     commandIsSelected() {
@@ -480,8 +488,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
         if (this.props.activeProgramStepNum != null) {
             let element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
-            if (this.programSequenceIsInViewport() && element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+            if (element) {
+                this.scrollProgramSequenceArea(element);
             }
         }
         if (this.props.actionPanelStepIndex != null) {
