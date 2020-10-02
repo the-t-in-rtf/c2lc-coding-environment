@@ -156,6 +156,10 @@ function getAddNodeButtonAtPosition(programBlockEditorWrapper, index: number) {
     return addNodeButton.at(0);
 }
 
+function getProgramSequenceContainer(programBlockEditorWrapper) {
+    return programBlockEditorWrapper.find('.ProgramBlockEditor__program-sequence-scroll-container');
+}
+
 describe('Program rendering', () => {
     test('Blocks should be rendered for the test program', () => {
         expect.assertions(5);
@@ -374,36 +378,40 @@ describe('Delete All button can be disabled', () => {
     });
 });
 
-describe('Scroll to show the active program step', () => {
-    test.each([
-        1,
-        2
-    ])('When active program step number is set to %i, then the editor should scroll to the step',
-        (stepNum) => {
-            expect.assertions(4);
+describe('Autoscroll to show the active program step', () => {
+    test('When active program step number is 0, scroll to the beginning of the container', () => {
+        expect.assertions(3);
+        const mockScrollTo = jest.fn();
+        const { wrapper } = createMountProgramBlockEditor();
+        getProgramSequenceContainer(wrapper).get(0).ref.current.scrollTo = mockScrollTo;
 
-            const mockScrollIntoView = jest.fn();
+        wrapper.setProps({
+            activeProgramStepNum: 0
+        });
 
-            window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
-
-            const { wrapper } = createMountProgramBlockEditor();
-
-            wrapper.setProps({
-                activeProgramStepNum: stepNum
-            });
-
-            expect(mockScrollIntoView.mock.calls.length).toBe(1);
-            expect(mockScrollIntoView.mock.calls[0][0]).toStrictEqual({
-                behavior: 'smooth',
-                block: 'nearest',
-                inline: 'nearest'
-            });
-
-            expect(mockScrollIntoView.mock.instances.length).toBe(1);
-            expect(mockScrollIntoView.mock.instances[0]).toBe(getProgramBlockAtPosition(wrapper, stepNum).getDOMNode());
-        }
-    );
-});
+        expect(mockScrollTo.mock.calls.length).toBe(1);
+        // mock.calls[0][0] for x position, [0][1] for y position
+        expect(mockScrollTo.mock.calls[0][0]).toBe(0);
+        expect(mockScrollTo.mock.calls[0][1]).toBe(0);
+    });
+    // test('When active program step is outside of the program sequence container', () => {
+    //     const { wrapper } = createMountProgramBlockEditor();
+    //     const programSequenceContainer = getProgramSequenceContainer(wrapper);
+    //     const activeProgramStep = getProgramBlockAtPosition(wrapper, 2);
+    //     const mockProgramSequenceContainer = shallow(
+    //         <div
+    //             style={{width: 100, height: 100, right: 100, overflow: scroll }}
+    //             ref={programSequenceContainer}>
+    //             <div
+    //                 style={{width: 200, height: 100, right: 200}} ref={activeProgramStep}/>
+    //         </div>
+    //     );
+    //     wrapper.setProps({
+    //         activeProgramStepNum: 2
+    //     });
+    //     console.log(mockProgramSequenceContainer.get(0).ref.current.scrollLeft);
+    // })
+})
 
 describe('The Run button class is changed when the program is running', () => {
     describe('Given the program is running', () => {
