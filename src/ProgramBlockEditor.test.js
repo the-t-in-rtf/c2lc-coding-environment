@@ -394,23 +394,6 @@ describe('Autoscroll to show the active program step', () => {
         expect(mockScrollTo.mock.calls[0][0]).toBe(0);
         expect(mockScrollTo.mock.calls[0][1]).toBe(0);
     });
-    // test('When active program step is outside of the program sequence container', () => {
-    //     const { wrapper } = createMountProgramBlockEditor();
-    //     const programSequenceContainer = getProgramSequenceContainer(wrapper);
-    //     const activeProgramStep = getProgramBlockAtPosition(wrapper, 2);
-    //     const mockProgramSequenceContainer = shallow(
-    //         <div
-    //             style={{width: 100, height: 100, right: 100, overflow: scroll }}
-    //             ref={programSequenceContainer}>
-    //             <div
-    //                 style={{width: 200, height: 100, right: 200}} ref={activeProgramStep}/>
-    //         </div>
-    //     );
-    //     wrapper.setProps({
-    //         activeProgramStepNum: 2
-    //     });
-    //     console.log(mockProgramSequenceContainer.get(0).ref.current.scrollLeft);
-    // })
 })
 
 describe('The Run button class is changed when the program is running', () => {
