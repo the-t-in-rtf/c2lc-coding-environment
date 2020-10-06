@@ -394,6 +394,30 @@ describe('Autoscroll to show the active program step', () => {
         expect(mockScrollTo.mock.calls[0][0]).toBe(0);
         expect(mockScrollTo.mock.calls[0][1]).toBe(0);
     });
+    test('When active program step is outside of the program sequence container', () => {
+        const { wrapper } = createMountProgramBlockEditor();
+        const mockRef = {
+            getBoundingClientRect : jest.fn(() => ({
+                right : 400
+            }))
+        };
+        const programSequenceContainer = getProgramSequenceContainer(wrapper);
+        const activeProgramStep = getProgramBlockAtPosition(wrapper, 2);
+        // activeProgramStep.get(0).getBoundingClientRect = jest.fn(() => ({
+        //     right: 400
+        // }));
+        programSequenceContainer.get(0).ref.current.getBoundingClientRect = jest.fn(() => ({
+            right : 300
+        }));
+        console.log(programSequenceContainer.get(0).ref.current.getBoundingClientRect());
+        console.log(activeProgramStep.get(0).ref);
+        // console.log(activeProgramStep.get(0).getBoundingClientRect);
+        // console.log(activeProgramStep.get(0).ref.getBoundingClientRect)
+        wrapper.setProps({
+            activeProgramStepNum: 3
+        });
+        //console.log(mockProgramSequenceContainer.get(0).ref.current.scrollLeft);
+    })
 })
 
 describe('The Run button class is changed when the program is running', () => {
