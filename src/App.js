@@ -16,6 +16,7 @@ import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import PlayButton from './PlayButton';
 import ProgramBlockEditor from './ProgramBlockEditor';
+import RefreshButton from './RefreshButton';
 import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
@@ -302,6 +303,14 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
+    handleRefresh = () => {
+        this.setState((state) => {
+            return {
+                characterState: state.characterState.refresh()
+            };
+        });
+    }
+
     render() {
         return (
             <IntlProvider
@@ -354,9 +363,18 @@ export default class App extends React.Component<{}, AppState> {
                                     <PlayButton
                                         interpreterIsRunning={this.state.interpreterIsRunning}
                                         disabled={
-                                                this.state.interpreterIsRunning ||
-                                                programIsEmpty(this.state.program)}
+                                            this.state.interpreterIsRunning ||
+                                            programIsEmpty(this.state.program)}
                                         onClick={this.handleClickPlay}
+                                    />
+                                </div>
+                                <div className='App__refreshButton-container'>
+                                    <RefreshButton
+                                        interpreterIsRunning={this.state.interpreterIsRunning}
+                                        disabled={
+                                            this.state.interpreterIsRunning
+                                        }
+                                        onClick={this.handleRefresh}
                                     />
                                 </div>
                                 <div className='App__penDown-toggle-switch-container'>
