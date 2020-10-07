@@ -58,7 +58,8 @@
         "ProgramBlockEditor.startIndicator": "Start",
         "ProgramTextEditor.programLabel": "Program:",
         "AudioFeedbackToggleSwitch.audioFeedback": "Audio feedback",
-        "Scene": "Scene"
+        "Scene": "Scene",
+        "RefreshButton": "Refresh"
     },
     "fr": {
         "App.blockMode": "Block in French",
