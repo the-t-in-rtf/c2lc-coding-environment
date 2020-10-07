@@ -143,3 +143,15 @@ test('Forward move should not create a path segment, when drawingEnabled is fals
     (expect(new CharacterState(0, 0, 90, []).forward(100, false).forward(200, false)): any)
         .toHaveCharacterState(300, 0, 90, []);
 });
+
+test('Refresh method should reset path property', () => {
+    (expect(new CharacterState(0, 0, 90, [{x1: 0, y1: 0, x2: 100, y2: 100}]).refresh()): any)
+        .toHaveCharacterState(0, 0, 90, []);
+    (expect(new CharacterState(100, 100, 180, [
+        {x1: 0, y1: 0, x2: 100, y2: 100},
+        {x1: 100, y1: 100, x2: 200, y2: 200}
+    ]).refresh()): any)
+        .toHaveCharacterState(100, 100, 180, []);
+    (expect(new CharacterState(200, 200, 180, []).refresh()): any)
+        .toHaveCharacterState(200, 200, 180, []);
+})
