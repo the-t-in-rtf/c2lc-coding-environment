@@ -5,5 +5,27 @@
     box-sizing: border-box;
     width: 100%;
     height: auto;
-    border: 0.1rem solid #555;
+    border-width: $c2lc-scene-border-width $c2lc-scene-border-width 0 $c2lc-scene-border-width;
+    border-color: $c2lc-scene-border-color;
+    border-style: $c2lc-scene-border-style;
+}
+
+.Scene svg {
+    overflow: visible;
+}
+
+.Scene__grid-line {
+    stroke: #DDD;
+    stroke-width: 1;
+}
+
+.Scene__grid-label {
+    fill: #555;
+    font: bold 1rem sans-serif;
+}
+
+.Scene__path-line {
+    stroke: #222;
+    stroke-width: 3;
+    stroke-linecap: round;
 }
