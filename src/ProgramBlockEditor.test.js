@@ -155,7 +155,7 @@ function getExpandAddNodeToggleSwitch(programBlockEditorWrapper) {
 }
 
 function getProgramSequenceContainer(programBlockEditorWrapper) {
-    return programBlockEditorWrapper.find('.ProgramBlockEditor__program-sequence-scroll-container');
+    return programBlockEditorWrapper.find('.ProgramBlockEditor__program-sequence-scroll-container').get(0);
 }
 
 describe('Program rendering', () => {
@@ -221,16 +221,16 @@ describe('The expand add node toggle switch should be configurable via propertie
 describe("Add nodes", () => {
     test("All aria labels for add buttons should be correct when no action is selected.", () => {
         expect.assertions(3);
-    
+
         const { wrapper } = createMountProgramBlockEditor({
             program: ['forward', 'right'],
-            addNodeExpandedMode: true            
+            addNodeExpandedMode: true
         });
-        
+
         const leadingAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
         const middleAddButton   = getAddNodeButtonAtPosition(wrapper, 1);
         const trailingAddButton = getAddNodeButtonAtPosition(wrapper, 2);
-        
+
         [leadingAddButton, middleAddButton, trailingAddButton].forEach((button)=> {
             const ariaLabel = button.getDOMNode().getAttribute('aria-label');
             expect(ariaLabel).toBe("Make sure an action is selected");
@@ -239,17 +239,17 @@ describe("Add nodes", () => {
 
     test("All aria labels for add buttons should be correct when an action is selected.", () => {
         expect.assertions(3);
-    
+
         const { wrapper } = createMountProgramBlockEditor({
             program: ['forward', 'right'],
             selectedAction: 'left',
             addNodeExpandedMode: true
         });
-        
+
         const leadingAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
         const middleAddButton   = getAddNodeButtonAtPosition(wrapper, 1);
         const trailingAddButton = getAddNodeButtonAtPosition(wrapper, 2);
-        
+
         // Add to the begining when an action is selected
         const addAtBeginningLabel = leadingAddButton.getDOMNode().getAttribute('aria-label');
         expect(addAtBeginningLabel).toBe("Add selected action left to the beginning of the program");
@@ -265,14 +265,14 @@ describe("Add nodes", () => {
 
     test("The aria label for the add button should be correct when there are no program blocks and an action is selected.", () => {
         expect.assertions(1);
-    
+
         const { wrapper } = createMountProgramBlockEditor({
             program: [],
             selectedAction: 'left'
         });
-        
+
         const soleAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
-        
+
         // Add to the end when an action is selected
         const addButtonLabel = soleAddButton.getDOMNode().getAttribute('aria-label');
         expect(addButtonLabel).toBe("Add selected action left to the end of the program");
@@ -281,13 +281,13 @@ describe("Add nodes", () => {
 
     test("The aria label for the add button should be correct when there are no program blocks and no action is selected.", () => {
         expect.assertions(1);
-    
+
         const { wrapper } = createMountProgramBlockEditor({
             program: []
         });
-        
+
         const soleAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
-        
+
         // Add to the end when an action is selected
         const addButtonLabel = soleAddButton.getDOMNode().getAttribute('aria-label');
         expect(addButtonLabel).toBe("Make sure an action is selected");
@@ -316,22 +316,22 @@ describe('Delete All button', () => {
 describe("Add program steps", () => {
     test('We should be able to add a step at the end of the program', () => {
         expect.assertions(4);
-    
+
         // Given a program of 5 forwards and 'left' as the selected command
         const { wrapper, audioManagerMock, mockChangeProgramHandler } = createMountProgramBlockEditor({
             program: ['forward', 'forward', 'forward', 'forward', 'forward'],
             selectedAction: 'left'
         });
-    
+
         // When 'left' is added to the end of the program
         // (The index is zero because the add nodes aren't expanded).
         const addNode = getAddNodeButtonAtPosition(wrapper, 0);
         addNode.simulate('click');
-    
+
         // Then the 'add' sound should be played
         expect(audioManagerMock.playSound.mock.calls.length).toBe(1);
         expect(audioManagerMock.playSound.mock.calls[0][0]).toBe('add');
-    
+
         // And the program should be changed
         expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
         expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(
@@ -352,11 +352,11 @@ describe("Add program steps", () => {
         // (The index is zero because the add nodes aren't expanded).
         const addNode = getAddNodeButtonAtPosition(wrapper, 0);
         addNode.simulate('click');
-    
+
         // Then the 'add' sound should be played
         expect(audioManagerMock.playSound.mock.calls.length).toBe(1);
         expect(audioManagerMock.playSound.mock.calls[0][0]).toBe('add');
-    
+
         // And the program should be changed
         expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
         expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(
@@ -365,22 +365,22 @@ describe("Add program steps", () => {
 
     test('We should be able to add a step in the middle of the program', () => {
         expect.assertions(4);
-    
+
         // Given a program of 5 forwards and 'left' as the selected command
         const { wrapper, audioManagerMock, mockChangeProgramHandler } = createMountProgramBlockEditor({
             program: ['forward', 'forward', 'forward', 'forward', 'forward'],
             selectedAction: 'left',
             addNodeExpandedMode: true
         });
-    
+
         // When 'left' is added to the middle of the program
         const addNode = getAddNodeButtonAtPosition(wrapper, 3);
         addNode.simulate('click');
-    
+
         // Then the 'add' sound should be played
         expect(audioManagerMock.playSound.mock.calls.length).toBe(1);
         expect(audioManagerMock.playSound.mock.calls[0][0]).toBe('add');
-    
+
         // And the program should be changed
         expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
         expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(
@@ -570,7 +570,7 @@ describe('Autoscroll to show the active program step', () => {
         expect.assertions(3);
         const mockScrollTo = jest.fn();
         const { wrapper } = createMountProgramBlockEditor();
-        getProgramSequenceContainer(wrapper).get(0).ref.current.scrollTo = mockScrollTo;
+        getProgramSequenceContainer(wrapper).ref.current.scrollTo = mockScrollTo;
 
         wrapper.setProps({
             activeProgramStepNum: 0
@@ -583,29 +583,34 @@ describe('Autoscroll to show the active program step', () => {
     });
     test('When active program step is outside of the program sequence container', () => {
         const { wrapper } = createMountProgramBlockEditor();
-        const mockRef = {
-            getBoundingClientRect : jest.fn(() => ({
-                right : 400
-            }))
-        };
+
         const programSequenceContainer = getProgramSequenceContainer(wrapper);
-        const activeProgramStep = getProgramBlockAtPosition(wrapper, 2);
-        // activeProgramStep.get(0).getBoundingClientRect = jest.fn(() => ({
-        //     right: 400
-        // }));
-        programSequenceContainer.get(0).ref.current.getBoundingClientRect = jest.fn(() => ({
-            right : 300
-        }));
-        console.log(programSequenceContainer.get(0).ref.current.getBoundingClientRect());
-        console.log(activeProgramStep.get(0).ref);
-        // console.log(activeProgramStep.get(0).getBoundingClientRect);
-        // console.log(activeProgramStep.get(0).ref.getBoundingClientRect)
+        programSequenceContainer.ref.current = {
+            getBoundingClientRect: () => {
+                return {
+                    left : 100
+                };
+            },
+            clientWidth: 1000,
+            scrollLeft: 200
+        };
+
+        const activeProgramStep = getProgramBlockAtPosition(wrapper, 3);
+        // $FlowFixMe: Flow complains that getBoundingClientRect is not writable
+        activeProgramStep.getDOMNode().getBoundingClientRect = () => {
+            return {
+                left: 2000,
+                right: 2300
+            };
+        };
+
         wrapper.setProps({
             activeProgramStepNum: 3
         });
-        //console.log(mockProgramSequenceContainer.get(0).ref.current.scrollLeft);
-    })
-})
+
+        expect(programSequenceContainer.ref.current.scrollLeft).toBe(200 + 2300 - 100 - 1000);
+    });
+});
 
 test('The editor scrolls when a step is added to the end of the program', () => {
     expect.assertions(8);

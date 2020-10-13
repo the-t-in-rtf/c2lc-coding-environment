@@ -68,22 +68,25 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
-    scrollProgramSequenceArea(activeProgramStep) {
-        if (
-            activeProgramStep.dataset.stepnumber === '0' &&
-            this.programSequenceContainerRef.current) {
-                this.programSequenceContainerRef.current.scrollTo(0,0);
-        } else if(
-            activeProgramStep.dataset.stepnumber !== '0' &&
-            this.programSequenceContainerRef.current) {
-                const programSequenceContainerRight = this.programSequenceContainerRef.current.getBoundingClientRect().right;
-                const activeProgramStepRight = activeProgramStep.getBoundingClientRect().right;
-                if (
-                    programSequenceContainerRight < activeProgramStepRight &&
-                    this.programSequenceContainerRef.current) {
-                        this.programSequenceContainerRef.current.scrollLeft
-                            += (activeProgramStepRight - programSequenceContainerRight);
+    scrollProgramSequenceContainer(toElement) {
+        if (this.programSequenceContainerRef.current) {
+            const containerElem = this.programSequenceContainerRef.current;
+            if (toElement.dataset.stepnumber === '0') {
+                containerElem.scrollTo(0, 0);
+            } else {
+                const containerLeft = containerElem.getBoundingClientRect().left;
+                const containerWidth = containerElem.clientWidth;
+                const toElementLeft = toElement.getBoundingClientRect().left;
+                const toElementRight = toElement.getBoundingClientRect().right;
+
+                if (toElementRight > containerLeft + containerWidth) {
+                    // toElement is outside of the container, on the right
+                    containerElem.scrollLeft += toElementRight - containerLeft - containerWidth;
+                } else if (toElementLeft < containerLeft) {
+                    // toElement is outside of the container, on the left
+                    containerElem.scrollLeft -= containerLeft - toElementLeft;
                 }
+            }
         }
     }
 
@@ -118,7 +121,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.props.onChangeActionPanelStepIndex(null);
     }
 
-    setCommandBlockRef = (programStepNumber: number, element: ?HTMLElement) => {
+    setCommandBlockRef(programStepNumber: number, element: ?HTMLElement) {
         if (element) {
             this.commandBlockRefs.set(programStepNumber, element);
         } else {
@@ -279,7 +282,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             <CommandBlock
                 commandName={command}
                 // $FlowFixMe: Limit to specific types of ref.
-                ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
+                ref={ (element) => { this.setCommandBlockRef(programStepNumber, element) } }
                 key={`${programStepNumber}-${command}`}
                 data-stepnumber={programStepNumber}
                 data-command={command}
@@ -471,7 +474,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         if (this.props.activeProgramStepNum != null) {
             const element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
             if (element) {
-                this.scrollProgramSequenceArea(element);
+                this.scrollProgramSequenceContainer(element);
             }
         }
         if (this.props.actionPanelStepIndex != null) {
