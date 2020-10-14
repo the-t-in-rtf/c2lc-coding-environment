@@ -581,9 +581,13 @@ describe('Autoscroll to show the active program step', () => {
         expect(mockScrollTo.mock.calls[0][0]).toBe(0);
         expect(mockScrollTo.mock.calls[0][1]).toBe(0);
     });
-    test('When active program step is outside of the program sequence container', () => {
+    test('When active program block is outside of the container, on the right', () => {
+        expect.assertions(1);
+
         const { wrapper } = createMountProgramBlockEditor();
 
+        // Set the container ref object to a custom object with just enough
+        // of the DOM API implemented to support the scroll logic
         const programSequenceContainer = getProgramSequenceContainer(wrapper);
         programSequenceContainer.ref.current = {
             getBoundingClientRect: () => {
@@ -595,20 +599,57 @@ describe('Autoscroll to show the active program step', () => {
             scrollLeft: 200
         };
 
-        const activeProgramStep = getProgramBlockAtPosition(wrapper, 3);
+        // Set the active block location
+        const activeProgramBlock = getProgramBlockAtPosition(wrapper, 3);
         // $FlowFixMe: Flow complains that getBoundingClientRect is not writable
-        activeProgramStep.getDOMNode().getBoundingClientRect = () => {
+        activeProgramBlock.getDOMNode().getBoundingClientRect = () => {
             return {
                 left: 2000,
                 right: 2300
             };
         };
 
+        // Trigger a scroll
         wrapper.setProps({
             activeProgramStepNum: 3
         });
 
         expect(programSequenceContainer.ref.current.scrollLeft).toBe(200 + 2300 - 100 - 1000);
+    });
+    test('When active program block is outside of the container, on the left', () => {
+        expect.assertions(1);
+
+        const { wrapper } = createMountProgramBlockEditor();
+
+        // Set the container ref object to a custom object with just enough
+        // of the DOM API implemented to support the scroll logic
+        const programSequenceContainer = getProgramSequenceContainer(wrapper);
+        programSequenceContainer.ref.current = {
+            getBoundingClientRect: () => {
+                return {
+                    left : 100
+                };
+            },
+            clientWidth: 1000,
+            scrollLeft: 2000
+        };
+
+        // Set the active block location
+        const activeProgramBlock = getProgramBlockAtPosition(wrapper, 3);
+        // $FlowFixMe: Flow complains that getBoundingClientRect is not writable
+        activeProgramBlock.getDOMNode().getBoundingClientRect = () => {
+            return {
+                left: -200,
+                right: -100
+            };
+        };
+
+        // Trigger a scroll
+        wrapper.setProps({
+            activeProgramStepNum: 3
+        });
+
+        expect(programSequenceContainer.ref.current.scrollLeft).toBe(2000 - 100 - 200);
     });
 });
 
