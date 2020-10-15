@@ -51,6 +51,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     focusCommandBlockIndex: ?number;
     focusAddNodeIndex: ?number;
     scrollToAddNodeIndex: ?number;
+    programSequenceContainerRef: { current: null | HTMLDivElement };
 
     constructor(props: ProgramBlockEditorProps) {
         super(props);
@@ -59,10 +60,33 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.focusCommandBlockIndex = null;
         this.focusAddNodeIndex = null;
         this.scrollToAddNodeIndex = null;
+        this.programSequenceContainerRef = React.createRef();
         this.state = {
             showConfirmDeleteAll : false,
             focusedActionPanelOptionName: null,
             replaceIsActive: false
+        }
+    }
+
+    scrollProgramSequenceContainer(toElement) {
+        if (this.programSequenceContainerRef.current) {
+            const containerElem = this.programSequenceContainerRef.current;
+            if (toElement.dataset.stepnumber === '0') {
+                containerElem.scrollTo(0, 0);
+            } else {
+                const containerLeft = containerElem.getBoundingClientRect().left;
+                const containerWidth = containerElem.clientWidth;
+                const toElementLeft = toElement.getBoundingClientRect().left;
+                const toElementRight = toElement.getBoundingClientRect().right;
+
+                if (toElementRight > containerLeft + containerWidth) {
+                    // toElement is outside of the container, on the right
+                    containerElem.scrollLeft += toElementRight - containerLeft - containerWidth;
+                } else if (toElementLeft < containerLeft) {
+                    // toElement is outside of the container, on the left
+                    containerElem.scrollLeft -= containerLeft - toElementLeft;
+                }
+            }
         }
     }
 
@@ -97,7 +121,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.props.onChangeActionPanelStepIndex(null);
     }
 
-    setCommandBlockRef = (programStepNumber: number, element: ?HTMLElement) => {
+    setCommandBlockRef(programStepNumber: number, element: ?HTMLElement) {
         if (element) {
             this.commandBlockRefs.set(programStepNumber, element);
         } else {
@@ -258,7 +282,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             <CommandBlock
                 commandName={command}
                 // $FlowFixMe: Limit to specific types of ref.
-                ref={ (element) => this.setCommandBlockRef(programStepNumber, element) }
+                ref={ (element) => { this.setCommandBlockRef(programStepNumber, element) } }
                 key={`${programStepNumber}-${command}`}
                 data-stepnumber={programStepNumber}
                 data-command={command}
@@ -409,7 +433,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         </div>
                     </h3>
                 </div>
-                <div className='ProgramBlockEditor__program-sequence-scroll-container' id='programSequenceContainer'>
+                <div className='ProgramBlockEditor__program-sequence-scroll-container' ref={this.programSequenceContainerRef}>
                     <div className='ProgramBlockEditor__program-sequence'>
                         <div className='ProgramBlockEditor__start-indicator'>
                             {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
@@ -450,7 +474,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         if (this.props.activeProgramStepNum != null) {
             const element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
             if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+                this.scrollProgramSequenceContainer(element);
             }
         }
         if (this.props.actionPanelStepIndex != null) {
