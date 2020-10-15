@@ -64,6 +64,7 @@ export default class App extends React.Component<{}, AppState> {
     toCommandPaletteNoticeId: string;
     audioManager: AudioManager;
     focusTrapManager: FocusTrapManager;
+    startingCharacterState: CharacterState;
 
     constructor(props: {}) {
         super(props);
