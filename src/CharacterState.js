@@ -74,13 +74,4 @@ export default class CharacterState {
             this.path
         );
     }
-
-    refresh(): CharacterState {
-        return new CharacterState(
-            this.xPos,
-            this.yPos,
-            this.directionDegrees,
-            []
-        );
-    }
 }
