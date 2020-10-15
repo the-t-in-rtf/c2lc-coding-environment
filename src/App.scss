@@ -46,20 +46,19 @@ body {
     border-color: $c2lc-scene-border-color;
     border-style: $c2lc-scene-border-style;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
 }
 
 .App__playButton-container {
     grid-column-start: 2;
     grid-column-end: 3;
-    padding-right: 1rem;
-    justify-self: end;
+    justify-self: center;
 }
 
 .App__refreshButton-container {
     grid-column-start: 3;
     grid-column-end: 4;
-    padding-left: 1rem;
+    margin-left: -1rem;
     justify-self: start;
 }
 
