@@ -72,9 +72,12 @@ export default class App extends React.Component<{}, AppState> {
             bluetoothApiIsAvailable: FeatureDetection.bluetoothApiIsAvailable()
         };
 
+        // Begin facing East
+        this.startingCharacterState = new CharacterState(0, 0, 90, []);
+
         this.state = {
             program: [],
-            characterState: new CharacterState(0, 0, 90, []), // Begin facing East
+            characterState: this.startingCharacterState,
             settings: {
                 language: 'en',
                 addNodeExpandedMode: true
@@ -304,10 +307,8 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     handleRefresh = () => {
-        this.setState((state) => {
-            return {
-                characterState: state.characterState.refresh()
-            };
+        this.setState({
+            characterState: this.startingCharacterState
         });
     }
 
@@ -371,9 +372,7 @@ export default class App extends React.Component<{}, AppState> {
                                 <div className='App__refreshButton-container'>
                                     <RefreshButton
                                         interpreterIsRunning={this.state.interpreterIsRunning}
-                                        disabled={
-                                            this.state.interpreterIsRunning
-                                        }
+                                        disabled={this.state.interpreterIsRunning}
                                         onClick={this.handleRefresh}
                                     />
                                 </div>
