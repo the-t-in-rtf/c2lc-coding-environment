@@ -20,6 +20,7 @@ import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
 import { programIsEmpty } from './ProgramUtils';
+import ProgramSerializer from './ProgramSerializer';
 import * as Utils from './Utils';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import messages from './messages.json';
@@ -93,6 +94,8 @@ export default class App extends React.Component<{}, AppState> {
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
+
+        this.programSerializer = new ProgramSerializer();
 
         this.interpreter.addCommandHandler(
             'forward',
@@ -430,7 +433,23 @@ export default class App extends React.Component<{}, AppState> {
         );
     }
 
+    componentDidMount() {
+        if (window.location.search !== null) {
+            const query = new URLSearchParams(window.location.search);
+            this.handleChangeProgram(
+                this.programSerializer.deserialize(query.get('program'))
+            );
+        }
+    }
+
     componentDidUpdate(prevProps: {}, prevState: AppState) {
+        if (this.state.program !== prevState.program) {
+            const encodedURI = encodeURI(this.programSerializer.serialize(this.state.program));
+            window.history.pushState(
+                {program: encodedURI},
+                '',
+                `?program=${encodedURI}`);
+        }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
         }
