@@ -88,7 +88,7 @@ export default class App extends React.Component<{}, AppState> {
             actionPanelStepIndex: null,
             sceneNumRows: 9,
             sceneNumColumns: 17,
-            sceneGridCellWidth: 100,
+            sceneGridCellWidth: 1,
             drawingEnabled: true
         };
 
