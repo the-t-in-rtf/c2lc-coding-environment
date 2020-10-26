@@ -16,16 +16,16 @@
 
 .Scene__grid-line {
     stroke: #DDD;
-    stroke-width: 1;
+    stroke-width: 0.01;
 }
 
 .Scene__grid-label {
     fill: #555;
-    font: bold 1rem sans-serif;
+    font: bold 0.01em sans-serif;
 }
 
 .Scene__path-line {
     stroke: #222;
-    stroke-width: 3;
+    stroke-width: 0.03;
     stroke-linecap: round;
 }
