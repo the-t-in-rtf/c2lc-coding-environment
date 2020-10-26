@@ -89,7 +89,7 @@ export default class CharacterState {
                 yOffset = -distance;
                 break;
             default:
-                // TODO
+                throw new Error('CharacterState direction must be an integer in range 0-7 inclusive');
         }
 
         const newPathSegment = {

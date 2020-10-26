@@ -3,8 +3,6 @@
 import CharacterState from './CharacterState';
 import * as C2lcMath from './C2lcMath';
 
-// TODO: Test CharacterState.getDirectionDegrees()
-
 // TODO: Figure out a better mechanism for using Jest expect.extend()
 //       with Flow than casting the expect() result to 'any'.
 
@@ -89,6 +87,17 @@ test('CharacterState.pathEquals', () => {
         ], 1)).toBeFalsy();
 });
 
+test('CharacterState.getDirectionDegrees() should return the direction in degrees', () => {
+    expect(new CharacterState(0, 0, 0, []).getDirectionDegrees()).toBe(0);
+    expect(new CharacterState(0, 0, 1, []).getDirectionDegrees()).toBe(45);
+    expect(new CharacterState(0, 0, 2, []).getDirectionDegrees()).toBe(90);
+    expect(new CharacterState(0, 0, 3, []).getDirectionDegrees()).toBe(135);
+    expect(new CharacterState(0, 0, 4, []).getDirectionDegrees()).toBe(180);
+    expect(new CharacterState(0, 0, 5, []).getDirectionDegrees()).toBe(225);
+    expect(new CharacterState(0, 0, 6, []).getDirectionDegrees()).toBe(270);
+    expect(new CharacterState(0, 0, 7, []).getDirectionDegrees()).toBe(315);
+});
+
 test('The character can move in 8 directions (N, NE, E, SE, S, SW, W, NW)', () => {
     // N
     (expect(new CharacterState(0, 0, 0, []).forward(100, true)): any)
@@ -165,4 +174,20 @@ test('Forward move should not create a path segment, when drawingEnabled is fals
         ]);
     (expect(new CharacterState(0, 0, 2, []).forward(100, false).forward(200, false)): any)
         .toHaveCharacterState(300, 0, 2, []);
+});
+
+test('When direction is not an integer in range 0-7, forward() should throw an Error', () => {
+    expect.assertions(3);
+
+    expect(() => {
+        (new CharacterState(0, 0, -1, [])).forward(1, false);
+    }).toThrowError(/^CharacterState direction must be an integer in range 0-7 inclusive$/);
+
+    expect(() => {
+        (new CharacterState(0, 0, 8, [])).forward(1, false);
+    }).toThrowError(/^CharacterState direction must be an integer in range 0-7 inclusive$/);
+
+    expect(() => {
+        (new CharacterState(0, 0, 0.5, [])).forward(1, false);
+    }).toThrowError(/^CharacterState direction must be an integer in range 0-7 inclusive$/);
 });
