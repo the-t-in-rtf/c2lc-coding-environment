@@ -20,7 +20,7 @@ import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
 import { programIsEmpty } from './ProgramUtils';
-import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
+import type { DeviceConnectionStatus, Program, RobotDriver, CommandName } from './types';
 import messages from './messages.json';
 import './App.scss';
 import './vendor/dragdroptouch/DragDropTouch.js';
@@ -61,6 +61,7 @@ export default class App extends React.Component<{}, AppState> {
     interpreter: Interpreter;
     audioManager: AudioManager;
     focusTrapManager: FocusTrapManager;
+    commandNames: Array<CommandName>;
 
     constructor(props: {}) {
         super(props);
@@ -90,64 +91,61 @@ export default class App extends React.Component<{}, AppState> {
             drawingEnabled: true
         };
 
+        this.commandNames = [
+            'forward1', 'forward2', 'forward3',
+            'left45', 'left90', 'left180',
+            'right45', 'right90', 'right180'
+        ];
+
         this.interpreter = new Interpreter(this.handleRunningStateChange);
 
-        this.interpreter.addCommandHandler(
-            'forward',
-            'moveCharacter',
-            () => {
-                this.audioManager.playSound('forward1');
-                this.setState((state) => {
-                    return {
-                        characterState: state.characterState.forward(
-                            state.sceneGridCellWidth,
-                            state.drawingEnabled
-                        )
-                    };
-                });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1750);
-                });
-            }
-        );
-
-        this.interpreter.addCommandHandler(
-            'left',
-            'moveCharacter',
-            () => {
-                this.audioManager.playSound('left45');
-                this.setState((state) => {
-                    return {
-                        characterState: state.characterState.turnLeft(1)
-                    };
-                });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1750);
-                });
-            }
-        );
-
-        this.interpreter.addCommandHandler(
-            'right',
-            'moveCharacter',
-            () => {
-                this.audioManager.playSound('right45');
-                this.setState((state) => {
-                    return {
-                        characterState: state.characterState.turnRight(1)
-                    };
-                });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1750);
-                });
-            }
-        );
+        for(let i=0; i<this.commandNames.length; i++) {
+            const commandName = this.commandNames[i];
+            this.interpreter.addCommandHandler(
+                commandName,
+                'moveCharacter',
+                () => {
+                    this.audioManager.playSound(commandName);
+                    switch (commandName.split(/([0-9]+)/)[0]) {
+                        case ('forward'):
+                            this.setState((state) => {
+                                return {
+                                    characterState: state.characterState.forward(
+                                        parseInt(commandName.split(/([0-9]+)/)[1]),
+                                        state.drawingEnabled
+                                    )
+                                };
+                            });
+                            break;
+                        case ('left'):
+                            this.setState((state) => {
+                                return {
+                                    characterState: state.characterState.turnLeft(
+                                        parseInt(commandName.split(/([0-9]+)/)[1]) / 45
+                                    )
+                                };
+                            });
+                            break;
+                        case ('right'):
+                            this.setState((state) => {
+                                return {
+                                    characterState: state.characterState.turnRight(
+                                        parseInt(commandName.split(/([0-9]+)/)[1]) / 45
+                                    )
+                                };
+                            });
+                            break;
+                        default:
+                            // TODO
+                    }
+                    return new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                            resolve();
+                        }, 1750);
+                    });
+                }
+            )
+        }
 
         // For FakeRobotDriver, replace with:
         // this.dashDriver = new FakeRobotDriver();
@@ -299,14 +297,9 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     renderCommandBlocks = () => {
-        const commandNames = [
-            'forward1', 'forward2', 'forward3',
-            'left45', 'left90', 'left180',
-            'right45', 'right90', 'right180'];
-
         const commandBlocks = [];
 
-        for (const [index, value] of commandNames.entries()) {
+        for (const [index, value] of this.commandNames.entries()) {
             commandBlocks.push(
                 <CommandPaletteCommand
                     key={`CommandBlock-${index}`}
