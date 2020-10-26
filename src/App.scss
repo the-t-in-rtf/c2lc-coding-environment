@@ -70,7 +70,7 @@ body {
 
 .App__command-palette {
     height: 100%;
-    padding: 1rem 0;
+    padding-top: 2rem;
     background-color: #F1F1F1;
     text-align: center;
 }
@@ -81,6 +81,11 @@ body {
     margin: 0 0 2rem 0;
 }
 
-.App__command-palette-command {
-    margin-top: 1rem;
+.App__command-palette-commands {
+    // width = #items * itemWidth + gapWidth * (#items - 1)
+    width: 14rem;
+    margin: 3rem auto 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 4rem);
+    grid-gap: 1rem;
 }
