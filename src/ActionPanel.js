@@ -36,7 +36,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
 
         const ariaLabelObj = {
             'stepNumber': this.props.pressedStepIndex + 1,
-            'stepName': this.props.intl.formatMessage({id:`CommandInfo.${currentStepName}`}),
+            'stepName': this.props.intl.formatMessage({id:`Command.${currentStepName}`}),
             'selectedCommandName': '',
             'previousStepInfo': '',
             'nextStepInfo': ''
@@ -46,7 +46,9 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
             ariaLabelObj['selectedCommandName'] =
                 this.props.intl.formatMessage(
                     { id: 'ActionPanel.selectedCommandName' },
-                    { selectedCommandName: this.props.selectedCommandName }
+                    { selectedCommandName:
+                        this.props.intl.formatMessage({id: `Command.${this.props.selectedCommandName}`})
+                    }
                 );
         }
 
@@ -54,8 +56,11 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
             const prevStepName = this.props.program[this.props.pressedStepIndex - 1];
             ariaLabelObj['previousStepInfo'] =
                 this.props.intl.formatMessage(
-                    { id: `CommandInfo.previousStep.${prevStepName}`},
-                    { previousStepNumber: this.props.pressedStepIndex }
+                    { id: `CommandInfo.previousStep.${prevStepName.split(/([0-9]+)/)[0]}`},
+                    {
+                        previousStepNumber: this.props.pressedStepIndex,
+                        command: this.props.intl.formatMessage({id: `Command.${prevStepName}`})
+                    }
                 );
         }
 
@@ -63,8 +68,11 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
             const nextStepName = this.props.program[this.props.pressedStepIndex + 1];
             ariaLabelObj['nextStepInfo'] =
                 this.props.intl.formatMessage(
-                    { id: `CommandInfo.nextStep.${nextStepName}`},
-                    { nextStepNumber: this.props.pressedStepIndex + 2}
+                    { id: `CommandInfo.nextStep.${nextStepName.split(/([0-9]+)/)[0]}`},
+                    {
+                        nextStepNumber: this.props.pressedStepIndex + 2,
+                        command: this.props.intl.formatMessage({id: `Command.${nextStepName}`})
+                    }
                 );
         }
 
