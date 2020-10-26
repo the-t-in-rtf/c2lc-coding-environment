@@ -73,7 +73,7 @@ export default class App extends React.Component<{}, AppState> {
 
         this.state = {
             program: [],
-            characterState: new CharacterState(0, 0, 90, []), // Begin facing East
+            characterState: new CharacterState(0, 0, 2, []), // Begin facing East
             settings: {
                 language: 'en',
                 addNodeExpandedMode: true
@@ -122,7 +122,7 @@ export default class App extends React.Component<{}, AppState> {
                 this.audioManager.playSound('left');
                 this.setState((state) => {
                     return {
-                        characterState: state.characterState.turnLeft(90)
+                        characterState: state.characterState.turnLeft(1)
                     };
                 });
                 return new Promise((resolve, reject) => {
@@ -140,7 +140,7 @@ export default class App extends React.Component<{}, AppState> {
                 this.audioManager.playSound('right');
                 this.setState((state) => {
                     return {
-                        characterState: state.characterState.turnRight(90)
+                        characterState: state.characterState.turnRight(1)
                     };
                 });
                 return new Promise((resolve, reject) => {
