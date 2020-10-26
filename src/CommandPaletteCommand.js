@@ -40,7 +40,7 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
         const pressed = this.props.commandName === this.props.selectedCommandName;
 
         const ariaLabel: string = this.props.intl.formatMessage({
-            id: `CommandPaletteCommand.${this.props.commandName}`
+            id: `Command.${this.props.commandName}`
         });
 
         return (

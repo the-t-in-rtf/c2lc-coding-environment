@@ -274,8 +274,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             hasActionPanelControl && 'ProgramBlockEditor__program-block--pressed'
         );
         const ariaLabel = this.props.intl.formatMessage(
-            { id: `ProgramBlockEditor.command.${command}` },
-            { index: programStepNumber + 1 }
+            { id: `ProgramBlockEditor.command.${command.split(/([0-9]+)/)[0]}` },
+            {
+                index: programStepNumber + 1 ,
+                command: this.props.intl.formatMessage({id: `Command.${command}`})
+            }
         );
 
         return (
@@ -302,21 +305,21 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             if (isEndOfProgramAddNode) {
                 return this.props.intl.formatMessage(
                     { id: 'ProgramBlockEditor.lastBlock' },
-                    { command: this.props.selectedAction }
+                    { command: this.props.intl.formatMessage({id: `Command.${this.props.selectedAction || ''}`}) }
                 );
             } else if (programStepNumber === 0) {
                 // The add node before the start of the program
                 return this.props.intl.formatMessage(
                     { id: 'ProgramBlockEditor.beginningBlock' },
-                    { command: this.props.selectedAction }
+                    { command: this.props.intl.formatMessage({id: `Command.${this.props.selectedAction || ''}`}) }
                 );
             } else {
                 return this.props.intl.formatMessage(
                     { id: 'ProgramBlockEditor.betweenBlocks' },
                     {
-                        command: this.props.selectedAction,
-                        prevCommand: `${programStepNumber}, ${this.props.program[programStepNumber-1]}`,
-                        postCommand: `${programStepNumber+1}, ${this.props.program[programStepNumber]}`
+                        command: this.props.intl.formatMessage({id: `Command.${this.props.selectedAction || ''}`}),
+                        prevCommand: `${programStepNumber}, ${this.props.intl.formatMessage({id: `Command.${this.props.program[programStepNumber-1]}`})}`,
+                        postCommand: `${programStepNumber+1}, ${this.props.intl.formatMessage({id: `Command.${this.props.program[programStepNumber]}`})}`
                     }
                 );
             }
