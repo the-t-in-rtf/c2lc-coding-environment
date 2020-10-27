@@ -104,53 +104,176 @@ export default class App extends React.Component<{}, AppState> {
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
 
-        for(let i=0; i<this.commandNames.length; i++) {
-            const commandName = this.commandNames[i];
-            this.interpreter.addCommandHandler(
-                commandName,
-                'moveCharacter',
-                () => {
-                    this.audioManager.playSound(commandName);
-                    switch (commandName.split(/([0-9]+)/)[0]) {
-                        case ('forward'):
-                            this.setState((state) => {
-                                return {
-                                    characterState: state.characterState.forward(
-                                        parseInt(commandName.split(/([0-9]+)/)[1]),
-                                        state.drawingEnabled
-                                    )
-                                };
-                            });
-                            break;
-                        case ('left'):
-                            this.setState((state) => {
-                                return {
-                                    characterState: state.characterState.turnLeft(
-                                        parseInt(commandName.split(/([0-9]+)/)[1]) / 45
-                                    )
-                                };
-                            });
-                            break;
-                        case ('right'):
-                            this.setState((state) => {
-                                return {
-                                    characterState: state.characterState.turnRight(
-                                        parseInt(commandName.split(/([0-9]+)/)[1]) / 45
-                                    )
-                                };
-                            });
-                            break;
-                        default:
-                            // TODO
-                    }
-                    return new Promise((resolve, reject) => {
-                        setTimeout(() => {
-                            resolve();
-                        }, 1750);
-                    });
-                }
-            )
-        }
+        this.interpreter.addCommandHandler(
+            'forward1',
+            'moveCharacter',
+            () => {
+                this.audioManager.playSound('forward1');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.forward(
+                            1,
+                            state.drawingEnabled
+                        )
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'forward2',
+            'moveCharacter',
+            () => {
+                this.audioManager.playSound('forward2');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.forward(
+                            2,
+                            state.drawingEnabled
+                        )
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'forward3',
+            'moveCharacter',
+            () => {
+                this.audioManager.playSound('forward3');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.forward(
+                            3,
+                            state.drawingEnabled
+                        )
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'left45',
+            'moveCharacter',
+            () => {
+                this.audioManager.playSound('left45');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnLeft(1)
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'left90',
+            'moveCharacter',
+            () => {
+                this.audioManager.playSound('left90');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnLeft(2)
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'left180',
+            'moveCharacter',
+            () => {
+                this.audioManager.playSound('left180');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnLeft(4)
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'right45',
+            'moveCharacter',
+            () => {
+                this.audioManager.playSound('right45');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnRight(1)
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'right90',
+            'moveCharacter',
+            () => {
+                this.audioManager.playSound('right90');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnRight(2)
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'right180',
+            'moveCharacter',
+            () => {
+                this.audioManager.playSound('right180');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnRight(4)
+                    };
+                });
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 1750);
+                });
+            }
+        );
 
         // For FakeRobotDriver, replace with:
         // this.dashDriver = new FakeRobotDriver();
