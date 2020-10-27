@@ -138,7 +138,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     // Handlers
 
     handleClickDeleteAll = () => {
-        this.props.audioManager.playSound('deleteAll');
+        this.props.audioManager.playAnnouncement('deleteAll');
         this.setState({
             showConfirmDeleteAll : true
         });
@@ -158,7 +158,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     };
 
     handleActionPanelDeleteStep = (index: number) => {
-        this.props.audioManager.playSound('delete');
+        this.props.audioManager.playAnnouncement('delete');
         // If there are steps following the one being deleted, focus the
         // next step. Otherwise, focus the final add node.
         if (index < this.props.program.length - 1) {
@@ -171,7 +171,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     };
 
     handleActionPanelReplaceStep = (index: number) => {
-        this.props.audioManager.playSound('replace');
+        this.props.audioManager.playAnnouncement('replace');
         if (this.props.selectedAction) {
             if (this.props.program[index] !== this.props.selectedAction) {
                 this.props.onChangeProgram(ProgramUtils.overwrite(this.props.program,
@@ -194,7 +194,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     };
 
     handleActionPanelMoveToPreviousStep = (index: number) => {
-        this.props.audioManager.playSound('moveToPrevious');
+        this.props.audioManager.playAnnouncement('moveToPrevious');
         if (this.props.program[index - 1] != null) {
             const previousStepIndex = index - 1;
             this.setState({
@@ -212,7 +212,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     };
 
     handleActionPanelMoveToNextStep = (index: number) => {
-        this.props.audioManager.playSound('moveToNext');
+        this.props.audioManager.playAnnouncement('moveToNext');
         if (this.props.program[index + 1] != null) {
             const nextStepIndex = index + 1;
             this.setState({
@@ -242,7 +242,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     };
 
     handleClickAddNode = (stepNumber: number) => {
-        this.props.audioManager.playSound('add');
+        this.props.audioManager.playAnnouncement('add');
         this.insertSelectedCommandIntoProgram(stepNumber);
     };
 

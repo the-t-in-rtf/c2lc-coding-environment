@@ -33,6 +33,10 @@ type AppContext = {
     bluetoothApiIsAvailable: boolean
 };
 
+type AppProps = {
+    movementDelay?: number
+};
+
 type AppSettings = {
     language: string,
     addNodeExpandedMode: boolean
@@ -56,7 +60,7 @@ type AppState = {
     drawingEnabled: boolean
 };
 
-export default class App extends React.Component<{}, AppState> {
+export default class App extends React.Component<AppProps, AppState> {
     appContext: AppContext;
     dashDriver: RobotDriver;
     interpreter: Interpreter;
@@ -64,7 +68,11 @@ export default class App extends React.Component<{}, AppState> {
     audioManager: AudioManager;
     focusTrapManager: FocusTrapManager;
 
-    constructor(props: {}) {
+    static defaultProps = {
+        movementDelay: 1000
+    }
+
+    constructor(props: AppProps) {
         super(props);
 
         this.appContext = {
@@ -98,19 +106,25 @@ export default class App extends React.Component<{}, AppState> {
             'forward',
             'moveCharacter',
             () => {
-                this.audioManager.playSound('forward');
+                // TODO: Enable announcements again.
+                // this.audioManager.playAnnouncement('forward');
+
                 this.setState((state) => {
+                    const newCharacterState = state.characterState.forward(
+                        state.sceneGridCellWidth,
+                        state.drawingEnabled
+                    );
+
+                    // We have to start the sound here because this is where we know the new character state.
+                    this.audioManager.playSoundForCharacterState(newCharacterState);
                     return {
-                        characterState: state.characterState.forward(
-                            state.sceneGridCellWidth,
-                            state.drawingEnabled
-                        )
+                        characterState: newCharacterState
                     };
                 });
                 return new Promise((resolve, reject) => {
                     setTimeout(() => {
                         resolve();
-                    }, 1750);
+                    }, this.props.movementDelay);
                 });
             }
         );
@@ -119,7 +133,8 @@ export default class App extends React.Component<{}, AppState> {
             'left',
             'moveCharacter',
             () => {
-                this.audioManager.playSound('left');
+                // TODO: Enable announcements again.
+                // this.audioManager.playAnnouncement('left');
                 this.setState((state) => {
                     return {
                         characterState: state.characterState.turnLeft(1)
@@ -128,7 +143,7 @@ export default class App extends React.Component<{}, AppState> {
                 return new Promise((resolve, reject) => {
                     setTimeout(() => {
                         resolve();
-                    }, 1750);
+                    }, this.props.movementDelay);
                 });
             }
         );
@@ -137,7 +152,8 @@ export default class App extends React.Component<{}, AppState> {
             'right',
             'moveCharacter',
             () => {
-                this.audioManager.playSound('right');
+                // TODO: Enable announcements again.
+                // this.audioManager.playAnnouncement('right');
                 this.setState((state) => {
                     return {
                         characterState: state.characterState.turnRight(1)
@@ -146,7 +162,7 @@ export default class App extends React.Component<{}, AppState> {
                 return new Promise((resolve, reject) => {
                     setTimeout(() => {
                         resolve();
-                    }, 1750);
+                    }, this.props.movementDelay);
                 });
             }
         );
@@ -186,7 +202,7 @@ export default class App extends React.Component<{}, AppState> {
 
     handleClickPlay = () => {
         this.interpreter.run(this.state.program).then(
-            () => {}, // Do nothing on successful resolution
+            () => { }, // Do nothing on successful resolution
             (error: Error) => {
                 console.log(error.name);
                 console.log(error.message);
@@ -222,7 +238,7 @@ export default class App extends React.Component<{}, AppState> {
 
     handleDashDisconnect = () => {
         this.setState({
-            dashConnectionStatus : 'notConnected'
+            dashConnectionStatus: 'notConnected'
         });
     };
 
@@ -250,7 +266,7 @@ export default class App extends React.Component<{}, AppState> {
         this.setState({ isDraggingCommand: false });
     };
 
-    handleRunningStateChange = ( interpreterRunningState : InterpreterRunningState) => {
+    handleRunningStateChange = (interpreterRunningState: InterpreterRunningState) => {
         this.setState({
             activeProgramStepNum: interpreterRunningState.activeStep,
             interpreterIsRunning: interpreterRunningState.isRunning
@@ -305,8 +321,8 @@ export default class App extends React.Component<{}, AppState> {
     render() {
         return (
             <IntlProvider
-                    locale={this.state.settings.language}
-                    messages={messages[this.state.settings.language]}>
+                locale={this.state.settings.language}
+                messages={messages[this.state.settings.language]}>
                 <div
                     onClick={this.handleRootClick}
                     onKeyDown={this.handleRootKeyDown}>
@@ -314,7 +330,7 @@ export default class App extends React.Component<{}, AppState> {
                         <Container>
                             <Row className='App__header-row'>
                                 <h1 className='App__app-heading'>
-                                    <FormattedMessage id='App.appHeading'/>
+                                    <FormattedMessage id='App.appHeading' />
                                 </h1>
                                 <div className='App__header-right'>
                                     <div className='App__audio-toggle-switch'>
@@ -325,7 +341,7 @@ export default class App extends React.Component<{}, AppState> {
                                     <DeviceConnectControl
                                         disabled={
                                             !this.appContext.bluetoothApiIsAvailable ||
-                                            this.state.dashConnectionStatus === 'connected' }
+                                            this.state.dashConnectionStatus === 'connected'}
                                         connectionStatus={this.state.dashConnectionStatus}
                                         onClickConnect={this.handleClickConnectDash}>
                                         <FormattedMessage id='App.connectToDash' />
@@ -338,7 +354,7 @@ export default class App extends React.Component<{}, AppState> {
                         {!this.appContext.bluetoothApiIsAvailable &&
                             <Row className='App__bluetooth-api-warning-section'>
                                 <Col>
-                                    <BluetoothApiWarning/>
+                                    <BluetoothApiWarning />
                                 </Col>
                             </Row>
                         }
@@ -354,8 +370,8 @@ export default class App extends React.Component<{}, AppState> {
                                     <PlayButton
                                         interpreterIsRunning={this.state.interpreterIsRunning}
                                         disabled={
-                                                this.state.interpreterIsRunning ||
-                                                programIsEmpty(this.state.program)}
+                                            this.state.interpreterIsRunning ||
+                                            programIsEmpty(this.state.program)}
                                         onClick={this.handleClickPlay}
                                     />
                                 </div>
@@ -363,7 +379,7 @@ export default class App extends React.Component<{}, AppState> {
                                     <PenDownToggleSwitch
                                         className='App__penDown-toggle-switch'
                                         value={this.state.drawingEnabled}
-                                        onChange={this.handleTogglePenDown}/>
+                                        onChange={this.handleTogglePenDown} />
                                 </div>
                             </div>
                         </div>
@@ -380,7 +396,7 @@ export default class App extends React.Component<{}, AppState> {
                                             audioManager={this.audioManager}
                                             onChange={this.handleCommandFromCommandPalette}
                                             onDragStart={this.handleDragStartCommand}
-                                            onDragEnd={this.handleDragEndCommand}/>
+                                            onDragEnd={this.handleDragEndCommand} />
                                     </div>
                                     <div className='App__command-palette-command'>
                                         <CommandPaletteCommand
@@ -389,7 +405,7 @@ export default class App extends React.Component<{}, AppState> {
                                             audioManager={this.audioManager}
                                             onChange={this.handleCommandFromCommandPalette}
                                             onDragStart={this.handleDragStartCommand}
-                                            onDragEnd={this.handleDragEndCommand}/>
+                                            onDragEnd={this.handleDragEndCommand} />
                                     </div>
                                     <div className='App__command-palette-command'>
                                         <CommandPaletteCommand
@@ -398,7 +414,7 @@ export default class App extends React.Component<{}, AppState> {
                                             audioManager={this.audioManager}
                                             onChange={this.handleCommandFromCommandPalette}
                                             onDragStart={this.handleDragStartCommand}
-                                            onDragEnd={this.handleDragEndCommand}/>
+                                            onDragEnd={this.handleDragEndCommand} />
                                     </div>
                                 </div>
                             </Col>
@@ -425,7 +441,7 @@ export default class App extends React.Component<{}, AppState> {
                 <DashConnectionErrorModal
                     show={this.state.showDashConnectionError}
                     onCancel={this.handleCancelDashConnection}
-                    onRetry={this.handleClickConnectDash}/>
+                    onRetry={this.handleClickConnectDash} />
             </IntlProvider>
         );
     }
