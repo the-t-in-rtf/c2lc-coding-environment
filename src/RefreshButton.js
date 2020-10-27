@@ -9,7 +9,6 @@ import './RefreshButton.scss';
 
 type RefreshButtonProps = {
     intl: IntlShape,
-    interpreterIsRunning: boolean,
     disabled: boolean,
     onClick: () => void
 };
@@ -19,9 +18,7 @@ class RefreshButton extends React.Component<RefreshButtonProps, {}> {
         return (
             <AriaDisablingButton
                 aria-label={`${this.props.intl.formatMessage({id:'RefreshButton'})}`}
-                className={this.props.interpreterIsRunning ?
-                    'RefreshButton RefreshButton--pressed' :
-                    'RefreshButton'}
+                className='RefreshButton'
                 disabledClassName='RefreshButton--disabled'
                 disabled={this.props.disabled}
                 onClick={this.props.onClick}

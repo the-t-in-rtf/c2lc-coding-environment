@@ -11,7 +11,6 @@ import RefreshButton from './RefreshButton';
 configure({ adapter: new Adapter()});
 
 const defaultRefreshButtonProps = {
-    interpreterIsRunning: false,
     disabled: false
 };
 
@@ -43,28 +42,6 @@ function getRefreshButton(refreshButtonWrapper) {
     return refreshButtonWrapper.find(AriaDisablingButton)
         .filter('.RefreshButton');
 }
-
-describe('The Refresh button class is changed when the program is running', () => {
-    describe('Given the program is running', () => {
-        test('Then the Refresh button should have the pressed class', () => {
-            expect.assertions(1);
-            const wrapper = createShallowRefreshButton({
-                interpreterIsRunning: true
-            });
-            expect(getRefreshButton(wrapper).hasClass('RefreshButton--pressed')).toBe(true);
-        })
-    });
-
-    describe('Given the program is not running', () => {
-        test('Then the Refresh button should not have the pressed class', () => {
-            expect.assertions(1);
-            const wrapper = createShallowRefreshButton({
-                interpreterIsRunning: false
-            });
-            expect(getRefreshButton(wrapper).hasClass('RefreshButton--pressed')).toBe(false);
-        })
-    });
-});
 
 describe('The Refresh button can be disabled', () => {
     describe('Given disabled is true', () => {
