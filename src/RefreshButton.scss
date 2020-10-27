@@ -5,17 +5,8 @@
     height: 1.7rem;
 }
 
-button.btn.RefreshButton--disabled {
-    background-color: #FFF;
-    cursor: default;
-}
-
 button.btn.RefreshButton svg {
     stroke: #000;
-}
-
-button.btn.RefreshButton--disabled svg {
-    stroke: $c2lc-disabled-color;
 }
 
 button.btn.RefreshButton {
@@ -38,6 +29,7 @@ button.btn.RefreshButton.RefreshButton--disabled:active:focus {
 button.btn.RefreshButton.RefreshButton--disabled,
 button.btn.RefreshButton.RefreshButton--disabled:active:focus {
     background-color: #FFF;
+    cursor: default;
 }
 
 button.btn.RefreshButton--disabled svg {
