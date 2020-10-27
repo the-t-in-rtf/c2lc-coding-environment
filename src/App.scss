@@ -46,7 +46,7 @@ body {
     border-color: $c2lc-scene-border-color;
     border-style: $c2lc-scene-border-style;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
 }
 
 .App__playButton-container {
@@ -55,10 +55,17 @@ body {
     justify-self: center;
 }
 
-.App__penDown-toggle-switch-container {
-    display: flex;
+.App__refreshButton-container {
     grid-column-start: 3;
     grid-column-end: 4;
+    margin-left: -1rem;
+    justify-self: start;
+}
+
+.App__penDown-toggle-switch-container {
+    display: flex;
+    grid-column-start: 4;
+    grid-column-end: 5;
     justify-self: end;
     align-items: center;
     padding-right: 1rem;
