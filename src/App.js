@@ -74,11 +74,11 @@ export default class App extends React.Component<{}, AppState> {
         };
 
         // Begin facing East
-        this.startingCharacterState = new CharacterState(0, 0, 90, []);
+        this.startingCharacterState = new CharacterState(0, 0, 2, []);
 
         this.state = {
             program: [],
-            characterState: this.startingCharacterState,
+            characterState: new CharacterState(0, 0, 2, []), // Begin facing East
             settings: {
                 language: 'en',
                 addNodeExpandedMode: true
@@ -93,7 +93,7 @@ export default class App extends React.Component<{}, AppState> {
             actionPanelStepIndex: null,
             sceneNumRows: 9,
             sceneNumColumns: 17,
-            sceneGridCellWidth: 100,
+            sceneGridCellWidth: 1,
             drawingEnabled: true
         };
 
@@ -127,7 +127,7 @@ export default class App extends React.Component<{}, AppState> {
                 this.audioManager.playSound('left');
                 this.setState((state) => {
                     return {
-                        characterState: state.characterState.turnLeft(90)
+                        characterState: state.characterState.turnLeft(1)
                     };
                 });
                 return new Promise((resolve, reject) => {
@@ -145,7 +145,7 @@ export default class App extends React.Component<{}, AppState> {
                 this.audioManager.playSound('right');
                 this.setState((state) => {
                     return {
-                        characterState: state.characterState.turnRight(90)
+                        characterState: state.characterState.turnRight(1)
                     };
                 });
                 return new Promise((resolve, reject) => {
@@ -372,7 +372,6 @@ export default class App extends React.Component<{}, AppState> {
                                 </div>
                                 <div className='App__refreshButton-container'>
                                     <RefreshButton
-                                        interpreterIsRunning={this.state.interpreterIsRunning}
                                         disabled={this.state.interpreterIsRunning}
                                         onClick={this.handleRefresh}
                                     />
