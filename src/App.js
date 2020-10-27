@@ -16,6 +16,7 @@ import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import PlayButton from './PlayButton';
 import ProgramBlockEditor from './ProgramBlockEditor';
+import RefreshButton from './RefreshButton';
 import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
@@ -63,6 +64,7 @@ export default class App extends React.Component<{}, AppState> {
     toCommandPaletteNoticeId: string;
     audioManager: AudioManager;
     focusTrapManager: FocusTrapManager;
+    startingCharacterState: CharacterState;
 
     constructor(props: {}) {
         super(props);
@@ -71,9 +73,12 @@ export default class App extends React.Component<{}, AppState> {
             bluetoothApiIsAvailable: FeatureDetection.bluetoothApiIsAvailable()
         };
 
+        // Begin facing East
+        this.startingCharacterState = new CharacterState(0, 0, 2, []);
+
         this.state = {
             program: [],
-            characterState: new CharacterState(0, 0, 2, []), // Begin facing East
+            characterState: this.startingCharacterState,
             settings: {
                 language: 'en',
                 addNodeExpandedMode: true
@@ -302,6 +307,12 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
+    handleRefresh = () => {
+        this.setState({
+            characterState: this.startingCharacterState
+        });
+    }
+
     render() {
         return (
             <IntlProvider
@@ -354,9 +365,15 @@ export default class App extends React.Component<{}, AppState> {
                                     <PlayButton
                                         interpreterIsRunning={this.state.interpreterIsRunning}
                                         disabled={
-                                                this.state.interpreterIsRunning ||
-                                                programIsEmpty(this.state.program)}
+                                            this.state.interpreterIsRunning ||
+                                            programIsEmpty(this.state.program)}
                                         onClick={this.handleClickPlay}
+                                    />
+                                </div>
+                                <div className='App__refreshButton-container'>
+                                    <RefreshButton
+                                        disabled={this.state.interpreterIsRunning}
+                                        onClick={this.handleRefresh}
                                     />
                                 </div>
                                 <div className='App__penDown-toggle-switch-container'>
