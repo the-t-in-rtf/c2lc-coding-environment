@@ -274,7 +274,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             hasActionPanelControl && 'ProgramBlockEditor__program-block--pressed'
         );
         const ariaLabel = this.props.intl.formatMessage(
-            { id: `ProgramBlockEditor.command.${command.split(/([0-9]+)/)[0]}` },
+            { id: 'ProgramBlockEditor.command' },
             {
                 index: programStepNumber + 1 ,
                 command: this.props.intl.formatMessage({id: `Command.${command}`})

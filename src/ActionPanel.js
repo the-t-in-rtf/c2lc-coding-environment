@@ -56,7 +56,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
             const prevStepName = this.props.program[this.props.pressedStepIndex - 1];
             ariaLabelObj['previousStepInfo'] =
                 this.props.intl.formatMessage(
-                    { id: `CommandInfo.previousStep.${prevStepName.split(/([0-9]+)/)[0]}`},
+                    { id: 'CommandInfo.previousStep'},
                     {
                         previousStepNumber: this.props.pressedStepIndex,
                         command: this.props.intl.formatMessage({id: `Command.${prevStepName}`})
@@ -68,7 +68,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
             const nextStepName = this.props.program[this.props.pressedStepIndex + 1];
             ariaLabelObj['nextStepInfo'] =
                 this.props.intl.formatMessage(
-                    { id: `CommandInfo.nextStep.${nextStepName.split(/([0-9]+)/)[0]}`},
+                    { id: 'CommandInfo.nextStep'},
                     {
                         nextStepNumber: this.props.pressedStepIndex + 2,
                         command: this.props.intl.formatMessage({id: `Command.${nextStepName}`})
