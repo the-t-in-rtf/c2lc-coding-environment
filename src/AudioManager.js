@@ -60,7 +60,7 @@ export default class AudioManager {
 
     buildAnnouncementLookUpTable() {
         this.announcementLookUpTable = {};
-        for (const [key, value] of Object.entries(AnnouncementDefs)) {
+        for (const [key: string, value: string] of Object.entries(AnnouncementDefs)) {
             const player = new Player(value);
             player.toDestination();
             this.announcementLookUpTable[key] = player;
