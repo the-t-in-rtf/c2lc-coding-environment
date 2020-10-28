@@ -8,6 +8,7 @@ function generateId(prefix: string): string {
     return id;
 }
 
+/* istanbul ignore next */
 function makeDelayedPromise(timeMs: number): Promise<void> {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
