@@ -22,6 +22,7 @@ import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
 import { programIsEmpty } from './ProgramUtils';
 import type { DeviceConnectionStatus, Program, RobotDriver, CommandName } from './types';
+import * as Utils from './Utils';
 import messages from './messages.json';
 import './App.scss';
 import './vendor/dragdroptouch/DragDropTouch.js';
@@ -117,11 +118,7 @@ export default class App extends React.Component<{}, AppState> {
                         )
                     };
                 });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1750);
-                });
+                return Utils.makeDelayedPromise(1750);
             }
         );
 
@@ -138,11 +135,7 @@ export default class App extends React.Component<{}, AppState> {
                         )
                     };
                 });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1750);
-                });
+                return Utils.makeDelayedPromise(1750);
             }
         );
 
@@ -159,11 +152,7 @@ export default class App extends React.Component<{}, AppState> {
                         )
                     };
                 });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1750);
-                });
+                return Utils.makeDelayedPromise(1750);
             }
         );
 
@@ -177,11 +166,7 @@ export default class App extends React.Component<{}, AppState> {
                         characterState: state.characterState.turnLeft(1)
                     };
                 });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1750);
-                });
+                return Utils.makeDelayedPromise(1750);
             }
         );
 
@@ -195,11 +180,7 @@ export default class App extends React.Component<{}, AppState> {
                         characterState: state.characterState.turnLeft(2)
                     };
                 });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1750);
-                });
+                return Utils.makeDelayedPromise(1750);
             }
         );
 
@@ -213,11 +194,7 @@ export default class App extends React.Component<{}, AppState> {
                         characterState: state.characterState.turnLeft(4)
                     };
                 });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1750);
-                });
+                return Utils.makeDelayedPromise(1750);
             }
         );
 
@@ -231,11 +208,7 @@ export default class App extends React.Component<{}, AppState> {
                         characterState: state.characterState.turnRight(1)
                     };
                 });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1750);
-                });
+                return Utils.makeDelayedPromise(1750);
             }
         );
 
@@ -249,11 +222,7 @@ export default class App extends React.Component<{}, AppState> {
                         characterState: state.characterState.turnRight(2)
                     };
                 });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1750);
-                });
+                return Utils.makeDelayedPromise(1750);
             }
         );
 
@@ -267,11 +236,7 @@ export default class App extends React.Component<{}, AppState> {
                         characterState: state.characterState.turnRight(4)
                     };
                 });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, 1750);
-                });
+                return Utils.makeDelayedPromise(1750);
             }
         );
 
