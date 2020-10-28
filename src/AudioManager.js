@@ -1,40 +1,39 @@
 // @flow
 
 // TODO: Add flow typed definitions as needed for Tone.js classes used.
-import { Midi, Panner, Player, Sampler} from "tone";
-import CharacterState from "./CharacterState";
-import type {AnnouncedSoundName} from "./types"
+import { Midi, Panner, Player, Sampler } from 'tone';
+import CharacterState from './CharacterState';
+import type {AnnouncedSoundName} from './types';
 
 type AnnouncementLookupTable = {
-    forward: typeof Player,
-    left: typeof Player,
-    right: typeof Player,
-    add: typeof Player,
-    deleteAll: typeof Player,
-    delete: typeof Player,
-    moveToPrevious: typeof Player,
-    moveToNext: typeof Player,
-    replace: typeof Player
+    forward: Player,
+    left: Player,
+    right: Player,
+    add: Player,
+    deleteAll: Player,
+    delete: Player,
+    moveToPrevious: Player,
+    moveToNext: Player,
+    replace: Player
 }
 
-const AnnouncementDefs = {
-    forward: '/audio/Move.wav',
-    left: '/audio/TurnLeft.wav',
-    right: '/audio/TurnRight.wav',
-    add: './audio/AddMovement.wav',
-    deleteAll: '/audio/DeleteAll.wav',
-    delete: '/audio/DeleteMovement.wav',
-    moveToPrevious: '/audio/MoveToLeft.wav',
-    moveToNext: '/audio/MoveToRight.wav',
-    replace: '/audio/ReplaceMovement.wav'
-}
-
+const AnnouncementDefs = new Map<string, string>([
+    ['forward', '/audio/Move.wav'],
+    ['left', '/audio/TurnLeft.wav'],
+    ['right', '/audio/TurnRight.wav'],
+    ['add', './audio/AddMovement.wav'],
+    ['deleteAll', '/audio/DeleteAll.wav'],
+    ['delete', '/audio/DeleteMovement.wav'],
+    ['moveToPrevious', '/audio/MoveToLeft.wav'],
+    ['moveToNext', '/audio/MoveToRight.wav'],
+    ['replace', '/audio/ReplaceMovement.wav']
+]);
 
 export default class AudioManager {
     audioEnabled: boolean;
     announcementLookUpTable: AnnouncementLookupTable;
-    panner: typeof Panner;
-    sampler: typeof Sampler;
+    panner: Panner;
+    sampler: Sampler;
 
     constructor(audioEnabled: boolean) {
         this.audioEnabled = audioEnabled;
@@ -60,11 +59,11 @@ export default class AudioManager {
 
     buildAnnouncementLookUpTable() {
         this.announcementLookUpTable = {};
-        for (const [key: string, value: string] of Object.entries(AnnouncementDefs)) {
+        AnnouncementDefs.forEach((value, key) => {
             const player = new Player(value);
             player.toDestination();
             this.announcementLookUpTable[key] = player;
-        }
+        });
     }
 
     playAnnouncement(soundName: AnnouncedSoundName) {
