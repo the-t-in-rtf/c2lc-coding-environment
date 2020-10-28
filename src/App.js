@@ -21,7 +21,7 @@ import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
 import { programIsEmpty } from './ProgramUtils';
-import type { DeviceConnectionStatus, Program, RobotDriver, CommandName } from './types';
+import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import * as Utils from './Utils';
 import messages from './messages.json';
 import './App.scss';
@@ -63,7 +63,6 @@ export default class App extends React.Component<{}, AppState> {
     interpreter: Interpreter;
     audioManager: AudioManager;
     focusTrapManager: FocusTrapManager;
-    commandNames: Array<CommandName>;
     startingCharacterState: CharacterState;
 
     constructor(props: {}) {
@@ -96,12 +95,6 @@ export default class App extends React.Component<{}, AppState> {
             sceneGridCellWidth: 1,
             drawingEnabled: true
         };
-
-        this.commandNames = [
-            'forward1', 'forward2', 'forward3',
-            'left45', 'left90', 'left180',
-            'right45', 'right90', 'right180'
-        ];
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
 
@@ -390,9 +383,14 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     renderCommandBlocks = () => {
+        const commandNames = [
+            'forward1', 'forward2', 'forward3',
+            'left45', 'left90', 'left180',
+            'right45', 'right90', 'right180'
+        ];
         const commandBlocks = [];
 
-        for (const [index, value] of this.commandNames.entries()) {
+        for (const [index, value] of commandNames.entries()) {
             commandBlocks.push(
                 <CommandPaletteCommand
                     key={`CommandBlock-${index}`}
