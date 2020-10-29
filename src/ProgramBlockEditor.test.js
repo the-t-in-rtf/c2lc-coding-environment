@@ -238,7 +238,7 @@ describe("Add nodes", () => {
     });
 
     test("All aria labels for add buttons should be correct when an action is selected.", () => {
-        //expect.assertions(3);
+        expect.assertions(3);
 
         const { wrapper } = createMountProgramBlockEditor({
             program: ['forward1', 'right45'],
