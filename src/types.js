@@ -1,6 +1,9 @@
 // @flow
 
-export type CommandName = 'forward' | 'left' | 'right';
+export type CommandName =
+    'forward1' | 'forward2' | 'forward3' |
+    'left45' | 'left90' | 'left180' |
+    'right45' | 'right90' | 'right180';
 
 export type DeviceConnectionStatus = 'notConnected' | 'connecting' | 'connected';
 
