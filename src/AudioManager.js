@@ -1,6 +1,5 @@
 // @flow
 
-// TODO: Add flow typed definitions as needed for Tone.js classes used.
 import { Midi, Panner, Player, Sampler } from 'tone';
 import CharacterState from './CharacterState';
 import type {AnnouncedSoundName} from './types';
