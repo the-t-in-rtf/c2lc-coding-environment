@@ -1,27 +1,45 @@
 // @flow
 
 import type {Program} from './types';
+import ProgramParser from './ProgramParser';
 
 export default class ProgramSerializer {
-//    query: URLSearchParams;
-//    onProgramChange: (program: Program) => void;
+    programParser: ProgramParser;
 
-//     constructor(location: any, handleChangeProgram: (program: Program) => void) {
-//         this.query = new URLSearchParams(location.search);
-//         this.onProgramChange = handleChangeProgram;
-//     }
+    constructor() {
+        this.programParser = new ProgramParser();
+    }
+
     serialize(program: Program): string {
         let programURL = '';
         for (let i=0; i<program.length; i++) {
             switch(program[i]) {
-                case ('forward') :
-                    programURL += 'f';
+                case ('forward1') :
+                    programURL += 'f1';
                     break;
-                case ('left') :
-                    programURL += 'l'
+                case ('forward2') :
+                    programURL += 'f2';
                     break;
-                case ('right') :
-                    programURL += 'r'
+                case ('forward3') :
+                    programURL += 'f3';
+                    break;
+                case ('left45') :
+                    programURL += 'l45'
+                    break;
+                case ('left90') :
+                    programURL += 'l90'
+                    break;
+                case ('left180') :
+                    programURL += 'l180'
+                    break;
+                case ('right45') :
+                    programURL += 'r45'
+                    break;
+                case ('right90') :
+                    programURL += 'r90'
+                    break;
+                case ('right180') :
+                    programURL += 'r180'
                     break;
                 default:
                     break;
@@ -29,24 +47,9 @@ export default class ProgramSerializer {
         }
         return programURL;
     }
+
     deserialize(programURL: string): Program {
         const decodedProgramURL = decodeURI(programURL);
-        const program = [];
-        for (let i=0;i<decodedProgramURL.length; i++) {
-            switch(programURL.charAt(i)) {
-                case ('f') :
-                    program.push('forward');
-                    break;
-                case ('l') :
-                    program.push('left');
-                    break;
-                case ('r') :
-                    program.push('right');
-                    break;
-                default:
-                    break;
-            }
-        }
-        return program;
+        return this.programParser.parse(decodedProgramURL);
     }
 };
