@@ -434,11 +434,14 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidMount() {
-        if (window.location.search !== null) {
+        if (window.location.search != null) {
             const query = new URLSearchParams(window.location.search);
-            this.handleChangeProgram(
-                this.programSerializer.deserialize(query.get('program'))
-            );
+            const programQuery = query.get('program');
+            if (programQuery != null) {
+                this.handleChangeProgram(
+                    this.programSerializer.deserialize(programQuery)
+                );
+            }
         }
     }
 
