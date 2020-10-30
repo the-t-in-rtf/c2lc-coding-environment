@@ -5,9 +5,15 @@ import CharacterState from './CharacterState';
 import type {AnnouncedSoundName} from './types';
 
 type AnnouncementLookupTable = {
-    forward: Player,
-    left: Player,
-    right: Player,
+    forward1: Player,
+    forward2: Player,
+    forward3: Player,
+    left45: Player,
+    left90: Player,
+    left180: Player,
+    right45: Player,
+    right90: Player,
+    right180: Player,
     add: Player,
     deleteAll: Player,
     delete: Player,
@@ -16,10 +22,17 @@ type AnnouncementLookupTable = {
     replace: Player
 }
 
+
 const AnnouncementDefs = new Map<string, string>([
-    ['forward', '/audio/Move.wav'],
-    ['left', '/audio/TurnLeft.wav'],
-    ['right', '/audio/TurnRight.wav'],
+    ['forward1', '/audio/Move.wav'],
+    ['forward2', '/audio/Move.wav'],
+    ['forward3', '/audio/Move.wav'],
+    ['left45', '/audio/TurnLeft.wav'],
+    ['left90', '/audio/TurnLeft.wav'],
+    ['left180', '/audio/TurnLeft.wav'],
+    ['right45', '/audio/TurnRight.wav'],
+    ['right90', '/audio/TurnRight.wav'],
+    ['right180', '/audio/TurnRight.wav'],
     ['add', './audio/AddMovement.wav'],
     ['deleteAll', '/audio/DeleteAll.wav'],
     ['delete', '/audio/DeleteMovement.wav'],

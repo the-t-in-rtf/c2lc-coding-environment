@@ -16,12 +16,13 @@ import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
 import PlayButton from './PlayButton';
 import ProgramBlockEditor from './ProgramBlockEditor';
+import RefreshButton from './RefreshButton';
 import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
 import { programIsEmpty } from './ProgramUtils';
-import * as Utils from './Utils';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
+import * as Utils from './Utils';
 import messages from './messages.json';
 import './App.scss';
 import './vendor/dragdroptouch/DragDropTouch.js';
@@ -34,7 +35,7 @@ type AppContext = {
 };
 
 type AppProps = {
-    movementDelay?: number
+    movementDelay: number
 };
 
 type AppSettings = {
@@ -64,9 +65,9 @@ export default class App extends React.Component<AppProps, AppState> {
     appContext: AppContext;
     dashDriver: RobotDriver;
     interpreter: Interpreter;
-    toCommandPaletteNoticeId: string;
     audioManager: AudioManager;
     focusTrapManager: FocusTrapManager;
+    startingCharacterState: CharacterState;
 
     static defaultProps = {
         movementDelay: 1000
@@ -79,9 +80,12 @@ export default class App extends React.Component<AppProps, AppState> {
             bluetoothApiIsAvailable: FeatureDetection.bluetoothApiIsAvailable()
         };
 
+        // Begin facing East
+        this.startingCharacterState = new CharacterState(0, 0, 2, []);
+
         this.state = {
             program: [],
-            characterState: new CharacterState(0, 0, 2, []), // Begin facing East
+            characterState: this.startingCharacterState,
             settings: {
                 language: 'en',
                 addNodeExpandedMode: true
@@ -103,15 +107,14 @@ export default class App extends React.Component<AppProps, AppState> {
         this.interpreter = new Interpreter(this.handleRunningStateChange);
 
         this.interpreter.addCommandHandler(
-            'forward',
+            'forward1',
             'moveCharacter',
             () => {
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('forward');
-
+                // this.audioManager.playAnnouncement('forward1');
                 this.setState((state) => {
                     const newCharacterState = state.characterState.forward(
-                        state.sceneGridCellWidth,
+                        1,
                         state.drawingEnabled
                     );
 
@@ -121,57 +124,147 @@ export default class App extends React.Component<AppProps, AppState> {
                         characterState: newCharacterState
                     };
                 });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, this.props.movementDelay);
-                });
+                return Utils.makeDelayedPromise(this.props.movementDelay);
             }
         );
 
         this.interpreter.addCommandHandler(
-            'left',
+            'forward2',
             'moveCharacter',
             () => {
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('left');
+                // this.audioManager.playAnnouncement('forward2');
+                this.setState((state) => {
+                    const newCharacterState = state.characterState.forward(
+                        2,
+                        state.drawingEnabled
+                    );
+
+                    // We have to start the sound here because this is where we know the new character state.
+                    this.audioManager.playSoundForCharacterState(newCharacterState);
+                    return {
+                        characterState: newCharacterState
+                    };
+                });
+                return Utils.makeDelayedPromise(this.props.movementDelay);
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'forward3',
+            'moveCharacter',
+            () => {
+                // TODO: Enable announcements again.
+                // this.audioManager.playAnnouncement('forward3');
+                this.setState((state) => {
+                    const newCharacterState = state.characterState.forward(
+                        3,
+                        state.drawingEnabled
+                    );
+
+                    // We have to start the sound here because this is where we know the new character state.
+                    this.audioManager.playSoundForCharacterState(newCharacterState);
+                    return {
+                        characterState: newCharacterState
+                    };
+                });
+                return Utils.makeDelayedPromise(this.props.movementDelay);
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'left45',
+            'moveCharacter',
+            () => {
+                // TODO: Enable announcements again.
+                // this.audioManager.playAnnouncement('left45');
                 this.setState((state) => {
                     return {
                         characterState: state.characterState.turnLeft(1)
                     };
                 });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, this.props.movementDelay);
-                });
+                return Utils.makeDelayedPromise(this.props.movementDelay);
             }
         );
 
         this.interpreter.addCommandHandler(
-            'right',
+            'left90',
             'moveCharacter',
             () => {
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('right');
+                // this.audioManager.playAnnouncement('left90');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnLeft(2)
+                    };
+                });
+                return Utils.makeDelayedPromise(this.props.movementDelay);
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'left180',
+            'moveCharacter',
+            () => {
+                // TODO: Enable announcements again.
+                // this.audioManager.playAnnouncement('left180');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnLeft(4)
+                    };
+                });
+                return Utils.makeDelayedPromise(this.props.movementDelay);
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'right45',
+            'moveCharacter',
+            () => {
+                // TODO: Enable announcements again.
+                // this.audioManager.playAnnouncement('right45');
                 this.setState((state) => {
                     return {
                         characterState: state.characterState.turnRight(1)
                     };
                 });
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        resolve();
-                    }, this.props.movementDelay);
+                return Utils.makeDelayedPromise(this.props.movementDelay);
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'right90',
+            'moveCharacter',
+            () => {
+                // TODO: Enable announcements again.
+                // this.audioManager.playAnnouncement('right90');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnRight(2)
+                    };
                 });
+                return Utils.makeDelayedPromise(this.props.movementDelay);
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'right180',
+            'moveCharacter',
+            () => {
+                // TODO: Enable announcements again.
+                // this.audioManager.playAnnouncement('right180');
+                this.setState((state) => {
+                    return {
+                        characterState: state.characterState.turnRight(4)
+                    };
+                });
+                return Utils.makeDelayedPromise(this.props.movementDelay);
             }
         );
 
         // For FakeRobotDriver, replace with:
         // this.dashDriver = new FakeRobotDriver();
         this.dashDriver = new DashDriver();
-
-        this.toCommandPaletteNoticeId = Utils.generateId('toCommandPaletteNotice');
 
         this.audioManager = new AudioManager(this.state.audioEnabled);
 
@@ -202,7 +295,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
     handleClickPlay = () => {
         this.interpreter.run(this.state.program).then(
-            () => { }, // Do nothing on successful resolution
+            () => {}, // Do nothing on successful resolution
             (error: Error) => {
                 console.log(error.name);
                 console.log(error.message);
@@ -238,7 +331,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
     handleDashDisconnect = () => {
         this.setState({
-            dashConnectionStatus: 'notConnected'
+            dashConnectionStatus : 'notConnected'
         });
     };
 
@@ -266,7 +359,7 @@ export default class App extends React.Component<AppProps, AppState> {
         this.setState({ isDraggingCommand: false });
     };
 
-    handleRunningStateChange = (interpreterRunningState: InterpreterRunningState) => {
+    handleRunningStateChange = ( interpreterRunningState : InterpreterRunningState) => {
         this.setState({
             activeProgramStepNum: interpreterRunningState.activeStep,
             interpreterIsRunning: interpreterRunningState.isRunning
@@ -318,11 +411,41 @@ export default class App extends React.Component<AppProps, AppState> {
         });
     }
 
+    renderCommandBlocks = () => {
+        const commandNames = [
+            'forward1', 'forward2', 'forward3',
+            'left45', 'left90', 'left180',
+            'right45', 'right90', 'right180'
+        ];
+        const commandBlocks = [];
+
+        for (const [index, value] of commandNames.entries()) {
+            commandBlocks.push(
+                <CommandPaletteCommand
+                    key={`CommandBlock-${index}`}
+                    commandName={value}
+                    selectedCommandName={this.getSelectedCommandName()}
+                    audioManager={this.audioManager}
+                    onChange={this.handleCommandFromCommandPalette}
+                    onDragStart={this.handleDragStartCommand}
+                    onDragEnd={this.handleDragEndCommand}/>
+            )
+        }
+
+        return commandBlocks;
+    }
+
+    handleRefresh = () => {
+        this.setState({
+            characterState: this.startingCharacterState
+        });
+    }
+
     render() {
         return (
             <IntlProvider
-                locale={this.state.settings.language}
-                messages={messages[this.state.settings.language]}>
+                    locale={this.state.settings.language}
+                    messages={messages[this.state.settings.language]}>
                 <div
                     onClick={this.handleRootClick}
                     onKeyDown={this.handleRootKeyDown}>
@@ -330,7 +453,7 @@ export default class App extends React.Component<AppProps, AppState> {
                         <Container>
                             <Row className='App__header-row'>
                                 <h1 className='App__app-heading'>
-                                    <FormattedMessage id='App.appHeading' />
+                                    <FormattedMessage id='App.appHeading'/>
                                 </h1>
                                 <div className='App__header-right'>
                                     <div className='App__audio-toggle-switch'>
@@ -341,7 +464,7 @@ export default class App extends React.Component<AppProps, AppState> {
                                     <DeviceConnectControl
                                         disabled={
                                             !this.appContext.bluetoothApiIsAvailable ||
-                                            this.state.dashConnectionStatus === 'connected'}
+                                            this.state.dashConnectionStatus === 'connected' }
                                         connectionStatus={this.state.dashConnectionStatus}
                                         onClickConnect={this.handleClickConnectDash}>
                                         <FormattedMessage id='App.connectToDash' />
@@ -354,7 +477,7 @@ export default class App extends React.Component<AppProps, AppState> {
                         {!this.appContext.bluetoothApiIsAvailable &&
                             <Row className='App__bluetooth-api-warning-section'>
                                 <Col>
-                                    <BluetoothApiWarning />
+                                    <BluetoothApiWarning/>
                                 </Col>
                             </Row>
                         }
@@ -375,50 +498,32 @@ export default class App extends React.Component<AppProps, AppState> {
                                         onClick={this.handleClickPlay}
                                     />
                                 </div>
+                                <div className='App__refreshButton-container'>
+                                    <RefreshButton
+                                        disabled={this.state.interpreterIsRunning}
+                                        onClick={this.handleRefresh}
+                                    />
+                                </div>
                                 <div className='App__penDown-toggle-switch-container'>
                                     <PenDownToggleSwitch
                                         className='App__penDown-toggle-switch'
                                         value={this.state.drawingEnabled}
-                                        onChange={this.handleTogglePenDown} />
+                                        onChange={this.handleTogglePenDown}/>
                                 </div>
                             </div>
                         </div>
                         <Row className='App__program-section' noGutters={true}>
-                            <Col md={4} lg={3} className='pr-md-3 mb-3 mb-md-0'>
+                            <Col md={5} lg={4} className='pr-md-4 mb-4 mb-md-0'>
                                 <div className='App__command-palette'>
                                     <h2 className='App__command-palette-heading'>
                                         <FormattedMessage id='CommandPalette.movementsTitle' />
                                     </h2>
-                                    <div className='App__command-palette-command'>
-                                        <CommandPaletteCommand
-                                            commandName='forward'
-                                            selectedCommandName={this.getSelectedCommandName()}
-                                            audioManager={this.audioManager}
-                                            onChange={this.handleCommandFromCommandPalette}
-                                            onDragStart={this.handleDragStartCommand}
-                                            onDragEnd={this.handleDragEndCommand} />
-                                    </div>
-                                    <div className='App__command-palette-command'>
-                                        <CommandPaletteCommand
-                                            commandName='right'
-                                            selectedCommandName={this.getSelectedCommandName()}
-                                            audioManager={this.audioManager}
-                                            onChange={this.handleCommandFromCommandPalette}
-                                            onDragStart={this.handleDragStartCommand}
-                                            onDragEnd={this.handleDragEndCommand} />
-                                    </div>
-                                    <div className='App__command-palette-command'>
-                                        <CommandPaletteCommand
-                                            commandName='left'
-                                            selectedCommandName={this.getSelectedCommandName()}
-                                            audioManager={this.audioManager}
-                                            onChange={this.handleCommandFromCommandPalette}
-                                            onDragStart={this.handleDragStartCommand}
-                                            onDragEnd={this.handleDragEndCommand} />
+                                    <div className='App__command-palette-commands'>
+                                        {this.renderCommandBlocks()}
                                     </div>
                                 </div>
                             </Col>
-                            <Col md={8} lg={9}>
+                            <Col md={7} lg={8}>
                                 <ProgramBlockEditor
                                     activeProgramStepNum={this.state.activeProgramStepNum}
                                     actionPanelStepIndex={this.state.actionPanelStepIndex}
@@ -441,7 +546,7 @@ export default class App extends React.Component<AppProps, AppState> {
                 <DashConnectionErrorModal
                     show={this.state.showDashConnectionError}
                     onCancel={this.handleCancelDashConnection}
-                    onRetry={this.handleClickConnectDash} />
+                    onRetry={this.handleClickConnectDash}/>
             </IntlProvider>
         );
     }
