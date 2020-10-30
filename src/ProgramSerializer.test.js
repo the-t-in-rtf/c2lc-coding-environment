@@ -5,14 +5,19 @@ test('Serialize program', () => {
 
     expect(programSerializer.serialize([])).toStrictEqual('');
     expect(programSerializer.serialize(['forward1'])).toStrictEqual('f1');
+    expect(programSerializer.serialize(['forward2'])).toStrictEqual('f2');
+    expect(programSerializer.serialize(['forward3'])).toStrictEqual('f3');
     expect(programSerializer.serialize(['left45'])).toStrictEqual('l45');
+    expect(programSerializer.serialize(['left90'])).toStrictEqual('l90');
+    expect(programSerializer.serialize(['left180'])).toStrictEqual('l180');
     expect(programSerializer.serialize(['right45'])).toStrictEqual('r45');
+    expect(programSerializer.serialize(['right90'])).toStrictEqual('r90');
+    expect(programSerializer.serialize(['right180'])).toStrictEqual('r180');
     expect(programSerializer.serialize([
-        'forward2', 'left90', 'right90'
-    ])).toStrictEqual('f2l90r90');
-    expect(programSerializer.serialize([
-        'left180', 'right180', 'forward3'
-    ])).toStrictEqual('l180r180f3');
+        'forward1', 'forward2', 'forward3',
+        'left45', 'left90', 'left180',
+        'right45', 'right90', 'right180'
+    ])).toStrictEqual('f1f2f3l45l90l180r45r90r180');
 });
 
 test('Deserialize program', () => {

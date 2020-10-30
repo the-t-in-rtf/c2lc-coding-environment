@@ -11,45 +11,44 @@ export default class ProgramSerializer {
     }
 
     serialize(program: Program): string {
-        let programURL = '';
+        let programText = '';
         for (let i=0; i<program.length; i++) {
             switch(program[i]) {
                 case ('forward1') :
-                    programURL += 'f1';
+                    programText += 'f1';
                     break;
                 case ('forward2') :
-                    programURL += 'f2';
+                    programText += 'f2';
                     break;
                 case ('forward3') :
-                    programURL += 'f3';
+                    programText += 'f3';
                     break;
                 case ('left45') :
-                    programURL += 'l45'
+                    programText += 'l45'
                     break;
                 case ('left90') :
-                    programURL += 'l90'
+                    programText += 'l90'
                     break;
                 case ('left180') :
-                    programURL += 'l180'
+                    programText += 'l180'
                     break;
                 case ('right45') :
-                    programURL += 'r45'
+                    programText += 'r45'
                     break;
                 case ('right90') :
-                    programURL += 'r90'
+                    programText += 'r90'
                     break;
                 case ('right180') :
-                    programURL += 'r180'
+                    programText += 'r180'
                     break;
                 default:
-                    break;
+                    throw new Error(`Unrecognized program command when serializing program: ${program[i]}`);
             }
         }
-        return programURL;
+        return programText;
     }
 
-    deserialize(programURL: string): Program {
-        const decodedProgramURL = decodeURI(programURL);
-        return this.programParser.parse(decodedProgramURL);
+    deserialize(programText: string): Program {
+        return this.programParser.parse(programText);
     }
 };
