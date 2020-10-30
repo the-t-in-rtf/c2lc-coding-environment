@@ -3,7 +3,7 @@
 export default class C2lcURLParams {
     urlSearchParams: URLSearchParams;
 
-    constructor(query: any) {
+    constructor(query: string) {
         this.urlSearchParams = new URLSearchParams(query);
     }
 
