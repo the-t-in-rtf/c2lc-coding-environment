@@ -15,7 +15,7 @@ const defaultSceneProps = {
     numRows: 1,
     numColumns: 1,
     gridCellWidth: 10,
-    characterState: new CharacterState(0, 0, 90, [])
+    characterState: new CharacterState(0, 0, 2, [])
 };
 
 function createMountScene(props) {
@@ -88,6 +88,14 @@ function calculateCharacterDimensions(gridCellWidth) {
 }
 
 describe('When the Scene renders', () => {
+    test('Aria label should tell there is a robot character with its position', () => {
+        const numRows = 9;
+        const numColumns = 17;
+        const sceneWrapper = createMountScene({numColumns, numRows});
+        const scene = findScene(sceneWrapper);
+        expect(scene.get(0).props['aria-label']).toBe('Scene, 17 by 9 grid with a robot character at column I, row 5');
+    });
+
     test('With numRows = 0, numColumns = 2, gridCellWidth = 5', () => {
         expect.assertions(1);
         const numRows = 0;
@@ -243,7 +251,7 @@ describe('When the Character has a path, it is drawn on the Scene', () => {
     test('When there is no path segment', () => {
         expect.assertions(1);
         const sceneWrapper = createMountScene({
-            characterState: new CharacterState(0, 0, 90, [])
+            characterState: new CharacterState(0, 0, 2, [])
         });
         const robotCharacterPath = findRobotCharacterPath(sceneWrapper);
         expect(robotCharacterPath.length).toBe(0);
@@ -252,7 +260,7 @@ describe('When the Character has a path, it is drawn on the Scene', () => {
     test('When there is one path segment', () => {
         expect.assertions(5);
         const sceneWrapper = createMountScene({
-            characterState: new CharacterState(0, 0, 90, [{x1: 100, y1: 200, x2: 300, y2: 400}])
+            characterState: new CharacterState(0, 0, 2, [{x1: 100, y1: 200, x2: 300, y2: 400}])
         });
         const robotCharacterPath = findRobotCharacterPath(sceneWrapper);
         expect(robotCharacterPath.length).toBe(1);
@@ -266,7 +274,7 @@ describe('When the Character has a path, it is drawn on the Scene', () => {
         expect.assertions(9);
         const sceneWrapper = createMountScene({
             characterState:
-                new CharacterState(0, 0, 90, [
+                new CharacterState(0, 0, 2, [
                     {x1: 100, y1: 200, x2: 300, y2: 400},
                     {x1: 500, y1: 600, x2: 700, y2: 800}
                 ])

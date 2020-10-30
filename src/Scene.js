@@ -17,6 +17,10 @@ export type SceneProps = {
 };
 
 class Scene extends React.Component<SceneProps, {}> {
+    constructor(props: SceneProps) {
+        super(props);
+        this.columnLookUp = this.generateColumnLookUp();
+    }
 
     drawGrid(minX: number, minY: number, sceneWidth: number, sceneHeight: number) {
         const grid = [];
@@ -87,6 +91,14 @@ class Scene extends React.Component<SceneProps, {}> {
         });
     }
 
+    generateColumnLookUp() {
+        const columnLookUp = {}
+        for (let i=0;i<this.props.numColumns;i++) {
+            columnLookUp[i-Math.floor(this.props.numColumns/2)] = String.fromCharCode(65+i);
+        }
+        return columnLookUp;
+    }
+
     render() {
         const width = this.props.numColumns * this.props.gridCellWidth;
         const height = this.props.numRows * this.props.gridCellWidth;
@@ -102,7 +114,15 @@ class Scene extends React.Component<SceneProps, {}> {
                 <span
                     className='Scene'
                     role='img'
-                    aria-label={this.props.intl.formatMessage({id: 'Scene'})}>
+                    aria-label={this.props.intl.formatMessage(
+                        {id: 'Scene'},
+                        {
+                            numColumns: this.props.numColumns,
+                            numRows: this.props.numRows,
+                            xPos: this.columnLookUp[this.props.characterState.xPos],
+                            yPos: this.props.characterState.yPos + Math.ceil(this.props.numRows/2)
+                        }
+                    )}>
                     <svg
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox={`${minX} ${minY} ${width} ${height}`}>
