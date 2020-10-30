@@ -4,6 +4,8 @@ declare module "tone" {
     //       https://tonejs.github.io/docs/14.7.58/fn/Frequency
     //       This "Frequency" is the type one, maybe call it FrequencyType?
     declare type Frequency = string;
+    // https://tonejs.github.io/docs/14.7.58/type/InputNode
+    declare type InputNode = ToneAudioNode;
     // https://tonejs.github.io/docs/14.7.58/type/Note
     declare type Note = string;
     // https://tonejs.github.io/docs/14.7.58/type/Seconds
@@ -18,6 +20,10 @@ declare module "tone" {
         rampTo(value: any, rampTime: Time): void
     }
 
+    // https://tonejs.github.io/docs/14.7.58/Instrument
+    declare class Instrument extends ToneAudioNode {
+    }
+
     // https://tonejs.github.io/docs/14.7.58/MidiClass
     declare class MidiClass {
         toNote(): Note
@@ -27,16 +33,13 @@ declare module "tone" {
     declare export function Midi(value: TimeValue): MidiClass;
 
     // https://tonejs.github.io/docs/14.7.58/Panner
-    declare export class Panner {
-        pan: Param,
-        toDestination(): void
+    declare export class Panner extends ToneAudioNode {
+        pan: Param
     }
 
     // https://tonejs.github.io/docs/14.7.58/Player
-    declare export class Player {
-        constructor(url: string): Player,
-        toDestination(): void,
-        start(): void
+    declare export class Player extends Source {
+        constructor(url: string): Player
     }
 
     // https://tonejs.github.io/docs/14.7.58/interface/SamplerOptions
@@ -50,9 +53,19 @@ declare module "tone" {
     }
 
     // https://tonejs.github.io/docs/14.7.58/Sampler
-    declare export class Sampler {
+    declare export class Sampler extends Instrument {
         constructor(samples: SamplerOptions): Sampler,
-        connect(Panner): void,
         triggerAttackRelease(notes: Array<Frequency>, duration: Time): void
+    }
+
+    // https://tonejs.github.io/docs/14.7.58/Source
+    declare class Source extends ToneAudioNode {
+        start(): void
+    }
+
+    // https://tonejs.github.io/docs/14.7.58/ToneAudioNode
+    declare class ToneAudioNode {
+        connect(destination: InputNode): void,
+        toDestination(): void
     }
 }
