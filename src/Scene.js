@@ -17,6 +17,7 @@ export type SceneProps = {
 };
 
 class Scene extends React.Component<SceneProps, {}> {
+    columnLookUp: { [number]: string };
     constructor(props: SceneProps) {
         super(props);
         this.columnLookUp = this.generateColumnLookUp();
