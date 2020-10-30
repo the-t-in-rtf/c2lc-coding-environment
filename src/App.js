@@ -7,6 +7,7 @@ import AudioManager from './AudioManager';
 import BluetoothApiWarning from './BluetoothApiWarning';
 import CharacterState from './CharacterState';
 import CommandPaletteCommand from './CommandPaletteCommand';
+import C2lcURLParams from './C2lcURLParams';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
@@ -528,8 +529,8 @@ export default class App extends React.Component<{}, AppState> {
 
     componentDidMount() {
         if (window.location.search != null) {
-            const query = new URLSearchParams(window.location.search);
-            const programQuery = query.get('program');
+            const params = new C2lcURLParams(window.location.search);
+            const programQuery = params.getProgram();
             if (programQuery != null) {
                 try {
                     this.setState({
@@ -545,11 +546,11 @@ export default class App extends React.Component<{}, AppState> {
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
         if (this.state.program !== prevState.program) {
-            const encodedURI = encodeURI(this.programSerializer.serialize(this.state.program));
+            const serializedProgram = this.programSerializer.serialize(this.state.program);
             window.history.pushState(
-                {program: encodedURI},
+                {p: serializedProgram},
                 '',
-                `?program=${encodedURI}`);
+                `${Utils.generateEncodedProgramURL('0.5', serializedProgram)}`);
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
