@@ -4,12 +4,14 @@ import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
 import AudioManager from './AudioManager';
-import BluetoothApiWarning from './BluetoothApiWarning';
+// Uncomment after 0.5 release
+// import BluetoothApiWarning from './BluetoothApiWarning';
 import CharacterState from './CharacterState';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
-import DeviceConnectControl from './DeviceConnectControl';
+// Uncomment after 0.5 release
+// import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
 import FocusTrapManager from './FocusTrapManager';
 import Interpreter from './Interpreter';
@@ -432,6 +434,7 @@ export default class App extends React.Component<{}, AppState> {
                                             value={this.state.audioEnabled}
                                             onChange={this.handleToggleAudioFeedback} />
                                     </div>
+                                    {/* Uncomment after 0.5 release
                                     <DeviceConnectControl
                                         disabled={
                                             !this.appContext.bluetoothApiIsAvailable ||
@@ -439,19 +442,20 @@ export default class App extends React.Component<{}, AppState> {
                                         connectionStatus={this.state.dashConnectionStatus}
                                         onClickConnect={this.handleClickConnectDash}>
                                         <FormattedMessage id='App.connectToDash' />
-                                    </DeviceConnectControl>
+                                    </DeviceConnectControl> */}
                                 </div>
                             </Row>
                         </Container>
                     </header>
                     <Container role='main' className='mb-5'>
+                        {/* Uncomment after 0.5 release
                         {!this.appContext.bluetoothApiIsAvailable &&
                             <Row className='App__bluetooth-api-warning-section'>
                                 <Col>
                                     <BluetoothApiWarning/>
                                 </Col>
                             </Row>
-                        }
+                        } */}
                         <div className='App__scene-container'>
                             <Scene
                                 numRows={this.state.sceneNumRows}
@@ -526,23 +530,24 @@ export default class App extends React.Component<{}, AppState> {
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
         }
-        if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
-            console.log(this.state.dashConnectionStatus);
+        // Uncomment after 0.5 release
+        // if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
+        //     console.log(this.state.dashConnectionStatus);
 
-            if (this.state.dashConnectionStatus === 'connected') {
-                this.interpreter.addCommandHandler('forward', 'dash',
-                    this.dashDriver.forward.bind(this.dashDriver));
-                this.interpreter.addCommandHandler('left', 'dash',
-                    this.dashDriver.left.bind(this.dashDriver));
-                this.interpreter.addCommandHandler('right', 'dash',
-                    this.dashDriver.right.bind(this.dashDriver));
-            } else if (this.state.dashConnectionStatus === 'notConnected') {
-                // TODO: Remove Dash handlers
+        //     if (this.state.dashConnectionStatus === 'connected') {
+        //         this.interpreter.addCommandHandler('forward', 'dash',
+        //             this.dashDriver.forward.bind(this.dashDriver));
+        //         this.interpreter.addCommandHandler('left', 'dash',
+        //             this.dashDriver.left.bind(this.dashDriver));
+        //         this.interpreter.addCommandHandler('right', 'dash',
+        //             this.dashDriver.right.bind(this.dashDriver));
+        //     } else if (this.state.dashConnectionStatus === 'notConnected') {
+        //         // TODO: Remove Dash handlers
 
-                if (this.state.interpreterIsRunning) {
-                    this.interpreter.stop();
-                }
-            }
-        }
+        //         if (this.state.interpreterIsRunning) {
+        //             this.interpreter.stop();
+        //         }
+        //     }
+        // }
     }
 }
