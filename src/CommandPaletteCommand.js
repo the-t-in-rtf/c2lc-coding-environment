@@ -2,6 +2,7 @@
 
 import React from 'react';
 import CommandBlock from './CommandBlock';
+import classNames from 'classnames';
 import AudioManager from './AudioManager';
 import { injectIntl } from 'react-intl';
 import type {IntlShape} from 'react-intl';
@@ -39,6 +40,11 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
     render() {
         const pressed = this.props.commandName === this.props.selectedCommandName;
 
+        const classes = classNames(
+            {'command-block--pressed' : pressed},
+            'command-palette-command'
+        );
+
         const ariaLabel: string = this.props.intl.formatMessage({
             id: `Command.${this.props.commandName}`
         });
@@ -51,7 +57,7 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
                 onDragStart={this.handleDragStart}
                 onDragEnd={this.handleDragEnd}
                 commandName={this.props.commandName}
-                className={pressed ? 'command-block--pressed' : undefined}
+                className={classes}
                 aria-label={ariaLabel}
                 aria-pressed={pressed}
                 onClick={this.handleClick}

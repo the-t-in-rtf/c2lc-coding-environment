@@ -484,7 +484,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             if (this.state.replaceIsActive) {
                 this.props.focusTrapManager.setFocusTrap(
                     this.handleCloseReplaceFocusTrap,
-                    ['.replace-action-button', '.App__command-palette-command button'],
+                    ['.replace-action-button', '.command-palette-command'],
                     '.replace-action-button'
                 );
             } else {
