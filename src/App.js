@@ -112,6 +112,7 @@ export default class App extends React.Component<AppProps, AppState> {
             () => {
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('forward1');
+
                 this.setState((state) => {
                     const newCharacterState = state.characterState.forward(
                         1,
@@ -133,37 +134,19 @@ export default class App extends React.Component<AppProps, AppState> {
             'forward2',
             'moveCharacter',
             () => {
-                // We are playing twice as many sounds, so we play them for half as long.
-                const timePerSound = this.props.movementDelay / 2;
-
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('forward2');
 
                 this.setState((state) => {
-                    // Simulate moving through the intermediate cells.
-                    const firstIntermediateCharacterState = state.characterState.forward(1, state.drawingEnabled);
+                    const finalNewCharacterState = state.characterState.forward(2, state.drawingEnabled);
 
                     // We have to start the sound here because this is where we know the new character state.
-                    this.audioManager.playSoundForCharacterState("movement", timePerSound, firstIntermediateCharacterState);
+                    this.audioManager.playSoundForCharacterState("movement", this.props.movementDelay, finalNewCharacterState);
 
                     return {
-                        characterState: firstIntermediateCharacterState
+                        characterState: finalNewCharacterState
                     };
                 });
-
-                setTimeout(() => {
-                    this.setState((state) => {
-                        // Simulate moving through the intermediate cells.
-                        const finalNewCharacterState = state.characterState.forward(1,  state.drawingEnabled );
-
-                        // We have to start the sound here because this is where we know the new character state.
-                        this.audioManager.playSoundForCharacterState("movement", timePerSound, finalNewCharacterState);
-                        return {
-                            characterState: finalNewCharacterState
-                        };
-                    });
-                }, timePerSound);
-
                 return Utils.makeDelayedPromise(this.props.movementDelay);
             }
         );
@@ -172,48 +155,18 @@ export default class App extends React.Component<AppProps, AppState> {
             'forward3',
             'moveCharacter',
             () => {
-                // We are playing three times as many sounds, so we play them for half as long.
-                const timePerSound = this.props.movementDelay / 3;
-
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('forward3');
 
-                // TODO: Discuss whether this approach to animation is tenable.
                 this.setState((state) => {
-                    // Simulate moving through the intermediate cells.
-                    const firstIntermediateCharacterState = state.characterState.forward(1, state.drawingEnabled);
+                    const finalNewCharacterState = state.characterState.forward(3, state.drawingEnabled);
 
                     // We have to start the sound here because this is where we know the new character state.
-                    this.audioManager.playSoundForCharacterState("movement", timePerSound, firstIntermediateCharacterState);
-
+                    this.audioManager.playSoundForCharacterState("movement", this.props.movementDelay, finalNewCharacterState);
                     return {
-                        characterState: firstIntermediateCharacterState
+                        characterState: finalNewCharacterState
                     };
                 });
-
-                setTimeout(() => {
-                    this.setState((state) => {
-                        const secondIntermediateCharacterState = state.characterState.forward(1, state.drawingEnabled);
-                        // We have to start the sound here because this is where we know the new character state.
-                        this.audioManager.playSoundForCharacterState("movement", timePerSound, secondIntermediateCharacterState);
-
-                        return {
-                            characterState: secondIntermediateCharacterState
-                        };
-                    });
-
-                }, timePerSound);
-
-                setTimeout(() => {
-                    this.setState((state) => {
-                        const finalNewCharacterState = state.characterState.forward(1, state.drawingEnabled);
-                        // We have to start the sound here because this is where we know the new character state.
-                        this.audioManager.playSoundForCharacterState("movement", timePerSound, finalNewCharacterState);
-                        return {
-                            characterState: finalNewCharacterState
-                        };
-                    });
-                }, timePerSound * 2);
 
                 return Utils.makeDelayedPromise(this.props.movementDelay);
             }
