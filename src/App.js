@@ -4,14 +4,10 @@ import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
 import AudioManager from './AudioManager';
-// Uncomment after 0.5 release
-// import BluetoothApiWarning from './BluetoothApiWarning';
 import CharacterState from './CharacterState';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
-// Uncomment after 0.5 release
-// import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
 import FocusTrapManager from './FocusTrapManager';
 import Interpreter from './Interpreter';
@@ -28,6 +24,10 @@ import * as Utils from './Utils';
 import messages from './messages.json';
 import './App.scss';
 import './vendor/dragdroptouch/DragDropTouch.js';
+
+// Uncomment after 0.5 release
+// import BluetoothApiWarning from './BluetoothApiWarning';
+// import DeviceConnectControl from './DeviceConnectControl';
 
 // Uncomment to use the FakeRobotDriver (see driver construction below also)
 //import FakeRobotDriver from './FakeRobotDriver';
