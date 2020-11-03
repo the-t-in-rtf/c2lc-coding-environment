@@ -119,7 +119,8 @@ export default class App extends React.Component<AppProps, AppState> {
                     );
 
                     // We have to start the sound here because this is where we know the new character state.
-                    this.audioManager.playSoundForCharacterState(newCharacterState);
+                    this.audioManager.playSoundForCharacterState("movement", this.props.movementDelay, newCharacterState);
+
                     return {
                         characterState: newCharacterState
                     };
@@ -132,20 +133,37 @@ export default class App extends React.Component<AppProps, AppState> {
             'forward2',
             'moveCharacter',
             () => {
+                // We are playing twice as many sounds, so we play them for half as long.
+                const timePerSound = this.props.movementDelay / 2;
+
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('forward2');
+
                 this.setState((state) => {
-                    const newCharacterState = state.characterState.forward(
-                        2,
-                        state.drawingEnabled
-                    );
+                    // Simulate moving through the intermediate cells.
+                    const firstIntermediateCharacterState = state.characterState.forward(1, state.drawingEnabled);
 
                     // We have to start the sound here because this is where we know the new character state.
-                    this.audioManager.playSoundForCharacterState(newCharacterState);
+                    this.audioManager.playSoundForCharacterState("movement", timePerSound, firstIntermediateCharacterState);
+
                     return {
-                        characterState: newCharacterState
+                        characterState: firstIntermediateCharacterState
                     };
                 });
+
+                setTimeout(() => {
+                    this.setState((state) => {
+                        // Simulate moving through the intermediate cells.
+                        const finalNewCharacterState = state.characterState.forward(1,  state.drawingEnabled );
+
+                        // We have to start the sound here because this is where we know the new character state.
+                        this.audioManager.playSoundForCharacterState("movement", timePerSound, finalNewCharacterState);
+                        return {
+                            characterState: finalNewCharacterState
+                        };
+                    });
+                }, timePerSound);
+
                 return Utils.makeDelayedPromise(this.props.movementDelay);
             }
         );
@@ -154,20 +172,49 @@ export default class App extends React.Component<AppProps, AppState> {
             'forward3',
             'moveCharacter',
             () => {
+                // We are playing three times as many sounds, so we play them for half as long.
+                const timePerSound = this.props.movementDelay / 3;
+
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('forward3');
+
+                // TODO: Discuss whether this approach to animation is tenable.
                 this.setState((state) => {
-                    const newCharacterState = state.characterState.forward(
-                        3,
-                        state.drawingEnabled
-                    );
+                    // Simulate moving through the intermediate cells.
+                    const firstIntermediateCharacterState = state.characterState.forward(1, state.drawingEnabled);
 
                     // We have to start the sound here because this is where we know the new character state.
-                    this.audioManager.playSoundForCharacterState(newCharacterState);
+                    this.audioManager.playSoundForCharacterState("movement", timePerSound, firstIntermediateCharacterState);
+
                     return {
-                        characterState: newCharacterState
+                        characterState: firstIntermediateCharacterState
                     };
                 });
+
+                setTimeout(() => {
+                    this.setState((state) => {
+                        const secondIntermediateCharacterState = state.characterState.forward(1, state.drawingEnabled);
+                        // We have to start the sound here because this is where we know the new character state.
+                        this.audioManager.playSoundForCharacterState("movement", timePerSound, secondIntermediateCharacterState);
+
+                        return {
+                            characterState: secondIntermediateCharacterState
+                        };
+                    });
+
+                }, timePerSound);
+
+                setTimeout(() => {
+                    this.setState((state) => {
+                        const finalNewCharacterState = state.characterState.forward(1, state.drawingEnabled);
+                        // We have to start the sound here because this is where we know the new character state.
+                        this.audioManager.playSoundForCharacterState("movement", timePerSound, finalNewCharacterState);
+                        return {
+                            characterState: finalNewCharacterState
+                        };
+                    });
+                }, timePerSound * 2);
+
                 return Utils.makeDelayedPromise(this.props.movementDelay);
             }
         );
@@ -176,11 +223,20 @@ export default class App extends React.Component<AppProps, AppState> {
             'left45',
             'moveCharacter',
             () => {
+                // We want for a 180 degree turn to take the whole movement delay, and for a 45 degree to take 1/4 of that.
+                const soundTime = this.props.movementDelay / 4;
+
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('left45');
+                // TODO: Make a function generating utility for all these blocks.
                 this.setState((state) => {
+                    const newCharacterState = state.characterState.turnLeft(1);
+
+                    // We have to start the sound here because this is where we know the new character state.
+                    this.audioManager.playSoundForCharacterState("left", soundTime, newCharacterState);
+
                     return {
-                        characterState: state.characterState.turnLeft(1)
+                        characterState: newCharacterState
                     };
                 });
                 return Utils.makeDelayedPromise(this.props.movementDelay);
@@ -191,11 +247,19 @@ export default class App extends React.Component<AppProps, AppState> {
             'left90',
             'moveCharacter',
             () => {
+                // We want for a 180 degree turn to take the whole movement delay, and for a 90 degree turn to take 1/2 of that.
+                const soundTime = this.props.movementDelay / 2;
+
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('left90');
                 this.setState((state) => {
+                    const newCharacterState = state.characterState.turnLeft(2);
+
+                    // We have to start the sound here because this is where we know the new character state.
+                    this.audioManager.playSoundForCharacterState("left", soundTime, newCharacterState);
+
                     return {
-                        characterState: state.characterState.turnLeft(2)
+                        characterState: newCharacterState
                     };
                 });
                 return Utils.makeDelayedPromise(this.props.movementDelay);
@@ -209,8 +273,13 @@ export default class App extends React.Component<AppProps, AppState> {
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('left180');
                 this.setState((state) => {
+                    const newCharacterState = state.characterState.turnLeft(4);
+
+                    // We have to start the sound here because this is where we know the new character state.
+                    this.audioManager.playSoundForCharacterState("left", this.props.movementDelay,  newCharacterState);
+
                     return {
-                        characterState: state.characterState.turnLeft(4)
+                        characterState: newCharacterState
                     };
                 });
                 return Utils.makeDelayedPromise(this.props.movementDelay);
@@ -221,26 +290,43 @@ export default class App extends React.Component<AppProps, AppState> {
             'right45',
             'moveCharacter',
             () => {
+                // We want for a 180 degree turn to take the whole movement delay, and for a 45 degree turn to take 1/4 of that.
+                const soundTime = this.props.movementDelay / 2;
+
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('right45');
                 this.setState((state) => {
+                    const newCharacterState = state.characterState.turnRight(1);
+
+                    // We have to start the sound here because this is where we know the new character state.
+                    this.audioManager.playSoundForCharacterState("right", soundTime, newCharacterState);
+
                     return {
-                        characterState: state.characterState.turnRight(1)
+                        characterState: newCharacterState
                     };
                 });
                 return Utils.makeDelayedPromise(this.props.movementDelay);
             }
         );
 
+        // TODO: Discuss changing this incrementally as I did with forward2 and forward3.
         this.interpreter.addCommandHandler(
             'right90',
             'moveCharacter',
             () => {
+                // We want for a 180 degree turn to take the whole movement delay, and for a 90 degree to take 1/2 of that.
+                const soundTime = this.props.movementDelay / 2;
+
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('right90');
                 this.setState((state) => {
+                    const newCharacterState = state.characterState.turnRight(2);
+
+                    // We have to start the sound here because this is where we know the new character state.
+                    this.audioManager.playSoundForCharacterState("right", soundTime, newCharacterState);
+
                     return {
-                        characterState: state.characterState.turnRight(2)
+                        characterState: newCharacterState
                     };
                 });
                 return Utils.makeDelayedPromise(this.props.movementDelay);
@@ -254,8 +340,13 @@ export default class App extends React.Component<AppProps, AppState> {
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('right180');
                 this.setState((state) => {
+                    const newCharacterState = state.characterState.turnRight(4);
+
+                    // We have to start the sound here because this is where we know the new character state.
+                    this.audioManager.playSoundForCharacterState("right", this.props.movementDelay, newCharacterState);
+
                     return {
-                        characterState: state.characterState.turnRight(4)
+                        characterState: newCharacterState
                     };
                 });
                 return Utils.makeDelayedPromise(this.props.movementDelay);

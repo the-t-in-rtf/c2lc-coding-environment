@@ -1,8 +1,13 @@
 # About These Files
 
-These sounds were recorded for this project, see the LICENSE.txt file for terms of use.  The patch used is from the Arturia V Collection, and is a DX7 patch called "ROM2A 29 - Cow Bell".
+These sounds were recorded for this project, see the LICENSE.txt file for terms of use.  The patch used is from the Arturia V Collection, and is a Synthi patch called "Shaker".
 
 Each filename corresponds to the pitch of the note.  The individual sounds are meant to be sped up and slowed down to simulate a fuller range of pitches.
+
+The 16-step sequence of notes used is (0s for unplayed, 1 for played):
+
+1 1 0 1 0 1 1 1 1 1 0 1 0 1 1 0
+
 
 ## Timing
 
@@ -11,14 +16,8 @@ breakdown of the duration of every file used for this "sampler":
 
 | Filename | Duration     |
 | -------- | ------------ |
-| C0.wav   | 0.481 sec    | 
-| C1.wav   | 0.618 sec    |
-| C2.wav   | 0.613 sec    |
-| C3.wav   | 0.605 sec    |
-| C4.wav   | 0.612 sec    |
-| C5.wav   | 0.439 sec    | 
-| C6.wav   | 0.411 sec    |
+| C6.wav   | 1.973625 sec |
 
 If you need to regenerate this timing data, on OS X you can use a command like:
 
-```find public/audio/short-bell -name \*.wav -exec afinfo -b {} \;```
+```find public/audio/left-turn -name \*.wav -exec afinfo -b {} \;```

@@ -3,15 +3,26 @@ declare module "tone" {
     //       https://tonejs.github.io/docs/14.7.58/type/Frequency
     //       https://tonejs.github.io/docs/14.7.58/fn/Frequency
     //       This "Frequency" is the type one, maybe call it FrequencyType?
-    declare type Frequency = string;
+    declare type FrequencyType = string;
+
+    declare export class FrequencyClass {
+        toMidi: any
+    }
+
+    declare export function Frequency(frequency: number | string): FrequencyClass;
+
     // https://tonejs.github.io/docs/14.7.58/type/InputNode
     declare type InputNode = ToneAudioNode;
+
     // https://tonejs.github.io/docs/14.7.58/type/Note
     declare type Note = string;
+
     // https://tonejs.github.io/docs/14.7.58/type/Seconds
     declare type Seconds = number;
+
     // https://tonejs.github.io/docs/14.7.58/type/Time
     declare type Time = Seconds;
+
     // https://tonejs.github.io/docs/14.7.58/type/TimeValue
     declare type TimeValue = Time;
 
