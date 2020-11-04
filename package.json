@@ -59,20 +59,16 @@
             "!src/serviceWorker.js",
             "!src/WebSpeechInput.js",
             "!src/vendor/**/*"
-        ],
-        "coverageThreshold": {
+          ],
+          "coverageThreshold": {
             "global": {
-                "branches": 85,
-                "functions": 95,
-                "lines": 95,
-                "statements": 95
+              "branches": 85,
+              "functions": 95,
+              "lines": 95,
+              "statements": 95
             }
-        },
-        "coverageReporters": [
-            "text",
-            "text-summary",
-            "html"
-        ]
+          },
+          "coverageReporters": ["text", "text-summary", "html"]
     },
     "browserslist": {
         "production": [
