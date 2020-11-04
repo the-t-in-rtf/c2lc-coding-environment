@@ -66,7 +66,7 @@ declare module "tone" {
     // https://tonejs.github.io/docs/14.7.58/Sampler
     declare export class Sampler extends Instrument {
         constructor(samples: SamplerOptions): Sampler,
-        triggerAttackRelease(notes: Array<Frequency>, duration: Time): void
+        triggerAttackRelease(notes: Array<FrequencyType>, duration: Time): void
     }
 
     // https://tonejs.github.io/docs/14.7.58/Source
