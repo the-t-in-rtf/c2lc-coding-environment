@@ -20,8 +20,24 @@ test('Serialize program', () => {
     ])).toStrictEqual('f1f2f3l45l90l180r45r90r180');
 });
 
+test('Serializing an unsupported command should throw an Error', () => {
+    expect(() => {
+        (new ProgramSerializer()).serialize(['unsupported-command']);
+    }).toThrowError(/^Unrecognized program command when serializing program: unsupported-command$/);
+});
+
 test('Deserialize program', () => {
     const programSerializer = new ProgramSerializer();
     expect(programSerializer.deserialize('')).toStrictEqual([]);
     expect(programSerializer.deserialize('f2f1r45')).toStrictEqual(['forward2', 'forward1', 'right45']);
-})
+});
+
+test('Roundtrip program', () => {
+    const programSerializer = new ProgramSerializer();
+    const program = [
+        'forward1', 'forward2', 'forward3',
+        'left45', 'left90', 'left180',
+        'right45', 'right90', 'right180'
+    ];
+    expect(programSerializer.deserialize(programSerializer.serialize(program))).toStrictEqual(program);
+});
