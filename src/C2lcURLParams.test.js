@@ -10,6 +10,6 @@ test('Given URL query parameters, get param values', () => {
 
 test('Given URL query parameters with special characters, get decoded param values', () => {
     const urlParams = new C2lcURLParams('?v=%20%21%224&p=%28%22');
-    expect(urlParams.getVersion()).toBe(' !\"4');
-    expect(urlParams.getProgram()).toBe('(\"');
+    expect(urlParams.getVersion()).toBe(' !"4');
+    expect(urlParams.getProgram()).toBe('("');
 })
