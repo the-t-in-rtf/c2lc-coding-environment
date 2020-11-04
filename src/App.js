@@ -54,7 +54,8 @@ type AppState = {
     sceneNumRows: number,
     sceneNumColumns: number,
     sceneGridCellWidth: number,
-    drawingEnabled: boolean
+    drawingEnabled: boolean,
+    programExecutionSpeed: number
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -93,7 +94,8 @@ export default class App extends React.Component<{}, AppState> {
             sceneNumRows: 9,
             sceneNumColumns: 17,
             sceneGridCellWidth: 1,
-            drawingEnabled: true
+            drawingEnabled: true,
+            programExecutionSpeed: 1750
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -111,7 +113,7 @@ export default class App extends React.Component<{}, AppState> {
                         )
                     };
                 });
-                return Utils.makeDelayedPromise(1750);
+                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
             }
         );
 
@@ -128,7 +130,7 @@ export default class App extends React.Component<{}, AppState> {
                         )
                     };
                 });
-                return Utils.makeDelayedPromise(1750);
+                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
             }
         );
 
@@ -145,7 +147,7 @@ export default class App extends React.Component<{}, AppState> {
                         )
                     };
                 });
-                return Utils.makeDelayedPromise(1750);
+                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
             }
         );
 
@@ -159,7 +161,7 @@ export default class App extends React.Component<{}, AppState> {
                         characterState: state.characterState.turnLeft(1)
                     };
                 });
-                return Utils.makeDelayedPromise(1750);
+                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
             }
         );
 
@@ -173,7 +175,7 @@ export default class App extends React.Component<{}, AppState> {
                         characterState: state.characterState.turnLeft(2)
                     };
                 });
-                return Utils.makeDelayedPromise(1750);
+                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
             }
         );
 
@@ -187,7 +189,7 @@ export default class App extends React.Component<{}, AppState> {
                         characterState: state.characterState.turnLeft(4)
                     };
                 });
-                return Utils.makeDelayedPromise(1750);
+                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
             }
         );
 
@@ -201,7 +203,7 @@ export default class App extends React.Component<{}, AppState> {
                         characterState: state.characterState.turnRight(1)
                     };
                 });
-                return Utils.makeDelayedPromise(1750);
+                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
             }
         );
 
@@ -215,7 +217,7 @@ export default class App extends React.Component<{}, AppState> {
                         characterState: state.characterState.turnRight(2)
                     };
                 });
-                return Utils.makeDelayedPromise(1750);
+                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
             }
         );
 
@@ -229,7 +231,7 @@ export default class App extends React.Component<{}, AppState> {
                         characterState: state.characterState.turnRight(4)
                     };
                 });
-                return Utils.makeDelayedPromise(1750);
+                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
             }
         );
 
@@ -379,6 +381,13 @@ export default class App extends React.Component<{}, AppState> {
     handleTogglePenDown = (drawingEnabled: boolean) => {
         this.setState({
             drawingEnabled: drawingEnabled
+        });
+    }
+
+    handleChangeProgramExecutionSpeed = (multiplier: number) => {
+        const newProgramExecutionSpeed = this.state.programExecutionSpeed * multiplier;
+        this.setState({
+            programExecutionSpeed: newProgramExecutionSpeed
         });
     }
 
