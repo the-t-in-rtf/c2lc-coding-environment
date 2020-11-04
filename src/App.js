@@ -550,7 +550,7 @@ export default class App extends React.Component<{}, AppState> {
             window.history.pushState(
                 {p: serializedProgram},
                 '',
-                `${Utils.generateEncodedProgramURL('0.5', serializedProgram)}`);
+                Utils.generateEncodedProgramURL('0.5', serializedProgram));
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
