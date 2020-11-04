@@ -7,6 +7,7 @@ import AudioManager from './AudioManager';
 import BluetoothApiWarning from './BluetoothApiWarning';
 import CharacterState from './CharacterState';
 import CommandPaletteCommand from './CommandPaletteCommand';
+import C2lcURLParams from './C2lcURLParams';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
 import DeviceConnectControl from './DeviceConnectControl';
@@ -21,6 +22,7 @@ import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
 import { programIsEmpty } from './ProgramUtils';
+import ProgramSerializer from './ProgramSerializer';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import * as Utils from './Utils';
 import messages from './messages.json';
@@ -64,6 +66,7 @@ export default class App extends React.Component<{}, AppState> {
     audioManager: AudioManager;
     focusTrapManager: FocusTrapManager;
     startingCharacterState: CharacterState;
+    programSerializer: ProgramSerializer;
 
     constructor(props: {}) {
         super(props);
@@ -97,6 +100,8 @@ export default class App extends React.Component<{}, AppState> {
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
+
+        this.programSerializer = new ProgramSerializer();
 
         this.interpreter.addCommandHandler(
             'forward1',
@@ -522,7 +527,31 @@ export default class App extends React.Component<{}, AppState> {
         );
     }
 
+    componentDidMount() {
+        if (window.location.search != null) {
+            const params = new C2lcURLParams(window.location.search);
+            const programQuery = params.getProgram();
+            if (programQuery != null) {
+                try {
+                    this.setState({
+                        program: this.programSerializer.deserialize(programQuery)
+                    });
+                } catch(err) {
+                    console.log(`Error parsing program: ${programQuery}`);
+                    console.log(err.toString());
+                }
+            }
+        }
+    }
+
     componentDidUpdate(prevProps: {}, prevState: AppState) {
+        if (this.state.program !== prevState.program) {
+            const serializedProgram = this.programSerializer.serialize(this.state.program);
+            window.history.pushState(
+                {p: serializedProgram},
+                '',
+                Utils.generateEncodedProgramURL('0.5', serializedProgram));
+        }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
         }
