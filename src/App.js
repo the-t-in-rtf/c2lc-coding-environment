@@ -66,7 +66,7 @@ export default class App extends React.Component<{}, AppState> {
     focusTrapManager: FocusTrapManager;
     startingCharacterState: CharacterState;
 
-    constructor(props: AppProps) {
+    constructor(props: any) {
         super(props);
 
         this.appContext = {
@@ -82,7 +82,7 @@ export default class App extends React.Component<{}, AppState> {
             settings: {
                 language: 'en',
                 addNodeExpandedMode: true,
-                movementDelay: 1000
+                movementDelayMs: 1000
             },
             dashConnectionStatus: 'notConnected',
             activeProgramStepNum: null,
