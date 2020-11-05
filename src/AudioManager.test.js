@@ -64,9 +64,9 @@ test("Returns a sensible note range for every supported character position.", ()
             expect(midiNote).toBeLessThanOrEqual(127);
         }
 
-        // const pitchRange = maxPitch - minPitch;
-        // expect(pitchRange).toBeGreaterThanOrEqual(0);
-        // expect(pitchRange).toBeLessThanOrEqual(12);
+        const pitchRange = maxPitch - minPitch;
+        expect(pitchRange).toBeGreaterThanOrEqual(0);
+        expect(pitchRange).toBeLessThanOrEqual(12);
     }
 
     logTuning(noteTable);

@@ -113,10 +113,7 @@ export default class App extends React.Component<{}, AppState> {
                 // this.audioManager.playAnnouncement('forward1');
 
                 this.setState((state) => {
-                    const newCharacterState = state.characterState.forward(
-                        1,
-                        state.drawingEnabled
-                    );
+                    const newCharacterState = state.characterState.forward(1, state.drawingEnabled);
 
                     // We have to start the sound here because this is where we know the new character state.
                     this.audioManager.playSoundForCharacterState("movement", state.settings.movementDelayMs, newCharacterState);
@@ -137,13 +134,13 @@ export default class App extends React.Component<{}, AppState> {
                 // this.audioManager.playAnnouncement('forward2');
 
                 this.setState((state) => {
-                    const finalNewCharacterState = state.characterState.forward(2, state.drawingEnabled);
+                    const newCharacterState = state.characterState.forward(2, state.drawingEnabled);
 
                     // We have to start the sound here because this is where we know the new character state.
-                    this.audioManager.playSoundForCharacterState("movement", state.settings.movementDelayMs, finalNewCharacterState);
+                    this.audioManager.playSoundForCharacterState("movement", state.settings.movementDelayMs, newCharacterState);
 
                     return {
-                        characterState: finalNewCharacterState
+                        characterState: newCharacterState
                     };
                 });
                 return Utils.makeDelayedPromise(this.state.settings.movementDelayMs);
@@ -158,12 +155,12 @@ export default class App extends React.Component<{}, AppState> {
                 // this.audioManager.playAnnouncement('forward3');
 
                 this.setState((state) => {
-                    const finalNewCharacterState = state.characterState.forward(3, state.drawingEnabled);
+                    const newCharacterState = state.characterState.forward(3, state.drawingEnabled);
 
                     // We have to start the sound here because this is where we know the new character state.
-                    this.audioManager.playSoundForCharacterState("movement", state.settings.movementDelayMs, finalNewCharacterState);
+                    this.audioManager.playSoundForCharacterState("movement", state.settings.movementDelayMs, newCharacterState);
                     return {
-                        characterState: finalNewCharacterState
+                        characterState: newCharacterState
                     };
                 });
 
@@ -180,7 +177,7 @@ export default class App extends React.Component<{}, AppState> {
 
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('left45');
-                // TODO: Make a function generating utility for all these blocks.
+
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnLeft(1);
 
@@ -204,6 +201,7 @@ export default class App extends React.Component<{}, AppState> {
 
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('left90');
+
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnLeft(2);
 
@@ -224,6 +222,7 @@ export default class App extends React.Component<{}, AppState> {
             () => {
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('left180');
+
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnLeft(4);
 
@@ -247,6 +246,7 @@ export default class App extends React.Component<{}, AppState> {
 
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('right45');
+
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnRight(1);
 
@@ -261,7 +261,6 @@ export default class App extends React.Component<{}, AppState> {
             }
         );
 
-        // TODO: Discuss changing this incrementally as I did with forward2 and forward3.
         this.interpreter.addCommandHandler(
             'right90',
             'moveCharacter',
@@ -271,6 +270,7 @@ export default class App extends React.Component<{}, AppState> {
 
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('right90');
+
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnRight(2);
 
@@ -291,6 +291,7 @@ export default class App extends React.Component<{}, AppState> {
             () => {
                 // TODO: Enable announcements again.
                 // this.audioManager.playAnnouncement('right180');
+
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnRight(4);
 

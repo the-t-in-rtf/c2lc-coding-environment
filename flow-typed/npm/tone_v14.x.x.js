@@ -1,15 +1,18 @@
 declare module "tone" {
-    // TODO: There are two things called "Frequency" in Tone.js
+    // There are two things called "Frequency" in Tone.js
+    //
     //       https://tonejs.github.io/docs/14.7.58/type/Frequency
     //       https://tonejs.github.io/docs/14.7.58/fn/Frequency
-    //       This "Frequency" is the type one, maybe call it FrequencyType?
+    // 
+    // To avoid confusion, we call the type `FrequencyType` and reserve `Frequency` for the function.
     declare type FrequencyType = string;
 
+    // https://tonejs.github.io/docs/14.7.58/FrequencyClass
     declare export class FrequencyClass {
         toMidi: any
     }
 
-    declare export function Frequency(frequency: number | string): FrequencyClass;
+    declare export function Frequency(value: TimeValue | FrequencyType ): FrequencyClass;
 
     // https://tonejs.github.io/docs/14.7.58/type/InputNode
     declare type InputNode = ToneAudioNode;
