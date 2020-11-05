@@ -20,6 +20,7 @@ import RefreshButton from './RefreshButton';
 import Scene from './Scene';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
+import ProgramSpeedController from './ProgramSpeedController';
 import { programIsEmpty } from './ProgramUtils';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import * as Utils from './Utils';
@@ -36,7 +37,8 @@ type AppContext = {
 
 type AppSettings = {
     language: string,
-    addNodeExpandedMode: boolean
+    addNodeExpandedMode: boolean,
+    movementDelayMs: number
 };
 
 type AppState = {
@@ -54,8 +56,7 @@ type AppState = {
     sceneNumRows: number,
     sceneNumColumns: number,
     sceneGridCellWidth: number,
-    drawingEnabled: boolean,
-    programExecutionSpeed: number
+    drawingEnabled: boolean
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -81,7 +82,8 @@ export default class App extends React.Component<{}, AppState> {
             characterState: this.startingCharacterState,
             settings: {
                 language: 'en',
-                addNodeExpandedMode: true
+                addNodeExpandedMode: true,
+                movementDelayMs: 1000
             },
             dashConnectionStatus: 'notConnected',
             activeProgramStepNum: null,
@@ -94,8 +96,7 @@ export default class App extends React.Component<{}, AppState> {
             sceneNumRows: 9,
             sceneNumColumns: 17,
             sceneGridCellWidth: 1,
-            drawingEnabled: true,
-            programExecutionSpeed: 1750
+            drawingEnabled: true
         };
 
         this.interpreter = new Interpreter(this.handleRunningStateChange);
@@ -103,7 +104,7 @@ export default class App extends React.Component<{}, AppState> {
         this.interpreter.addCommandHandler(
             'forward1',
             'moveCharacter',
-            () => {
+            (interpreter, timeDelayMs) => {
                 this.audioManager.playSound('forward1');
                 this.setState((state) => {
                     return {
@@ -113,14 +114,14 @@ export default class App extends React.Component<{}, AppState> {
                         )
                     };
                 });
-                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
+                return Utils.makeDelayedPromise(timeDelayMs);
             }
         );
 
         this.interpreter.addCommandHandler(
             'forward2',
             'moveCharacter',
-            () => {
+            (interpreter, timeDelayMs) => {
                 this.audioManager.playSound('forward2');
                 this.setState((state) => {
                     return {
@@ -130,14 +131,14 @@ export default class App extends React.Component<{}, AppState> {
                         )
                     };
                 });
-                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
+                return Utils.makeDelayedPromise(timeDelayMs);
             }
         );
 
         this.interpreter.addCommandHandler(
             'forward3',
             'moveCharacter',
-            () => {
+            (interpreter, timeDelayMs) => {
                 this.audioManager.playSound('forward3');
                 this.setState((state) => {
                     return {
@@ -147,91 +148,91 @@ export default class App extends React.Component<{}, AppState> {
                         )
                     };
                 });
-                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
+                return Utils.makeDelayedPromise(timeDelayMs);
             }
         );
 
         this.interpreter.addCommandHandler(
             'left45',
             'moveCharacter',
-            () => {
+            (interpreter, timeDelayMs) => {
                 this.audioManager.playSound('left45');
                 this.setState((state) => {
                     return {
                         characterState: state.characterState.turnLeft(1)
                     };
                 });
-                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
+                return Utils.makeDelayedPromise(timeDelayMs);
             }
         );
 
         this.interpreter.addCommandHandler(
             'left90',
             'moveCharacter',
-            () => {
+            (interpreter, timeDelayMs) => {
                 this.audioManager.playSound('left90');
                 this.setState((state) => {
                     return {
                         characterState: state.characterState.turnLeft(2)
                     };
                 });
-                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
+                return Utils.makeDelayedPromise(timeDelayMs);
             }
         );
 
         this.interpreter.addCommandHandler(
             'left180',
             'moveCharacter',
-            () => {
+            (interpreter, timeDelayMs) => {
                 this.audioManager.playSound('left180');
                 this.setState((state) => {
                     return {
                         characterState: state.characterState.turnLeft(4)
                     };
                 });
-                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
+                return Utils.makeDelayedPromise(timeDelayMs);
             }
         );
 
         this.interpreter.addCommandHandler(
             'right45',
             'moveCharacter',
-            () => {
+            (interpreter, timeDelayMs) => {
                 this.audioManager.playSound('right45');
                 this.setState((state) => {
                     return {
                         characterState: state.characterState.turnRight(1)
                     };
                 });
-                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
+                return Utils.makeDelayedPromise(timeDelayMs);
             }
         );
 
         this.interpreter.addCommandHandler(
             'right90',
             'moveCharacter',
-            () => {
+            (interpreter, timeDelayMs) => {
                 this.audioManager.playSound('right90');
                 this.setState((state) => {
                     return {
                         characterState: state.characterState.turnRight(2)
                     };
                 });
-                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
+                return Utils.makeDelayedPromise(timeDelayMs);
             }
         );
 
         this.interpreter.addCommandHandler(
             'right180',
             'moveCharacter',
-            () => {
+            (interpreter, timeDelayMs) => {
                 this.audioManager.playSound('right180');
                 this.setState((state) => {
                     return {
                         characterState: state.characterState.turnRight(4)
                     };
                 });
-                return Utils.makeDelayedPromise(this.state.programExecutionSpeed);
+                return Utils.makeDelayedPromise(timeDelayMs);
             }
         );
 
@@ -384,11 +385,10 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
-    handleChangeProgramExecutionSpeed = (multiplier: number) => {
-        const newProgramExecutionSpeed = this.state.programExecutionSpeed * multiplier;
-        this.setState({
-            programExecutionSpeed: newProgramExecutionSpeed
-        });
+    handleChangeProgramSpeed = (e) => {
+        const newMovementDelay = 2000 - (e.target.value - 1) * 250;
+        this.interpreter.updateTimeDelayMs(newMovementDelay);
+        this.setStateSettings({movementDelayMs: newMovementDelay});
     }
 
     renderCommandBlocks = () => {
@@ -521,6 +521,7 @@ export default class App extends React.Component<{}, AppState> {
                                 />
                             </Col>
                         </Row>
+                        <ProgramSpeedController onChange={this.handleChangeProgramSpeed}/>
                     </Container>
                 </div>
                 <DashConnectionErrorModal
