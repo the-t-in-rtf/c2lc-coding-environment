@@ -85,9 +85,9 @@ test('Clicking the button toggles selectedCommandName and plays its sound', () =
 
     // Initially the command is not selected
     button.simulate('click');
-    // Verify that the audioManager playSound is called
-    expect(audioManagerMock.playSound.mock.calls.length).toBe(1);
-    expect(audioManagerMock.playSound.mock.calls[0][0]).toBe('forward1');
+    // Verify that the audioManager playAnnouncement is called
+    expect(audioManagerMock.playAnnouncement.mock.calls.length).toBe(1);
+    expect(audioManagerMock.playAnnouncement.mock.calls[0][0]).toBe('forward1');
     // Verify that onChange is called with the commandName
     expect(mockChangeHandler.mock.calls.length).toBe(1);
     expect(mockChangeHandler.mock.calls[0][0]).toBe('forward1');
@@ -96,9 +96,9 @@ test('Clicking the button toggles selectedCommandName and plays its sound', () =
     wrapper.update();
     // Click again
     button.simulate('click');
-    // Verify that the audioManager playSound is called again
-    expect(audioManagerMock.playSound.mock.calls.length).toBe(2);
-    expect(audioManagerMock.playSound.mock.calls[1][0]).toBe('forward1');
+    // Verify that the audioManager playAnnouncement is called again
+    expect(audioManagerMock.playAnnouncement.mock.calls.length).toBe(2);
+    expect(audioManagerMock.playAnnouncement.mock.calls[1][0]).toBe('forward1');
     // And verify that the command is toggled off
     expect(mockChangeHandler.mock.calls.length).toBe(2);
     expect(mockChangeHandler.mock.calls[1][0]).toBe(null);

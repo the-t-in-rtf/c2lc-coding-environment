@@ -2,6 +2,7 @@
 
 let idCounter: number = 0;
 
+/* istanbul ignore next */
 function generateId(prefix: string): string {
     const id = `${prefix}-${idCounter}`;
     idCounter += 1;
@@ -17,4 +18,8 @@ function makeDelayedPromise(timeMs: number): Promise<void> {
     });
 }
 
-export { generateId, makeDelayedPromise };
+function generateEncodedProgramURL(versionString: string, programString: string): string {
+    return `?v=${encodeURIComponent(versionString)}&p=${encodeURIComponent(programString)}`;
+}
+
+export { generateId, makeDelayedPromise, generateEncodedProgramURL };
