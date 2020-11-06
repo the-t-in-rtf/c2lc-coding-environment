@@ -426,7 +426,7 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleRootClick = (e: SyntheticInputEvent<HTMLInputElement>) => {
-        // Ensure that sound support is started on any user actiono.
+        // Ensure that sound support is started on any user action.
         ToneStart();
 
         let element = e.target;
@@ -446,7 +446,7 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleRootKeyDown = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
-        // Ensure that sound support is started on any user actiono.
+        // Ensure that sound support is started on any user action.
         ToneStart();
 
         this.focusTrapManager.handleKeyDown(e);
