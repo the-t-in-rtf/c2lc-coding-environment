@@ -27,6 +27,8 @@
 }
 
 .ProgramBlockEditor__options {
+    display: flex;
+    align-items: center;
     justify-self: end;
     grid-column-start: 2;
     grid-column-end: 3;
@@ -93,8 +95,8 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEdi
 }
 
 .ProgramBlockEditor__program-deleteAll-button-svg {
-    width: 1.4rem;
-    height: 1.4rem;
+    width: 1.7rem;
+    height: 1.7rem;
     display: block;
 }
 
