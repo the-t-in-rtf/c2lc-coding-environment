@@ -85,7 +85,7 @@ export default class AudioManager {
     };
     panner: Panner;
     toneStartHasBeenCalled: boolean;
-    toneStarted: boolean;
+    toneStartPromise: Promise<void>;
 
     constructor(audioEnabled: boolean) {
         this.audioEnabled = audioEnabled;
@@ -149,7 +149,6 @@ export default class AudioManager {
 
         // Flag our audio as not having been started.
         this.toneStartHasBeenCalled = false;
-        this.toneStarted = false;
     }
 
     buildAnnouncementLookUpTable() {
@@ -162,19 +161,25 @@ export default class AudioManager {
     }
 
     playAnnouncement(soundName: AnnouncedSoundName) {
-        if (this.audioEnabled && this.toneStarted) {
-            const player = this.announcementLookUpTable[soundName];
-            if (player.loaded) {
-                player.start();
-            }
+        if (this.audioEnabled && this.toneStartPromise) {
+            this.toneStartPromise.then(() => {
+                const player = this.announcementLookUpTable[soundName];
+                if (player.loaded) {
+                    player.start();
+                }
+            });
         }
     }
 
     // TODO: Add a better type for pitch.
     playPitchedSample(sampler: Sampler, pitch: string, releaseTime: number) {
-        // We can only play the sound if it's already loaded.
-        if (sampler.loaded) {
-            sampler.triggerAttackRelease([pitch], releaseTime);
+        if (this.audioEnabled && this.toneStartPromise) {
+            this.toneStartPromise.then(() => {
+                // We can only play the sound if it's already loaded.
+                if (sampler.loaded) {
+                    sampler.triggerAttackRelease([pitch], releaseTime);
+                }
+            });
         }
     }
 
@@ -203,11 +208,8 @@ export default class AudioManager {
     startTone = () => {
         // Ensure that sound support is started on any user action.
         if (!this.toneStartHasBeenCalled) {
-            const toneStartPromise = ToneStart();
+            this.toneStartPromise = ToneStart();
             this.toneStartHasBeenCalled = true;
-            toneStartPromise.then(() => {
-                this.toneStarted = true;
-            });
         }
     }
 };

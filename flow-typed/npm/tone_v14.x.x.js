@@ -1,6 +1,6 @@
 declare module "tone" {
     // https://tonejs.github.io/docs/14.7.39/fn/start
-    declare export function start(): Promise;
+    declare export function start(): Promise<void>;
 
     // There are two things called "Frequency" in Tone.js
     //
