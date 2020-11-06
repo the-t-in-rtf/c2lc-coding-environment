@@ -18,7 +18,7 @@ export interface RobotDriver {
     right(): Promise<void>;
 };
 
-export type SoundName = CommandName | 'add' | 'deleteAll' | 'delete' | 'moveToPrevious' | 'moveToNext' | 'replace';
+export type AnnouncedSoundName = CommandName | 'add' | 'deleteAll' | 'delete' | 'moveToPrevious' | 'moveToNext' | 'replace';
 
 // Flow lacks its own types for the Speech Recognition API, so we define our own
 // TODO: remove when https://github.com/facebook/flow/issues/7361 is resolved.

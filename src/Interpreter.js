@@ -3,7 +3,7 @@
 import type {Program} from './types';
 
 /* eslint-disable no-use-before-define */
-export type CommandHandler = { (Interpreter): Promise<void> };
+export type CommandHandler = { (Interpreter, timeDelayMs: number): Promise<void> };
 /* eslint-enable no-use-before-define */
 
 export type InterpreterRunningState = { isRunning: boolean, activeStep: ?number }
@@ -17,6 +17,7 @@ export default class Interpreter {
     programCounter: number;
     memory: { [string]: any };
     isRunning: boolean;
+    timeDelayMs: number;
     onRunningStateChange: (InterpreterRunningState) => void;
 
     constructor(onRunningStateChange: (InterpreterRunningState) => void) {
@@ -26,6 +27,7 @@ export default class Interpreter {
         this.memory = {};
         this.isRunning = false;
         this.onRunningStateChange = onRunningStateChange;
+        this.timeDelayMs = 1500;
     }
 
     addCommandHandler(command: string, namespace: string, handler: CommandHandler) {
@@ -112,7 +114,7 @@ export default class Interpreter {
     callCommandHandlers(handlers: Array<CommandHandler>): Promise<any> {
         const promises = [];
         for (const handler of handlers) {
-            promises.push(handler(this));
+            promises.push(handler(this, this.timeDelayMs));
         }
         return Promise.all(promises);
     };
