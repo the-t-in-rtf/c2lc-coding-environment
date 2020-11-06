@@ -56,7 +56,8 @@ declare module "tone" {
 
     // https://tonejs.github.io/docs/14.7.58/Player
     declare export class Player extends Source {
-        constructor(url: string): Player
+        constructor(url: string): Player,
+        loaded: boolean
     }
 
     // https://tonejs.github.io/docs/14.7.58/interface/SamplerOptions
@@ -72,6 +73,7 @@ declare module "tone" {
     // https://tonejs.github.io/docs/14.7.58/Sampler
     declare export class Sampler extends Instrument {
         constructor(samples: SamplerOptions): Sampler,
+        loaded: boolean,
         triggerAttackRelease(notes: Array<FrequencyType>, duration: Time): void
     }
 
