@@ -174,7 +174,11 @@ export default class AudioManager {
         const noteName = getNoteForState(characterState);
 
         const sampler: Sampler = this.samplers[samplerKey];
-        this.playPitchedSample(sampler, noteName, releaseTime);
+
+        // We can only play the sound if it's already loaded.
+        if (sampler.loaded) {
+            this.playPitchedSample(sampler, noteName, releaseTime);
+        }
 
         // Pan left/right to suggest the relative horizontal position.
         // As we use a single Sampler grade, our best option for panning is
