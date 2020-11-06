@@ -167,6 +167,7 @@ export default class AudioManager {
 
     // TODO: Add a better type for pitch.
     playPitchedSample(sampler: Sampler, pitch: string, releaseTime: number) {
+        // We can only play the sound if it's already loaded.
         if (sampler.loaded) {
             sampler.triggerAttackRelease([pitch], releaseTime);
         }
@@ -178,7 +179,6 @@ export default class AudioManager {
 
         const sampler: Sampler = this.samplers[samplerKey];
 
-        // We can only play the sound if it's already loaded.
         this.playPitchedSample(sampler, noteName, releaseTime);
 
         // Pan left/right to suggest the relative horizontal position.
