@@ -3,6 +3,7 @@
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
+import {start as ToneStart} from 'tone';
 import AudioManager from './AudioManager';
 import CharacterState from './CharacterState';
 import CommandPaletteCommand from './CommandPaletteCommand';
@@ -425,6 +426,9 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleRootClick = (e: SyntheticInputEvent<HTMLInputElement>) => {
+        // Ensure that sound support is started on any user actiono.
+        ToneStart();
+
         let element = e.target;
         // Walk up the document tree until we hit the top, or we find that
         // we are within an action panel group area
@@ -442,6 +446,9 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleRootKeyDown = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
+        // Ensure that sound support is started on any user actiono.
+        ToneStart();
+
         this.focusTrapManager.handleKeyDown(e);
     };
 
