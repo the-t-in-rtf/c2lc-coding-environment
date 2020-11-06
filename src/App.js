@@ -4,13 +4,11 @@ import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
 import AudioManager from './AudioManager';
-import BluetoothApiWarning from './BluetoothApiWarning';
 import CharacterState from './CharacterState';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import C2lcURLParams from './C2lcURLParams';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
-import DeviceConnectControl from './DeviceConnectControl';
 import * as FeatureDetection from './FeatureDetection';
 import FocusTrapManager from './FocusTrapManager';
 import Interpreter from './Interpreter';
@@ -29,6 +27,10 @@ import * as Utils from './Utils';
 import messages from './messages.json';
 import './App.scss';
 import './vendor/dragdroptouch/DragDropTouch.js';
+/* Dash connection removed for version 0.5
+import BluetoothApiWarning from './BluetoothApiWarning';
+import DeviceConnectControl from './DeviceConnectControl';
+*/
 
 // Uncomment to use the FakeRobotDriver (see driver construction below also)
 //import FakeRobotDriver from './FakeRobotDriver';
@@ -499,6 +501,7 @@ export default class App extends React.Component<{}, AppState> {
                                             value={this.state.audioEnabled}
                                             onChange={this.handleToggleAudioFeedback} />
                                     </div>
+                                    {/* Dash connection removed for version 0.5
                                     <DeviceConnectControl
                                         disabled={
                                             !this.appContext.bluetoothApiIsAvailable ||
@@ -507,11 +510,13 @@ export default class App extends React.Component<{}, AppState> {
                                         onClickConnect={this.handleClickConnectDash}>
                                         <FormattedMessage id='App.connectToDash' />
                                     </DeviceConnectControl>
+                                    */}
                                 </div>
                             </Row>
                         </Container>
                     </header>
                     <Container role='main' className='mb-5'>
+                        {/* Dash connection removed for version 0.5
                         {!this.appContext.bluetoothApiIsAvailable &&
                             <Row className='App__bluetooth-api-warning-section'>
                                 <Col>
@@ -519,6 +524,7 @@ export default class App extends React.Component<{}, AppState> {
                                 </Col>
                             </Row>
                         }
+                        */}
                         <div className='App__scene-container'>
                             <Scene
                                 numRows={this.state.sceneNumRows}
@@ -622,6 +628,7 @@ export default class App extends React.Component<{}, AppState> {
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
         }
+        /* Dash connection removed for version 0.5
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
 
@@ -640,5 +647,6 @@ export default class App extends React.Component<{}, AppState> {
                 }
             }
         }
+        */
     }
 }
