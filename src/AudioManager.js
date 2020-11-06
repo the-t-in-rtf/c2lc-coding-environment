@@ -1,6 +1,6 @@
 // @flow
 
-import { Midi, Panner, Player, Sampler } from 'tone';
+import { Midi, Panner, Player, Sampler, start as ToneStart} from 'tone';
 import CharacterState from './CharacterState';
 import type {AnnouncedSoundName} from './types';
 
@@ -21,7 +21,6 @@ type AnnouncementLookupTable = {
     moveToNext: Player,
     replace: Player
 }
-
 
 const AnnouncementDefs = new Map<string, string>([
     ['forward1', '/audio/Move.wav'],
@@ -79,12 +78,14 @@ export function getNoteForState (characterState: CharacterState) : string {
 export default class AudioManager {
     audioEnabled: boolean;
     announcementLookUpTable: AnnouncementLookupTable;
-    panner: Panner;
     samplers: {
         movement: Sampler,
         left: Sampler,
         right: Sampler
     };
+    panner: Panner;
+    toneStartHasBeenCalled: boolean;
+    toneStarted: boolean;
 
     constructor(audioEnabled: boolean) {
         this.audioEnabled = audioEnabled;
@@ -145,6 +146,10 @@ export default class AudioManager {
         });
 
         this.samplers.movement.connect(this.panner);
+
+        // Flag our audio as not having been started.
+        this.toneStartHasBeenCalled = false;
+        this.toneStarted = false;
     }
 
     buildAnnouncementLookUpTable() {
@@ -157,7 +162,7 @@ export default class AudioManager {
     }
 
     playAnnouncement(soundName: AnnouncedSoundName) {
-        if (this.audioEnabled) {
+        if (this.audioEnabled && this.toneStarted) {
             const player = this.announcementLookUpTable[soundName];
             player.start();
         }
@@ -188,5 +193,16 @@ export default class AudioManager {
 
     setAudioEnabled(value: boolean) {
         this.audioEnabled = value;
+    }
+
+    startTone = () => {
+        // Ensure that sound support is started on any user action.
+        if (!this.toneStartHasBeenCalled) {
+            const toneStartPromise = ToneStart();
+            this.toneStartHasBeenCalled = true;
+            toneStartPromise.then(() => {
+                this.toneStarted = true;
+            });
+        }
     }
 };
