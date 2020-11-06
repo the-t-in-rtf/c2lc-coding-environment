@@ -86,6 +86,8 @@ export default class AudioManager {
     panner: Panner;
     toneStartHasBeenCalled: boolean;
     toneStartPromise: Promise<void>;
+    toneStartResolve: function;
+    toneStartReject: function;
 
     constructor(audioEnabled: boolean) {
         this.audioEnabled = audioEnabled;
@@ -149,6 +151,10 @@ export default class AudioManager {
 
         // Flag our audio as not having been started.
         this.toneStartHasBeenCalled = false;
+        this.toneStartPromise = new Promise((resolve, reject) => {
+            this.toneStartResolve = resolve;
+            this.toneStartReject = reject;
+        });
     }
 
     buildAnnouncementLookUpTable() {
@@ -208,8 +214,10 @@ export default class AudioManager {
     startTone = () => {
         // Ensure that sound support is started on any user action.
         if (!this.toneStartHasBeenCalled) {
-            this.toneStartPromise = ToneStart();
+            const toneStartPromise = ToneStart();
             this.toneStartHasBeenCalled = true;
+
+            toneStartPromise.then(this.toneStartResolve, this.toneStartReject);
         }
     }
 };
