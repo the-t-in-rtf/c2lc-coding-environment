@@ -448,7 +448,7 @@ export default class App extends React.Component<{}, AppState> {
 
     handleChangeProgramSpeed = (e: SyntheticInputEvent<HTMLInputElement>) => {
         const speedLookUp = [2000, 1500, 1000, 500, 250];
-        const newMovementDelay = speedLookUp[e.target.value - 1];
+        const newMovementDelay = speedLookUp[parseInt(e.target.value) - 1];
         this.interpreter.timeDelayMs = newMovementDelay;
     }
 
