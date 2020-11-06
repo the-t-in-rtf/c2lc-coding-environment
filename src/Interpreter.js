@@ -27,7 +27,7 @@ export default class Interpreter {
         this.memory = {};
         this.isRunning = false;
         this.onRunningStateChange = onRunningStateChange;
-        this.timeDelayMs = 1500;
+        this.timeDelayMs = 1000;
     }
 
     addCommandHandler(command: string, namespace: string, handler: CommandHandler) {
