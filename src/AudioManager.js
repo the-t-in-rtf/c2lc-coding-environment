@@ -159,14 +159,18 @@ export default class AudioManager {
     playAnnouncement(soundName: AnnouncedSoundName) {
         if (this.audioEnabled) {
             const player = this.announcementLookUpTable[soundName];
-            player.start();
+            if (player.loaded) {
+                player.start();
+            }
         }
     }
 
     // TODO: Add a better type for pitch.
-    // TODO: Confirm whether release time is meaningful, it always seems to play the whole sound.
     playPitchedSample(sampler: Sampler, pitch: string, releaseTime: number) {
-        sampler.triggerAttackRelease([pitch], releaseTime);
+        // We can only play the sound if it's already loaded.
+        if (sampler.loaded) {
+            sampler.triggerAttackRelease([pitch], releaseTime);
+        }
     }
 
     playSoundForCharacterState(samplerKey: string, releaseTimeInMs: number, characterState: CharacterState) {
@@ -174,6 +178,7 @@ export default class AudioManager {
         const noteName = getNoteForState(characterState);
 
         const sampler: Sampler = this.samplers[samplerKey];
+
         this.playPitchedSample(sampler, noteName, releaseTime);
 
         // Pan left/right to suggest the relative horizontal position.
