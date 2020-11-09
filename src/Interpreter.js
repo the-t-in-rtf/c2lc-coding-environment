@@ -133,7 +133,7 @@ export default class Interpreter {
         }
     }
 
-    setStepTime(stepTime: number) {
-        this.stepTimeMs = stepTime;
+    setStepTime(stepTimeMs: number) {
+        this.stepTimeMs = stepTimeMs;
     }
 }

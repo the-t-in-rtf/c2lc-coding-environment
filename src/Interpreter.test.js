@@ -245,4 +245,20 @@ test('Should initiallize stepTime value from constructor and update on setStepTi
     const newStepTimeValue = 2000;
     interpreter.setStepTime(newStepTimeValue);
     expect(interpreter.stepTimeMs).toBe(newStepTimeValue);
+});
+
+test('Each command handler get called with step time specified in the class property', () => {
+    const mockCommandHandler = jest.fn();
+    const interpreter = new Interpreter(()=>{}, 1000);
+    interpreter.addCommandHandler('test', 'test', mockCommandHandler);
+    interpreter.doCommand('test');
+    expect(mockCommandHandler.mock.calls.length).toBe(1);
+    expect(mockCommandHandler.mock.calls[0][1]).toBe(interpreter.stepTimeMs);
+
+    const newStepTimeValue = 2000;
+    interpreter.setStepTime(newStepTimeValue);
+    expect(interpreter.stepTimeMs).toBe(newStepTimeValue);
+    interpreter.doCommand('test');
+    expect(mockCommandHandler.mock.calls.length).toBe(2);
+    expect(mockCommandHandler.mock.calls[1][1]).toBe(interpreter.stepTimeMs);
 })
