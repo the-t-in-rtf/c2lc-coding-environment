@@ -5,6 +5,7 @@ import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
 import AudioManager from './AudioManager';
 import CharacterState from './CharacterState';
+import CharacterStateSerializer from './CharacterStateSerializer';
 import CommandPaletteCommand from './CommandPaletteCommand';
 import C2lcURLParams from './C2lcURLParams';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
@@ -619,6 +620,10 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
+        if (this.state.characterState !== prevState.characterState) {
+            const characterStateSerializer = new CharacterStateSerializer();
+            console.log(characterStateSerializer.serialize(this.state.characterState));
+        }
         if (this.state.program !== prevState.program) {
             const serializedProgram = this.programSerializer.serialize(this.state.program);
             window.history.pushState(
