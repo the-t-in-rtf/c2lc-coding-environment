@@ -85,6 +85,11 @@ export default class AudioManager {
     };
     panner: Panner;
     toneStartHasBeenCalled: boolean;
+
+    startPromise: Promise<void>;
+    startResolve: function;
+    startReject: function;
+
     toneStartPromise: Promise<void>;
     toneStartResolve: function;
     toneStartReject: function;
@@ -92,69 +97,81 @@ export default class AudioManager {
     constructor(audioEnabled: boolean) {
         this.audioEnabled = audioEnabled;
 
-        this.buildAnnouncementLookUpTable();
-
-        this.panner = new Panner();
-        this.panner.toDestination();
-
-        this.samplers = {};
-
-        // TODO: Make a sammplerDef for all variations.
-        this.samplers.left = new Sampler({
-            // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
-            // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
-            urls: {
-                "C0": "C6.wav",
-                "C1": "C6.wav",
-                "C2": "C6.wav",
-                "C3": "C6.wav",
-                "C4": "C6.wav",
-                "C5": "C6.wav",
-                "C6": "C6.wav"
-            },
-            baseUrl: "/audio/left-turn/"
-        });
-
-        this.samplers.left.connect(this.panner);
-
-        this.samplers.right = new Sampler({
-            urls: {
-                // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
-                // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
-                "C0": "C6.wav",
-                "C1": "C6.wav",
-                "C2": "C6.wav",
-                "C3": "C6.wav",
-                "C4": "C6.wav",
-                "C5": "C6.wav",
-                "C6": "C6.wav"
-            },
-            baseUrl: "/audio/right-turn/"
-        });
-
-        this.samplers.right.connect(this.panner);
-
-        this.samplers.movement = new Sampler({
-            urls: {
-                "C0": "C0.wav",
-                "C1": "C1.wav",
-                "C2": "C2.wav",
-                "C3": "C3.wav",
-                "C4": "C4.wav",
-                "C5": "C5.wav",
-                "C6": "C6.wav"
-            },
-            baseUrl: "/audio/long-bell/"
-        });
-
-        this.samplers.movement.connect(this.panner);
-
         // Flag our audio as not having been started.
         this.toneStartHasBeenCalled = false;
-        this.toneStartPromise = new Promise((resolve, reject) => {
-            this.toneStartResolve = resolve;
-            this.toneStartReject = reject;
+
+        this.startPromise = new Promise((resolve, reject) => {
+            this.startResolve = resolve;
+            this.startReject = reject;
         });
+
+        this.createSoundInfrastructure();
+    }
+
+    createSoundInfrastructure = () => {
+        try {
+            this.buildAnnouncementLookUpTable();
+
+            this.panner = new Panner();
+            this.panner.toDestination();
+
+            this.samplers = {};
+
+            // TODO: Make a sammplerDef for all variations.
+            this.samplers.left = new Sampler({
+                // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
+                // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
+                urls: {
+                    "C0": "C6.wav",
+                    "C1": "C6.wav",
+                    "C2": "C6.wav",
+                    "C3": "C6.wav",
+                    "C4": "C6.wav",
+                    "C5": "C6.wav",
+                    "C6": "C6.wav"
+                },
+                baseUrl: "/audio/left-turn/"
+            });
+
+            this.samplers.left.connect(this.panner);
+
+            this.samplers.right = new Sampler({
+                urls: {
+                    // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
+                    // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
+                    "C0": "C6.wav",
+                    "C1": "C6.wav",
+                    "C2": "C6.wav",
+                    "C3": "C6.wav",
+                    "C4": "C6.wav",
+                    "C5": "C6.wav",
+                    "C6": "C6.wav"
+                },
+                baseUrl: "/audio/right-turn/"
+            });
+
+            this.samplers.right.connect(this.panner);
+
+            this.samplers.movement = new Sampler({
+                urls: {
+                    "C0": "C0.wav",
+                    "C1": "C1.wav",
+                    "C2": "C2.wav",
+                    "C3": "C3.wav",
+                    "C4": "C4.wav",
+                    "C5": "C5.wav",
+                    "C6": "C6.wav"
+                },
+                baseUrl: "/audio/long-bell/"
+            });
+
+            this.samplers.movement.connect(this.panner);
+
+            this.startResolve();
+        }
+        catch (error) {
+            this.startReject(error);
+        }
     }
 
     buildAnnouncementLookUpTable() {
@@ -167,8 +184,8 @@ export default class AudioManager {
     }
 
     playAnnouncement(soundName: AnnouncedSoundName) {
-        if (this.audioEnabled && this.toneStartPromise) {
-            this.toneStartPromise.then(() => {
+        if (this.audioEnabled) {
+            this.startPromise.then(() => {
                 const player = this.announcementLookUpTable[soundName];
                 if (player.loaded) {
                     player.start();
@@ -179,32 +196,34 @@ export default class AudioManager {
 
     // TODO: Add a better type for pitch.
     playPitchedSample(sampler: Sampler, pitch: string, releaseTime: number) {
-        if (this.audioEnabled && this.toneStartPromise) {
-            this.toneStartPromise.then(() => {
-                // We can only play the sound if it's already loaded.
-                if (sampler.loaded) {
-                    sampler.triggerAttackRelease([pitch], releaseTime);
-                }
-            });
+        if (this.audioEnabled) {
+            // We can only play the sound if it's already loaded.
+            if (sampler.loaded) {
+                sampler.triggerAttackRelease([pitch], releaseTime);
+            }
         }
     }
 
     playSoundForCharacterState(samplerKey: string, releaseTimeInMs: number, characterState: CharacterState) {
-        const releaseTime = releaseTimeInMs / 1000;
-        const noteName = getNoteForState(characterState);
+        if (this.audioEnabled) {
+            this.startPromise.then(() => {
+                const releaseTime = releaseTimeInMs / 1000;
+                const noteName = getNoteForState(characterState);
 
-        const sampler: Sampler = this.samplers[samplerKey];
+                const sampler: Sampler = this.samplers[samplerKey];
 
-        this.playPitchedSample(sampler, noteName, releaseTime);
+                this.playPitchedSample(sampler, noteName, releaseTime);
 
-        // Pan left/right to suggest the relative horizontal position.
-        // As we use a single Sampler grade, our best option for panning is
-        // to pan all sounds.  We can discuss adjusting this once we have
-        // multiple sound-producing elements in the environment.
-        const panningLevel = Math.min(1, Math.max(-1, (0.1 * characterState.xPos)));
+                // Pan left/right to suggest the relative horizontal position.
+                // As we use a single Sampler grade, our best option for panning is
+                // to pan all sounds.  We can discuss adjusting this once we have
+                // multiple sound-producing elements in the environment.
+                const panningLevel = Math.min(1, Math.max(-1, (0.1 * characterState.xPos)));
 
-        // TODO: Consider making the timing configurable or tying it to the movement timing.
-        this.panner.pan.rampTo(panningLevel, 0.5)
+                // TODO: Consider making the timing configurable or tying it to the movement timing.
+                this.panner.pan.rampTo(panningLevel, 0.5)
+            });
+        }
     }
 
     setAudioEnabled(value: boolean) {
@@ -214,10 +233,8 @@ export default class AudioManager {
     startTone = () => {
         // Ensure that sound support is started on any user action.
         if (!this.toneStartHasBeenCalled) {
-            const toneStartPromise = ToneStart();
+            ToneStart().then(this.startResolve, this.startReject);
             this.toneStartHasBeenCalled = true;
-
-            toneStartPromise.then(this.toneStartResolve, this.toneStartReject);
         }
     }
 };
