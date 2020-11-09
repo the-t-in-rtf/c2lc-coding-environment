@@ -591,7 +591,7 @@ export default class App extends React.Component<{}, AppState> {
                                 />
                             </div>
                             <ProgramSpeedController
-                                speedLookUp={this.speedLookUp}
+                                values={this.speedLookUp}
                                 onChange={this.handleChangeProgramSpeed}
                             />
                         </div>
