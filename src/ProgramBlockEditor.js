@@ -271,7 +271,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         const classes = classNames(
             'ProgramBlockEditor__program-block',
             active && 'ProgramBlockEditor__program-block--active',
-            hasActionPanelControl && 'focus-trap-program-block'
+            hasActionPanelControl && 'focus-trap-action-panel__program-block'
         );
         const ariaLabel = this.props.intl.formatMessage(
             { id: 'ProgramBlockEditor.command' },
@@ -484,14 +484,20 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             if (this.state.replaceIsActive) {
                 this.props.focusTrapManager.setFocusTrap(
                     this.handleCloseReplaceFocusTrap,
-                    ['.focus-trap-replace-action-button', '.focus-trap-replace-command'],
-                    '.focus-trap-replace-action-button'
+                    [
+                        '.focus-trap-action-panel-replace__replace_button',
+                        '.focus-trap-action-panel-replace__command_button'
+                    ],
+                    '.focus-trap-action-panel-replace__replace_button'
                 );
             } else {
                 this.props.focusTrapManager.setFocusTrap(
                     this.handleCloseActionPanelFocusTrap,
-                    ['.focus-trap-program-block', '.focus-trap-action-buttons'],
-                    '.focus-trap-program-block'
+                    [
+                        '.focus-trap-action-panel__program-block',
+                        '.focus-trap-action-panel__action-panel-button'
+                    ],
+                    '.focus-trap-action-panel__program-block'
                 );
             }
         } else {

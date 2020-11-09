@@ -42,7 +42,7 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
 
         const classes = classNames(
             {'command-block--pressed' : pressed},
-            'focus-trap-replace-command'
+            'focus-trap-action-panel-replace__command_button'
         );
 
         const ariaLabel: string = this.props.intl.formatMessage({
