@@ -3,7 +3,7 @@
 import type {Program} from './types';
 
 /* eslint-disable no-use-before-define */
-export type CommandHandler = { (Interpreter, timeDelayMs: number): Promise<void> };
+export type CommandHandler = { (Interpreter, stepTimeMs: number): Promise<void> };
 /* eslint-enable no-use-before-define */
 
 export type InterpreterRunningState = { isRunning: boolean, activeStep: ?number }
@@ -17,17 +17,17 @@ export default class Interpreter {
     programCounter: number;
     memory: { [string]: any };
     isRunning: boolean;
-    timeDelayMs: number;
+    stepTimeMs: number;
     onRunningStateChange: (InterpreterRunningState) => void;
 
-    constructor(onRunningStateChange: (InterpreterRunningState) => void) {
+    constructor(onRunningStateChange: (InterpreterRunningState) => void, stepTimeMs: number) {
         this.commands = {};
         this.program = [];
         this.programCounter = 0;
         this.memory = {};
         this.isRunning = false;
         this.onRunningStateChange = onRunningStateChange;
-        this.timeDelayMs = 1000;
+        this.stepTimeMs = stepTimeMs;
     }
 
     addCommandHandler(command: string, namespace: string, handler: CommandHandler) {
@@ -113,8 +113,9 @@ export default class Interpreter {
 
     callCommandHandlers(handlers: Array<CommandHandler>): Promise<any> {
         const promises = [];
+        const stepTimeMs = this.stepTimeMs;
         for (const handler of handlers) {
-            promises.push(handler(this, this.timeDelayMs));
+            promises.push(handler(this, stepTimeMs));
         }
         return Promise.all(promises);
     };
@@ -130,5 +131,9 @@ export default class Interpreter {
         } else {
             return [];
         }
+    }
+
+    setStepTime(stepTime: number) {
+        this.stepTimeMs = stepTime;
     }
 }
