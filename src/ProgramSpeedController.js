@@ -10,10 +10,14 @@ import './ProgramSpeedController.scss';
 
 type ProgramSpeedControllerProps = {
     intl: IntlShape,
-    onChange: (e: SyntheticInputEvent<HTMLInputElement>) => void
+    speedLookUp: Array<number>,
+    onChange: (stepTimeMs: number) => void
 };
 
 class ProgramSpeedController extends React.Component<ProgramSpeedControllerProps, {}> {
+    onChangeInput = (e: SyntheticInputEvent<HTMLInputElement>) => {
+        this.props.onChange(this.props.speedLookUp[parseInt(e.target.value) - 1]);
+    }
     render() {
         return (
             <div className='ProgramSpeedController__container'>
@@ -25,7 +29,7 @@ class ProgramSpeedController extends React.Component<ProgramSpeedControllerProps
                         type='range'
                         min='1'
                         max='5'
-                        onChange={this.props.onChange} />
+                        onChange={this.onChangeInput} />
                 }
                 <FastIcon />
             </div>
