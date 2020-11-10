@@ -71,6 +71,7 @@ export default class App extends React.Component<{}, AppState> {
     focusTrapManager: FocusTrapManager;
     startingCharacterState: CharacterState;
     programSerializer: ProgramSerializer;
+    characterStateSerializer: CharacterStateSerializer;
 
     constructor(props: any) {
         super(props);
@@ -107,6 +108,8 @@ export default class App extends React.Component<{}, AppState> {
         this.interpreter = new Interpreter(this.handleRunningStateChange);
 
         this.programSerializer = new ProgramSerializer();
+
+        this.characterStateSerializer = new CharacterStateSerializer();
 
         this.interpreter.addCommandHandler(
             'forward1',
@@ -606,13 +609,15 @@ export default class App extends React.Component<{}, AppState> {
         if (window.location.search != null) {
             const params = new C2lcURLParams(window.location.search);
             const programQuery = params.getProgram();
-            if (programQuery != null) {
+            const characterStateQuery = params.getCharacterState();
+            if (programQuery != null && characterStateQuery != null) {
                 try {
                     this.setState({
-                        program: this.programSerializer.deserialize(programQuery)
+                        program: this.programSerializer.deserialize(programQuery),
+                        characterState: this.characterStateSerializer.deserialize(characterStateQuery)
                     });
                 } catch(err) {
-                    console.log(`Error parsing program: ${programQuery}`);
+                    console.log(`Error parsing program: ${programQuery} or characterState: ${characterStateQuery}`);
                     console.log(err.toString());
                 }
             }
@@ -621,15 +626,26 @@ export default class App extends React.Component<{}, AppState> {
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
         if (this.state.characterState !== prevState.characterState) {
-            const characterStateSerializer = new CharacterStateSerializer();
-            console.log(characterStateSerializer.serialize(this.state.characterState));
-        }
-        if (this.state.program !== prevState.program) {
+            const serializedCharacterState = this.characterStateSerializer.serialize(this.state.characterState);
             const serializedProgram = this.programSerializer.serialize(this.state.program);
             window.history.pushState(
-                {p: serializedProgram},
+                {
+                    p: serializedProgram,
+                    c: serializedCharacterState
+                },
                 '',
-                Utils.generateEncodedProgramURL('0.5', serializedProgram));
+                Utils.generateEncodedProgramURL('0.5', serializedProgram, serializedCharacterState));
+        }
+        if (this.state.program !== prevState.program) {
+            const serializedCharacterState = this.characterStateSerializer.serialize(this.state.characterState);
+            const serializedProgram = this.programSerializer.serialize(this.state.program);
+            window.history.pushState(
+                {
+                    p: serializedProgram,
+                    c: serializedCharacterState
+                },
+                '',
+                Utils.generateEncodedProgramURL('0.5', serializedProgram, serializedCharacterState));
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
