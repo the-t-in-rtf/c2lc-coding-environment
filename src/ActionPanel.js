@@ -109,7 +109,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     name='deleteCurrentStep'
                     disabled={false}
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.delete'}, stepInfoMessage)}
-                    className='ActionPanel__action-buttons'
+                    className='ActionPanel__action-buttons focus-trap-action-panel__action-panel-button'
                     onClick={this.handleClickDelete}>
                     <DeleteIcon className='ActionPanel__action-button-svg' />
                 </AriaDisablingButton>
@@ -117,7 +117,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     name='replaceCurrentStep'
                     disabled={false}
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.replace'}, stepInfoMessage)}
-                    className='ActionPanel__action-buttons replace-action-button'
+                    className='ActionPanel__action-buttons focus-trap-action-panel__action-panel-button focus-trap-action-panel-replace__replace_button'
                     onClick={this.handleClickReplace}>
                     <ReplaceIcon className='ActionPanel__action-button-svg' />
                 </AriaDisablingButton>
@@ -126,7 +126,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     disabled={this.props.pressedStepIndex === 0}
                     disabledClassName='ActionPanel__action-buttons--disabled'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToPreviousStep'}, stepInfoMessage)}
-                    className='ActionPanel__action-buttons'
+                    className='ActionPanel__action-buttons focus-trap-action-panel__action-panel-button'
                     onClick={this.handleClickMoveToPreviousStep}>
                     <MovePreviousIcon className='ActionPanel__action-button-svg' />
                 </AriaDisablingButton>
@@ -135,7 +135,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     disabled={this.props.pressedStepIndex === this.props.program.length-1}
                     disabledClassName='ActionPanel__action-buttons--disabled'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToNextStep'}, stepInfoMessage)}
-                    className='ActionPanel__action-buttons'
+                    className='ActionPanel__action-buttons focus-trap-action-panel__action-panel-button'
                     onClick={this.handleClickMoveToNextStep}>
                     <MoveNextIcon className='ActionPanel__action-button-svg' />
                 </AriaDisablingButton>
