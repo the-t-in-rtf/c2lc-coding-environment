@@ -200,29 +200,32 @@ describe('When the robot character renders, transform should apply', () => {
     test('When xPos = 0, yPos = 0, direction = 2', () => {
         expect.assertions(1);
         const sceneWrapper = createMountScene({
+            dimensions: new SceneDimensions(1, 1),
             characterState: new CharacterState(0, 0, 2, [])
         });
         const robotCharacter = findRobotCharacter(sceneWrapper);
         expect(robotCharacter.get(0).props.transform)
             .toBe('translate(0 0) rotate(0 0 0)');
     });
-    test('When xPos = 100, yPos = 80, direction = 4', () => {
+    test('When xPos = 10, yPos = 8, direction = 4', () => {
         expect.assertions(1);
         const sceneWrapper = createMountScene({
-            characterState: new CharacterState(100, 80, 4, [])
+            dimensions: new SceneDimensions(20, 20),
+            characterState: new CharacterState(10, 8, 4, [])
         });
         const robotCharacter = findRobotCharacter(sceneWrapper);
         expect(robotCharacter.get(0).props.transform)
-            .toBe('translate(100 80) rotate(90 0 0)');
+            .toBe('translate(10 8) rotate(90 0 0)');
     });
-    test('When xPos = 0, yPos = 90, direction = 0', () => {
+    test('When xPos = 0, yPos = 9, direction = 0', () => {
         expect.assertions(1);
         const sceneWrapper = createMountScene({
-            characterState: new CharacterState(0, 90, 0, [])
+            dimensions: new SceneDimensions(20, 20),
+            characterState: new CharacterState(0, 9, 0, [])
         });
         const robotCharacter = findRobotCharacter(sceneWrapper);
         expect(robotCharacter.get(0).props.transform)
-            .toBe('translate(0 90) rotate(-90 0 0)');
+            .toBe('translate(0 9) rotate(-90 0 0)');
     });
 });
 
