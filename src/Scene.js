@@ -9,9 +9,6 @@ import type {IntlShape} from 'react-intl';
 
 import './Scene.scss';
 
-// TODO: Replace numRows, numColumns, and gridCellWidth with a
-//       SceneDimensions instance
-
 export type SceneProps = {
     dimensions: SceneDimensions,
     characterState: CharacterState,
