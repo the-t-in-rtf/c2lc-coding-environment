@@ -21,6 +21,7 @@ import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
 import { programIsEmpty } from './ProgramUtils';
 import ProgramSerializer from './ProgramSerializer';
+import ShareButton from './ShareButton';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import * as Utils from './Utils';
 import messages from './messages.json';
@@ -593,6 +594,8 @@ export default class App extends React.Component<{}, AppState> {
                         </Row>
                     </Container>
                 </div>
+                <ShareButton/>
+
                 <DashConnectionErrorModal
                     show={this.state.showDashConnectionError}
                     onCancel={this.handleCancelDashConnection}

@@ -41,6 +41,7 @@ type ProgramBlockEditorProps = {
 
 type ProgramBlockEditorState = {
     showConfirmDeleteAll: boolean,
+    showShareComplete: boolean,
     focusedActionPanelOptionName: ?string,
     replaceIsActive: boolean
 };
@@ -63,6 +64,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.programSequenceContainerRef = React.createRef();
         this.state = {
             showConfirmDeleteAll : false,
+            showShareComplete: false,
             focusedActionPanelOptionName: null,
             replaceIsActive: false
         }
@@ -444,6 +446,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         {contents}
                     </div>
                 </div>
+
                 <ConfirmDeleteAllModal
                     show={this.state.showConfirmDeleteAll}
                     onCancel={this.handleCancelDeleteAll}

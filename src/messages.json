@@ -55,6 +55,8 @@
         "ProgramTextEditor.programLabel": "Program:",
         "AudioFeedbackToggleSwitch.audioFeedback": "Audio feedback",
         "Scene": "Scene",
+        "ShareButton": "Share",
+        "ShareCompleteModal.shareComplete": "The URL for your program has been copied to the clipboard.",
         "RefreshButton": "Refresh"
     },
     "fr": {
