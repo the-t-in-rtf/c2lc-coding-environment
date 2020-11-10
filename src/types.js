@@ -20,13 +20,6 @@ export interface RobotDriver {
 
 export type AnnouncedSoundName = CommandName | 'add' | 'deleteAll' | 'delete' | 'moveToPrevious' | 'moveToNext' | 'replace';
 
-export type SceneBounds = {
-    minX: number,
-    minY: number,
-    maxX: number,
-    maxY: number
-};
-
 // Flow lacks its own types for the Speech Recognition API, so we define our own
 // TODO: remove when https://github.com/facebook/flow/issues/7361 is resolved.
 

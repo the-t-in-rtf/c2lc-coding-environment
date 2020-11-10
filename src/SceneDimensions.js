@@ -1,43 +1,22 @@
 // @flow
 
-import type { SceneBounds } from './types';
+type BoundsType = 'inBounds' | 'outOfBoundsAbove' | 'outOfBoundsBelow';
 
 export default class SceneDimensions {
-    #numRows: number;
-    #numColumns: number;
-    #gridCellWidth: number;
     #width: number;
     #height: number;
     #minX: number;
     #minY: number;
-    #bounds: SceneBounds;
+    #maxX: number;
+    #maxY: number;
 
-    constructor(numRows: number, numColumns: number, gridCellWidth: number) {
-        this.#numRows = numRows;
-        this.#numColumns = numColumns;
-        this.#gridCellWidth = gridCellWidth;
-        this.#width = numColumns * gridCellWidth;
-        this.#height = numRows * gridCellWidth;
-        this.#minX = this.#width * -0.5;
-        this.#minY = this.#height * -0.5;
-        this.#bounds = {
-            minX: this.#minX,
-            minY: this.#minY,
-            maxX: this.#width * 0.5,
-            maxY: this.#height * 0.5
-        }
-    }
-
-    getNumRows(): number {
-        return this.#numRows;
-    }
-
-    getNumColumns(): number {
-        return this.#numColumns;
-    }
-
-    getGridCellWidth(): number {
-        return this.#gridCellWidth;
+    constructor(width: number, height: number) {
+        this.#width = width;
+        this.#height = height;
+        this.#minX = width * -0.5;
+        this.#minY = height * -0.5;
+        this.#maxX = width * 0.5;
+        this.#maxY = height * 0.5;
     }
 
     getWidth(): number {
@@ -56,7 +35,29 @@ export default class SceneDimensions {
         return this.#minY;
     }
 
-    getBounds(): SceneBounds {
-        return this.#bounds;
+    getMaxX(): number {
+        return this.#maxX;
+    }
+
+    getMaxY(): number {
+        return this.#maxY;
+    }
+
+    getBoundsStateX(x: number): BoundsType {
+        if (x < this.#minX) {
+            return 'outOfBoundsBelow';
+        } else if (x > this.#maxX) {
+            return 'outOfBoundsAbove';
+        }
+        return 'inBounds';
+    }
+
+    getBoundsStateY(y: number): BoundsType {
+        if (y < this.#minY) {
+            return 'outOfBoundsBelow';
+        } else if (y > this.#maxY) {
+            return 'outOfBoundsAbove';
+        }
+        return 'inBounds';
     }
 };

@@ -58,10 +58,6 @@ type AppState = {
     audioEnabled: boolean,
     actionPanelStepIndex: ?number,
     sceneDimensions: SceneDimensions,
-    // TODO: Remove sceneNumRows, sceneNumColumns, and sceneGridCellWidth
-    sceneNumRows: number,
-    sceneNumColumns: number,
-    sceneGridCellWidth: number,
     drawingEnabled: boolean
 };
 
@@ -100,10 +96,7 @@ export default class App extends React.Component<{}, AppState> {
             isDraggingCommand: false,
             audioEnabled: true,
             actionPanelStepIndex: null,
-            sceneDimensions: new SceneDimensions(17, 9, 1),
-            sceneNumRows: 9,
-            sceneNumColumns: 17,
-            sceneGridCellWidth: 1,
+            sceneDimensions: new SceneDimensions(17, 9),
             drawingEnabled: true
         };
 
@@ -533,9 +526,7 @@ export default class App extends React.Component<{}, AppState> {
                         */}
                         <div className='App__scene-container'>
                             <Scene
-                                numRows={this.state.sceneNumRows}
-                                numColumns={this.state.sceneNumColumns}
-                                gridCellWidth={this.state.sceneGridCellWidth}
+                                dimensions={this.state.sceneDimensions}
                                 characterState={this.state.characterState}
                             />
                             <div className='App__scene-controls'>

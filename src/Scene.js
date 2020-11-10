@@ -3,6 +3,7 @@
 import React from 'react';
 import CharacterState from './CharacterState';
 import RobotCharacter from './RobotCharacter';
+import SceneDimensions from './SceneDimensions';
 import { injectIntl } from 'react-intl';
 import type {IntlShape} from 'react-intl';
 
@@ -12,32 +13,31 @@ import './Scene.scss';
 //       SceneDimensions instance
 
 export type SceneProps = {
-    numRows: number,
-    numColumns: number,
-    gridCellWidth: number,
-    intl: IntlShape,
-    characterState: CharacterState
+    dimensions: SceneDimensions,
+    characterState: CharacterState,
+    intl: IntlShape
 };
 
 class Scene extends React.Component<SceneProps, {}> {
 
-    drawGrid(minX: number, minY: number, sceneWidth: number, sceneHeight: number) {
+    drawGrid() {
         const grid = [];
-        if (this.props.numRows === 0 || this.props.numColumns === 0) {
+        if (this.props.dimensions.getWidth() === 0 ||
+            this.props.dimensions.getHeight() === 0) {
             return grid;
         }
-        const rowLabelOffset = sceneWidth * 0.025;
-        const columnLabelOffset = sceneHeight * 0.025;
-        let yOffset = minY;
-        for (let i=1;i < this.props.numRows + 1;i++) {
-            yOffset = yOffset + this.props.gridCellWidth;
-            if (i < this.props.numRows) {
+        const rowLabelOffset = this.props.dimensions.getWidth() * 0.025;
+        const columnLabelOffset = this.props.dimensions.getHeight() * 0.025;
+        let yOffset = this.props.dimensions.getMinY();
+        for (let i=1;i < this.props.dimensions.getHeight() + 1;i++) {
+            yOffset += 1;
+            if (i < this.props.dimensions.getHeight()) {
                 grid.push(<line
                     className='Scene__grid-line'
                     key={`grid-cell-row-${i}`}
-                    x1={minX}
+                    x1={this.props.dimensions.getMinX()}
                     y1={yOffset}
-                    x2={minX + sceneWidth}
+                    x2={this.props.dimensions.getMinX() + this.props.dimensions.getWidth()}
                     y2={yOffset} />);
             }
             grid.push(
@@ -46,31 +46,31 @@ class Scene extends React.Component<SceneProps, {}> {
                     textAnchor='end'
                     key={`grid-cell-label-${i}`}
                     dominantBaseline='middle'
-                    x={minX - rowLabelOffset}
-                    y={yOffset - this.props.gridCellWidth / 2}>
+                    x={this.props.dimensions.getMinX() - rowLabelOffset}
+                    y={yOffset - 0.5}>
                     {i}
                 </text>
             )
         }
-        let xOffset = minX;
-        for (let i=1;i < this.props.numColumns + 1;i++) {
-            xOffset = xOffset + this.props.gridCellWidth;
-            if (i < this.props.numColumns) {
+        let xOffset = this.props.dimensions.getMinX();
+        for (let i=1;i < this.props.dimensions.getWidth() + 1;i++) {
+            xOffset += 1;
+            if (i < this.props.dimensions.getWidth()) {
                 grid.push(<line
                     className='Scene__grid-line'
                     key={`grid-cell-column-${i}`}
                     x1={xOffset}
-                    y1={minY}
+                    y1={this.props.dimensions.getMinY()}
                     x2={xOffset}
-                    y2={minY + sceneHeight} />);
+                    y2={this.props.dimensions.getMinY() + this.props.dimensions.getHeight()} />);
             }
             grid.push(
                 <text
                     className='Scene__grid-label'
                     key={`grid-cell-label-${String.fromCharCode(64+i)}`}
                     textAnchor='middle'
-                    x={xOffset - this.props.gridCellWidth / 2}
-                    y={minY - columnLabelOffset}>
+                    x={xOffset - 0.5}
+                    y={this.props.dimensions.getMinY() - columnLabelOffset}>
                     {String.fromCharCode(64+i)}
                 </text>
             )
@@ -91,10 +91,10 @@ class Scene extends React.Component<SceneProps, {}> {
     }
 
     render() {
-        const width = this.props.numColumns * this.props.gridCellWidth;
-        const height = this.props.numRows * this.props.gridCellWidth;
-        const minX = -width / 2;
-        const minY = -height / 2;
+        const minX = this.props.dimensions.getMinX();
+        const minY = this.props.dimensions.getMinY();
+        const width = this.props.dimensions.getWidth();
+        const height = this.props.dimensions.getHeight();
 
         // Subtract 90 degrees from the character bearing as the character
         // image is drawn upright when it is facing East
@@ -114,12 +114,12 @@ class Scene extends React.Component<SceneProps, {}> {
                                 <rect x={minX} y={minY} width={width} height={height} />
                             </clipPath>
                         </defs>
-                        {this.drawGrid(minX, minY, width, height)}
+                        {this.drawGrid()}
                         <g clipPath='url(#Scene-clippath)'>
                             {this.drawCharacterPath()}
                             <RobotCharacter
                                 transform={robotCharacterTransform}
-                                width={this.props.gridCellWidth * 0.6}
+                                width={0.6}
                             />
                         </g>
                     </svg>
