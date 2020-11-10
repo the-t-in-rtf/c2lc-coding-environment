@@ -53,6 +53,7 @@
         "ProgramBlockEditor.robotCharacter": "Robot character",
         "ProgramBlockEditor.startIndicator": "Start",
         "ProgramTextEditor.programLabel": "Program:",
+        "ProgramSpeedController.slider": "Program play speed",
         "AudioFeedbackToggleSwitch.audioFeedback": "Audio feedback",
         "Scene": "Scene",
         "ShareButton": "Share",
