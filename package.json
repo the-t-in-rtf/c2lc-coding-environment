@@ -15,6 +15,7 @@
         "react-mic": "12.4.1",
         "react-scripts": "3.4.1",
         "soundex": "0.2.1",
+        "tone": "14.7.58",
         "typeface-roboto": "0.0.75"
     },
     "devDependencies": {
@@ -36,6 +37,7 @@
             "build/"
         ],
         "rules": {
+            "no-trailing-spaces": "error",
             "no-unused-vars": "error",
             "no-var": "error",
             "prefer-const": "error"
@@ -58,16 +60,20 @@
             "!src/serviceWorker.js",
             "!src/WebSpeechInput.js",
             "!src/vendor/**/*"
-          ],
-          "coverageThreshold": {
+        ],
+        "coverageThreshold": {
             "global": {
-              "branches": 85,
-              "functions": 95,
-              "lines": 95,
-              "statements": 95
+                "branches": 85,
+                "functions": 95,
+                "lines": 95,
+                "statements": 95
             }
-          },
-          "coverageReporters": ["text", "text-summary", "html"]
+        },
+        "coverageReporters": [
+            "text",
+            "text-summary",
+            "html"
+        ]
     },
     "browserslist": {
         "production": [

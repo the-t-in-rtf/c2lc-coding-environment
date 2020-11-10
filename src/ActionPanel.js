@@ -36,7 +36,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
 
         const ariaLabelObj = {
             'stepNumber': this.props.pressedStepIndex + 1,
-            'stepName': this.props.intl.formatMessage({id:`CommandInfo.${currentStepName}`}),
+            'stepName': this.props.intl.formatMessage({id:`Command.${currentStepName}`}),
             'selectedCommandName': '',
             'previousStepInfo': '',
             'nextStepInfo': ''
@@ -46,7 +46,9 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
             ariaLabelObj['selectedCommandName'] =
                 this.props.intl.formatMessage(
                     { id: 'ActionPanel.selectedCommandName' },
-                    { selectedCommandName: this.props.selectedCommandName }
+                    { selectedCommandName:
+                        this.props.intl.formatMessage({id: `Command.${this.props.selectedCommandName}`})
+                    }
                 );
         }
 
@@ -54,8 +56,11 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
             const prevStepName = this.props.program[this.props.pressedStepIndex - 1];
             ariaLabelObj['previousStepInfo'] =
                 this.props.intl.formatMessage(
-                    { id: `CommandInfo.previousStep.${prevStepName}`},
-                    { previousStepNumber: this.props.pressedStepIndex }
+                    { id: 'CommandInfo.previousStep'},
+                    {
+                        previousStepNumber: this.props.pressedStepIndex,
+                        command: this.props.intl.formatMessage({id: `Command.${prevStepName}`})
+                    }
                 );
         }
 
@@ -63,8 +68,11 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
             const nextStepName = this.props.program[this.props.pressedStepIndex + 1];
             ariaLabelObj['nextStepInfo'] =
                 this.props.intl.formatMessage(
-                    { id: `CommandInfo.nextStep.${nextStepName}`},
-                    { nextStepNumber: this.props.pressedStepIndex + 2}
+                    { id: 'CommandInfo.nextStep'},
+                    {
+                        nextStepNumber: this.props.pressedStepIndex + 2,
+                        command: this.props.intl.formatMessage({id: `Command.${nextStepName}`})
+                    }
                 );
         }
 
@@ -101,7 +109,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     name='deleteCurrentStep'
                     disabled={false}
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.delete'}, stepInfoMessage)}
-                    className='ActionPanel__action-buttons'
+                    className='ActionPanel__action-buttons focus-trap-action-panel__action-panel-button'
                     onClick={this.handleClickDelete}>
                     <DeleteIcon className='ActionPanel__action-button-svg' />
                 </AriaDisablingButton>
@@ -109,7 +117,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     name='replaceCurrentStep'
                     disabled={false}
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.replace'}, stepInfoMessage)}
-                    className='ActionPanel__action-buttons replace-action-button'
+                    className='ActionPanel__action-buttons focus-trap-action-panel__action-panel-button focus-trap-action-panel-replace__replace_button'
                     onClick={this.handleClickReplace}>
                     <ReplaceIcon className='ActionPanel__action-button-svg' />
                 </AriaDisablingButton>
@@ -118,7 +126,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     disabled={this.props.pressedStepIndex === 0}
                     disabledClassName='ActionPanel__action-buttons--disabled'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToPreviousStep'}, stepInfoMessage)}
-                    className='ActionPanel__action-buttons'
+                    className='ActionPanel__action-buttons focus-trap-action-panel__action-panel-button'
                     onClick={this.handleClickMoveToPreviousStep}>
                     <MovePreviousIcon className='ActionPanel__action-button-svg' />
                 </AriaDisablingButton>
@@ -127,7 +135,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                     disabled={this.props.pressedStepIndex === this.props.program.length-1}
                     disabledClassName='ActionPanel__action-buttons--disabled'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToNextStep'}, stepInfoMessage)}
-                    className='ActionPanel__action-buttons'
+                    className='ActionPanel__action-buttons focus-trap-action-panel__action-panel-button'
                     onClick={this.handleClickMoveToNextStep}>
                     <MoveNextIcon className='ActionPanel__action-button-svg' />
                 </AriaDisablingButton>
