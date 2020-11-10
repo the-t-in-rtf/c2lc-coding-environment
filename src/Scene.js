@@ -34,7 +34,7 @@ class Scene extends React.Component<SceneProps, {}> {
                     key={`grid-cell-row-${i}`}
                     x1={this.props.dimensions.getMinX()}
                     y1={yOffset}
-                    x2={this.props.dimensions.getMinX() + this.props.dimensions.getWidth()}
+                    x2={this.props.dimensions.getMaxX()}
                     y2={yOffset} />);
             }
             grid.push(
@@ -59,7 +59,7 @@ class Scene extends React.Component<SceneProps, {}> {
                     x1={xOffset}
                     y1={this.props.dimensions.getMinY()}
                     x2={xOffset}
-                    y2={this.props.dimensions.getMinY() + this.props.dimensions.getHeight()} />);
+                    y2={this.props.dimensions.getMaxY()} />);
             }
             grid.push(
                 <text
@@ -96,7 +96,7 @@ class Scene extends React.Component<SceneProps, {}> {
             case 'outOfBoundsBelow':
                 return this.props.dimensions.getMinX() + 0.1;
             default:
-                throw new Error(`Unexpected bounds type`);
+                throw new Error('Unexpected bounds type');
         }
     }
 
@@ -109,7 +109,7 @@ class Scene extends React.Component<SceneProps, {}> {
             case 'outOfBoundsBelow':
                 return this.props.dimensions.getMinY() + 0.1;
             default:
-                throw new Error(`Unexpected bounds type`);
+                throw new Error('Unexpected bounds type');
         }
     }
 
