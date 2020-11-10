@@ -7,6 +7,8 @@ import type { IntlShape } from 'react-intl';
 
 import ShareCompleteModal from './ShareCompleteModal';
 
+import './ShareButton.css';
+
 type ShareButtonProps = {
     intl: IntlShape,
     disabled: boolean
@@ -36,7 +38,6 @@ class ShareButton extends React.Component<ShareButtonProps, ShareButtonState> {
         // Copy the URL to the clipboard, see:
         // https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText
         navigator.clipboard.writeText(currentUrl).then(() => {
-            // TODO: Display modal.
             this.setState({ showShareComplete: true})
         });
     }
@@ -51,7 +52,6 @@ class ShareButton extends React.Component<ShareButtonProps, ShareButtonState> {
                 <Button
                     variant="dark"
                     className='ShareButton'
-                    disabled={this.props.disabled}
                     onClick={this.handleClickShareButton}
                 >
                     {this.props.intl.formatMessage({id:'ShareButton'})}
