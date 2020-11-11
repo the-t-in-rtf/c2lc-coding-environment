@@ -34,11 +34,11 @@ function createShareButton(props) {
 }
 
 // TODO: Figure how to do this properly with the required intl infrastructure
-// it('renders without crashing', () => {
-//     const div = document.createElement('div');
-//     ReactDOM.render(<ShareButton intl={intl}/>, div);
-//     ReactDOM.unmountComponentAtNode(div);
-// });
+it('renders without crashing', () => {
+    const div = document.createElement('div');
+    ReactDOM.render(<ShareButton intl={intl}/>, div);
+    ReactDOM.unmountComponentAtNode(div);
+});
 
 it('hides modal on startup', () => {
     const wrapper = createShareButton();
