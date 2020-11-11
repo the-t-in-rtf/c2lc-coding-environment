@@ -1,6 +1,5 @@
 .ShareButton {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    margin-top: 3rem;
+    margin-top: 1rem;
+    height: 2rem;
+    width: 10rem;
 }
