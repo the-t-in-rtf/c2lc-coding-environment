@@ -17,6 +17,7 @@ import PlayButton from './PlayButton';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import RefreshButton from './RefreshButton';
 import Scene from './Scene';
+import SceneDimensions from './SceneDimensions';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
 import ProgramSpeedController from './ProgramSpeedController';
@@ -56,9 +57,7 @@ type AppState = {
     isDraggingCommand: boolean,
     audioEnabled: boolean,
     actionPanelStepIndex: ?number,
-    sceneNumRows: number,
-    sceneNumColumns: number,
-    sceneGridCellWidth: number,
+    sceneDimensions: SceneDimensions,
     drawingEnabled: boolean
 };
 
@@ -97,9 +96,7 @@ export default class App extends React.Component<{}, AppState> {
             isDraggingCommand: false,
             audioEnabled: true,
             actionPanelStepIndex: null,
-            sceneNumRows: 9,
-            sceneNumColumns: 17,
-            sceneGridCellWidth: 1,
+            sceneDimensions: new SceneDimensions(17, 9),
             drawingEnabled: true
         };
 
@@ -529,9 +526,7 @@ export default class App extends React.Component<{}, AppState> {
                         */}
                         <div className='App__scene-container'>
                             <Scene
-                                numRows={this.state.sceneNumRows}
-                                numColumns={this.state.sceneNumColumns}
-                                gridCellWidth={this.state.sceneGridCellWidth}
+                                dimensions={this.state.sceneDimensions}
                                 characterState={this.state.characterState}
                             />
                             <div className='App__scene-controls'>
