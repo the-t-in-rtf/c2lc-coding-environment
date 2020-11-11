@@ -624,20 +624,10 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
-        if (this.state.characterState !== prevState.characterState) {
-            const serializedCharacterState = this.characterStateSerializer.serialize(this.state.characterState);
+        if (this.state.program !== prevState.program
+            || this.state.characterState !== prevState.characterState) {
             const serializedProgram = this.programSerializer.serialize(this.state.program);
-            window.history.pushState(
-                {
-                    p: serializedProgram,
-                    c: serializedCharacterState
-                },
-                '',
-                Utils.generateEncodedProgramURL('0.5', serializedProgram, serializedCharacterState));
-        }
-        if (this.state.program !== prevState.program) {
             const serializedCharacterState = this.characterStateSerializer.serialize(this.state.characterState);
-            const serializedProgram = this.programSerializer.serialize(this.state.program);
             window.history.pushState(
                 {
                     p: serializedProgram,
