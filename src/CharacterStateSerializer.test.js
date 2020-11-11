@@ -19,7 +19,7 @@ test('Serialize character state', () => {
 });
 
 test('Deserialize character state', () => {
-    expect.assertions(3);
+    expect.assertions(5);
     const characterStateSerializer = new CharacterStateSerializer();
     let text = '00b';
     expect(characterStateSerializer.deserialize(text)).toStrictEqual(new CharacterState(0,0,2,[]));
@@ -27,10 +27,14 @@ test('Deserialize character state', () => {
     expect(characterStateSerializer.deserialize(text)).toStrictEqual(new CharacterState(1,1,2,[{x1:0,y1:0,x2:1,y2:1}]));
     text = 'AAc00AA';
     expect(characterStateSerializer.deserialize(text)).toStrictEqual(new CharacterState(-1,-1,3,[{x1:0,y1:0,x2:-1,y2:-1}]));
-    //text = '3ac00AA';
-    //expect(characterStateSerializer.deserialize(text)).toThrowError(/^Invalid character position xPos=undefined, yPos=1, direction=3$/);
-    // text = 'aab3322';
-    // expect(characterStateSerializer.deserialize(text)).toThrowError(/^Invalid path coordinates x1=undefined y1=undefined x2=undefined y2=undefined$/);
+    text = '3ac00AA';
+    expect(() => {
+        characterStateSerializer.deserialize(text)
+    }).toThrowError(/^Invalid character position xPos=undefined, yPos=1, direction=3$/);
+    text = 'aab3322';
+    expect(() => {
+        characterStateSerializer.deserialize(text)
+    }).toThrowError(/^Invalid path coordinates x1=undefined y1=undefined x2=undefined y2=undefined$/);
 });
 
 test('getDirectionCoord', () => {
@@ -47,7 +51,7 @@ test('getDirectionCoord', () => {
 });
 
 test('getDirectionFromCoord', () => {
-    expect.assertions(8);
+    expect.assertions(9);
     const characterStateSerializer = new CharacterStateSerializer();
     expect(characterStateSerializer.getDirectionFromCoord('0')).toBe(0);
     expect(characterStateSerializer.getDirectionFromCoord('a')).toBe(1);
@@ -57,7 +61,9 @@ test('getDirectionFromCoord', () => {
     expect(characterStateSerializer.getDirectionFromCoord('e')).toBe(5);
     expect(characterStateSerializer.getDirectionFromCoord('f')).toBe(6);
     expect(characterStateSerializer.getDirectionFromCoord('g')).toBe(7);
-    //expect(characterStateSerializer.getDirectionFromCoord('3')).toThrowError(/^Unrecognized direction coordinate 3$/);
+    expect(() => {
+        characterStateSerializer.getDirectionFromCoord('3')
+    }).toThrowError(/^Unrecognized direction coordinate 3$/);
 });
 
 test('getAlphabetCoord', () => {
