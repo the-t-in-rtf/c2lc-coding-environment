@@ -236,6 +236,29 @@ describe('When the robot character renders, transform should apply', () => {
     });
 });
 
+describe('Draw character when out of bounds', () => {
+    test.each([
+        [  0, -2,  0  , -1.4 ], // N
+        [  3, -2,  2.4, -1.4 ], // NE
+        [  3,  0,  2.4,  0   ], // E
+        [  3,  2,  2.4,  1.4 ], // SE
+        [  0,  2,  0  ,  1.4 ], // S
+        [ -3,  2, -2.4,  1.4 ], // SW
+        [ -3,  0, -2.4,  0   ], // W
+        [ -3, -2, -2.4, -1.4 ]  // NW
+    ])('x=%f, y=%f, expectedDrawX=%f, expectedDrawY=%f',
+        (x, y, expectedDrawX, expectedDrawY) => {
+            const sceneWrapper = createMountScene({
+                dimensions: new SceneDimensions(5, 3),
+                characterState: new CharacterState(x, y, 2, [])
+            });
+            const robotCharacter = findRobotCharacter(sceneWrapper);
+            expect(robotCharacter.get(0).props.transform)
+                .toBe(`translate(${expectedDrawX} ${expectedDrawY}) rotate(0 0 0)`);
+        }
+    );
+});
+
 describe('When the Character has a path, it is drawn on the Scene', () => {
     test('When there is no path segment', () => {
         expect.assertions(1);
