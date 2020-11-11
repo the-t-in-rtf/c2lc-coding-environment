@@ -126,13 +126,14 @@ describe('When the Scene renders', () => {
         expect(findGridLines(sceneWrapper).length).toBe(0);
     });
 
-    test('With width = 2, height = 2', () => {
-        expect.assertions(19);
-        const dimensions = new SceneDimensions(2, 2);
+    test('With width = 3, height = 2', () => {
+        expect.assertions(25);
+        const dimensions = new SceneDimensions(3, 2);
         const sceneWrapper = createMountScene({
             dimensions: dimensions
         });
-        const expectedLabelOffset = 0.05;
+        const expectedRowLabelOffset = 0.075;
+        const expectedColumnLabelOffset = 0.05;
 
         // Scene viewbox
 
@@ -141,39 +142,45 @@ describe('When the Scene renders', () => {
 
         // Grid labels
 
-        expect(findGridLabels(sceneWrapper).length).toBe(4);
+        expect(findGridLabels(sceneWrapper).length).toBe(5);
 
         // Row labels
 
-        expect(findGridLabels(sceneWrapper).get(0).props.x).toBe(-1 - expectedLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(0).props.x).toBe(-1.5 - expectedRowLabelOffset);
         expect(findGridLabels(sceneWrapper).get(0).props.y).toBe(-0.5);
-        expect(findGridLabels(sceneWrapper).get(1).props.x).toBe(-1 - expectedLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(1).props.x).toBe(-1.5 - expectedRowLabelOffset);
         expect(findGridLabels(sceneWrapper).get(1).props.y).toBe(0.5);
 
         // Column labels
 
-        expect(findGridLabels(sceneWrapper).get(2).props.x).toBe(-0.5);
-        expect(findGridLabels(sceneWrapper).get(2).props.y).toBe(-1 - expectedLabelOffset);
-        expect(findGridLabels(sceneWrapper).get(3).props.x).toBe(0.5);
-        expect(findGridLabels(sceneWrapper).get(3).props.y).toBe(-1 - expectedLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(2).props.x).toBe(-1);
+        expect(findGridLabels(sceneWrapper).get(2).props.y).toBe(-1 - expectedColumnLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(3).props.x).toBe(0);
+        expect(findGridLabels(sceneWrapper).get(3).props.y).toBe(-1 - expectedColumnLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(4).props.x).toBe(1);
+        expect(findGridLabels(sceneWrapper).get(4).props.y).toBe(-1 - expectedColumnLabelOffset);
 
         // Grid lines
 
-        expect(findGridLines(sceneWrapper).length).toBe(2);
+        expect(findGridLines(sceneWrapper).length).toBe(3);
 
         // Grid rows
 
-        expect(findGridLines(sceneWrapper).get(0).props.x1).toBe(-1);
+        expect(findGridLines(sceneWrapper).get(0).props.x1).toBe(-1.5);
         expect(findGridLines(sceneWrapper).get(0).props.y1).toBe(0);
-        expect(findGridLines(sceneWrapper).get(0).props.x2).toBe(1);
+        expect(findGridLines(sceneWrapper).get(0).props.x2).toBe(1.5);
         expect(findGridLines(sceneWrapper).get(0).props.y2).toBe(0);
 
         // Grid columns
 
-        expect(findGridLines(sceneWrapper).get(1).props.x1).toBe(0);
+        expect(findGridLines(sceneWrapper).get(1).props.x1).toBe(-0.5);
         expect(findGridLines(sceneWrapper).get(1).props.y1).toBe(-1);
-        expect(findGridLines(sceneWrapper).get(1).props.x2).toBe(0);
+        expect(findGridLines(sceneWrapper).get(1).props.x2).toBe(-0.5);
         expect(findGridLines(sceneWrapper).get(1).props.y2).toBe(1);
+        expect(findGridLines(sceneWrapper).get(2).props.x1).toBe(0.5);
+        expect(findGridLines(sceneWrapper).get(2).props.y1).toBe(-1);
+        expect(findGridLines(sceneWrapper).get(2).props.x2).toBe(0.5);
+        expect(findGridLines(sceneWrapper).get(2).props.y2).toBe(1);
     });
 });
 
