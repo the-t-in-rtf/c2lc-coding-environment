@@ -25,6 +25,7 @@ class Scene extends React.Component<SceneProps, {}> {
         }
         const rowLabelOffset = this.props.dimensions.getWidth() * 0.025;
         const columnLabelOffset = this.props.dimensions.getHeight() * 0.025;
+        const halfGridCellWidth = 0.5;
         let yOffset = this.props.dimensions.getMinY();
         for (let i=1;i < this.props.dimensions.getHeight() + 1;i++) {
             yOffset += 1;
@@ -44,7 +45,7 @@ class Scene extends React.Component<SceneProps, {}> {
                     key={`grid-cell-label-${i}`}
                     dominantBaseline='middle'
                     x={this.props.dimensions.getMinX() - rowLabelOffset}
-                    y={yOffset - 0.5}>
+                    y={yOffset - halfGridCellWidth}>
                     {i}
                 </text>
             )
@@ -66,7 +67,7 @@ class Scene extends React.Component<SceneProps, {}> {
                     className='Scene__grid-label'
                     key={`grid-cell-label-${String.fromCharCode(64+i)}`}
                     textAnchor='middle'
-                    x={xOffset - 0.5}
+                    x={xOffset - halfGridCellWidth}
                     y={this.props.dimensions.getMinY() - columnLabelOffset}>
                     {String.fromCharCode(64+i)}
                 </text>
