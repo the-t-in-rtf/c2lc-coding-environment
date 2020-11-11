@@ -581,33 +581,22 @@ export default class App extends React.Component<{}, AppState> {
                                 />
                             </Col>
                         </Row>
-                        <Row>
-                            <Col md={4}/>
-                            <Col md={1}>
-                                <div className='App__playControl-container'>
-                                    <div className='App__playButton-container'>
-                                        <PlayButton
-                                            interpreterIsRunning={this.state.interpreterIsRunning}
-                                            disabled={
-                                                this.state.interpreterIsRunning ||
-                                                programIsEmpty(this.state.program)}
-                                            onClick={this.handleClickPlay}
-                                        />
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col md={1}/>
-                            <Col md={3}>
-                                <ProgramSpeedController
-                                    values={this.speedLookUp}
-                                    onChange={this.handleChangeProgramSpeed}
+                        <div className='App__playControl-container'>
+                            <div className='App__playButton-container'>
+                                <PlayButton
+                                    interpreterIsRunning={this.state.interpreterIsRunning}
+                                    disabled={
+                                        this.state.interpreterIsRunning ||
+                                        programIsEmpty(this.state.program)}
+                                    onClick={this.handleClickPlay}
                                 />
-                            </Col>
-                            <Col md={1}/>
-                            <Col md={2}>
-                                <ShareButton className="justify-content-end"/>
-                            </Col>
-                        </Row>
+                            </div>
+                            <ProgramSpeedController
+                                values={this.speedLookUp}
+                                onChange={this.handleChangeProgramSpeed}
+                            />
+                            <ShareButton/>
+                        </div>
                     </Container>
                 </div>
 
