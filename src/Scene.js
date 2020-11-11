@@ -16,12 +16,6 @@ export type SceneProps = {
 };
 
 class Scene extends React.Component<SceneProps, {}> {
-    columnLookUp: { [number]: string };
-    constructor(props: SceneProps) {
-        super(props);
-        this.columnLookUp = this.generateColumnLookUp();
-    }
-
     drawGrid() {
         const grid = [];
         if (this.props.dimensions.getWidth() === 0 ||
@@ -99,6 +93,34 @@ class Scene extends React.Component<SceneProps, {}> {
             columnLookUp[i-Math.floor(this.props.numColumns/2)] = String.fromCharCode(65+i);
         }
         return columnLookUp;
+    }
+
+    generateAriaLabel() {
+        const { xPos, yPos } = this.props.characterState;
+        const numColumns = this.props.dimensions.getWidth();
+        const numRows = this.props.dimensions.getHeight();
+        if (this.props.dimensions.getBoundsStateX(xPos) !== 'inBounds'
+            || this.props.dimensions.getBoundsStateY(yPos) !== 'inBounds') {
+                return this.props.intl.formatMessage(
+                    { id: 'Scene.outBound' },
+                    {
+                        numColumns,
+                        numRows
+                    }
+                )
+        } else {
+            return this.props.intl.formatMessage(
+                { id: 'Scene.inBound' },
+                {
+                    numColumns: this.props.dimensions.getWidth(),
+                    numRows: this.props.dimensions.getHeight(),
+                    xPos: String.fromCharCode(64 + xPos + Math.ceil(numColumns/2)),
+                    yPos: yPos + Math.ceil(numRows/2)
+                }
+            )
+        }
+    }
+
     getCharacterDrawXPos() {
         switch (this.props.dimensions.getBoundsStateX(this.props.characterState.xPos)) {
             case 'inBounds':
@@ -140,15 +162,7 @@ class Scene extends React.Component<SceneProps, {}> {
                 <span
                     className='Scene'
                     role='img'
-                    aria-label={this.props.intl.formatMessage(
-                        {id: 'Scene'},
-                        {
-                            numColumns: this.props.numColumns,
-                            numRows: this.props.numRows,
-                            xPos: this.columnLookUp[this.props.characterState.xPos],
-                            yPos: this.props.characterState.yPos + Math.ceil(this.props.numRows/2)
-                        }
-                    )}>
+                    aria-label={this.generateAriaLabel()}>
                     <svg
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox={`${minX} ${minY} ${width} ${height}`}>

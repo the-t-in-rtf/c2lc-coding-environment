@@ -81,13 +81,17 @@ describe('When the Scene renders', () => {
     test('Aria label should tell there is a robot character with its position', () => {
         const numRows = 9;
         const numColumns = 17;
-        const sceneWrapper = createMountScene({numColumns, numRows});
-        const scene = findScene(sceneWrapper);
-        expect(scene.get(0).props['aria-label']).toBe('Scene, 17 by 9 grid with a robot character at column I, row 5');
+        const sceneWrapper = createMountScene({
+            dimensions: new SceneDimensions(numColumns, numRows)
+        });
+        expect(findScene(sceneWrapper).get(0).props['aria-label']).toBe('Scene, 17 by 9 grid with a robot character at column I, row 5');
+        sceneWrapper.setProps({
+            characterState: new CharacterState(100, 10, 0, [])
+        });
+        expect(findScene(sceneWrapper).get(0).props['aria-label']).toBe('Scene, 17 by 9 grid with a robot character outside of the scene');
     });
 
     test('With width = 0, height = 2', () => {
-
         expect.assertions(1);
         const sceneWrapper = createMountScene({
             dimensions: new SceneDimensions(0, 2)
