@@ -87,14 +87,6 @@ class Scene extends React.Component<SceneProps, {}> {
         });
     }
 
-    generateColumnLookUp() {
-        const columnLookUp = {}
-        for (let i=0;i<this.props.numColumns;i++) {
-            columnLookUp[i-Math.floor(this.props.numColumns/2)] = String.fromCharCode(65+i);
-        }
-        return columnLookUp;
-    }
-
     generateAriaLabel() {
         const { xPos, yPos } = this.props.characterState;
         const numColumns = this.props.dimensions.getWidth();
