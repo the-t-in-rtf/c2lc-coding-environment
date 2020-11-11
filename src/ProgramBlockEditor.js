@@ -16,7 +16,7 @@ import classNames from 'classnames';
 import ToggleSwitch from './ToggleSwitch';
 import { ReactComponent as AddIcon } from './svg/Add.svg';
 import { ReactComponent as DeleteAllIcon } from './svg/DeleteAll.svg';
-import { ReactComponent as RobotIcon } from './svg/Robot.svg';
+import { ReactComponent as SpaceShipIcon } from './svg/SpaceShip.svg';
 import './ProgramBlockEditor.scss';
 
 // TODO: Send focus to Delete toggle button on close of Delete All confirmation
@@ -432,7 +432,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                             className='ProgramBlockEditor__character-column-character-container'
                             role='img'
                             aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.robotCharacter'})}>
-                            <RobotIcon className='ProgramBlockEditor__chracter-column-character' />
+                            <SpaceShipIcon className='ProgramBlockEditor__chracter-column-character' />
                         </div>
                     </h3>
                 </div>

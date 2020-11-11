@@ -43,7 +43,7 @@ body {
 
 .App__scene-controls {
     height: 4rem;
-    background-color: #F1F1F1;
+    background-color: $c2lc-container-color;
     border-width: 0 $c2lc-scene-border-width $c2lc-scene-border-width $c2lc-scene-border-width;
     border-color: $c2lc-scene-border-color;
     border-style: $c2lc-scene-border-style;
@@ -69,7 +69,7 @@ body {
 .App__command-palette {
     height: 100%;
     padding-top: 2rem;
-    background-color: #F1F1F1;
+    background-color: $c2lc-container-color;
     text-align: center;
 }
 
@@ -93,7 +93,7 @@ body {
     flex-direction: column;
     align-items: center;
     margin-top: 1rem;
-    background-color: #F1F1F1;
+    background-color: $c2lc-container-color;
     padding: 0.5rem;
 }
 

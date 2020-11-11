@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { ReactComponent as RobotIcon } from './svg/Robot.svg';
+import { ReactComponent as RobotIcon } from './svg/SpaceShip.svg';
 import './RobotCharacter.scss';
 
 type RobotCharacterProps = {
