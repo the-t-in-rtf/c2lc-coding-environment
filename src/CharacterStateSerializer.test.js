@@ -38,7 +38,7 @@ test('Deserialize character state', () => {
 });
 
 test('encodeDirection', () => {
-    expect.assertions(8);
+    expect.assertions(10);
     const serializer = new CharacterStateSerializer();
     expect(serializer.encodeDirection(0)).toBe('0');
     expect(serializer.encodeDirection(1)).toBe('a');
@@ -48,6 +48,12 @@ test('encodeDirection', () => {
     expect(serializer.encodeDirection(5)).toBe('e');
     expect(serializer.encodeDirection(6)).toBe('f');
     expect(serializer.encodeDirection(7)).toBe('g');
+    expect(() => {
+        serializer.encodeDirection(8)
+    }).toThrowError(/^Unrecognized direction 8$/);
+    expect(() => {
+        serializer.encodeDirection(-1)
+    }).toThrowError(/^Unrecognized direction -1$/);
 });
 
 test('decodeDirection', () => {
