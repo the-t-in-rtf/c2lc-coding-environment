@@ -53,6 +53,7 @@
         "ProgramBlockEditor.robotCharacter": "Robot character",
         "ProgramBlockEditor.startIndicator": "Start",
         "ProgramTextEditor.programLabel": "Program:",
+        "ProgramSpeedController.slider": "Program play speed",
         "AudioFeedbackToggleSwitch.audioFeedback": "Audio feedback",
         "Scene": "Scene, {numColumns} by {numRows} grid with a robot character at column {xPos}, row {yPos}",
         "RefreshButton": "Refresh"
