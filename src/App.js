@@ -24,6 +24,7 @@ import PenDownToggleSwitch from './PenDownToggleSwitch';
 import ProgramSpeedController from './ProgramSpeedController';
 import { programIsEmpty } from './ProgramUtils';
 import ProgramSerializer from './ProgramSerializer';
+import ShareButton from './ShareButton';
 import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import * as Utils from './Utils';
 import messages from './messages.json';
@@ -579,23 +580,29 @@ export default class App extends React.Component<{}, AppState> {
                                 />
                             </Col>
                         </Row>
-                        <div className='App__playControl-container'>
-                            <div className='App__playButton-container'>
-                                <PlayButton
-                                    interpreterIsRunning={this.state.interpreterIsRunning}
-                                    disabled={
-                                        this.state.interpreterIsRunning ||
-                                        programIsEmpty(this.state.program)}
-                                    onClick={this.handleClickPlay}
+                        <div className='App__playAndShare-container'>
+                            <div className='App__playControl-container'>
+                                <div className='App__playButton-container'>
+                                    <PlayButton
+                                        interpreterIsRunning={this.state.interpreterIsRunning}
+                                        disabled={
+                                            this.state.interpreterIsRunning ||
+                                            programIsEmpty(this.state.program)}
+                                        onClick={this.handleClickPlay}
+                                    />
+                                </div>
+                                <ProgramSpeedController
+                                    values={this.speedLookUp}
+                                    onChange={this.handleChangeProgramSpeed}
                                 />
                             </div>
-                            <ProgramSpeedController
-                                values={this.speedLookUp}
-                                onChange={this.handleChangeProgramSpeed}
-                            />
+                            <div className='App__shareButton-container'>
+                                <ShareButton/>
+                            </div>
                         </div>
                     </Container>
                 </div>
+
                 <DashConnectionErrorModal
                     show={this.state.showDashConnectionError}
                     onCancel={this.handleCancelDashConnection}

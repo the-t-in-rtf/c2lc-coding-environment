@@ -73,7 +73,9 @@
         "RelativeDirection.4": "below the",
         "RelativeDirection.5": "to the lower left of the",
         "RelativeDirection.6": "to the left of the",
-        "RelativeDirection.7": "to the upper left of the"
+        "RelativeDirection.7": "to the upper left of the",
+        "ShareButton": "Share",
+        "ShareCompleteModal.shareComplete": "The URL for your program has been copied to the clipboard."
     },
     "fr": {
         "App.blockMode": "Block in French",
