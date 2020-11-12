@@ -41,7 +41,6 @@ type ProgramBlockEditorProps = {
 
 type ProgramBlockEditorState = {
     showConfirmDeleteAll: boolean,
-    showShareComplete: boolean,
     focusedActionPanelOptionName: ?string,
     replaceIsActive: boolean
 };

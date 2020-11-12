@@ -11,7 +11,6 @@ import './ShareButton.css';
 
 type ShareButtonProps = {
     intl: IntlShape,
-    disabled: boolean,
     onShowModal?: Function
 };
 
@@ -20,11 +19,6 @@ type ShareButtonState = {
 }
 
 class ShareButton extends React.Component<ShareButtonProps, ShareButtonState> {
-    static defaultProps = {
-        disabled: false,
-        showShareComplete: false
-    }
-
     constructor (props: ShareButtonProps) {
         super(props);
         this.state = {

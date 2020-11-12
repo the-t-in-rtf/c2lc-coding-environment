@@ -51,7 +51,6 @@ function createShareButton(props) {
     return wrapper;
 }
 
-// TODO: Figure how to do this properly with the required intl infrastructure
 test('The component should render without errors.', () => {
     const div = document.createElement('div');
     ReactDOM.render(<IntlProvider
