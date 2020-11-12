@@ -184,6 +184,34 @@ describe('When the Scene renders', () => {
     });
 });
 
+describe('The ARIA label should tell there is a robot character with its position', () => {
+    test.each([
+        [0, 1, 0, 'Scene, 17 by 9 grid with a robot character at column I, row 6 facing up'],
+        [1, 2, 1, 'Scene, 17 by 9 grid with a robot character at column J, row 7 facing upper right'],
+        [0, 1, 2, 'Scene, 17 by 9 grid with a robot character at column I, row 6 facing right'],
+        [0, 1, 3, 'Scene, 17 by 9 grid with a robot character at column I, row 6 facing lower right'],
+        [0, 1, 4, 'Scene, 17 by 9 grid with a robot character at column I, row 6 facing down'],
+        [0, 1, 5, 'Scene, 17 by 9 grid with a robot character at column I, row 6 facing lower left'],
+        [0, 1, 6, 'Scene, 17 by 9 grid with a robot character at column I, row 6 facing left'],
+        [0, 1, 7, 'Scene, 17 by 9 grid with a robot character at column I, row 6 facing upper left'],
+        [   0, -10, 0, 'Scene, 17 by 9 grid with a robot character outside of the scene above the scene, facing up'],
+        [ 100, -10, 6, 'Scene, 17 by 9 grid with a robot character outside of the scene to the upper right of the scene, facing left'],
+        [ 100,   0, 0, 'Scene, 17 by 9 grid with a robot character outside of the scene to the right of the scene, facing up'],
+        [ 100,  10, 0, 'Scene, 17 by 9 grid with a robot character outside of the scene to the lower right of the scene, facing up'],
+        [   0,  10, 0, 'Scene, 17 by 9 grid with a robot character outside of the scene below the scene, facing up'],
+        [-100,  10, 0, 'Scene, 17 by 9 grid with a robot character outside of the scene to the lower left of the scene, facing up'],
+        [-100,   0, 0, 'Scene, 17 by 9 grid with a robot character outside of the scene to the left of the scene, facing up'],
+        [-100, -10, 0, 'Scene, 17 by 9 grid with a robot character outside of the scene to the upper left of the scene, facing up']
+    ])('x=%f, y=%f, direction=%i', (x, y, direction, expectedLabel) => {
+            const sceneWrapper = createMountScene({
+                dimensions: new SceneDimensions(17, 9),
+                characterState: new CharacterState(x, y, direction, [])
+            });
+            expect(findScene(sceneWrapper).get(0).props['aria-label']).toBe(expectedLabel);
+        }
+    );
+});
+
 describe('When the Scene renders', () => {
     test('Should render the robot character component', () => {
         expect.assertions(5);
@@ -263,7 +291,7 @@ describe('When the Character has a path, it is drawn on the Scene', () => {
     test('When there is no path segment', () => {
         expect.assertions(1);
         const sceneWrapper = createMountScene({
-            characterState: new CharacterState(0, 0, 90, [])
+            characterState: new CharacterState(0, 0, 2, [])
         });
         const robotCharacterPath = findRobotCharacterPath(sceneWrapper);
         expect(robotCharacterPath.length).toBe(0);
@@ -272,7 +300,7 @@ describe('When the Character has a path, it is drawn on the Scene', () => {
     test('When there is one path segment', () => {
         expect.assertions(5);
         const sceneWrapper = createMountScene({
-            characterState: new CharacterState(0, 0, 90, [{x1: 100, y1: 200, x2: 300, y2: 400}])
+            characterState: new CharacterState(0, 0, 2, [{x1: 100, y1: 200, x2: 300, y2: 400}])
         });
         const robotCharacterPath = findRobotCharacterPath(sceneWrapper);
         expect(robotCharacterPath.length).toBe(1);
@@ -286,7 +314,7 @@ describe('When the Character has a path, it is drawn on the Scene', () => {
         expect.assertions(9);
         const sceneWrapper = createMountScene({
             characterState:
-                new CharacterState(0, 0, 90, [
+                new CharacterState(0, 0, 2, [
                     {x1: 100, y1: 200, x2: 300, y2: 400},
                     {x1: 500, y1: 600, x2: 700, y2: 800}
                 ])
