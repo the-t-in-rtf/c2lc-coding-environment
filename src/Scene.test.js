@@ -186,7 +186,7 @@ describe('When the Scene renders', () => {
 
 describe('When the Scene renders', () => {
     test('Should render the robot character component', () => {
-        //expect.assertions(5);
+        expect.assertions(5);
         const sceneWrapper = createMountScene({
             dimensions: new SceneDimensions(1, 1)
         });
