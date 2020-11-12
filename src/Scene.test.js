@@ -84,11 +84,11 @@ describe('When the Scene renders', () => {
         const sceneWrapper = createMountScene({
             dimensions: new SceneDimensions(numColumns, numRows)
         });
-        expect(findScene(sceneWrapper).get(0).props['aria-label']).toBe('Scene, 17 by 9 grid with a robot character at column I, row 5');
+        expect(findScene(sceneWrapper).get(0).props['aria-label']).toBe('Scene, 17 by 9 grid with a robot character is facing right at column I, row 5');
         sceneWrapper.setProps({
             characterState: new CharacterState(100, 10, 0, [])
         });
-        expect(findScene(sceneWrapper).get(0).props['aria-label']).toBe('Scene, 17 by 9 grid with a robot character outside of the scene');
+        expect(findScene(sceneWrapper).get(0).props['aria-label']).toBe('Scene, 17 by 9 grid with a robot character is facing upwards, outside of the scene');
     });
 
     test('With width = 0, height = 2', () => {

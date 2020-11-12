@@ -87,27 +87,44 @@ class Scene extends React.Component<SceneProps, {}> {
         });
     }
 
+    getDirectionWords(direction: number): string {
+        switch(direction) {
+            case (0): return 'upwards';
+            case (1): return 'upper right';
+            case (2): return 'right';
+            case (3): return 'lower right';
+            case (4): return 'downwards';
+            case (5): return 'lower left';
+            case (6): return 'left';
+            case (7): return 'upper left';
+            default: throw new Error(`Unrecognized direction: ${direction}`);;
+        }
+    }
+
     generateAriaLabel() {
         const { xPos, yPos } = this.props.characterState;
         const numColumns = this.props.dimensions.getWidth();
         const numRows = this.props.dimensions.getHeight();
+        const direction = this.getDirectionWords(this.props.characterState.direction);
         if (this.props.dimensions.getBoundsStateX(xPos) !== 'inBounds'
             || this.props.dimensions.getBoundsStateY(yPos) !== 'inBounds') {
                 return this.props.intl.formatMessage(
-                    { id: 'Scene.outBound' },
+                    { id: 'Scene.outBounds' },
                     {
                         numColumns,
-                        numRows
+                        numRows,
+                        direction
                     }
                 )
         } else {
             return this.props.intl.formatMessage(
-                { id: 'Scene.inBound' },
+                { id: 'Scene.inBounds' },
                 {
                     numColumns: this.props.dimensions.getWidth(),
                     numRows: this.props.dimensions.getHeight(),
                     xPos: String.fromCharCode(64 + xPos + Math.ceil(numColumns/2)),
-                    yPos: yPos + Math.ceil(numRows/2)
+                    yPos: yPos + Math.ceil(numRows/2),
+                    direction
                 }
             )
         }
