@@ -136,7 +136,7 @@ class Scene extends React.Component<SceneProps, {}> {
         if (this.props.dimensions.getBoundsStateX(xPos) !== 'inBounds'
             || this.props.dimensions.getBoundsStateY(yPos) !== 'inBounds') {
                 return this.props.intl.formatMessage(
-                    { id: 'Scene.outBounds' },
+                    { id: 'Scene.outOfBounds' },
                     {
                         numColumns,
                         numRows,
