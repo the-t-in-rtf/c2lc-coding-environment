@@ -14,4 +14,8 @@ export default class C2lcURLParams {
     getProgram() {
         return this.urlSearchParams.get('p');
     }
+
+    getCharacterState() {
+        return this.urlSearchParams.get('c');
+    }
 }
