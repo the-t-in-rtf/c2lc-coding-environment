@@ -67,6 +67,8 @@ export default class CharacterStateSerializer {
     }
 
     encodePosition(positionComponent: number): string {
+        // Remove any fractional digits, to make sure we have an integer
+        positionComponent = Math.trunc(positionComponent);
         if (positionComponent === 0) {
             return '0';
         } else if (positionComponent > 0 && positionComponent < 27) {

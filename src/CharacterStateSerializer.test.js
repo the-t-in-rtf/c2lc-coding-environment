@@ -7,11 +7,11 @@ test('Serialize character state', () => {
     expect.assertions(5);
     const serializer = new CharacterStateSerializer();
     expect(serializer.serialize(
-        new CharacterState(0, 0, 2, [])
-    )).toBe('00b');
+        new CharacterState(0, 1, 2, [])
+    )).toBe('0ab');
     expect(serializer.serialize(
-        new CharacterState(1, 1, 4, [{x1: 0, y1: 0, x2: 1, y2: 1}])
-    )).toBe('aad00aa');
+        new CharacterState(1, 0, 4, [{x1: 0, y1: 1, x2: 2, y2: 3}])
+    )).toBe('a0d0abc');
     expect(serializer.serialize(
         new CharacterState(-1, -1, 7, [{x1: 0, y1: 0, x2: -1, y2: -1}])
     )).toBe('AAg00AA');
@@ -26,8 +26,8 @@ test('Serialize character state', () => {
 test('Deserialize character state', () => {
     expect.assertions(5);
     const serializer = new CharacterStateSerializer();
-    expect(serializer.deserialize('00b')).toStrictEqual(new CharacterState(0,0,2,[]));
-    expect(serializer.deserialize('aab00aa')).toStrictEqual(new CharacterState(1,1,2,[{x1:0,y1:0,x2:1,y2:1}]));
+    expect(serializer.deserialize('0ab')).toStrictEqual(new CharacterState(0,1,2,[]));
+    expect(serializer.deserialize('a0d0abc')).toStrictEqual(new CharacterState(1,0,4,[{x1:0,y1:1,x2:2,y2:3}]));
     expect(serializer.deserialize('AAc00AA')).toStrictEqual(new CharacterState(-1,-1,3,[{x1:0,y1:0,x2:-1,y2:-1}]));
     expect(() => {
         serializer.deserialize('3ac00AA')
@@ -73,7 +73,7 @@ test('decodeDirection', () => {
 });
 
 test('encodePosition', () => {
-    expect.assertions(8);
+    expect.assertions(9);
     const serializer = new CharacterStateSerializer();
     expect(serializer.encodePosition(0)).toBe('0');
     expect(serializer.encodePosition(-1)).toBe('A');
@@ -82,6 +82,7 @@ test('encodePosition', () => {
     expect(serializer.encodePosition(26)).toBe('z');
     expect(serializer.encodePosition(-130)).toBe('Z');
     expect(serializer.encodePosition(34)).toBe('z');
+    expect(serializer.encodePosition(2.8)).toBe('b');
     expect(() => {
         serializer.encodePosition(NaN)
     }).toThrowError(/^Position out of the range: NaN$/);
