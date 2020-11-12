@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import ReactDOM from 'react-dom';
+//import ReactDOM from 'react-dom';
 import Adapter from 'enzyme-adapter-react-16';
 import { configure, shallow } from 'enzyme';
 import { createIntl } from 'react-intl';
@@ -9,6 +9,23 @@ import messages from './messages.json';
 import ShareButton from './ShareButton';
 
 configure({ adapter: new Adapter()});
+
+class FakeClipboard {
+    currentClipboardContents: string;
+
+    constructor() {
+        this.currentClipboardContents = '';
+    }
+
+    readText(): Promise<string> {
+        return Promise.resolve(this.currentClipboardContents);
+    }
+
+    writeText(data: string): Promise<void> {
+        this.currentClipboardContents = data;
+        return Promise.resolve();
+    }
+}
 
 const intl = createIntl({
     locale: 'en',
@@ -34,41 +51,47 @@ function createShareButton(props) {
 }
 
 // TODO: Figure how to do this properly with the required intl infrastructure
+/*
 it('renders without crashing', () => {
     const div = document.createElement('div');
     ReactDOM.render(<ShareButton intl={intl}/>, div);
     ReactDOM.unmountComponentAtNode(div);
 });
+*/
 
-it('hides modal on startup', () => {
+test('The modal should be hidden on startup', () => {
     const wrapper = createShareButton();
-
     const modal = wrapper.children().at(1);
     expect(modal.props().show).toBe(false);
 });
 
-it('displays modal on click', () => {
-    const wrapper = createShareButton();
+test('When the Share button is clicked, then the modal should be displayed', (done) => {
+    expect.assertions(1);
+
+    Object.assign(navigator, {
+        // $FlowFixMe: Flow wants us to mock the full clipboard before we do this.
+        clipboard: new FakeClipboard()
+    });
+
+    const wrapper = createShareButton({
+        // Register a callback to verify that the modal has been shown
+        onShowModal: () => {
+            const modal = wrapper.children().at(1);
+            expect(modal.props().show).toBe(true);
+            done();
+        }
+    });
+
     const button = wrapper.children().at(0);
     button.simulate("click");
-
-    const modal = wrapper.children().at(1);
-    expect(modal.props().show).toBe(true);
 });
 
-it('copies URL to clipboard on click', () => {
-    let currentClipboard = "";
+test('When the Share button is clicked, then the URL should be copied to the clipboard', (done) => {
+    expect.assertions(1);
+
     Object.assign(navigator, {
-        // $FlowFixMe: Flow wants to to mock the full clipboard before we do this.
-        clipboard: {
-            readText: () => {
-                return Promise.resolve(currentClipboard);
-            },
-            writeText: (textToWrite) => {
-                currentClipboard = textToWrite;
-                return Promise.resolve(textToWrite);
-            }
-        }
+        // $FlowFixMe: Flow wants us to mock the full clipboard before we do this.
+        clipboard: new FakeClipboard()
     });
 
     const wrapper = createShareButton();
@@ -77,5 +100,6 @@ it('copies URL to clipboard on click', () => {
 
     navigator.clipboard.readText().then((clipBoardText) => {
         expect(clipBoardText).toBe(document.location.href);
+        done();
     });
 });
