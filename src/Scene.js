@@ -101,6 +101,20 @@ class Scene extends React.Component<SceneProps, {}> {
         }
     }
 
+    getRelativeDirection(direction: number): string {
+        switch(direction) {
+            case (0): return 'above the';
+            case (1): return 'to the upper right of the';
+            case (2): return 'to the right of the';
+            case (3): return 'to the lower right';
+            case (4): return 'below';
+            case (5): return 'lower left';
+            case (6): return 'left';
+            case (7): return 'upper left';
+            default: throw new Error(`Unrecognized direction: ${direction}`);;
+        }
+    }
+
     generateAriaLabel() {
         const { xPos, yPos } = this.props.characterState;
         const numColumns = this.props.dimensions.getWidth();
