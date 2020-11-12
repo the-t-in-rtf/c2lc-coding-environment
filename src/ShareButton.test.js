@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
-//import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 import Adapter from 'enzyme-adapter-react-16';
+import { IntlProvider } from 'react-intl';
 import { configure, shallow } from 'enzyme';
 import { createIntl } from 'react-intl';
 import messages from './messages.json';
@@ -51,13 +52,16 @@ function createShareButton(props) {
 }
 
 // TODO: Figure how to do this properly with the required intl infrastructure
-/*
-it('renders without crashing', () => {
+test('The component should render without errors.', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<ShareButton intl={intl}/>, div);
+    ReactDOM.render(<IntlProvider
+        locale={intl.locale}
+        messages={intl.messages}
+    >
+        <ShareButton/>
+    </IntlProvider>, div);
     ReactDOM.unmountComponentAtNode(div);
 });
-*/
 
 test('The modal should be hidden on startup', () => {
     const wrapper = createShareButton();
