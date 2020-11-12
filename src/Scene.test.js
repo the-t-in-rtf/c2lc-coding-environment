@@ -88,7 +88,8 @@ describe('When the Scene renders', () => {
         sceneWrapper.setProps({
             characterState: new CharacterState(100, 10, 0, [])
         });
-        expect(findScene(sceneWrapper).get(0).props['aria-label']).toBe('Scene, 17 by 9 grid with a robot character is facing upwards, outside of the scene');
+        expect(findScene(sceneWrapper).get(0).props['aria-label'])
+            .toBe('Scene, 17 by 9 grid with a robot character is facing up, outside of the scene to the lower right of the scene');
     });
 
     test('With width = 0, height = 2', () => {

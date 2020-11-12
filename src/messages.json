@@ -64,7 +64,7 @@
         "ProgramSpeedController.slider": "Program play speed",
         "AudioFeedbackToggleSwitch.audioFeedback": "Audio feedback",
         "Scene.inBounds": "Scene, {numColumns} by {numRows} grid with a robot character is facing {direction} at column {xPos}, row {yPos}",
-        "Scene.outBounds": "Scene, {numColumns} by {numRows} grid with a robot character is facing {direction}, outside of the scene",
+        "Scene.outBounds": "Scene, {numColumns} by {numRows} grid with a robot character is facing {direction}, outside of the scene {relativeDirection} scene",
         "RefreshButton": "Refresh",
         "RelativeDirection.0": "above the",
         "RelativeDirection.1": "to the upper right of the",

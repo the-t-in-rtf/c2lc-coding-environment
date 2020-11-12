@@ -88,30 +88,43 @@ class Scene extends React.Component<SceneProps, {}> {
     }
 
     getDirectionWords(direction: number): string {
-        switch(direction) {
-            case (0): return 'upwards';
-            case (1): return 'upper right';
-            case (2): return 'right';
-            case (3): return 'lower right';
-            case (4): return 'downwards';
-            case (5): return 'lower left';
-            case (6): return 'left';
-            case (7): return 'upper left';
-            default: throw new Error(`Unrecognized direction: ${direction}`);;
-        }
+        return this.props.intl.formatMessage({id: `Direction.${direction}`});
     }
 
-    getRelativeDirection(direction: number): string {
-        switch(direction) {
-            case (0): return 'above the';
-            case (1): return 'to the upper right of the';
-            case (2): return 'to the right of the';
-            case (3): return 'to the lower right';
-            case (4): return 'below';
-            case (5): return 'lower left';
-            case (6): return 'left';
-            case (7): return 'upper left';
-            default: throw new Error(`Unrecognized direction: ${direction}`);;
+    getRelativeDirection(xPos: number, yPos: number): string {
+        if (this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsBelow' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'inBounds') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.0'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsBelow' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsAbove') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.1'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'inBounds' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsAbove') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.2'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsAbove' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsAbove') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.3'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsAbove' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'inBounds') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.4'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsAbove' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsBelow') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.5'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'inBounds' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsBelow') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.6'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsBelow' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsBelow') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.7'});
+        } else {
+            throw new Error(`Unrecognized xPos: ${xPos} or yPos: ${yPos}`);
         }
     }
 
@@ -127,7 +140,8 @@ class Scene extends React.Component<SceneProps, {}> {
                     {
                         numColumns,
                         numRows,
-                        direction
+                        direction,
+                        relativeDirection: this.getRelativeDirection(xPos, yPos)
                     }
                 )
         } else {
