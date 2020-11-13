@@ -554,7 +554,7 @@ export default class App extends React.Component<{}, AppState> {
                             </div>
                         </div>
                         <Row className='App__program-section' noGutters={true}>
-                            <Col md={5} lg={4} className='pr-md-4 mb-4 mb-md-0'>
+                            <Col md={6} lg={4} className='pr-md-4 mb-4 mb-md-0'>
                                 <div className='App__command-palette'>
                                     <h2 className='App__command-palette-heading'>
                                         <FormattedMessage id='CommandPalette.movementsTitle' />
@@ -564,7 +564,7 @@ export default class App extends React.Component<{}, AppState> {
                                     </div>
                                 </div>
                             </Col>
-                            <Col md={7} lg={8}>
+                            <Col md={6} lg={8}>
                                 <ProgramBlockEditor
                                     activeProgramStepNum={this.state.activeProgramStepNum}
                                     actionPanelStepIndex={this.state.actionPanelStepIndex}
