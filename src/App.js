@@ -519,7 +519,9 @@ export default class App extends React.Component<{}, AppState> {
                             </Row>
                         </Container>
                     </header>
-                    <Container role='main' className='mb-5'>
+                    <div
+                        className='App__container mb-5'
+                        role='main'>
                         {/* Dash connection removed for version 0.5
                         {!this.appContext.bluetoothApiIsAvailable &&
                             <Row className='App__bluetooth-api-warning-section'>
@@ -600,7 +602,7 @@ export default class App extends React.Component<{}, AppState> {
                                 <ShareButton/>
                             </div>
                         </div>
-                    </Container>
+                    </div>
                 </div>
 
                 <DashConnectionErrorModal

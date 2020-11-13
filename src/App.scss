@@ -5,7 +5,16 @@ body {
     overflow-x: hidden;
 }
 
+.App__container {
+    width: 80%;
+    padding: 1rem 2rem 3rem 3rem;
+    margin: auto;
+    background-color: #171C1C;
+}
+
 .App__header {
+    width: 80%;
+    margin: auto;
     display: flex;
     background: #000;
     color: #FFF;
@@ -38,7 +47,7 @@ body {
 }
 
 .App__scene-container {
-    margin-top: 4rem;
+    margin-top: 2rem;
 }
 
 .App__scene-controls {
