@@ -494,7 +494,7 @@ export default class App extends React.Component<{}, AppState> {
                     onClick={this.handleRootClick}
                     onKeyDown={this.handleRootKeyDown}>
                     <header className='App__header'>
-                        <Container>
+                        <Container className='App__title'>
                             <Row className='App__header-row'>
                                 <h1 className='App__app-heading'>
                                     <FormattedMessage id='App.appHeading'/>
@@ -519,7 +519,7 @@ export default class App extends React.Component<{}, AppState> {
                             </Row>
                         </Container>
                     </header>
-                    <div
+                    <Container
                         className='App__container mb-5'
                         role='main'>
                         {/* Dash connection removed for version 0.5
@@ -602,7 +602,7 @@ export default class App extends React.Component<{}, AppState> {
                                 <ShareButton/>
                             </div>
                         </div>
-                    </div>
+                    </Container>
                 </div>
 
                 <DashConnectionErrorModal
