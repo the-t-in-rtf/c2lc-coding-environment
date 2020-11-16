@@ -117,3 +117,23 @@ body {
     justify-content: center;
     padding-right: 2rem;
 }
+
+@media only screen and (max-width: 768px) {
+    .App__playAndShare-container {
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+    .App__playControl-container {
+        grid-row-start: 1;
+        grid-row-end: 2;
+    }
+    .App__shareButton-container {
+        padding-right: 0;
+        align-items: flex-start;
+        flex-direction: row;
+        grid-column-start: 2;
+        grid-column-end: 3;
+        grid-row-start: 2;
+        grid-row-end: 3;
+    }
+}
