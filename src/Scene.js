@@ -16,7 +16,6 @@ export type SceneProps = {
 };
 
 class Scene extends React.Component<SceneProps, {}> {
-
     drawGrid() {
         const grid = [];
         if (this.props.dimensions.getWidth() === 0 ||
@@ -88,6 +87,77 @@ class Scene extends React.Component<SceneProps, {}> {
         });
     }
 
+    getDirectionWords(direction: number): string {
+        return this.props.intl.formatMessage({id: `Direction.${direction}`});
+    }
+
+    getRelativeDirection(xPos: number, yPos: number): string {
+        if (this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsBelow' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'inBounds') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.0'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsBelow' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsAbove') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.1'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'inBounds' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsAbove') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.2'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsAbove' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsAbove') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.3'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsAbove' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'inBounds') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.4'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsAbove' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsBelow') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.5'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'inBounds' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsBelow') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.6'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsBelow' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsBelow') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.7'});
+        } else {
+            throw new Error(`Unrecognized xPos: ${xPos} or yPos: ${yPos}`);
+        }
+    }
+
+    generateAriaLabel() {
+        const { xPos, yPos } = this.props.characterState;
+        const numColumns = this.props.dimensions.getWidth();
+        const numRows = this.props.dimensions.getHeight();
+        const direction = this.getDirectionWords(this.props.characterState.direction);
+        if (this.props.dimensions.getBoundsStateX(xPos) !== 'inBounds'
+            || this.props.dimensions.getBoundsStateY(yPos) !== 'inBounds') {
+                return this.props.intl.formatMessage(
+                    { id: 'Scene.outOfBounds' },
+                    {
+                        numColumns,
+                        numRows,
+                        direction,
+                        relativeDirection: this.getRelativeDirection(xPos, yPos)
+                    }
+                )
+        } else {
+            return this.props.intl.formatMessage(
+                { id: 'Scene.inBounds' },
+                {
+                    numColumns: this.props.dimensions.getWidth(),
+                    numRows: this.props.dimensions.getHeight(),
+                    xPos: String.fromCharCode(64 + Math.trunc(xPos) + Math.ceil(numColumns/2)),
+                    yPos: Math.trunc(yPos) + Math.ceil(numRows/2),
+                    direction
+                }
+            )
+        }
+    }
+
     getCharacterDrawXPos() {
         switch (this.props.dimensions.getBoundsStateX(this.props.characterState.xPos)) {
             case 'inBounds':
@@ -129,7 +199,7 @@ class Scene extends React.Component<SceneProps, {}> {
                 <span
                     className='Scene'
                     role='img'
-                    aria-label={this.props.intl.formatMessage({id: 'Scene'})}>
+                    aria-label={this.generateAriaLabel()}>
                     <svg
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox={`${minX} ${minY} ${width} ${height}`}>

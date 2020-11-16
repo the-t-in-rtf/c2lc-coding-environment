@@ -166,6 +166,7 @@ export default class AudioManager {
     }
 
     // TODO: Add a better type for pitch.
+    // TODO: Make this private, as it doesn't respect the audioEnabled setting.
     playPitchedSample(sampler: Sampler, pitch: string, releaseTime: number) {
         // We can only play the sound if it's already loaded.
         if (sampler.loaded) {
@@ -174,21 +175,23 @@ export default class AudioManager {
     }
 
     playSoundForCharacterState(samplerKey: string, releaseTimeInMs: number, characterState: CharacterState) {
-        const releaseTime = releaseTimeInMs / 1000;
-        const noteName = getNoteForState(characterState);
+        if (this.audioEnabled) {
+            const releaseTime = releaseTimeInMs / 1000;
+            const noteName = getNoteForState(characterState);
 
-        const sampler: Sampler = this.samplers[samplerKey];
+            const sampler: Sampler = this.samplers[samplerKey];
 
-        this.playPitchedSample(sampler, noteName, releaseTime);
+            this.playPitchedSample(sampler, noteName, releaseTime);
 
-        // Pan left/right to suggest the relative horizontal position.
-        // As we use a single Sampler grade, our best option for panning is
-        // to pan all sounds.  We can discuss adjusting this once we have
-        // multiple sound-producing elements in the environment.
-        const panningLevel = Math.min(1, Math.max(-1, (0.1 * characterState.xPos)));
+            // Pan left/right to suggest the relative horizontal position.
+            // As we use a single Sampler grade, our best option for panning is
+            // to pan all sounds.  We can discuss adjusting this once we have
+            // multiple sound-producing elements in the environment.
+            const panningLevel = Math.min(1, Math.max(-1, (0.1 * characterState.xPos)));
 
-        // TODO: Consider making the timing configurable or tying it to the movement timing.
-        this.panner.pan.rampTo(panningLevel, 0.5)
+            // TODO: Consider making the timing configurable or tying it to the movement timing.
+            this.panner.pan.rampTo(panningLevel, 0.5)
+        }
     }
 
     setAudioEnabled(value: boolean) {
