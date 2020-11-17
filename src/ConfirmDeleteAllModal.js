@@ -32,7 +32,7 @@ class ConfrimDeleteAllModal extends React.Component<ConfrimDeleteAllModalProps, 
                     </div>
                     <div className='ConfrimDeleteAllModal__footer'>
                         <Button
-                            className='ConfrimDeleteAllModal__option-button mr-4'
+                            className='ConfrimDeleteAllModal__option-button'
                             onClick={this.props.onCancel}>
                             <FormattedMessage id='ConfrimDeleteAllModal.cancelButton' />
                         </Button>
