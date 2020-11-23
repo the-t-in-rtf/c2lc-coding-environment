@@ -1,6 +1,7 @@
 @import 'variables';
 
 .Scene {
+    background-color: #FFF;
     display: inline-block;
     box-sizing: border-box;
     width: 100%;
@@ -20,7 +21,7 @@
 }
 
 .Scene__grid-label {
-    fill: #555;
+    fill: #FFF;
     font: bold 0.01em sans-serif;
 }
 

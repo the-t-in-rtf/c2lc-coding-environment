@@ -213,7 +213,7 @@ class Scene extends React.Component<SceneProps, {}> {
                             {this.drawCharacterPath()}
                             <RobotCharacter
                                 transform={robotCharacterTransform}
-                                width={0.6}
+                                width={0.9}
                             />
                         </g>
                     </svg>
