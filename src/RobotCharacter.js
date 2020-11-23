@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { ReactComponent as SpaceShipIcon } from './svg/SpaceShip.svg';
+import { ReactComponent as RabbitIcon } from './svg/Rabbit.svg';
 import './RobotCharacter.scss';
 
 type RobotCharacterProps = {
@@ -15,7 +15,7 @@ export default class RobotCharacter extends React.Component<RobotCharacterProps,
             <g
                 className='RobotCharacter'
                 transform={this.props.transform}>
-                <SpaceShipIcon
+                <RabbitIcon
                     className='RobotCharacter__icon'
                     x={-this.props.width/2}
                     y={-this.props.width/2}
