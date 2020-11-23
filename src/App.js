@@ -19,6 +19,7 @@ import ProgramBlockEditor from './ProgramBlockEditor';
 import RefreshButton from './RefreshButton';
 import Scene from './Scene';
 import SceneDimensions from './SceneDimensions';
+import StopButton from './StopButton';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
 import ProgramSpeedController from './ProgramSpeedController';
@@ -343,6 +344,10 @@ export default class App extends React.Component<{}, AppState> {
         );
     };
 
+    handleClickStop = () => {
+        this.interpreter.stop();
+    }
+
     handleClickConnectDash = () => {
         this.setState({
             dashConnectionStatus: 'connecting',
@@ -590,6 +595,9 @@ export default class App extends React.Component<{}, AppState> {
                                             programIsEmpty(this.state.program)}
                                         onClick={this.handleClickPlay}
                                     />
+                                    <StopButton
+                                        disabled={!this.state.interpreterIsRunning}
+                                        onClick={this.handleClickStop}/>
                                 </div>
                                 <ProgramSpeedController
                                     values={this.speedLookUp}
@@ -631,6 +639,7 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
+        console.log(this.state.activeProgramStepNum);
         if (this.state.program !== prevState.program
             || this.state.characterState !== prevState.characterState) {
             const serializedProgram = this.programSerializer.serialize(this.state.program);
