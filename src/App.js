@@ -639,7 +639,6 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
-        console.log(this.state.activeProgramStepNum);
         if (this.state.program !== prevState.program
             || this.state.characterState !== prevState.characterState) {
             const serializedProgram = this.programSerializer.serialize(this.state.program);
