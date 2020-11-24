@@ -195,6 +195,7 @@ export default class AudioManager {
     }
 
     // TODO: Add a better type for pitch.
+    // TODO: Make this private, as it doesn't respect the audioEnabled setting.
     playPitchedSample(sampler: Sampler, pitch: string, releaseTime: number) {
         if (this.audioEnabled) {
             // We can only play the sound if it's already loaded.

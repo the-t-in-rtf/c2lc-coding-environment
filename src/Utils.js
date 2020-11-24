@@ -18,8 +18,8 @@ function makeDelayedPromise(timeMs: number): Promise<void> {
     });
 }
 
-function generateEncodedProgramURL(versionString: string, programString: string): string {
-    return `?v=${encodeURIComponent(versionString)}&p=${encodeURIComponent(programString)}`;
+function generateEncodedProgramURL(versionString: string, programString: string, characterStateString: string): string {
+    return `?v=${encodeURIComponent(versionString)}&p=${encodeURIComponent(programString)}&c=${encodeURIComponent(characterStateString)}`;
 }
 
 export { generateId, makeDelayedPromise, generateEncodedProgramURL };
