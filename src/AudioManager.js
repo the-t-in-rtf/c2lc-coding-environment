@@ -90,10 +90,6 @@ export default class AudioManager {
     startResolve: function;
     startReject: function;
 
-    toneStartPromise: Promise<void>;
-    toneStartResolve: function;
-    toneStartReject: function;
-
     constructor(audioEnabled: boolean) {
         this.audioEnabled = audioEnabled;
 
@@ -104,8 +100,6 @@ export default class AudioManager {
             this.startResolve = resolve;
             this.startReject = reject;
         });
-
-        this.createSoundInfrastructure();
     }
 
     createSoundInfrastructure = () => {
@@ -234,7 +228,7 @@ export default class AudioManager {
     startTone = () => {
         // Ensure that sound support is started on any user action.
         if (!this.toneStartHasBeenCalled) {
-            ToneStart().then(this.startResolve, this.startReject);
+            ToneStart().then(this.createSoundInfrastructure, this.startReject);
             this.toneStartHasBeenCalled = true;
         }
     }
