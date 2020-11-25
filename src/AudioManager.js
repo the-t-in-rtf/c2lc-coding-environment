@@ -4,22 +4,64 @@ import { Midi, Panner, Player, Sampler, start as ToneStart} from 'tone';
 import CharacterState from './CharacterState';
 import type {AnnouncedSoundName} from './types';
 
+class WrappedPlayer extends Player {
+    isLoadedPromise: Promise<any>;
+    isLoadedResolve: function;
+    isLoadedReject: function; // TODO: Discuss adding safety checks so that this eventually resolves or resolves on error.
+    loadedCheckInterval: IntervalID;
+    constructor (value: string) {
+        super(value);
+        this.isLoadedPromise = new Promise((resolve, reject) => {
+            this.isLoadedResolve = resolve;
+            this.isLoadedReject = reject;
+        });
+
+        this.loadedCheckInterval = setInterval(() => {
+            if (this.loaded) {
+                clearInterval(this.loadedCheckInterval);
+                this.isLoadedResolve();
+            }
+        }, 10);
+    }
+}
+
+class WrappedSampler extends Sampler {
+    isLoadedPromise: Promise<any>;
+    isLoadedResolve: function;
+    isLoadedReject: function; // TODO: Discuss adding safety checks so that this eventually resolves or resolves on error.
+    loadedCheckInterval: IntervalID;
+    constructor (samplerOptions: any) { // TODO: Need a better type for thiss.
+        super(samplerOptions);
+        this.isLoadedPromise = new Promise((resolve, reject) => {
+            this.isLoadedResolve = resolve;
+            this.isLoadedReject = reject;
+        });
+
+        this.loadedCheckInterval = setInterval(() => {
+            if (this.loaded) {
+                clearInterval(this.loadedCheckInterval);
+                this.isLoadedResolve();
+            }
+        }, 10);
+    }
+}
+
 type AnnouncementLookupTable = {
-    forward1: Player,
-    forward2: Player,
-    forward3: Player,
-    left45: Player,
-    left90: Player,
-    left180: Player,
-    right45: Player,
-    right90: Player,
-    right180: Player,
-    add: Player,
-    deleteAll: Player,
-    delete: Player,
-    moveToPrevious: Player,
-    moveToNext: Player,
-    replace: Player
+    forward1: WrappedPlayer,
+    forward2: WrappedPlayer,
+    forward3: WrappedPlayer,
+    left45: WrappedPlayer,
+    left90: WrappedPlayer,
+    left180: WrappedPlayer,
+    right45: WrappedPlayer,
+    right90: WrappedPlayer,
+    right180: WrappedPlayer,
+    add: WrappedPlayer,
+    deleteAll: WrappedPlayer,
+    delete: WrappedPlayer,
+    moveToPrevious: WrappedPlayer,
+    moveToNext: WrappedPlayer,
+    replace: WrappedPlayer
 }
 
 const AnnouncementDefs = new Map<string, string>([
@@ -79,9 +121,9 @@ export default class AudioManager {
     audioEnabled: boolean;
     announcementLookUpTable: AnnouncementLookupTable;
     samplers: {
-        movement: Sampler,
-        left: Sampler,
-        right: Sampler
+        movement: WrappedSampler,
+        left: WrappedSampler,
+        right: WrappedSampler
     };
     panner: Panner;
     toneStartHasBeenCalled: boolean;
@@ -112,7 +154,7 @@ export default class AudioManager {
             this.samplers = {};
 
             // TODO: Make a sammplerDef for all variations.
-            this.samplers.left = new Sampler({
+            this.samplers.left = new WrappedSampler({
                 // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
                 // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
                 urls: {
@@ -129,7 +171,7 @@ export default class AudioManager {
 
             this.samplers.left.connect(this.panner);
 
-            this.samplers.right = new Sampler({
+            this.samplers.right = new WrappedSampler({
                 urls: {
                     // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
                     // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
@@ -146,7 +188,7 @@ export default class AudioManager {
 
             this.samplers.right.connect(this.panner);
 
-            this.samplers.movement = new Sampler({
+            this.samplers.movement = new WrappedSampler({
                 urls: {
                     "C0": "C0.wav",
                     "C1": "C1.wav",
@@ -171,7 +213,7 @@ export default class AudioManager {
     buildAnnouncementLookUpTable() {
         this.announcementLookUpTable = {};
         AnnouncementDefs.forEach((value, key) => {
-            const player = new Player(value);
+            const player = new WrappedPlayer(value);
             player.toDestination();
             this.announcementLookUpTable[key] = player;
         });
@@ -181,9 +223,9 @@ export default class AudioManager {
         if (this.audioEnabled) {
             this.startPromise.then(() => {
                 const player = this.announcementLookUpTable[soundName];
-                if (player.loaded) {
+                player.isLoadedPromise.then(() => {
                     player.start();
-                }
+                });
             });
         }
     }
@@ -193,9 +235,9 @@ export default class AudioManager {
     playPitchedSample(sampler: Sampler, pitch: string, releaseTime: number) {
         if (this.audioEnabled) {
             // We can only play the sound if it's already loaded.
-            if (sampler.loaded) {
+            sampler.isLoadedPromise.then(() => {
                 sampler.triggerAttackRelease([pitch], releaseTime);
-            }
+            });
         }
     }
 
