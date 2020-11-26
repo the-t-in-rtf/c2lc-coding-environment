@@ -1,6 +1,9 @@
 // @flow
 
-export type CommandName = 'forward' | 'left' | 'right';
+export type CommandName =
+    'forward1' | 'forward2' | 'forward3' |
+    'left45' | 'left90' | 'left180' |
+    'right45' | 'right90' | 'right180';
 
 export type DeviceConnectionStatus = 'notConnected' | 'connecting' | 'connected';
 
@@ -15,7 +18,7 @@ export interface RobotDriver {
     right(): Promise<void>;
 };
 
-export type SoundName = CommandName | 'add' | 'deleteAll' | 'delete' | 'moveToPrevious' | 'moveToNext' | 'replace';
+export type AnnouncedSoundName = CommandName | 'add' | 'deleteAll' | 'delete' | 'moveToPrevious' | 'moveToNext' | 'replace';
 
 // Flow lacks its own types for the Speech Recognition API, so we define our own
 // TODO: remove when https://github.com/facebook/flow/issues/7361 is resolved.

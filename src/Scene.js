@@ -3,38 +3,38 @@
 import React from 'react';
 import CharacterState from './CharacterState';
 import RobotCharacter from './RobotCharacter';
+import SceneDimensions from './SceneDimensions';
 import { injectIntl } from 'react-intl';
 import type {IntlShape} from 'react-intl';
 
 import './Scene.scss';
 
 export type SceneProps = {
-    numRows: number,
-    numColumns: number,
-    gridCellWidth: number,
-    intl: IntlShape,
-    characterState: CharacterState
+    dimensions: SceneDimensions,
+    characterState: CharacterState,
+    intl: IntlShape
 };
 
 class Scene extends React.Component<SceneProps, {}> {
-
-    drawGrid(minX: number, minY: number, sceneWidth: number, sceneHeight: number) {
+    drawGrid() {
         const grid = [];
-        if (this.props.numRows === 0 || this.props.numColumns === 0) {
+        if (this.props.dimensions.getWidth() === 0 ||
+            this.props.dimensions.getHeight() === 0) {
             return grid;
         }
-        const rowLabelOffset = sceneWidth * 0.025;
-        const columnLabelOffset = sceneHeight * 0.025;
-        let yOffset = minY;
-        for (let i=1;i < this.props.numRows + 1;i++) {
-            yOffset = yOffset + this.props.gridCellWidth;
-            if (i < this.props.numRows) {
+        const rowLabelOffset = this.props.dimensions.getWidth() * 0.025;
+        const columnLabelOffset = this.props.dimensions.getHeight() * 0.025;
+        const halfGridCellWidth = 0.5;
+        let yOffset = this.props.dimensions.getMinY();
+        for (let i=1;i < this.props.dimensions.getHeight() + 1;i++) {
+            yOffset += 1;
+            if (i < this.props.dimensions.getHeight()) {
                 grid.push(<line
                     className='Scene__grid-line'
                     key={`grid-cell-row-${i}`}
-                    x1={minX}
+                    x1={this.props.dimensions.getMinX()}
                     y1={yOffset}
-                    x2={minX + sceneWidth}
+                    x2={this.props.dimensions.getMaxX()}
                     y2={yOffset} />);
             }
             grid.push(
@@ -43,31 +43,31 @@ class Scene extends React.Component<SceneProps, {}> {
                     textAnchor='end'
                     key={`grid-cell-label-${i}`}
                     dominantBaseline='middle'
-                    x={minX - rowLabelOffset}
-                    y={yOffset - this.props.gridCellWidth / 2}>
+                    x={this.props.dimensions.getMinX() - rowLabelOffset}
+                    y={yOffset - halfGridCellWidth}>
                     {i}
                 </text>
             )
         }
-        let xOffset = minX;
-        for (let i=1;i < this.props.numColumns + 1;i++) {
-            xOffset = xOffset + this.props.gridCellWidth;
-            if (i < this.props.numColumns) {
+        let xOffset = this.props.dimensions.getMinX();
+        for (let i=1;i < this.props.dimensions.getWidth() + 1;i++) {
+            xOffset += 1;
+            if (i < this.props.dimensions.getWidth()) {
                 grid.push(<line
                     className='Scene__grid-line'
                     key={`grid-cell-column-${i}`}
                     x1={xOffset}
-                    y1={minY}
+                    y1={this.props.dimensions.getMinY()}
                     x2={xOffset}
-                    y2={minY + sceneHeight} />);
+                    y2={this.props.dimensions.getMaxY()} />);
             }
             grid.push(
                 <text
                     className='Scene__grid-label'
                     key={`grid-cell-label-${String.fromCharCode(64+i)}`}
                     textAnchor='middle'
-                    x={xOffset - this.props.gridCellWidth / 2}
-                    y={minY - columnLabelOffset}>
+                    x={xOffset - halfGridCellWidth}
+                    y={this.props.dimensions.getMinY() - columnLabelOffset}>
                     {String.fromCharCode(64+i)}
                 </text>
             )
@@ -87,22 +87,119 @@ class Scene extends React.Component<SceneProps, {}> {
         });
     }
 
+    getDirectionWords(direction: number): string {
+        return this.props.intl.formatMessage({id: `Direction.${direction}`});
+    }
+
+    getRelativeDirection(xPos: number, yPos: number): string {
+        if (this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsBelow' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'inBounds') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.0'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsBelow' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsAbove') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.1'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'inBounds' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsAbove') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.2'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsAbove' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsAbove') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.3'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsAbove' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'inBounds') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.4'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsAbove' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsBelow') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.5'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'inBounds' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsBelow') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.6'});
+        } else if (
+            this.props.dimensions.getBoundsStateY(yPos) === 'outOfBoundsBelow' &&
+            this.props.dimensions.getBoundsStateX(xPos) === 'outOfBoundsBelow') {
+                return this.props.intl.formatMessage({id: 'RelativeDirection.7'});
+        } else {
+            throw new Error(`Unrecognized xPos: ${xPos} or yPos: ${yPos}`);
+        }
+    }
+
+    generateAriaLabel() {
+        const { xPos, yPos } = this.props.characterState;
+        const numColumns = this.props.dimensions.getWidth();
+        const numRows = this.props.dimensions.getHeight();
+        const direction = this.getDirectionWords(this.props.characterState.direction);
+        if (this.props.dimensions.getBoundsStateX(xPos) !== 'inBounds'
+            || this.props.dimensions.getBoundsStateY(yPos) !== 'inBounds') {
+                return this.props.intl.formatMessage(
+                    { id: 'Scene.outOfBounds' },
+                    {
+                        numColumns,
+                        numRows,
+                        direction,
+                        relativeDirection: this.getRelativeDirection(xPos, yPos)
+                    }
+                )
+        } else {
+            return this.props.intl.formatMessage(
+                { id: 'Scene.inBounds' },
+                {
+                    numColumns: this.props.dimensions.getWidth(),
+                    numRows: this.props.dimensions.getHeight(),
+                    xPos: String.fromCharCode(64 + Math.trunc(xPos) + Math.ceil(numColumns/2)),
+                    yPos: Math.trunc(yPos) + Math.ceil(numRows/2),
+                    direction
+                }
+            )
+        }
+    }
+
+    getCharacterDrawXPos() {
+        switch (this.props.dimensions.getBoundsStateX(this.props.characterState.xPos)) {
+            case 'inBounds':
+                return this.props.characterState.xPos;
+            case 'outOfBoundsAbove':
+                return this.props.dimensions.getMaxX() - 0.1;
+            case 'outOfBoundsBelow':
+                return this.props.dimensions.getMinX() + 0.1;
+            default:
+                throw new Error('Unexpected bounds type');
+        }
+    }
+
+    getCharacterDrawYPos() {
+        switch (this.props.dimensions.getBoundsStateY(this.props.characterState.yPos)) {
+            case 'inBounds':
+                return this.props.characterState.yPos;
+            case 'outOfBoundsAbove':
+                return this.props.dimensions.getMaxY() - 0.1;
+            case 'outOfBoundsBelow':
+                return this.props.dimensions.getMinY() + 0.1;
+            default:
+                throw new Error('Unexpected bounds type');
+        }
+    }
+
     render() {
-        const width = this.props.numColumns * this.props.gridCellWidth;
-        const height = this.props.numRows * this.props.gridCellWidth;
-        const minX = -width / 2;
-        const minY = -height / 2;
+        const minX = this.props.dimensions.getMinX();
+        const minY = this.props.dimensions.getMinY();
+        const width = this.props.dimensions.getWidth();
+        const height = this.props.dimensions.getHeight();
 
         // Subtract 90 degrees from the character bearing as the character
         // image is drawn upright when it is facing East
-        const robotCharacterTransform = `translate(${this.props.characterState.xPos} ${this.props.characterState.yPos}) rotate(${this.props.characterState.directionDegrees - 90} 0 0)`;
+        const robotCharacterTransform = `translate(${this.getCharacterDrawXPos()} ${this.getCharacterDrawYPos()}) rotate(${this.props.characterState.getDirectionDegrees() - 90} 0 0)`;
 
         return (
             <div>
                 <span
                     className='Scene'
                     role='img'
-                    aria-label={this.props.intl.formatMessage({id: 'Scene'})}>
+                    aria-label={this.generateAriaLabel()}>
                     <svg
                         xmlns='http://www.w3.org/2000/svg'
                         viewBox={`${minX} ${minY} ${width} ${height}`}>
@@ -111,12 +208,12 @@ class Scene extends React.Component<SceneProps, {}> {
                                 <rect x={minX} y={minY} width={width} height={height} />
                             </clipPath>
                         </defs>
-                        {this.drawGrid(minX, minY, width, height)}
+                        {this.drawGrid()}
                         <g clipPath='url(#Scene-clippath)'>
                             {this.drawCharacterPath()}
                             <RobotCharacter
                                 transform={robotCharacterTransform}
-                                width={this.props.gridCellWidth * 0.6}
+                                width={0.6}
                             />
                         </g>
                     </svg>
