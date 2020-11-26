@@ -232,7 +232,7 @@ export default class AudioManager {
 
     // TODO: Add a better type for pitch.
     // TODO: Make this private, as it doesn't respect the audioEnabled setting.
-    playPitchedSample(sampler: Sampler, pitch: string, releaseTime: number) {
+    playPitchedSample(sampler: WrappedSampler, pitch: string, releaseTime: number) {
         if (this.audioEnabled) {
             // We can only play the sound if it's already loaded.
             sampler.isLoadedPromise.then(() => {
@@ -247,7 +247,7 @@ export default class AudioManager {
                 const releaseTime = releaseTimeInMs / 1000;
                 const noteName = getNoteForState(characterState);
 
-                const sampler: Sampler = this.samplers[samplerKey];
+                const sampler: WrappedSampler = this.samplers[samplerKey];
 
                 this.playPitchedSample(sampler, noteName, releaseTime);
 
