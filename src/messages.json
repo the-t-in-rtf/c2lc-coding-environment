@@ -75,7 +75,11 @@
         "RelativeDirection.6": "to the left of",
         "RelativeDirection.7": "to the upper left of",
         "ShareButton": "Share",
-        "ShareCompleteModal.shareComplete": "The URL for your program has been copied to the clipboard."
+        "ShareCompleteModal.shareComplete": "The URL for your program has been copied to the clipboard.",
+        "ThemeSelector.theme": "Theme",
+        "ThemeSelector.theme.default": "Default",
+        "ThemeSelector.theme.forest": "Forest",
+        "ThemeSelector.theme.space": "Space"
     },
     "fr": {
         "App.blockMode": "Block in French",
