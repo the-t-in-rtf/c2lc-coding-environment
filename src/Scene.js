@@ -12,6 +12,7 @@ import './Scene.scss';
 export type SceneProps = {
     dimensions: SceneDimensions,
     characterState: CharacterState,
+    theme: string,
     intl: IntlShape
 };
 
@@ -39,7 +40,7 @@ class Scene extends React.Component<SceneProps, {}> {
             }
             grid.push(
                 <text
-                    className='Scene__grid-label'
+                    className={`Scene__grid-label ${this.props.theme}`}
                     textAnchor='end'
                     key={`grid-cell-label-${i}`}
                     dominantBaseline='middle'
@@ -63,7 +64,7 @@ class Scene extends React.Component<SceneProps, {}> {
             }
             grid.push(
                 <text
-                    className='Scene__grid-label'
+                    className={`Scene__grid-label ${this.props.theme}`}
                     key={`grid-cell-label-${String.fromCharCode(64+i)}`}
                     textAnchor='middle'
                     x={xOffset - halfGridCellWidth}
@@ -212,6 +213,7 @@ class Scene extends React.Component<SceneProps, {}> {
                         <g clipPath='url(#Scene-clippath)'>
                             {this.drawCharacterPath()}
                             <RobotCharacter
+                                theme={this.props.theme}
                                 transform={robotCharacterTransform}
                                 width={0.9}
                             />

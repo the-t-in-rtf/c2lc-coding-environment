@@ -21,8 +21,16 @@
 }
 
 .Scene__grid-label {
-    fill: #FFF;
+    @include getSceneLabelColor(default);
     font: bold 0.01em sans-serif;
+}
+
+.Scene__grid-label.forest {
+    @include getSceneLabelColor(forestTheme);
+}
+
+.Scene__grid-label.space {
+    @include getSceneLabelColor(spaceTheme);
 }
 
 .Scene__path-line {

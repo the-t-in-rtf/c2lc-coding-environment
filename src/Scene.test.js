@@ -14,7 +14,8 @@ configure({ adapter: new Adapter() });
 
 const defaultSceneProps = {
     dimensions: new SceneDimensions(1, 1),
-    characterState: new CharacterState(0, 0, 2, [])
+    characterState: new CharacterState(0, 0, 2, []),
+    theme: 'default'
 };
 
 function createMountScene(props) {
@@ -329,5 +330,17 @@ describe('When the Character has a path, it is drawn on the Scene', () => {
         expect(robotCharacterPath.get(1).props.y1).toBe(600);
         expect(robotCharacterPath.get(1).props.x2).toBe(700);
         expect(robotCharacterPath.get(1).props.y2).toBe(800);
+    })
+})
+
+describe('Grid Labels should have theme specific class names', () => {
+    test('forest theme', () => {
+        const sceneWrapper = createMountScene({
+            theme: 'forest'
+        });
+        const gridLabels = findGridLabels(sceneWrapper);
+        for (const gridLabel of gridLabels) {
+            expect(gridLabel.props.className.includes('forest')).toBe(true);
+        }
     })
 })

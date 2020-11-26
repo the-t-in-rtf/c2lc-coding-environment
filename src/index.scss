@@ -29,9 +29,17 @@ html {
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
+}
+
+body.forest {
     background-color: #49827A;
     background-image: url('./svg/ForestBackground.svg');
     background-size: 13%;
+}
+
+body.space {
+    background-color: #171C1C;
+    background-image: url('./svg/SpaceBackground.svg');
 }
 
 button.btn {

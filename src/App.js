@@ -19,6 +19,7 @@ import ProgramBlockEditor from './ProgramBlockEditor';
 import RefreshButton from './RefreshButton';
 import Scene from './Scene';
 import SceneDimensions from './SceneDimensions';
+import ThemeSelector from './ThemeSelector';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
 import ProgramSpeedController from './ProgramSpeedController';
@@ -44,7 +45,8 @@ type AppContext = {
 
 type AppSettings = {
     language: string,
-    addNodeExpandedMode: boolean
+    addNodeExpandedMode: boolean,
+    theme: string
 };
 
 type AppState = {
@@ -89,7 +91,8 @@ export default class App extends React.Component<{}, AppState> {
             characterState: this.startingCharacterState,
             settings: {
                 language: 'en',
-                addNodeExpandedMode: true
+                addNodeExpandedMode: true,
+                theme: 'default'
             },
             dashConnectionStatus: 'notConnected',
             activeProgramStepNum: null,
@@ -485,6 +488,14 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
+    handleOnChangeTheme = (theme: string) => {
+        if (document.body) {
+            document.body.className = '';
+            document.body.classList.add(theme);
+            this.setStateSettings({ theme });
+        }
+    }
+
     render() {
         return (
             <IntlProvider
@@ -515,12 +526,13 @@ export default class App extends React.Component<{}, AppState> {
                                         <FormattedMessage id='App.connectToDash' />
                                     </DeviceConnectControl>
                                     */}
+                                    <ThemeSelector onSelect={this.handleOnChangeTheme} />
                                 </div>
                             </Row>
                         </Container>
                     </header>
                     <Container
-                        className='App__container mb-5'
+                        className={`App__container ${this.state.settings.theme} mb-5`}
                         role='main'>
                         {/* Dash connection removed for version 0.5
                         {!this.appContext.bluetoothApiIsAvailable &&
@@ -535,8 +547,9 @@ export default class App extends React.Component<{}, AppState> {
                             <Scene
                                 dimensions={this.state.sceneDimensions}
                                 characterState={this.state.characterState}
+                                theme={this.state.settings.theme}
                             />
-                            <div className='App__scene-controls'>
+                            <div className={`App__scene-controls ${this.state.settings.theme}`}>
                                 <div className='App__scene-controls-group'>
                                     <div className='App__penDown-toggle-switch-container'>
                                         <PenDownToggleSwitch
@@ -555,7 +568,7 @@ export default class App extends React.Component<{}, AppState> {
                         </div>
                         <Row className='App__program-section' noGutters={true}>
                             <Col md={6} lg={4} className='pr-md-4 mb-4 mb-md-0'>
-                                <div className='App__command-palette'>
+                                <div className={`App__command-palette ${this.state.settings.theme}`}>
                                     <h2 className='App__command-palette-heading'>
                                         <FormattedMessage id='CommandPalette.movementsTitle' />
                                     </h2>
@@ -576,13 +589,14 @@ export default class App extends React.Component<{}, AppState> {
                                     audioManager={this.audioManager}
                                     focusTrapManager={this.focusTrapManager}
                                     addNodeExpandedMode={this.state.settings.addNodeExpandedMode}
+                                    theme={this.state.settings.theme}
                                     onChangeProgram={this.handleChangeProgram}
                                     onChangeActionPanelStepIndex={this.handleChangeActionPanelStepIndex}
                                     onChangeAddNodeExpandedMode={this.handleChangeAddNodeExpandedMode}
                                 />
                             </Col>
                         </Row>
-                        <div className='App__playAndShare-container'>
+                        <div className={`App__playAndShare-container ${this.state.settings.theme}`}>
                             <div className='App__playControl-container'>
                                 <div className='App__playButton-container'>
                                     <PlayButton

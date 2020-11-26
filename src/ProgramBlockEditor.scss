@@ -1,11 +1,19 @@
 @import 'variables';
 
 .ProgramBlockEditor__container {
-    background: $c2lc-container-color;
+    @include getContainerThemeColor(default);
     display: grid;
     height: 100%;
     grid-template-columns: 6rem auto;
     grid-template-rows: 4rem auto;
+}
+
+.ProgramBlockEditor__container.forest {
+    @include getContainerThemeColor(forestTheme);
+}
+
+.ProgramBlockEditor__container.space {
+    @include getContainerThemeColor(spaceTheme);
 }
 
 .ProgramBlockEditor__header {

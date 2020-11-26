@@ -30,7 +30,8 @@ const defaultProgramBlockEditorProps = {
     replaceIsActive: false,
     isDraggingCommand: false,
     focusTrapManager: new FocusTrapManager(),
-    addNodeExpandedMode: false
+    addNodeExpandedMode: false,
+    theme: 'default'
 };
 
 function createShallowProgramBlockEditor(props) {
@@ -156,6 +157,14 @@ function getExpandAddNodeToggleSwitch(programBlockEditorWrapper) {
 
 function getProgramSequenceContainer(programBlockEditorWrapper) {
     return programBlockEditorWrapper.find('.ProgramBlockEditor__program-sequence-scroll-container').get(0);
+}
+
+function getChracterColumnCharacter(programBlockEditorWrapper) {
+    return programBlockEditorWrapper.find('.ProgramBlockEditor__chracter-column-character').get(0);
+}
+
+function getProgramBlockEditorContainer(programBlockEditorWrapper) {
+    return programBlockEditorWrapper.find('.ProgramBlockEditor__container');
 }
 
 describe('Program rendering', () => {
@@ -693,3 +702,39 @@ test('The editor scrolls when a step is added to the end of the program', () => 
     // (The index used to get the add note button position is zero because the add nodes aren't expanded).
     expect(mockScrollIntoView.mock.instances[0]).toBe(getAddNodeButtonAtPosition(wrapper, 0).getDOMNode());
 });
+
+describe('Themed character icon should be rendered on the character column', () => {
+    test('default', () => {
+        expect.assertions(1);
+        const { wrapper } = createMountProgramBlockEditor();
+        expect(getChracterColumnCharacter(wrapper).type.render().props.children).toBe('Robot.svg');
+    });
+    test('forest', () => {
+        expect.assertions(1);
+        const { wrapper } = createMountProgramBlockEditor({theme: 'forest'});
+        expect(getChracterColumnCharacter(wrapper).type.render().props.children).toBe('Rabbit.svg');
+    });
+    test('space', () => {
+        expect.assertions(1);
+        const { wrapper } = createMountProgramBlockEditor({theme: 'space'});
+        expect(getChracterColumnCharacter(wrapper).type.render().props.children).toBe('SpaceShip.svg');
+    });
+});
+
+describe('ProgramBlockEditor should have a themed className', () => {
+    test('default', () => {
+        expect.assertions(1);
+        const { wrapper } = createMountProgramBlockEditor();
+        expect(getProgramBlockEditorContainer(wrapper).hasClass('default')).toBe(true);
+    });
+    test('forest', () => {
+        expect.assertions(1);
+        const { wrapper } = createMountProgramBlockEditor({theme:'forest'});
+        expect(getProgramBlockEditorContainer(wrapper).hasClass('forest')).toBe(true);
+    });
+    test('space', () => {
+        expect.assertions(1);
+        const { wrapper } = createMountProgramBlockEditor({theme:'space'});
+        expect(getProgramBlockEditorContainer(wrapper).hasClass('space')).toBe(true);
+    })
+})
