@@ -17,11 +17,11 @@ function createMountRobotChracter(props) {
     const wrapper = mount(
         React.createElement(
             RobotCharacter,
-            (Object.assign(
+            Object.assign(
                 {},
                 defaultRobotCharacterProps,
                 props
-            ):RobotCharacter)
+            )
         )
     );
 

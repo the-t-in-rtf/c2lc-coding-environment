@@ -339,8 +339,8 @@ describe('Grid Labels should have theme specific class names', () => {
             theme: 'forest'
         });
         const gridLabels = findGridLabels(sceneWrapper);
-        for (const gridLabel of gridLabels) {
-            expect(gridLabel.props.className.includes('forest')).toBe(true);
+        for (let i=0; i<gridLabels.length; i++) {
+            expect(gridLabels.get(i).props.className.includes('forest')).toBe(true);
         }
     })
 })
