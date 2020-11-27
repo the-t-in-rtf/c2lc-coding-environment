@@ -616,6 +616,8 @@ export default class App extends React.Component<{}, AppState> {
             const params = new C2lcURLParams(window.location.search);
             const programQuery = params.getProgram();
             const characterStateQuery = params.getCharacterState();
+            const localProgram = window.localStorage.getItem('program');
+            const localCharacterState = window.localStorage.getItem('characterState');
             if (programQuery != null && characterStateQuery != null) {
                 try {
                     this.setState({
@@ -625,6 +627,16 @@ export default class App extends React.Component<{}, AppState> {
                 } catch(err) {
                     console.log(`Error parsing program: ${programQuery} or characterState: ${characterStateQuery}`);
                     console.log(err.toString());
+                }
+            } else if (localProgram != null && localCharacterState != null) {
+                try {
+                    this.setState({
+                        program: this.programSerializer.deserialize(localProgram),
+                        characterState: this.characterStateSerializer.deserialize(localCharacterState)
+                    });
+                } catch(err) {
+                    console.log(`Error parsing program: ${localProgram} or characterState: ${localCharacterState}`);
+                        console.log(err.toString());
                 }
             }
         }
@@ -642,6 +654,8 @@ export default class App extends React.Component<{}, AppState> {
                 },
                 '',
                 Utils.generateEncodedProgramURL('0.5', serializedProgram, serializedCharacterState));
+            window.localStorage.setItem('program', serializedProgram);
+            window.localStorage.setItem('characterState', serializedCharacterState);
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
