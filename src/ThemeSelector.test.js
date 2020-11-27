@@ -37,7 +37,7 @@ function getSelectorOptions(wrapper) {
 describe('When rendering selector options', () => {
     test('there should be default, forest, and space options', () => {
         expect.assertions(3);
-        const { wrapper } = createMountThemeSelector();
+        const { wrapper } = createMountThemeSelector({onSelect: ()=> {}});
         const selectorOptions = getSelectorOptions(wrapper).get(0).props.children;
         expect(selectorOptions[0].props.eventKey).toBe('default');
         expect(selectorOptions[1].props.eventKey).toBe('space');
