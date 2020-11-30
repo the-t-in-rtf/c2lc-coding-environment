@@ -73,6 +73,7 @@ export default class App extends React.Component<{}, AppState> {
     programSerializer: ProgramSerializer;
     characterStateSerializer: CharacterStateSerializer;
     speedLookUp: Array<number>;
+    version: string;
 
     constructor(props: any) {
         super(props);
