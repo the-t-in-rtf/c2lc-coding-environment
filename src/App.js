@@ -103,6 +103,8 @@ export default class App extends React.Component<{}, AppState> {
             drawingEnabled: true
         };
 
+        this.version = '0.5';
+
         this.interpreter = new Interpreter(this.handleRunningStateChange, 1000);
 
         this.speedLookUp = [2000, 1500, 1000, 500, 250];
@@ -612,12 +614,10 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidMount() {
-        if (window.location.search != null) {
+        if (window.location.search != null && window.location.search !== '') {
             const params = new C2lcURLParams(window.location.search);
             const programQuery = params.getProgram();
             const characterStateQuery = params.getCharacterState();
-            const localProgram = window.localStorage.getItem('program');
-            const localCharacterState = window.localStorage.getItem('characterState');
             if (programQuery != null && characterStateQuery != null) {
                 try {
                     this.setState({
@@ -628,7 +628,11 @@ export default class App extends React.Component<{}, AppState> {
                     console.log(`Error parsing program: ${programQuery} or characterState: ${characterStateQuery}`);
                     console.log(err.toString());
                 }
-            } else if (localProgram != null && localCharacterState != null) {
+            }
+        } else {
+            const localProgram = window.localStorage.getItem('program');
+            const localCharacterState = window.localStorage.getItem('characterState');
+            if (localProgram != null && localCharacterState != null) {
                 try {
                     this.setState({
                         program: this.programSerializer.deserialize(localProgram),
@@ -636,7 +640,7 @@ export default class App extends React.Component<{}, AppState> {
                     });
                 } catch(err) {
                     console.log(`Error parsing program: ${localProgram} or characterState: ${localCharacterState}`);
-                        console.log(err.toString());
+                    console.log(err.toString());
                 }
             }
         }
@@ -653,9 +657,10 @@ export default class App extends React.Component<{}, AppState> {
                     c: serializedCharacterState
                 },
                 '',
-                Utils.generateEncodedProgramURL('0.5', serializedProgram, serializedCharacterState));
+                Utils.generateEncodedProgramURL(this.version, serializedProgram, serializedCharacterState));
             window.localStorage.setItem('program', serializedProgram);
             window.localStorage.setItem('characterState', serializedCharacterState);
+            window.localStorage.setItem('version', this.version);
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
