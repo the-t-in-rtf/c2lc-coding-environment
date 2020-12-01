@@ -40,7 +40,7 @@ class Scene extends React.Component<SceneProps, {}> {
             }
             grid.push(
                 <text
-                    className={`Scene__grid-label ${this.props.theme}`}
+                    className='Scene__grid-label'
                     textAnchor='end'
                     key={`grid-cell-label-${i}`}
                     dominantBaseline='middle'
@@ -64,7 +64,7 @@ class Scene extends React.Component<SceneProps, {}> {
             }
             grid.push(
                 <text
-                    className={`Scene__grid-label ${this.props.theme}`}
+                    className='Scene__grid-label'
                     key={`grid-cell-label-${String.fromCharCode(64+i)}`}
                     textAnchor='middle'
                     x={xOffset - halfGridCellWidth}

@@ -30,6 +30,7 @@ import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
 import * as Utils from './Utils';
 import messages from './messages.json';
 import './App.scss';
+import './Themes.css';
 import './vendor/dragdroptouch/DragDropTouch.js';
 /* Dash connection removed for version 0.5
 import BluetoothApiWarning from './BluetoothApiWarning';
@@ -491,7 +492,7 @@ export default class App extends React.Component<{}, AppState> {
     handleOnChangeTheme = (theme: string) => {
         if (document.body) {
             document.body.className = '';
-            document.body.classList.add(theme);
+            document.body.classList.add(`${theme}-theme`);
             this.setStateSettings({ theme });
         }
     }
@@ -532,7 +533,7 @@ export default class App extends React.Component<{}, AppState> {
                         </Container>
                     </header>
                     <Container
-                        className={`App__container ${this.state.settings.theme} mb-5`}
+                        className={`App__container mb-5`}
                         role='main'>
                         {/* Dash connection removed for version 0.5
                         {!this.appContext.bluetoothApiIsAvailable &&
@@ -549,7 +550,7 @@ export default class App extends React.Component<{}, AppState> {
                                 characterState={this.state.characterState}
                                 theme={this.state.settings.theme}
                             />
-                            <div className={`App__scene-controls ${this.state.settings.theme}`}>
+                            <div className='App__scene-controls'>
                                 <div className='App__scene-controls-group'>
                                     <div className='App__penDown-toggle-switch-container'>
                                         <PenDownToggleSwitch
@@ -568,7 +569,7 @@ export default class App extends React.Component<{}, AppState> {
                         </div>
                         <Row className='App__program-section' noGutters={true}>
                             <Col md={6} lg={4} className='pr-md-4 mb-4 mb-md-0'>
-                                <div className={`App__command-palette ${this.state.settings.theme}`}>
+                                <div className='App__command-palette'>
                                     <h2 className='App__command-palette-heading'>
                                         <FormattedMessage id='CommandPalette.movementsTitle' />
                                     </h2>
@@ -596,7 +597,7 @@ export default class App extends React.Component<{}, AppState> {
                                 />
                             </Col>
                         </Row>
-                        <div className={`App__playAndShare-container ${this.state.settings.theme}`}>
+                        <div className='App__playAndShare-container'>
                             <div className='App__playControl-container'>
                                 <div className='App__playButton-container'>
                                     <PlayButton

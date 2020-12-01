@@ -32,35 +32,3 @@ $c2lc-action-panel-height: 5rem;
 $c2lc-scene-border-width: 0.1rem;
 $c2lc-scene-border-color: #555;
 $c2lc-scene-border-style: solid;
-
-/* mixins */
-
-@mixin getContainerThemeColor($theme) {
-    @if $theme == forestTheme {
-        background-color: #CCE6E2;
-    } @else if $theme == spaceTheme {
-        background-color: #AAD5CF;
-    } @else {
-        background-color: #F1F1F1;
-    }
-}
-
-@mixin getAppContainerColor($theme) {
-    @if $theme == forestTheme {
-        background-color: #496D69;
-    } @else if $theme == spaceTheme {
-        background-color: #171C1C;
-    } @else {
-        background-color: #FFF;
-    }
-}
-
-@mixin getSceneLabelColor($theme) {
-    @if $theme == forestTheme {
-        fill: #F1F2F4;
-    } @else if $theme == spaceTheme {
-        fill: #FFF;
-    } @else {
-        fill: #555;
-    }
-}

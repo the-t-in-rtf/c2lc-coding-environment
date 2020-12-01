@@ -1,1 +1,51 @@
-/* // contains all the theming color schemes */
+/* Forest Theme */
+
+.forest-theme .App__container {
+    background-color: #496D69;
+}
+
+.forest-theme .App__scene-controls {
+    background-color: #CCE6E2;
+}
+
+.forest-theme .Scene__grid-label {
+    fill: #F1F2F4;
+}
+
+.forest-theme .ProgramBlockEditor__container {
+    background-color: #CCE6E2;
+}
+
+.forest-theme .App__command-palette {
+    background-color: #CCE6E2;
+}
+
+.forest-theme .App__playAndShare-container {
+    background-color: #CCE6E2;
+}
+
+/* Space Theme */
+
+.space-theme .App__container {
+    background-color: #171C1C;
+}
+
+.space-theme .App__scene-controls {
+    background-color: #AAD5CF;
+}
+
+.space-theme .Scene__grid-label {
+    fill: #FFF;
+}
+
+.space-theme .ProgramBlockEditor__container {
+    background-color: #AAD5CF;
+}
+
+.space-theme .App__command-palette {
+    background-color: #AAD5CF;
+}
+
+.space-theme .App__playAndShare-container {
+    background-color: #AAD5CF;
+}

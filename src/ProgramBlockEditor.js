@@ -411,7 +411,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         contents.push(this.makeEndOfProgramAddNodeSection(this.props.program.length));
 
         return (
-            <div className={`ProgramBlockEditor__container ${this.props.theme}`}>
+            <div className='ProgramBlockEditor__container'>
                 <div className='ProgramBlockEditor__header'>
                     <h2 className='ProgramBlockEditor__heading'>
                         <FormattedMessage id='ProgramBlockEditor.programHeading' />

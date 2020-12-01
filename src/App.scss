@@ -6,18 +6,10 @@ body {
 }
 
 .App__container {
-    @include getAppContainerColor(default);
+    background-color: #FFF;
     width: 80%;
     padding: 1rem 2rem 3rem 3rem;
     margin: auto;
-}
-
-.App__container.forest {
-    @include getAppContainerColor(forestTheme);
-}
-
-.App__container.space {
-    @include getAppContainerColor(spaceTheme);
 }
 
 .App__header {
@@ -61,21 +53,13 @@ body {
 }
 
 .App__scene-controls {
-    @include getContainerThemeColor(default);
+    background-color: #F1F1F1;
     height: 4rem;
     border-width: 0 $c2lc-scene-border-width $c2lc-scene-border-width $c2lc-scene-border-width;
     border-color: $c2lc-scene-border-color;
     border-style: $c2lc-scene-border-style;
     display: grid;
     grid-template-columns: 1fr;
-}
-
-.App__scene-controls.forest {
-    @include getContainerThemeColor(forestTheme);
-}
-
-.App__scene-controls.space {
-    @include getContainerThemeColor(spaceTheme);
 }
 
 .App__scene-controls-group {
@@ -94,18 +78,10 @@ body {
 }
 
 .App__command-palette {
-    @include getContainerThemeColor(default);
+    background-color: #F1F1F1;
     height: 100%;
     padding-top: 2rem;
     text-align: center;
-}
-
-.App__command-palette.forest {
-    @include getContainerThemeColor(forestTheme);
-}
-
-.App__command-palette.space {
-    @include getContainerThemeColor(spaceTheme);
 }
 
 .App__command-palette-heading {
@@ -124,19 +100,11 @@ body {
 }
 
 .App__playAndShare-container {
-    @include getContainerThemeColor(default);
+    background-color: #F1F1F1;
     height: 10rem;
     margin-top: 1rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-}
-
-.App__playAndShare-container.forest {
-    @include getContainerThemeColor(forestTheme);
-}
-
-.App__playAndShare-container.space {
-    @include getContainerThemeColor(spaceTheme);
 }
 
 .App__playControl-container {
