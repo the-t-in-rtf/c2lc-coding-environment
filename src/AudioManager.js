@@ -4,6 +4,8 @@ import { Midi, Panner, Player, Sampler } from 'tone';
 import CharacterState from './CharacterState';
 import type {AnnouncedSoundName} from './types';
 
+import {webAudioApiIsAvailable} from './FeatureDetection'
+
 type AnnouncementLookupTable = {
     forward1: Player,
     forward2: Player,
@@ -85,66 +87,68 @@ export default class AudioManager {
         left: Sampler,
         right: Sampler
     };
+    webAudioApiIsAvailable: boolean;
 
     constructor(audioEnabled: boolean) {
         this.audioEnabled = audioEnabled;
 
-        this.buildAnnouncementLookUpTable();
+        this.webAudioApiIsAvailable = webAudioApiIsAvailable();
 
-        this.panner = new Panner();
-        this.panner.toDestination();
-
-        this.samplers = {};
-
-        // TODO: Make a sammplerDef for all variations.
-        this.samplers.left = new Sampler({
-            // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
-            // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
-            urls: {
-                "C0": "C6.wav",
-                "C1": "C6.wav",
-                "C2": "C6.wav",
-                "C3": "C6.wav",
-                "C4": "C6.wav",
-                "C5": "C6.wav",
-                "C6": "C6.wav"
-            },
-            baseUrl: "/audio/left-turn/"
-        });
-
-        this.samplers.left.connect(this.panner);
-
-        this.samplers.right = new Sampler({
-            urls: {
+        if (this.webAudioApiIsAvailable) {
+            this.samplers = {};
+            this.buildAnnouncementLookUpTable();
+            this.panner = new Panner();
+            this.panner.toDestination();
+            // TODO: Make a sammplerDef for all variations.
+            this.samplers.left = new Sampler({
                 // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
                 // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
-                "C0": "C6.wav",
-                "C1": "C6.wav",
-                "C2": "C6.wav",
-                "C3": "C6.wav",
-                "C4": "C6.wav",
-                "C5": "C6.wav",
-                "C6": "C6.wav"
-            },
-            baseUrl: "/audio/right-turn/"
-        });
+                urls: {
+                    "C0": "C6.wav",
+                    "C1": "C6.wav",
+                    "C2": "C6.wav",
+                    "C3": "C6.wav",
+                    "C4": "C6.wav",
+                    "C5": "C6.wav",
+                    "C6": "C6.wav"
+                },
+                baseUrl: "/audio/left-turn/"
+            });
 
-        this.samplers.right.connect(this.panner);
+            this.samplers.left.connect(this.panner);
 
-        this.samplers.movement = new Sampler({
-            urls: {
-                "C0": "C0.wav",
-                "C1": "C1.wav",
-                "C2": "C2.wav",
-                "C3": "C3.wav",
-                "C4": "C4.wav",
-                "C5": "C5.wav",
-                "C6": "C6.wav"
-            },
-            baseUrl: "/audio/long-bell/"
-        });
+            this.samplers.right = new Sampler({
+                urls: {
+                    // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
+                    // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
+                    "C0": "C6.wav",
+                    "C1": "C6.wav",
+                    "C2": "C6.wav",
+                    "C3": "C6.wav",
+                    "C4": "C6.wav",
+                    "C5": "C6.wav",
+                    "C6": "C6.wav"
+                },
+                baseUrl: "/audio/right-turn/"
+            });
 
-        this.samplers.movement.connect(this.panner);
+            this.samplers.right.connect(this.panner);
+
+            this.samplers.movement = new Sampler({
+                urls: {
+                    "C0": "C0.wav",
+                    "C1": "C1.wav",
+                    "C2": "C2.wav",
+                    "C3": "C3.wav",
+                    "C4": "C4.wav",
+                    "C5": "C5.wav",
+                    "C6": "C6.wav"
+                },
+                baseUrl: "/audio/long-bell/"
+            });
+
+            this.samplers.movement.connect(this.panner);
+        }
     }
 
     buildAnnouncementLookUpTable() {
@@ -175,7 +179,7 @@ export default class AudioManager {
     }
 
     playSoundForCharacterState(samplerKey: string, releaseTimeInMs: number, characterState: CharacterState) {
-        if (this.audioEnabled) {
+        if (this.webAudioApiIsAvailable && this.audioEnabled) {
             const releaseTime = releaseTimeInMs / 1000;
             const noteName = getNoteForState(characterState);
 

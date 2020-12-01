@@ -28,6 +28,9 @@ export type ArrayLike<T> = {
     item: (number:number) => T
 };
 
+// TODO: Discuss how far to go in mocking this up.
+export type AudioContext = any;
+
 // https://developer.mozilla.org/en-US/docs/Web/API/SpeechGrammar
 export type SpeechGrammar = {
     src: string,
