@@ -163,10 +163,6 @@ function getChracterColumnCharacter(programBlockEditorWrapper) {
     return programBlockEditorWrapper.find('.ProgramBlockEditor__chracter-column-character').get(0);
 }
 
-function getProgramBlockEditorContainer(programBlockEditorWrapper) {
-    return programBlockEditorWrapper.find('.ProgramBlockEditor__container');
-}
-
 describe('Program rendering', () => {
     test('Blocks should be rendered for the test program', () => {
         expect.assertions(5);
