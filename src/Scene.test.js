@@ -332,15 +332,3 @@ describe('When the Character has a path, it is drawn on the Scene', () => {
         expect(robotCharacterPath.get(1).props.y2).toBe(800);
     })
 })
-
-describe('Grid Labels should have theme specific class names', () => {
-    test('forest theme', () => {
-        const sceneWrapper = createMountScene({
-            theme: 'forest'
-        });
-        const gridLabels = findGridLabels(sceneWrapper);
-        for (let i=0; i<gridLabels.length; i++) {
-            expect(gridLabels.get(i).props.className.includes('forest')).toBe(true);
-        }
-    })
-})
