@@ -26,7 +26,7 @@ import ProgramSpeedController from './ProgramSpeedController';
 import { programIsEmpty } from './ProgramUtils';
 import ProgramSerializer from './ProgramSerializer';
 import ShareButton from './ShareButton';
-import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
+import type { DeviceConnectionStatus, Program, RobotDriver, ThemeNames } from './types';
 import * as Utils from './Utils';
 import messages from './messages.json';
 import './App.scss';
@@ -47,7 +47,7 @@ type AppContext = {
 type AppSettings = {
     language: string,
     addNodeExpandedMode: boolean,
-    theme: string
+    theme: ThemeNames
 };
 
 type AppState = {
@@ -489,12 +489,8 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
-    handleOnChangeTheme = (theme: string) => {
-        if (document.body) {
-            document.body.className = '';
-            document.body.classList.add(`${theme}-theme`);
-            this.setStateSettings({ theme });
-        }
+    handleOnChangeTheme = (theme: ThemeNames) => {
+        this.setStateSettings({ theme });
     }
 
     render() {
@@ -662,6 +658,15 @@ export default class App extends React.Component<{}, AppState> {
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
+        }
+        if (this.state.settings.theme !== prevState.settings.theme) {
+            if (document.body) {
+                if(this.state.settings.theme === 'default') {
+                    document.body.className = '';
+                } else {
+                    document.body.className = `${this.state.settings.theme}-theme`;
+                }
+            }
         }
         /* Dash connection removed for version 0.5
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
