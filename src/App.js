@@ -3,7 +3,7 @@
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
-import AudioManager from './AudioManager';
+import AudioManagerImpl from './AudioManagerImpl';
 import CharacterState from './CharacterState';
 import CharacterStateSerializer from './CharacterStateSerializer';
 import CommandPaletteCommand from './CommandPaletteCommand';
@@ -11,6 +11,7 @@ import C2lcURLParams from './C2lcURLParams';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
 import * as FeatureDetection from './FeatureDetection';
+import FakeAudioManager from './FakeAudioManager';
 import FocusTrapManager from './FocusTrapManager';
 import Interpreter from './Interpreter';
 import type { InterpreterRunningState } from './Interpreter';
@@ -25,7 +26,7 @@ import ProgramSpeedController from './ProgramSpeedController';
 import { programIsEmpty } from './ProgramUtils';
 import ProgramSerializer from './ProgramSerializer';
 import ShareButton from './ShareButton';
-import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
+import type { AudioManager, DeviceConnectionStatus, Program, RobotDriver } from './types';
 import * as Utils from './Utils';
 import messages from './messages.json';
 import './App.scss';
@@ -306,7 +307,12 @@ export default class App extends React.Component<{}, AppState> {
         // this.dashDriver = new FakeRobotDriver();
         this.dashDriver = new DashDriver();
 
-        this.audioManager = new AudioManager(this.state.audioEnabled);
+        if (FeatureDetection.webAudioApiIsAvailable()) {
+            this.audioManager = new AudioManagerImpl(this.state.audioEnabled);
+        }
+        else {
+            this.audioManager = new FakeAudioManager();
+        }
 
         this.focusTrapManager = new FocusTrapManager();
     }

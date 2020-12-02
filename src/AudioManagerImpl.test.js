@@ -1,6 +1,6 @@
 // @flow
 
-import {getNoteForState} from './AudioManager';
+import {getNoteForState} from './AudioManagerImpl';
 import CharacterState from './CharacterState';
 import {Frequency} from 'tone';
 
