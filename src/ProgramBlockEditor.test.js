@@ -720,21 +720,3 @@ describe('Themed character icon should be rendered on the character column', () 
         expect(getChracterColumnCharacter(wrapper).type.render().props.children).toBe('SpaceShip.svg');
     });
 });
-
-describe('ProgramBlockEditor should have a themed className', () => {
-    test('default', () => {
-        expect.assertions(1);
-        const { wrapper } = createMountProgramBlockEditor();
-        expect(getProgramBlockEditorContainer(wrapper).hasClass('default')).toBe(true);
-    });
-    test('forest', () => {
-        expect.assertions(1);
-        const { wrapper } = createMountProgramBlockEditor({theme:'forest'});
-        expect(getProgramBlockEditorContainer(wrapper).hasClass('forest')).toBe(true);
-    });
-    test('space', () => {
-        expect.assertions(1);
-        const { wrapper } = createMountProgramBlockEditor({theme:'space'});
-        expect(getProgramBlockEditorContainer(wrapper).hasClass('space')).toBe(true);
-    })
-})
