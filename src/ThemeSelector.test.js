@@ -10,10 +10,17 @@ import ThemeSelector from './ThemeSelector';
 configure({ adapter: new Adapter() });
 
 function createMountThemeSelector(props) {
+    const mockSelectHandler = jest.fn();
+
     const wrapper = mount(
         React.createElement(
             ThemeSelector,
-            props
+            Object.assign(
+                {
+                    onSelect: mockSelectHandler
+                },
+                props
+            )
         ),
         {
             wrappingComponent: IntlProvider,
@@ -26,23 +33,23 @@ function createMountThemeSelector(props) {
     );
 
     return {
-        wrapper
+        wrapper,
+        mockSelectHandler
     };
 }
 
-function getSelectorOptions(wrapper) {
+function getThemeSelector(wrapper) {
     return wrapper.find('.ThemeSelector');
 }
 
 describe('When rendering selector options', () => {
     test('there should be default, forest, and space options', () => {
         expect.assertions(3);
-        const { wrapper } = createMountThemeSelector({onSelect: ()=> {}});
-        const selectorOptions = getSelectorOptions(wrapper).get(0).props.children;
+        const { wrapper } = createMountThemeSelector();
+        const selectorOptions = getThemeSelector(wrapper).get(0).props.children;
         expect(selectorOptions[0].props.eventKey).toBe('default');
         expect(selectorOptions[1].props.eventKey).toBe('space');
         expect(selectorOptions[2].props.eventKey).toBe('forest');
     });
 })
-
 
