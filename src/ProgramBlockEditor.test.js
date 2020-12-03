@@ -651,6 +651,41 @@ describe('Autoscroll to show a step after the active program step', () => {
 
         expect(programSequenceContainer.ref.current.scrollLeft).toBe(2000 - 100 - 200);
     });
+    test('When active program block is the last program block, autoscroll to the last add node', () => {
+        expect.assertions(1);
+
+        const { wrapper } = createMountProgramBlockEditor();
+
+        // Set the container ref object to a custom object with just enough
+        // of the DOM API implemented to support the scroll logic
+        const programSequenceContainer = getProgramSequenceContainer(wrapper);
+        programSequenceContainer.ref.current = {
+            getBoundingClientRect: () => {
+                return {
+                    left : 100
+                };
+            },
+            clientWidth: 1000,
+            scrollLeft: 2000
+        };
+
+        // Set the last add node location
+        const lastAddNode = getAddNodeButtonAtPosition(wrapper, 0);
+        // $FlowFixMe: Flow complains that getBoundingClientRect is not writable
+        lastAddNode.getDOMNode().getBoundingClientRect = () => {
+            return {
+                left: -200,
+                right: -100
+            };
+        };
+
+        // Trigger a scroll
+        wrapper.setProps({
+            activeProgramStepNum: 3
+        });
+
+        expect(programSequenceContainer.ref.current.scrollLeft).toBe(2000 - 100 - 200);
+    })
 });
 
 test('The editor scrolls when a step is added to the end of the program', () => {
