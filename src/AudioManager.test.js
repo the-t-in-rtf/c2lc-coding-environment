@@ -55,13 +55,15 @@ test("Returns a sensible note range for every supported character position.", ()
 
         for (let col = minCol; col <= maxCol; col++) {
             const noteForState = getNoteForState(new CharacterState(col, row, 0, []));
-            rowEntries.push(noteForState);
+            rowEntries.push(noteForState || '-');
 
-            const midiNote: number = Frequency(noteForState).toMidi();
-            maxPitch = Math.max(maxPitch, midiNote);
-            minPitch = Math.min(minPitch, midiNote);
-            expect(midiNote).toBeGreaterThanOrEqual(0);
-            expect(midiNote).toBeLessThanOrEqual(127);
+            if (noteForState) {
+                const midiNote: number = Frequency(noteForState).toMidi();
+                maxPitch = Math.max(maxPitch, midiNote);
+                minPitch = Math.min(minPitch, midiNote);
+                expect(midiNote).toBeGreaterThanOrEqual(0);
+                expect(midiNote).toBeLessThanOrEqual(127);
+            }
         }
 
         const pitchRange = maxPitch - minPitch;

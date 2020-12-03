@@ -1,6 +1,6 @@
 // @flow
 
-import { Midi, Panner, Player, Sampler } from 'tone';
+import { Midi, Player, Sampler } from 'tone';
 import CharacterState from './CharacterState';
 import type {AnnouncedSoundName} from './types';
 
@@ -41,49 +41,58 @@ const AnnouncementDefs = new Map<string, string>([
     ['replace', '/audio/ReplaceMovement.wav']
 ]);
 
-function octaveModulo (rawPitch: number) : number {
-    const adjustedPitch = rawPitch % 12;
-    return adjustedPitch < 0 ? adjustedPitch + 12 : adjustedPitch;
-}
+/*
 
-// Modified "Tonnetz" tuning, see https://en.wikipedia.org/wiki/Tonnetz for explanation and diagrams.
-export function getNoteForState (characterState: CharacterState) : string {
-    // The centre note (xPos: 0, yPos: 0) is 440hz = A4 = 69.
+    "Guitar" tuning, where row 0 is between the 2nd (A2) and 3rd string, and column -8 is the open string.
 
-    // Every "column" is 7 tones from the next but stays within the same octave.  This results in a pattern that
-    // cycles through the full octave range every 12 squares.
-    const xPitchOffset = octaveModulo(7 * characterState.xPos);
+        -8  -7  -6  -5  -4  -3  -2  -1   0  +1  +2  +3  +4  +5  +6  +7  +8
+       -----------------------------------------------------------------------
+    +5 E4  F4  F#4 G4  G#4 A4  A#4 B4   C5 C#5 D5  D#5 E5  F5  F#5 G5  G#5
+    +4 -----------------------------------------------------------------------
+    +3 B3  C4  C#4 D4  D#4 E4  F4  F#4  G4 G#4 A4  A#4 B4  C5  C#5 D5  D#5
+    +2 -----------------------------------------------------------------------
+    +1 G3  G#3 A3  A#3 B3  C4  C#4 D4  D#4 E4  F4  F#4 G4  G#4 A4  A#4 B4
+     0 -----------------------------------------------------------------------
+    -1 D3  D#3 E3  F3  F#3 G3  G#3 A3  A#3 B3  C4  C#4 D4  D#4 E4  F4  F#4
+    -2 -----------------------------------------------------------------------
+    -3 A2  A#2  B2  C3 C#3 D3  D#3 E3  F3  F#3 G3  G#3 A3  A#3 B3  C4  C#4
+    -4 -----------------------------------------------------------------------
+    -5 E2  F2  F#2 G2  G#2 A2  A#2  B2  C3 C#3 D3  D#3 E3  F3  F#3 G3  G#3
 
+    Converted to MIDI notes, that would be:
 
-    // Every "row" is 4 tones from the next but stays within the same octave.  This results in a pattern of three
-    // notes that repeats every three rows.
-    const yPitchOffset = octaveModulo(4 * characterState.yPos);
+        -8 -7 -6 -5 -4 -3 -2 -1 00 +1 +2 +3 +4 +5 +6 +7 +8
+       ----------------------------------------------------
+    +5  64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80
+    +4 ----------------------------------------------------
+    +3  59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75
+    +2 ----------------------------------------------------
+    +1  55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71
+    00 ----------------------------------------------------
+    -1  50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66
+    -2 ----------------------------------------------------
+    -3  45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61
+    -4 ----------------------------------------------------
+    -5  40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56
 
-    const combinedPitchOffset = octaveModulo(xPitchOffset + yPitchOffset);
+*/
+export function getNoteForState (characterState: CharacterState) : string | false {
+    const openNoteByStringNumber = [40, 45, 50, 55, 59, 64];
+    if (characterState.yPos %2) {
+        const stringNumber = Math.min(5, Math.max(0, (characterState.yPos + 5) / 2));
+        const midiNote = openNoteByStringNumber[stringNumber] + (characterState.xPos + 8);
+        const noteName: string = Midi(midiNote).toNote();
+        return noteName;
+    }
 
-    // To vary the range of notes without going too high or low, we use the repeating nature of the "row" pattern
-    // to divide the tuning into "octave bands" every three rows.  The middle band (yPos of -1, 0, or 1) is octave 3.
-    // The "band" above centre (yPos of 2, 3, or 4) is octave 4.  Anything higher is octave 5. The "band" below
-    // centre (yPos of -2, -3, or -4) is octave 2.  Anything lower is octave 1.
-    const octaveOffset = (Math.round(characterState.yPos / 3));
-    const boundedOctaveOffset = Math.max(Math.min(3, octaveOffset), -3);
-    const octave = 4 - boundedOctaveOffset;
-
-    // const midiNote = (12 * octave);
-    const midiNote = combinedPitchOffset + (12 * octave);
-    const noteName: string = Midi(midiNote).toNote();
-
-    return noteName;
+    return false;
 }
 
 export default class AudioManager {
     audioEnabled: boolean;
     announcementLookUpTable: AnnouncementLookupTable;
-    panner: Panner;
     samplers: {
-        movement: Sampler,
-        left: Sampler,
-        right: Sampler
+        movement: Sampler
     };
 
     constructor(audioEnabled: boolean) {
@@ -91,60 +100,21 @@ export default class AudioManager {
 
         this.buildAnnouncementLookUpTable();
 
-        this.panner = new Panner();
-        this.panner.toDestination();
-
         this.samplers = {};
 
-        // TODO: Make a sammplerDef for all variations.
-        this.samplers.left = new Sampler({
-            // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
-            // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
-            urls: {
-                "C0": "C6.wav",
-                "C1": "C6.wav",
-                "C2": "C6.wav",
-                "C3": "C6.wav",
-                "C4": "C6.wav",
-                "C5": "C6.wav",
-                "C6": "C6.wav"
-            },
-            baseUrl: "/audio/left-turn/"
-        });
-
-        this.samplers.left.connect(this.panner);
-
-        this.samplers.right = new Sampler({
-            urls: {
-                // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
-                // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
-                "C0": "C6.wav",
-                "C1": "C6.wav",
-                "C2": "C6.wav",
-                "C3": "C6.wav",
-                "C4": "C6.wav",
-                "C5": "C6.wav",
-                "C6": "C6.wav"
-            },
-            baseUrl: "/audio/right-turn/"
-        });
-
-        this.samplers.right.connect(this.panner);
 
         this.samplers.movement = new Sampler({
             urls: {
-                "C0": "C0.wav",
-                "C1": "C1.wav",
-                "C2": "C2.wav",
-                "C3": "C3.wav",
-                "C4": "C4.wav",
-                "C5": "C5.wav",
-                "C6": "C6.wav"
+                "A1": "A1.wav",
+                "A2": "A2.wav",
+                "A3": "A3.wav",
+                "A4": "A4.wav",
+                "A5": "A5.wav"
             },
-            baseUrl: "/audio/long-bell/"
+            baseUrl: "/audio/guitar/"
         });
 
-        this.samplers.movement.connect(this.panner);
+        this.samplers.movement.toDestination();
     }
 
     buildAnnouncementLookUpTable() {
@@ -179,18 +149,12 @@ export default class AudioManager {
             const releaseTime = releaseTimeInMs / 1000;
             const noteName = getNoteForState(characterState);
 
-            const sampler: Sampler = this.samplers[samplerKey];
-
-            this.playPitchedSample(sampler, noteName, releaseTime);
-
-            // Pan left/right to suggest the relative horizontal position.
-            // As we use a single Sampler grade, our best option for panning is
-            // to pan all sounds.  We can discuss adjusting this once we have
-            // multiple sound-producing elements in the environment.
-            const panningLevel = Math.min(1, Math.max(-1, (0.1 * characterState.xPos)));
-
-            // TODO: Consider making the timing configurable or tying it to the movement timing.
-            this.panner.pan.rampTo(panningLevel, 0.5)
+            if (noteName) {
+                const sampler: Sampler = this.samplers[samplerKey];
+                if (sampler) {
+                    this.playPitchedSample(sampler, noteName, releaseTime);
+                }
+            }
         }
     }
 
