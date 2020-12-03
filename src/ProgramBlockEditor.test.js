@@ -565,7 +565,7 @@ describe('Delete All button can be disabled', () => {
     });
 });
 
-describe('Autoscroll to show the active program step', () => {
+describe('Autoscroll to show a step after the active program step', () => {
     test('When active program step number is 0, scroll to the beginning of the container', () => {
         expect.assertions(3);
         const mockScrollTo = jest.fn();
@@ -581,7 +581,7 @@ describe('Autoscroll to show the active program step', () => {
         expect(mockScrollTo.mock.calls[0][0]).toBe(0);
         expect(mockScrollTo.mock.calls[0][1]).toBe(0);
     });
-    test('When active program block is outside of the container, on the right', () => {
+    test('When a step after active program block is outside of the container, on the right', () => {
         expect.assertions(1);
 
         const { wrapper } = createMountProgramBlockEditor();
@@ -600,9 +600,9 @@ describe('Autoscroll to show the active program step', () => {
         };
 
         // Set the active block location
-        const activeProgramBlock = getProgramBlockAtPosition(wrapper, 3);
+        const nextProgramStep = getProgramBlockAtPosition(wrapper, 3);
         // $FlowFixMe: Flow complains that getBoundingClientRect is not writable
-        activeProgramBlock.getDOMNode().getBoundingClientRect = () => {
+        nextProgramStep.getDOMNode().getBoundingClientRect = () => {
             return {
                 left: 2000,
                 right: 2300
@@ -611,12 +611,12 @@ describe('Autoscroll to show the active program step', () => {
 
         // Trigger a scroll
         wrapper.setProps({
-            activeProgramStepNum: 3
+            activeProgramStepNum: 2
         });
 
         expect(programSequenceContainer.ref.current.scrollLeft).toBe(200 + 2300 - 100 - 1000);
     });
-    test('When active program block is outside of the container, on the left', () => {
+    test('When a step after active program block is outside of the container, on the left', () => {
         expect.assertions(1);
 
         const { wrapper } = createMountProgramBlockEditor();
@@ -646,7 +646,7 @@ describe('Autoscroll to show the active program step', () => {
 
         // Trigger a scroll
         wrapper.setProps({
-            activeProgramStepNum: 3
+            activeProgramStepNum: 2
         });
 
         expect(programSequenceContainer.ref.current.scrollLeft).toBe(2000 - 100 - 200);

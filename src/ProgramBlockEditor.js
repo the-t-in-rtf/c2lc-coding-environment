@@ -71,9 +71,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     scrollProgramSequenceContainer(toElement) {
         if (this.programSequenceContainerRef.current) {
             const containerElem = this.programSequenceContainerRef.current;
-            if (toElement.dataset.stepnumber === '0') {
+            if (toElement != null && toElement.dataset.stepnumber === '0') {
                 containerElem.scrollTo(0, 0);
-            } else {
+            } else if (toElement != null){
                 const containerLeft = containerElem.getBoundingClientRect().left;
                 const containerWidth = containerElem.clientWidth;
                 const toElementLeft = toElement.getBoundingClientRect().left;
@@ -475,9 +475,15 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             this.focusAddNodeIndex = null;
         }
         if (this.props.activeProgramStepNum != null) {
-            const element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
-            if (element) {
-                this.scrollProgramSequenceContainer(element);
+            const activeProgramStep = this.commandBlockRefs.get(this.props.activeProgramStepNum);
+            const nextProgramStep = this.commandBlockRefs.get(parseInt(this.props.activeProgramStepNum) + 1);
+            const lastAddNode = this.addNodeRefs.get(this.props.program.length);
+            if (this.props.activeProgramStepNum === 0) {
+                this.scrollProgramSequenceContainer(activeProgramStep);
+            } else if (nextProgramStep) {
+                this.scrollProgramSequenceContainer(nextProgramStep);
+            } else {
+                this.scrollProgramSequenceContainer(lastAddNode);
             }
         }
         if (this.props.actionPanelStepIndex != null) {
