@@ -78,8 +78,8 @@ const AnnouncementDefs = new Map<string, string>([
 */
 export function getNoteForState (characterState: CharacterState) : string | false {
     const openNoteByStringNumber = [40, 45, 50, 55, 59, 64];
-    if (characterState.yPos %2) {
-        const stringNumber = Math.min(5, Math.max(0, (characterState.yPos + 5) / 2));
+    if (characterState.yPos % 2) {
+        const stringNumber = 5 - Math.min(5, Math.max(0, (characterState.yPos + 5) / 2));
         const midiNote = openNoteByStringNumber[stringNumber] + (characterState.xPos + 8);
         const noteName: string = Midi(midiNote).toNote();
         return noteName;
