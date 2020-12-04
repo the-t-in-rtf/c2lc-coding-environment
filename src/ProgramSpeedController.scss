@@ -1,3 +1,5 @@
+@import 'variables';
+
 .ProgramSpeedController__container {
     display: flex;
     flex-direction: row;
@@ -8,4 +10,10 @@
     width: 8rem;
     margin-left: 0.3rem;
     margin-right: 0.3rem;
+}
+
+.form-control-range:focus,
+.form-control-range:focus::-webkit-slider-runnable-track{
+    outline: none;
+    box-shadow: 0 0 0.3rem $c2lc-focus-indicator-width #007bff;
 }
