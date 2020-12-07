@@ -24,21 +24,22 @@ type AnnouncementLookupTable = {
 
 
 const AnnouncementDefs = new Map<string, string>([
-    ['forward1', '/audio/Move.wav'],
-    ['forward2', '/audio/Move.wav'],
-    ['forward3', '/audio/Move.wav'],
-    ['left45', '/audio/TurnLeft.wav'],
-    ['left90', '/audio/TurnLeft.wav'],
-    ['left180', '/audio/TurnLeft.wav'],
-    ['right45', '/audio/TurnRight.wav'],
-    ['right90', '/audio/TurnRight.wav'],
-    ['right180', '/audio/TurnRight.wav'],
-    ['add', './audio/AddMovement.wav'],
-    ['deleteAll', '/audio/DeleteAll.wav'],
-    ['delete', '/audio/DeleteMovement.wav'],
-    ['moveToPrevious', '/audio/MoveToLeft.wav'],
-    ['moveToNext', '/audio/MoveToRight.wav'],
-    ['replace', '/audio/ReplaceMovement.wav']
+    ['forward1',      '/audio/announcements/Forward1.wav'],
+    ['forward2',      '/audio/announcements/Forward2.wav'],
+    ['forward3',      '/audio/announcements/Forward3.wav'],
+    ['left45',        '/audio/announcements/Left45.wav'],
+    ['left90',        '/audio/announcements/Left90.wav'],
+    ['left180',       '/audio/announcements/Left180.wav'],
+    ['right45',       '/audio/announcements/Right45.wav'],
+    ['right90',       '/audio/announcements/Right90.wav'],
+    ['right180',      '/audio/announcements/Right180.wav'],
+    ['add',           '/audio/announcements/AddMovement.wav'],
+    ['deleteAll',     '/audio/announcements/DeleteAll.wav'],
+    ['delete',        '/audio/announcements/DeleteMovement.wav'],
+    ['replace',       '/audio/announcements/ReplaceMovement.wav'],
+    ['moveToPrevious', '/audio/announcements/MoveToPrevious.wav'],
+    ['moveToNext',     '/audio/announcements/MoveToNext.wav'],
+
 ]);
 
 function octaveModulo (rawPitch: number) : number {
