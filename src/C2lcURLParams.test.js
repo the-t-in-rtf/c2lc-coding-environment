@@ -11,9 +11,9 @@ test('Given URL query parameters, get param values', () => {
 });
 
 test('Given URL query parameters with special characters, get decoded param values', () => {
-    const urlParams = new C2lcURLParams('?v=%20%21%224&t=default%20theme&p=%28%22&c=%21%20');
+    const urlParams = new C2lcURLParams('?v=%20%21%224&t=space&p=%28%22&c=%21%20');
     expect(urlParams.getVersion()).toBe(' !"4');
     expect(urlParams.getProgram()).toBe('("');
     expect(urlParams.getCharacterState()).toBe('! ');
-    expect(urlParams.getTheme()).toBe('default theme');
+    expect(urlParams.getTheme()).toBe('space');
 })
