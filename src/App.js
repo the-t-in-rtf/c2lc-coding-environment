@@ -104,7 +104,7 @@ export default class App extends React.Component<{}, AppState> {
             drawingEnabled: true
         };
 
-        this.version = '0.5';
+        this.version = '0.6';
 
         this.interpreter = new Interpreter(this.handleRunningStateChange, 1000);
 
