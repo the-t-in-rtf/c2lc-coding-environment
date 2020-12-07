@@ -1,7 +1,5 @@
 // @flow
 
-import type { ThemeNames } from './types';
-
 export default class C2lcURLParams {
     urlSearchParams: URLSearchParams;
 
@@ -21,11 +19,7 @@ export default class C2lcURLParams {
         return this.urlSearchParams.get('c');
     }
 
-    getTheme(): ThemeNames {
-        switch (this.urlSearchParams.get('t')) {
-            case('space'): return 'space';
-            case('forest'): return 'forest';
-            default: return 'default';
-        }
+    getTheme() {
+        return this.urlSearchParams.get('t');
     }
 }
