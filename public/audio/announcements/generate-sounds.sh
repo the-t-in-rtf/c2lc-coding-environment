@@ -24,10 +24,10 @@ say -v $VOICE -o DeleteMovement.aiff "Delete movement."
 
 say -v $VOICE -o ReplaceMovement.aiff "Replace movement."
 
-say -v $VOICE -o MoveToPrevious.aiff "Move Right."
+say -v $VOICE -o MoveToPrevious.aiff "Move to left."
 
 # NOTE: The utterance is oddly clipped if we use the "Karen" voice for this specific utterance.
-say -v $VOICE -o MoveToNext.aiff "Move Left."
+say -v $VOICE -o MoveToNext.aiff "Move to right."
 
 # We convert the raw aiff ourselves because the 'say' command's built in wav output is not usable with a browser.
 for i in *.aiff; do sox $i ${i/aiff/wav}; rm $i; done
