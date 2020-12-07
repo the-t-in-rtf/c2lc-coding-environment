@@ -629,14 +629,16 @@ export default class App extends React.Component<{}, AppState> {
             const params = new C2lcURLParams(window.location.search);
             const programQuery = params.getProgram();
             const characterStateQuery = params.getCharacterState();
-            if (programQuery != null && characterStateQuery != null) {
+            const themeQuery = params.getTheme();
+            if (programQuery != null && characterStateQuery != null && themeQuery != null) {
                 try {
                     this.setState({
                         program: this.programSerializer.deserialize(programQuery),
                         characterState: this.characterStateSerializer.deserialize(characterStateQuery)
                     });
+                    this.setStateSettings({ theme: themeQuery });
                 } catch(err) {
-                    console.log(`Error parsing program: ${programQuery} or characterState: ${characterStateQuery}`);
+                    console.log(`Error parsing program: ${programQuery} or characterState: ${characterStateQuery} or theme: ${themeQuery}`);
                     console.log(err.toString());
                 }
             }
@@ -645,16 +647,18 @@ export default class App extends React.Component<{}, AppState> {
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
         if (this.state.program !== prevState.program
-            || this.state.characterState !== prevState.characterState) {
+            || this.state.characterState !== prevState.characterState
+            || this.state.settings.theme !== prevState.settings.theme) {
             const serializedProgram = this.programSerializer.serialize(this.state.program);
             const serializedCharacterState = this.characterStateSerializer.serialize(this.state.characterState);
             window.history.pushState(
                 {
                     p: serializedProgram,
-                    c: serializedCharacterState
+                    c: serializedCharacterState,
+                    t: this.state.settings.theme
                 },
                 '',
-                Utils.generateEncodedProgramURL('0.5', serializedProgram, serializedCharacterState));
+                Utils.generateEncodedProgramURL('0.5', this.state.settings.theme, serializedProgram, serializedCharacterState));
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
