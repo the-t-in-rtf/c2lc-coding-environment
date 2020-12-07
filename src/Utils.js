@@ -1,5 +1,7 @@
 // @flow
 
+import type { ThemeNames } from './types';
+
 let idCounter: number = 0;
 
 /* istanbul ignore next */
@@ -22,4 +24,12 @@ function generateEncodedProgramURL(versionString: string, themeString: string, p
     return `?v=${encodeURIComponent(versionString)}&t=${themeString}&p=${encodeURIComponent(programString)}&c=${encodeURIComponent(characterStateString)}`;
 }
 
-export { generateId, makeDelayedPromise, generateEncodedProgramURL };
+function getThemeFromString(themeQuery: ?string, defaultThemeName: ThemeNames): ThemeNames {
+    switch (themeQuery) {
+        case('space'): return 'space';
+        case('forest'): return 'forest';
+        default: return defaultThemeName;
+    }
+}
+
+export { generateId, makeDelayedPromise, generateEncodedProgramURL, getThemeFromString };

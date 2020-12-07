@@ -630,18 +630,18 @@ export default class App extends React.Component<{}, AppState> {
             const programQuery = params.getProgram();
             const characterStateQuery = params.getCharacterState();
             const themeQuery = params.getTheme();
-            if (programQuery != null && characterStateQuery != null && themeQuery != null) {
+            if (programQuery != null && characterStateQuery != null) {
                 try {
                     this.setState({
                         program: this.programSerializer.deserialize(programQuery),
                         characterState: this.characterStateSerializer.deserialize(characterStateQuery)
                     });
-                    this.setStateSettings({ theme: themeQuery });
                 } catch(err) {
-                    console.log(`Error parsing program: ${programQuery} or characterState: ${characterStateQuery} or theme: ${themeQuery}`);
+                    console.log(`Error parsing program: ${programQuery} or characterState: ${characterStateQuery}`);
                     console.log(err.toString());
                 }
             }
+            this.setStateSettings({ theme: Utils.getThemeFromString(themeQuery, 'default') });
         }
     }
 
@@ -658,7 +658,7 @@ export default class App extends React.Component<{}, AppState> {
                     t: this.state.settings.theme
                 },
                 '',
-                Utils.generateEncodedProgramURL('0.5', this.state.settings.theme, serializedProgram, serializedCharacterState));
+                Utils.generateEncodedProgramURL('0.6', this.state.settings.theme, serializedProgram, serializedCharacterState));
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
