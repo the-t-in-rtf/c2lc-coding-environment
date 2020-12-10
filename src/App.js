@@ -67,6 +67,7 @@ type AppState = {
 };
 
 export default class App extends React.Component<{}, AppState> {
+    version: string;
     appContext: AppContext;
     dashDriver: RobotDriver;
     interpreter: Interpreter;
@@ -79,6 +80,8 @@ export default class App extends React.Component<{}, AppState> {
 
     constructor(props: any) {
         super(props);
+
+        this.version = '0.6';
 
         this.appContext = {
             bluetoothApiIsAvailable: FeatureDetection.bluetoothApiIsAvailable()
@@ -625,7 +628,7 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidMount() {
-        if (window.location.search != null) {
+        if (window.location.search != null && window.location.search !== '') {
             const params = new C2lcURLParams(window.location.search);
             const programQuery = params.getProgram();
             const characterStateQuery = params.getCharacterState();
@@ -642,6 +645,22 @@ export default class App extends React.Component<{}, AppState> {
                 }
             }
             this.setStateSettings({ theme: Utils.getThemeFromString(themeQuery, 'default') });
+        } else {
+            const localProgram = window.localStorage.getItem('c2lc-program');
+            const localCharacterState = window.localStorage.getItem('c2lc-characterState');
+            const localTheme = window.localStorage.getItem('c2lc-theme');
+            if (localProgram != null && localCharacterState != null) {
+                try {
+                    this.setState({
+                        program: this.programSerializer.deserialize(localProgram),
+                        characterState: this.characterStateSerializer.deserialize(localCharacterState)
+                    });
+                } catch(err) {
+                    console.log(`Error parsing program: ${localProgram} or characterState: ${localCharacterState}`);
+                    console.log(err.toString());
+                }
+            }
+            this.setStateSettings({ theme: Utils.getThemeFromString(localTheme, 'default') });
         }
     }
 
@@ -658,7 +677,12 @@ export default class App extends React.Component<{}, AppState> {
                     t: this.state.settings.theme
                 },
                 '',
-                Utils.generateEncodedProgramURL('0.6', this.state.settings.theme, serializedProgram, serializedCharacterState));
+                Utils.generateEncodedProgramURL(this.version, this.state.settings.theme, serializedProgram, serializedCharacterState)
+            );
+            window.localStorage.setItem('c2lc-version', this.version);
+            window.localStorage.setItem('c2lc-program', serializedProgram);
+            window.localStorage.setItem('c2lc-characterState', serializedCharacterState);
+            window.localStorage.setItem('c2lc-theme', this.state.settings.theme);
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
