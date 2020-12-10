@@ -194,3 +194,7 @@ button.ProgramBlockEditor__program-block--active {
     left: #{-$c2lc-action-panel-width / 2};
     top: #{-$c2lc-action-panel-height * 1.3};
 }
+
+.ProgramBlockEditor__program-sequence-scroll-container.isDragging {
+    background-color: #33333325;
+}
