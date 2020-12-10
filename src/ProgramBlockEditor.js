@@ -436,7 +436,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         </div>
                     </h3>
                 </div>
-                <div className={'ProgramBlockEditor__program-sequence-scroll-container' + (this.props.isDraggingCommand ? " isDragging": "") } ref={this.programSequenceContainerRef}>
+                <div className={'ProgramBlockEditor__program-sequence-scroll-container' + (!this.props.editingDisabled && this.props.isDraggingCommand ? " isDragging": "") } ref={this.programSequenceContainerRef}>
                     <div className='ProgramBlockEditor__program-sequence'>
                         <div className='ProgramBlockEditor__start-indicator'>
                             {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
