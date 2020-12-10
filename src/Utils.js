@@ -1,6 +1,6 @@
 // @flow
 
-import type { ThemeNames } from './types';
+import type { ThemeName } from './types';
 
 let idCounter: number = 0;
 
@@ -24,7 +24,7 @@ function generateEncodedProgramURL(versionString: string, themeString: string, p
     return `?v=${encodeURIComponent(versionString)}&t=${themeString}&p=${encodeURIComponent(programString)}&c=${encodeURIComponent(characterStateString)}`;
 }
 
-function getThemeFromString(themeQuery: ?string, defaultThemeName: ThemeNames): ThemeNames {
+function getThemeFromString(themeQuery: ?string, defaultThemeName: ThemeName): ThemeName {
     switch (themeQuery) {
         case('space'): return 'space';
         case('forest'): return 'forest';

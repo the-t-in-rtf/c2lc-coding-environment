@@ -2,14 +2,14 @@
 
 import React from 'react';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
-import type { ThemeNames } from './types';
+import type { ThemeName } from './types';
 import type { IntlShape } from 'react-intl';
 import { injectIntl } from 'react-intl';
 import './ThemeSelector.scss';
 
 type ThemeSelectorProps = {
     intl: IntlShape,
-    onSelect: (value: ThemeNames) => void
+    onSelect: (value: ThemeName) => void
 };
 
 class ThemeSelector extends React.Component<ThemeSelectorProps, {}> {

@@ -26,7 +26,7 @@ import ProgramSpeedController from './ProgramSpeedController';
 import { programIsEmpty } from './ProgramUtils';
 import ProgramSerializer from './ProgramSerializer';
 import ShareButton from './ShareButton';
-import type { DeviceConnectionStatus, Program, RobotDriver, ThemeNames } from './types';
+import type { DeviceConnectionStatus, Program, RobotDriver, ThemeName } from './types';
 import * as Utils from './Utils';
 import messages from './messages.json';
 import './App.scss';
@@ -47,7 +47,7 @@ type AppContext = {
 type AppSettings = {
     language: string,
     addNodeExpandedMode: boolean,
-    theme: ThemeNames
+    theme: ThemeName
 };
 
 type AppState = {
@@ -492,7 +492,7 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
-    handleOnChangeTheme = (theme: ThemeNames) => {
+    handleOnChangeTheme = (theme: ThemeName) => {
         this.setStateSettings({ theme });
     }
 
