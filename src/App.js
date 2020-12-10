@@ -21,6 +21,7 @@ import Scene from './Scene';
 import SceneDimensions from './SceneDimensions';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
+import ProgramSequence from './ProgramSequence';
 import ProgramSpeedController from './ProgramSpeedController';
 import { programIsEmpty } from './ProgramUtils';
 import ProgramSerializer from './ProgramSerializer';
@@ -49,6 +50,7 @@ type AppSettings = {
 
 type AppState = {
     program: Program,
+    programSequence: ProgramSequence,
     characterState: CharacterState,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
@@ -86,6 +88,7 @@ export default class App extends React.Component<{}, AppState> {
 
         this.state = {
             program: [],
+            programSequence: new ProgramSequence(),
             characterState: this.startingCharacterState,
             settings: {
                 language: 'en',
@@ -103,7 +106,7 @@ export default class App extends React.Component<{}, AppState> {
             drawingEnabled: true
         };
 
-        this.interpreter = new Interpreter(this.handleRunningStateChange, 1000);
+        this.interpreter = new Interpreter(this.handleRunningStateChange, 1000, this.state.programSequence);
 
         this.speedLookUp = [2000, 1500, 1000, 500, 250];
 
@@ -569,6 +572,7 @@ export default class App extends React.Component<{}, AppState> {
                                     editingDisabled={this.state.interpreterIsRunning === true}
                                     interpreterIsRunning={this.state.interpreterIsRunning}
                                     program={this.state.program}
+                                    programSequence={this.state.programSequence}
                                     selectedAction={this.state.selectedAction}
                                     isDraggingCommand={this.state.isDraggingCommand}
                                     audioManager={this.audioManager}
@@ -622,6 +626,7 @@ export default class App extends React.Component<{}, AppState> {
                         program: this.programSerializer.deserialize(programQuery),
                         characterState: this.characterStateSerializer.deserialize(characterStateQuery)
                     });
+                    this.state.programSequence.updateProgram(this.programSerializer.deserialize(programQuery));
                 } catch(err) {
                     console.log(`Error parsing program: ${programQuery} or characterState: ${characterStateQuery}`);
                     console.log(err.toString());
@@ -631,6 +636,8 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
+        console.log(this.state.programSequence.getProgram());
+        console.log(this.state.programSequence.getProgramCounter());
         if (this.state.program !== prevState.program
             || this.state.characterState !== prevState.characterState) {
             const serializedProgram = this.programSerializer.serialize(this.state.program);

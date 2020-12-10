@@ -13,6 +13,7 @@ import AudioManager from './AudioManager';
 import FocusTrapManager from './FocusTrapManager';
 import CommandBlock from './CommandBlock';
 import classNames from 'classnames';
+import ProgramSequence from './ProgramSequence';
 import ToggleSwitch from './ToggleSwitch';
 import { ReactComponent as AddIcon } from './svg/Add.svg';
 import { ReactComponent as DeleteAllIcon } from './svg/DeleteAll.svg';
@@ -29,6 +30,7 @@ type ProgramBlockEditorProps = {
     editingDisabled: boolean,
     interpreterIsRunning: boolean,
     program: Program,
+    programSequence: ProgramSequence,
     selectedAction: ?string,
     isDraggingCommand: boolean,
     audioManager: AudioManager,
@@ -100,12 +102,13 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             this.scrollToAddNodeIndex = index + 1;
             this.props.onChangeProgram(ProgramUtils.insert(this.props.program,
                 index, this.props.selectedAction, 'none'));
+            this.props.programSequence.insertStep(index, this.props.selectedAction);
         }
     }
 
     programStepIsActive(programStepNumber: number) {
-        if (this.props.interpreterIsRunning && this.props.activeProgramStepNum != null) {
-            return (this.props.activeProgramStepNum) === programStepNumber;
+        if (this.props.programSequence.getProgramRunningState() === true) {
+            return (this.props.programSequence.getProgramCounter()) === programStepNumber;
         } else {
             return false;
         }
@@ -167,6 +170,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             this.focusAddNodeIndex = index;
         }
         this.props.onChangeProgram(ProgramUtils.deleteStep(this.props.program, index));
+        this.props.programSequence.deleteStep(index);
         this.closeActionPanel();
     };
 
@@ -474,8 +478,14 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             }
             this.focusAddNodeIndex = null;
         }
-        if (this.props.activeProgramStepNum != null) {
-            const element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
+        // if (this.props.activeProgramStepNum != null) {
+        //     const element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
+        //     if (element) {
+        //         this.scrollProgramSequenceContainer(element);
+        //     }
+        // }
+        if (this.props.programSequence.getProgramRunningState() === true) {
+            const element = this.commandBlockRefs.get(this.props.programSequence.getProgramCounter());
             if (element) {
                 this.scrollProgramSequenceContainer(element);
             }

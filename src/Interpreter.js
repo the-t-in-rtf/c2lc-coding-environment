@@ -1,6 +1,7 @@
 // @flow
 
 import type {Program} from './types';
+import ProgramSequence from './ProgramSequence';
 
 /* eslint-disable no-use-before-define */
 export type CommandHandler = { (Interpreter, stepTimeMs: number): Promise<void> };
@@ -20,7 +21,7 @@ export default class Interpreter {
     stepTimeMs: number;
     onRunningStateChange: (InterpreterRunningState) => void;
 
-    constructor(onRunningStateChange: (InterpreterRunningState) => void, stepTimeMs: number) {
+    constructor(onRunningStateChange: (InterpreterRunningState) => void, stepTimeMs: number, programSequence: ProgramSequence) {
         this.commands = {};
         this.program = [];
         this.programCounter = 0;
@@ -28,6 +29,7 @@ export default class Interpreter {
         this.isRunning = false;
         this.onRunningStateChange = onRunningStateChange;
         this.stepTimeMs = stepTimeMs;
+        this.programSequence = programSequence;
     }
 
     addCommandHandler(command: string, namespace: string, handler: CommandHandler) {
@@ -48,6 +50,8 @@ export default class Interpreter {
         this.program = program;
         this.programCounter = 0;
         this.isRunning = true;
+        this.programSequence.updateProgramCounter(0);
+        this.programSequence.updateRunningState(true);
         return new Promise((resolve, reject) => {
             this.continueRun(resolve, reject);
         });
@@ -58,6 +62,8 @@ export default class Interpreter {
             if (this.atEnd()) {
                 this.isRunning = false;
                 this.onRunningStateChange({isRunning: this.isRunning, activeStep: null});
+                this.programSequence.updateRunningState(false);
+                this.programSequence.updateProgramCounter(null);
                 resolve();
             } else {
                 this.onRunningStateChange({isRunning: this.isRunning, activeStep: this.programCounter});
@@ -67,6 +73,8 @@ export default class Interpreter {
                     // Reject the run Promise when the step Promise is rejected
                     this.isRunning = false;
                     this.onRunningStateChange({isRunning: this.isRunning, activeStep: null});
+                    this.programSequence.updateRunningState(false);
+                    this.programSequence.updateProgramCounter(null);
                     reject(error);
                 });
             }
@@ -89,6 +97,7 @@ export default class Interpreter {
                     // When the command has completed, increment
                     // the programCounter and resolve the step Promise
                     this.programCounter = this.programCounter + 1;
+                    this.programSequence.updateProgramCounter(this.programSequence.getProgramCounter() + 1);
                     resolve();
                 }, (error: Error) => {
                     reject(error);
@@ -100,6 +109,8 @@ export default class Interpreter {
     stop(): void {
         this.isRunning = false;
         this.onRunningStateChange({isRunning: this.isRunning, activeStep: null});
+        this.programSequence.updateRunningState(false);
+        this.programSequence.updateProgramCounter(null);
     }
 
     doCommand(command: string): Promise<any> {
