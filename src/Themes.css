@@ -1,5 +1,11 @@
 /* Forest Theme */
 
+body.forest-theme {
+    background-color: #49827A;
+    background-image: url('./svg/ForestBackground.svg');
+    background-size: 13%;
+}
+
 .forest-theme .App__container {
     background-color: #496D69;
 }
@@ -25,6 +31,11 @@
 }
 
 /* Space Theme */
+
+body.space-theme {
+    background-color: #171C1C;
+    background-image: url('./svg/SpaceBackground.svg');
+}
 
 .space-theme .App__container {
     background-color: #171C1C;
