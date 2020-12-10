@@ -248,6 +248,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     /* istanbul ignore next */
     handleDropCommand = (stepNumber: number) => {
+        this.props.audioManager.playAnnouncement('add');
         this.insertSelectedCommandIntoProgram(stepNumber);
     };
 
