@@ -64,6 +64,7 @@ type AppState = {
 };
 
 export default class App extends React.Component<{}, AppState> {
+    version: string;
     appContext: AppContext;
     dashDriver: RobotDriver;
     interpreter: Interpreter;
@@ -73,10 +74,11 @@ export default class App extends React.Component<{}, AppState> {
     programSerializer: ProgramSerializer;
     characterStateSerializer: CharacterStateSerializer;
     speedLookUp: Array<number>;
-    version: string;
 
     constructor(props: any) {
         super(props);
+
+        this.version = '0.6';
 
         this.appContext = {
             bluetoothApiIsAvailable: FeatureDetection.bluetoothApiIsAvailable()
@@ -103,8 +105,6 @@ export default class App extends React.Component<{}, AppState> {
             sceneDimensions: new SceneDimensions(17, 9),
             drawingEnabled: true
         };
-
-        this.version = '0.6';
 
         this.interpreter = new Interpreter(this.handleRunningStateChange, 1000);
 
@@ -631,8 +631,8 @@ export default class App extends React.Component<{}, AppState> {
                 }
             }
         } else {
-            const localProgram = window.localStorage.getItem('program');
-            const localCharacterState = window.localStorage.getItem('characterState');
+            const localProgram = window.localStorage.getItem('c2lc-program');
+            const localCharacterState = window.localStorage.getItem('c2lc-characterState');
             if (localProgram != null && localCharacterState != null) {
                 try {
                     this.setState({
@@ -658,10 +658,11 @@ export default class App extends React.Component<{}, AppState> {
                     c: serializedCharacterState
                 },
                 '',
-                Utils.generateEncodedProgramURL(this.version, serializedProgram, serializedCharacterState));
-            window.localStorage.setItem('program', serializedProgram);
-            window.localStorage.setItem('characterState', serializedCharacterState);
-            window.localStorage.setItem('version', this.version);
+                Utils.generateEncodedProgramURL(this.version, serializedProgram, serializedCharacterState)
+            );
+            window.localStorage.setItem('c2lc-version', this.version);
+            window.localStorage.setItem('c2lc-program', serializedProgram);
+            window.localStorage.setItem('c2lc-characterState', serializedCharacterState);
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
