@@ -77,7 +77,7 @@ export function getNoteForState (characterState: CharacterState) : string {
 }
 
 export default class AudioManagerImpl
-  implements AudioManager {
+implements AudioManager {
   audioEnabled: boolean;
   announcementLookUpTable: AnnouncementLookupTable;
   panner: Panner;
@@ -88,123 +88,123 @@ export default class AudioManagerImpl
   };
 
   constructor(audioEnabled: boolean) {
-    this.audioEnabled = audioEnabled;
+      this.audioEnabled = audioEnabled;
 
-    this.samplers = {};
-    this.buildAnnouncementLookUpTable();
-    this.panner = new Panner();
-    this.panner.toDestination();
-    // TODO: Make a sammplerDef for all variations.
-    this.samplers.left = new Sampler(
+      this.samplers = {};
+      this.buildAnnouncementLookUpTable();
+      this.panner = new Panner();
+      this.panner.toDestination();
+      // TODO: Make a sammplerDef for all variations.
+      this.samplers.left = new Sampler(
       {
-        // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
-        // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
-        urls: {
-          "C0": "C6.wav",
-          "C1": "C6.wav",
-          "C2": "C6.wav",
-          "C3": "C6.wav",
-          "C4": "C6.wav",
-          "C5": "C6.wav",
-          "C6": "C6.wav",
-        },
-        baseUrl: "/audio/left-turn/",
-      },
-    );
-
-    this.samplers.left.connect(this.panner);
-
-    this.samplers.right = new Sampler(
-      {
-        urls: {
           // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
           // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
-          "C0": "C6.wav",
-          "C1": "C6.wav",
-          "C2": "C6.wav",
-          "C3": "C6.wav",
-          "C4": "C6.wav",
-          "C5": "C6.wav",
-          "C6": "C6.wav",
-        },
-        baseUrl: "/audio/right-turn/",
+          urls: {
+              "C0": "C6.wav",
+              "C1": "C6.wav",
+              "C2": "C6.wav",
+              "C3": "C6.wav",
+              "C4": "C6.wav",
+              "C5": "C6.wav",
+              "C6": "C6.wav",
+          },
+          baseUrl: "/audio/left-turn/",
       },
-    );
+      );
 
-    this.samplers.right.connect(this.panner);
+      this.samplers.left.connect(this.panner);
 
-    this.samplers.movement = new Sampler(
+      this.samplers.right = new Sampler(
       {
-        urls: {
-          "C0": "C0.wav",
-          "C1": "C1.wav",
-          "C2": "C2.wav",
-          "C3": "C3.wav",
-          "C4": "C4.wav",
-          "C5": "C5.wav",
-          "C6": "C6.wav",
-        },
-        baseUrl: "/audio/long-bell/",
+          urls: {
+          // The percussion instrument we used actually dooesn't vary it's pitch, we use the same sample at different
+          // pitches so that we can scale relative to the octave without ending up with wildy different tempos.
+              "C0": "C6.wav",
+              "C1": "C6.wav",
+              "C2": "C6.wav",
+              "C3": "C6.wav",
+              "C4": "C6.wav",
+              "C5": "C6.wav",
+              "C6": "C6.wav",
+          },
+          baseUrl: "/audio/right-turn/",
       },
-    );
+      );
 
-    this.samplers.movement.connect(this.panner);
+      this.samplers.right.connect(this.panner);
+
+      this.samplers.movement = new Sampler(
+      {
+          urls: {
+              "C0": "C0.wav",
+              "C1": "C1.wav",
+              "C2": "C2.wav",
+              "C3": "C3.wav",
+              "C4": "C4.wav",
+              "C5": "C5.wav",
+              "C6": "C6.wav",
+          },
+          baseUrl: "/audio/long-bell/",
+      },
+      );
+
+      this.samplers.movement.connect(this.panner);
   }
 
   buildAnnouncementLookUpTable() {
-    this.announcementLookUpTable = {};
-    AnnouncementDefs.forEach(
+      this.announcementLookUpTable = {};
+      AnnouncementDefs.forEach(
       (value, key) => {
-        const player = new Player(value);
-        player.toDestination();
-        this.announcementLookUpTable[key] = player;
+          const player = new Player(value);
+          player.toDestination();
+          this.announcementLookUpTable[key] = player;
       },
-    );
+      );
   }
 
   playAnnouncement(soundName: AnnouncedSoundName) {
-    if (this.audioEnabled) {
-      const player = this.announcementLookUpTable[soundName];
-      if (player.loaded) {
-        player.start();
+      if (this.audioEnabled) {
+          const player = this.announcementLookUpTable[soundName];
+          if (player.loaded) {
+              player.start();
+          }
       }
-    }
   }
 
   // TODO: Add a better type for pitch.
   // TODO: Make this private, as it doesn't respect the audioEnabled setting.
   playPitchedSample(sampler: Sampler, pitch: string, releaseTime: number) {
-    // We can only play the sound if it's already loaded.
-    if (sampler.loaded) {
-      sampler.triggerAttackRelease([pitch], releaseTime);
-    }
+      // We can only play the sound if it's already loaded.
+      if (sampler.loaded) {
+          sampler.triggerAttackRelease([pitch], releaseTime);
+      }
   }
 
   playSoundForCharacterState(
-    samplerKey: string,
-    releaseTimeInMs: number,
-    characterState: CharacterState,
+      samplerKey: string,
+      releaseTimeInMs: number,
+      characterState: CharacterState,
   ) {
-    if (this.audioEnabled) {
-      const releaseTime = releaseTimeInMs / 1000;
-      const noteName = getNoteForState(characterState);
+      if (this.audioEnabled) {
+          const releaseTime = releaseTimeInMs / 1000;
+          const noteName = getNoteForState(characterState);
 
-      const sampler: Sampler = this.samplers[samplerKey];
+          const sampler: Sampler = this.samplers[samplerKey];
 
-      this.playPitchedSample(sampler, noteName, releaseTime);
+          this.playPitchedSample(sampler, noteName, releaseTime);
 
-      // Pan left/right to suggest the relative horizontal position.
-      // As we use a single Sampler grade, our best option for panning is
-      // to pan all sounds.  We can discuss adjusting this once we have
-      // multiple sound-producing elements in the environment.
-      const panningLevel = Math.min(1, Math.max(-1, 0.1 * characterState.xPos));
+          // Pan left/right to suggest the relative horizontal position.
+          // As we use a single Sampler grade, our best option for panning is
+          // to pan all sounds.  We can discuss adjusting this once we have
+          // multiple sound-producing elements in the environment.
+          const panningLevel = Math.min(1, Math.max(-1, 0.1 * characterState.xPos));
 
-      // TODO: Consider making the timing configurable or tying it to the movement timing.
-      this.panner.pan.rampTo(panningLevel, 0.5);
-    }
+          // TODO: Consider making the timing configurable or tying it to the movement timing.
+          this.panner.pan.rampTo(panningLevel, 0.5);
+      }
   }
 
   setAudioEnabled(value: boolean) {
-    this.audioEnabled = value;
+      this.audioEnabled = value;
   }
 };
