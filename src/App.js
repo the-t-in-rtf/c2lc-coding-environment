@@ -499,8 +499,8 @@ export default class App extends React.Component<{}, AppState> {
     render() {
         return (
             <IntlProvider
-                    locale={this.state.settings.language}
-                    messages={messages[this.state.settings.language]}>
+                locale={this.state.settings.language}
+                messages={messages[this.state.settings.language]}>
                 <div
                     onClick={this.handleRootClick}
                     onKeyDown={this.handleRootKeyDown}>
