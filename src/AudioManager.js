@@ -1,46 +1,8 @@
 // @flow
 
-import { Midi, Panner, Player, Sampler } from 'tone';
+import { Midi, Panner, Sampler } from 'tone';
 import CharacterState from './CharacterState';
-import type {AnnouncedSoundName} from './types';
-
-type AnnouncementLookupTable = {
-    forward1: Player,
-    forward2: Player,
-    forward3: Player,
-    left45: Player,
-    left90: Player,
-    left180: Player,
-    right45: Player,
-    right90: Player,
-    right180: Player,
-    add: Player,
-    deleteAll: Player,
-    delete: Player,
-    moveToPrevious: Player,
-    moveToNext: Player,
-    replace: Player
-}
-
-
-const AnnouncementDefs = new Map<string, string>([
-    ['forward1',      '/audio/announcements/Forward1.wav'],
-    ['forward2',      '/audio/announcements/Forward2.wav'],
-    ['forward3',      '/audio/announcements/Forward3.wav'],
-    ['left45',        '/audio/announcements/Left45.wav'],
-    ['left90',        '/audio/announcements/Left90.wav'],
-    ['left180',       '/audio/announcements/Left180.wav'],
-    ['right45',       '/audio/announcements/Right45.wav'],
-    ['right90',       '/audio/announcements/Right90.wav'],
-    ['right180',      '/audio/announcements/Right180.wav'],
-    ['add',           '/audio/announcements/AddMovement.wav'],
-    ['deleteAll',     '/audio/announcements/DeleteAll.wav'],
-    ['delete',        '/audio/announcements/DeleteMovement.wav'],
-    ['replace',       '/audio/announcements/ReplaceMovement.wav'],
-    ['moveToPrevious', '/audio/announcements/MoveToPrevious.wav'],
-    ['moveToNext',     '/audio/announcements/MoveToNext.wav'],
-
-]);
+import type {IntlShape} from 'react-intl';
 
 function octaveModulo (rawPitch: number) : number {
     const adjustedPitch = rawPitch % 12;
@@ -79,7 +41,6 @@ export function getNoteForState (characterState: CharacterState) : string {
 
 export default class AudioManager {
     audioEnabled: boolean;
-    announcementLookUpTable: AnnouncementLookupTable;
     panner: Panner;
     samplers: {
         movement: Sampler,
@@ -89,8 +50,6 @@ export default class AudioManager {
 
     constructor(audioEnabled: boolean) {
         this.audioEnabled = audioEnabled;
-
-        this.buildAnnouncementLookUpTable();
 
         this.panner = new Panner();
         this.panner.toDestination();
@@ -148,21 +107,15 @@ export default class AudioManager {
         this.samplers.movement.connect(this.panner);
     }
 
-    buildAnnouncementLookUpTable() {
-        this.announcementLookUpTable = {};
-        AnnouncementDefs.forEach((value, key) => {
-            const player = new Player(value);
-            player.toDestination();
-            this.announcementLookUpTable[key] = player;
-        });
-    }
-
-    playAnnouncement(soundName: AnnouncedSoundName) {
+    playAnnouncement(messageIdSuffix: string, intl: IntlShape) {
         if (this.audioEnabled) {
-            const player = this.announcementLookUpTable[soundName];
-            if (player.loaded) {
-                player.start();
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
             }
+            const messageId = "Announcement." + messageIdSuffix;
+            const toAnnounce = intl.formatMessage({ id: messageId});
+            const utterance = new SpeechSynthesisUtterance(toAnnounce);
+            window.speechSynthesis.speak(utterance);
         }
     }
 

@@ -21,7 +21,7 @@ type CommandPaletteCommandProps = {
 
 class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, {}> {
     handleClick = () => {
-        this.props.audioManager.playAnnouncement(this.props.commandName);
+        this.props.audioManager.playAnnouncement(this.props.commandName, this.props.intl);
         this.props.onChange(
             this.props.commandName === this.props.selectedCommandName ? null : this.props.commandName
         );
