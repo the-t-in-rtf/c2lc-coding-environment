@@ -246,10 +246,17 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.insertSelectedCommandIntoProgram(stepNumber);
     };
 
-    /* istanbul ignore next */
-    handleDropCommand = (stepNumber: number) => {
+    handleDropCommandOnAddNode = (stepNumber: number) => {
         this.insertSelectedCommandIntoProgram(stepNumber);
     };
+
+    handleDragCommandOverProgramArea = (event: Event) => {
+        event.preventDefault();
+    }
+
+    handleDropCommandOnProgramArea = (event: Event) => {
+        console.log("dropped on program area.");
+    }
 
     /* istanbul ignore next */
     handleCloseActionPanelFocusTrap = () => {
@@ -345,7 +352,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         this.props.editingDisabled ||
                         (!this.commandIsSelected() && !this.props.isDraggingCommand)}
                     onClick={this.handleClickAddNode}
-                    onDrop={this.handleDropCommand}
+                    onDrop={this.handleDropCommandOnAddNode}
                 />
                 <div className='ProgramBlockEditor__program-block-connector' />
                 <div className='ProgramBlockEditor__program-block-with-panel'>
@@ -384,7 +391,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         this.props.editingDisabled ||
                         (!this.commandIsSelected() && !this.props.isDraggingCommand)}
                     onClick={this.handleClickAddNode}
-                    onDrop={this.handleDropCommand}
+                    onDrop={this.handleDropCommandOnAddNode}
                 />
             </React.Fragment>
         )
@@ -398,7 +405,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         contents.push(this.makeEndOfProgramAddNodeSection(this.props.program.length));
 
         return (
-            <div className='ProgramBlockEditor__container'>
+            <div
+                className='ProgramBlockEditor__container'
+                onDragOver={this.handleDragCommandOverProgramArea}
+                onDrop={this.handleDropCommandOnProgramArea}
+            >
                 <div className='ProgramBlockEditor__header'>
                     <h2 className='ProgramBlockEditor__heading'>
                         <FormattedMessage id='ProgramBlockEditor.programHeading' />
