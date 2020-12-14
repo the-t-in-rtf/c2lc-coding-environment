@@ -247,15 +247,41 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     };
 
     handleDropCommandOnAddNode = (stepNumber: number) => {
+        // TODO: How to get to the event? Do we need this at all?
+        // event.preventDefault();
         this.insertSelectedCommandIntoProgram(stepNumber);
     };
 
-    handleDragCommandOverProgramArea = (event: Event) => {
+    handleDragCommandOverProgramArea = (event: DragEvent) => {
         event.preventDefault();
     }
 
-    handleDropCommandOnProgramArea = (event: Event) => {
-        console.log("dropped on program area.");
+    handleDropCommandOnProgramArea = (event: DragEvent) => {
+        event.preventDefault();
+
+        // Find the nearest add node.
+        let closestDistance = 100000;
+        let closestAddNodeIndex;
+
+        this.addNodeRefs.forEach((addNode, index) => {
+            const addNodeBounds = addNode.getBoundingClientRect();
+            const nodeCenterX = addNodeBounds.left + (addNodeBounds.width / 2);
+            const nodeCenterY = addNodeBounds.top + (addNodeBounds.height / 2);
+
+            // TODO: Figure out how to make flow aware of this.
+            const xDistanceSquared = Math.pow((event.clientX - nodeCenterX), 2);
+            const yDistanceSquared = Math.pow((event.clientY - nodeCenterY), 2);;
+            const distance = Math.sqrt(xDistanceSquared + yDistanceSquared);
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestAddNodeIndex = index;
+            }
+        });
+
+        if (closestAddNodeIndex !== undefined) {
+            // TODO: Make sure an announcement is triggered.
+            this.insertSelectedCommandIntoProgram(closestAddNodeIndex);
+        }
     }
 
     /* istanbul ignore next */
