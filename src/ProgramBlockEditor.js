@@ -246,17 +246,23 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.insertSelectedCommandIntoProgram(stepNumber);
     };
 
+    // TODO: Discuss removing this once we have a good way to test drag and drop.
+    /* istanbul ignore next */
     handleDropCommandOnAddNode = (stepNumber: number) => {
         // TODO: How to get to the event? Do we need this at all?
         // event.preventDefault();
         this.insertSelectedCommandIntoProgram(stepNumber);
     };
 
+    /* istanbul ignore next */
     handleDragCommandOverProgramArea = (event: DragEvent) => {
         event.preventDefault();
     }
 
+    // TODO: Discuss removing this once we have a good way to test drag and drop.
+    /* istanbul ignore next */
     handleDropCommandOnProgramArea = (event: DragEvent) => {
+        debugger;
         event.preventDefault();
 
         // Find the nearest add node.
