@@ -261,7 +261,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
         // Find the nearest add node.
         let closestDistance = 100000;
-        let closestAddNodeIndex;
+        let closestAddNodeIndex = 0;
 
         this.addNodeRefs.forEach((addNode, index) => {
             const addNodeBounds = addNode.getBoundingClientRect();
@@ -278,10 +278,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             }
         });
 
-        if (closestAddNodeIndex !== undefined) {
-            // TODO: Make sure an announcement is triggered.
-            this.insertSelectedCommandIntoProgram(closestAddNodeIndex);
-        }
+        // TODO: Make sure an announcement is triggered.
+        this.insertSelectedCommandIntoProgram(closestAddNodeIndex);
     }
 
     /* istanbul ignore next */
