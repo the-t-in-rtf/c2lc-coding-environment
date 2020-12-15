@@ -26,6 +26,7 @@ function mountAddNode(props) {
                     disabled: false,
                     'aria-label': 'some aria label',
                     isDraggingCommand: false,
+                    closestAddNodeIndex: -1,
                     onClick: mockClickHandler,
                     onDrop: mockDropHandler
                 },

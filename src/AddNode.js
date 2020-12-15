@@ -12,6 +12,7 @@ type AddNodeProps = {
     disabled: boolean,
     'aria-label': string,
     isDraggingCommand: boolean,
+    closestAddNodeIndex: number,
     onClick: (stepNumber: number) => void,
     onDrop: (stepNumber: number) => void
 };
@@ -54,7 +55,8 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
             props.isDraggingCommand && 'AddNode--is-dragging-command'
         );
 
-        if (props.expandedMode || (isDragOver && !props.disabled)) {
+        const isNearestDragNode = ( props.programStepNumber === props.closestAddNodeIndex);
+        if (props.expandedMode || isNearestDragNode || (isDragOver && !props.disabled)) {
             return (
                 <div className={addNodeClasses}>
                     <div className='AddNode__drop-area-container'>
@@ -66,7 +68,7 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
                         />
                     </div>
                     <AriaDisablingButton
-                        className='AddNode__expanded-button'
+                        className={"AddNode__expanded-button" + (isNearestDragNode ? " isDragTarget" : "")}
                         data-stepnumber={props.programStepNumber}
                         // $FlowFixMe: Use something less generic here.
                         ref={ref}
@@ -83,6 +85,7 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
                 <div className={addNodeClasses}>
                     <div className='AddNode__drop-area-container'>
                         <div className='AddNode__collapsed-drop-area'
+                            ref={ref}
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
                             onDrop={handleDrop}

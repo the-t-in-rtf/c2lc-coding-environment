@@ -42,7 +42,8 @@ type ProgramBlockEditorProps = {
 type ProgramBlockEditorState = {
     showConfirmDeleteAll: boolean,
     focusedActionPanelOptionName: ?string,
-    replaceIsActive: boolean
+    replaceIsActive: boolean,
+    closestAddNodeIndex: number
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
@@ -64,7 +65,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.state = {
             showConfirmDeleteAll : false,
             focusedActionPanelOptionName: null,
-            replaceIsActive: false
+            replaceIsActive: false,
+            closestAddNodeIndex: -1
         }
     }
 
@@ -155,12 +157,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             }
         });
         return closestAddNodeIndex;
-    }
-
-    clearNearestAddNodeHighlighting = () => {
-        this.addNodeRefs.forEach((addNode, index) => {
-            addNode.classList.remove("isEffectiveTarget");
-        });
     }
 
     // Handlers
@@ -288,39 +284,31 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
         const closestAddNodeIndex = this.findAddNodeClosestToEvent(event);
 
-        this.addNodeRefs.forEach((addNode, index) => {
-            const isClosestAddNode = (index === closestAddNodeIndex);
-            // If all buttons are not expanded, expand the add button that's the effective target.
-            if (!this.props.addNodeExpandedMode) {
-                if (index !== this.addNodeRefs.size - 1) {
-                    addNode.setAttribute("aria-disabled",  isClosestAddNode ? "false" : "true");
-                }
-            }
-
-            if (isClosestAddNode) {
-                addNode.classList.add("isEffectiveTarget");
-            }
-            else {
-                addNode.classList.remove("isEffectiveTarget");
-            }
+        this.setState({
+            closestAddNodeIndex: closestAddNodeIndex
         });
     }
+
+    handleDragLeaveOnProgramArea = (event: DragEvent) => {
+        this.setState({
+            closestAddNodeIndex: -1
+        });
+    }
+
 
     // TODO: Discuss removing this once we have a good way to test drag and drop.
     /* istanbul ignore next */
     handleDropCommandOnProgramArea = (event: DragEvent) => {
         event.preventDefault();
 
-        this.clearNearestAddNodeHighlighting();
+        // Nothing should be highlighted once the drop completes.
+        this.setState({
+            closestAddNodeIndex: -1
+        });
 
         const closestAddNodeIndex = this.findAddNodeClosestToEvent(event);
-
         // TODO: Make sure an announcement is triggered.
         this.insertSelectedCommandIntoProgram(closestAddNodeIndex);
-    }
-
-    handleDragLeaveOnProgramArea = (event: DragEvent) => {
-        this.clearNearestAddNodeHighlighting();
     }
 
     /* istanbul ignore next */
@@ -413,6 +401,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     expandedMode={this.props.addNodeExpandedMode}
                     isDraggingCommand={this.props.isDraggingCommand}
                     programStepNumber={programStepNumber}
+                    closestAddNodeIndex={this.state.closestAddNodeIndex}
                     disabled={
                         this.props.editingDisabled ||
                         (!this.commandIsSelected() && !this.props.isDraggingCommand)}
@@ -452,6 +441,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     expandedMode={true}
                     isDraggingCommand={this.props.isDraggingCommand}
                     programStepNumber={programStepNumber}
+                    closestAddNodeIndex={this.state.closestAddNodeIndex}
                     disabled={
                         this.props.editingDisabled ||
                         (!this.commandIsSelected() && !this.props.isDraggingCommand)}

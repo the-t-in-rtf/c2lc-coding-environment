@@ -76,6 +76,6 @@ button.btn.AddNode__expanded-button svg {
     height: $addNodeDropAreaHeight;
 }
 
-.AddNode__expanded-button.isEffectiveTarget {
+.AddNode__expanded-button.isDragTarget {
     box-shadow: 0 0 0 0.4rem #79F1CD;
 }
