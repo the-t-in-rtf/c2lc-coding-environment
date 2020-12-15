@@ -135,6 +135,34 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
+    findAddNodeClosestToEvent = (event: DragEvent): number => {
+        // Find the nearest add node.
+        let closestDistance = 100000;
+        let closestAddNodeIndex = 0;
+
+        this.addNodeRefs.forEach((addNode, index) => {
+            const addNodeBounds = addNode.getBoundingClientRect();
+            const nodeCenterX = addNodeBounds.left + (addNodeBounds.width / 2);
+            const nodeCenterY = addNodeBounds.top + (addNodeBounds.height / 2);
+
+            // TODO: Figure out how to make flow aware of this.
+            const xDistanceSquared = Math.pow((event.clientX - nodeCenterX), 2);
+            const yDistanceSquared = Math.pow((event.clientY - nodeCenterY), 2);;
+            const distance = Math.sqrt(xDistanceSquared + yDistanceSquared);
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestAddNodeIndex = index;
+            }
+        });
+        return closestAddNodeIndex;
+    }
+
+    clearNearestAddNodeHighlighting = () => {
+        this.addNodeRefs.forEach((addNode, index) => {
+            addNode.classList.remove("isEffectiveTarget");
+        });
+    }
+
     // Handlers
 
     handleClickDeleteAll = () => {
@@ -257,35 +285,42 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     /* istanbul ignore next */
     handleDragCommandOverProgramArea = (event: DragEvent) => {
         event.preventDefault();
+
+        const closestAddNodeIndex = this.findAddNodeClosestToEvent(event);
+
+        this.addNodeRefs.forEach((addNode, index) => {
+            const isClosestAddNode = (index === closestAddNodeIndex);
+            // If all buttons are not expanded, expand the add button that's the effective target.
+            if (!this.props.addNodeExpandedMode) {
+                if (index !== this.addNodeRefs.size - 1) {
+                    addNode.setAttribute("aria-disabled",  isClosestAddNode ? "false" : "true");
+                }
+            }
+
+            if (isClosestAddNode) {
+                addNode.classList.add("isEffectiveTarget");
+            }
+            else {
+                addNode.classList.remove("isEffectiveTarget");
+            }
+        });
     }
 
     // TODO: Discuss removing this once we have a good way to test drag and drop.
     /* istanbul ignore next */
     handleDropCommandOnProgramArea = (event: DragEvent) => {
-        debugger;
         event.preventDefault();
 
-        // Find the nearest add node.
-        let closestDistance = 100000;
-        let closestAddNodeIndex = 0;
+        this.clearNearestAddNodeHighlighting();
 
-        this.addNodeRefs.forEach((addNode, index) => {
-            const addNodeBounds = addNode.getBoundingClientRect();
-            const nodeCenterX = addNodeBounds.left + (addNodeBounds.width / 2);
-            const nodeCenterY = addNodeBounds.top + (addNodeBounds.height / 2);
-
-            // TODO: Figure out how to make flow aware of this.
-            const xDistanceSquared = Math.pow((event.clientX - nodeCenterX), 2);
-            const yDistanceSquared = Math.pow((event.clientY - nodeCenterY), 2);;
-            const distance = Math.sqrt(xDistanceSquared + yDistanceSquared);
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestAddNodeIndex = index;
-            }
-        });
+        const closestAddNodeIndex = this.findAddNodeClosestToEvent(event);
 
         // TODO: Make sure an announcement is triggered.
         this.insertSelectedCommandIntoProgram(closestAddNodeIndex);
+    }
+
+    handleDragLeaveOnProgramArea = (event: DragEvent) => {
+        this.clearNearestAddNodeHighlighting();
     }
 
     /* istanbul ignore next */
@@ -438,6 +473,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             <div
                 className='ProgramBlockEditor__container'
                 onDragOver={this.handleDragCommandOverProgramArea}
+                onDragLeave={this.handleDragLeaveOnProgramArea}
                 onDrop={this.handleDropCommandOnProgramArea}
             >
                 <div className='ProgramBlockEditor__header'>

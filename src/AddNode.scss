@@ -75,3 +75,7 @@ button.btn.AddNode__expanded-button svg {
     width: (2 * $addNodeDropMargin) + $widthOfCollapsedIcon;
     height: $addNodeDropAreaHeight;
 }
+
+.AddNode__expanded-button.isEffectiveTarget {
+    box-shadow: 0 0 0 0.4rem #79F1CD;
+}
