@@ -137,6 +137,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
+    // TODO: Discuss removing this once we have a good way to test drag and drop.
+    /* istanbul ignore next */
     findAddNodeClosestToEvent = (event: DragEvent): number => {
         // Find the nearest add node.
         let closestDistance = 100000;
