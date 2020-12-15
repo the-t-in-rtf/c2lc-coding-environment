@@ -466,9 +466,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         return (
             <div
                 className='ProgramBlockEditor__container'
-                onDragOver={this.handleDragCommandOverProgramArea}
-                onDragLeave={this.handleDragLeaveOnProgramArea}
-                onDrop={this.handleDropCommandOnProgramArea}
             >
                 <div className='ProgramBlockEditor__header'>
                     <h2 className='ProgramBlockEditor__heading'>
@@ -507,7 +504,12 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         </div>
                     </h3>
                 </div>
-                <div className={'ProgramBlockEditor__program-sequence-scroll-container' + (!this.props.editingDisabled && this.props.isDraggingCommand ? " isDragging": "") } ref={this.programSequenceContainerRef}>
+                <div
+                    className={'ProgramBlockEditor__program-sequence-scroll-container' + (!this.props.editingDisabled && this.props.isDraggingCommand ? " isDragging": "") } ref={this.programSequenceContainerRef}
+                    onDragOver={this.handleDragCommandOverProgramArea}
+                    onDragLeave={this.handleDragLeaveOnProgramArea}
+                    onDrop={this.handleDropCommandOnProgramArea}
+                >
                     <div className='ProgramBlockEditor__program-sequence'>
                         <div className='ProgramBlockEditor__start-indicator'>
                             {this.props.intl.formatMessage({id:'ProgramBlockEditor.startIndicator'})}
