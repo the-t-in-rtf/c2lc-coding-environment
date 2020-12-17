@@ -1,6 +1,6 @@
 // @flow
 
-import type { RunningState } from './types';
+import App from './App';
 import ProgramSequence from './ProgramSequence';
 
 /* eslint-disable no-use-before-define */
@@ -10,18 +10,12 @@ export type CommandHandler = { (Interpreter, stepTimeMs: number): Promise<void> 
 export default class Interpreter {
     commands: { [command: string]: { [namespace: string]: CommandHandler } };
     stepTimeMs: number;
-    programSequence: ProgramSequence;
-    runningState: RunningState;
-    requestIncrementProgramCounter: () => void;
-    requestSetRunningState: (runningState: RunningState) => void;
+    app: App;
 
-    constructor(stepTimeMs: number, programSequence: ProgramSequence, requestIncrementProgramCounter: () => void, requestSetRunningState: (runningState: RunningState) => void) {
+    constructor(stepTimeMs: number, app: App) {
         this.commands = {};
         this.stepTimeMs = stepTimeMs;
-        this.programSequence = programSequence;
-        this.runningState = 'stopped';
-        this.requestIncrementProgramCounter = requestIncrementProgramCounter;
-        this.requestSetRunningState = requestSetRunningState;
+        this.app = app;
     }
 
     addCommandHandler(command: string, namespace: string, handler: CommandHandler) {
@@ -33,36 +27,28 @@ export default class Interpreter {
         commandNamespaces[namespace] = handler;
     }
 
-    setProgramSequence(programSequence: ProgramSequence) {
-        this.programSequence = programSequence;
-    }
-
-    setRunningState(runningState: RunningState) {
-        this.runningState = runningState;
-    }
-
     setStepTime(stepTimeMs: number) {
         this.stepTimeMs = stepTimeMs;
     }
 
-    run(): Promise<void> {
+    startRun(): Promise<void> {
         return new Promise((resolve, reject) => {
             this.continueRun(resolve, reject);
         });
     }
 
     continueRun(resolve: (result:any) => void, reject: (error: any) => void): void {
-        if (this.runningState === 'running') {
-            if (this.atEnd()) {
-                this.requestSetRunningState('stopped');
+        if (this.app.getRunningState() === 'running') {
+            const programSequence = this.app.getProgramSequence();
+            if (this.atEnd(programSequence)) {
+                this.app.stopPlaying();
                 resolve();
             } else {
-                //this.onRunningStateChange({isRunning: this.isRunning, activeStep: this.programCounter});
-                this.step().then(() => {
+                this.step(programSequence).then(() => {
                     this.continueRun(resolve, reject);
                 }, (error: Error) => {
                     // Reject the run Promise when the step Promise is rejected
-                    this.requestSetRunningState('stopped');
+                    this.app.stopPlaying();
                     reject(error);
                 });
             }
@@ -71,21 +57,22 @@ export default class Interpreter {
         }
     }
 
-    atEnd(): boolean {
-        return this.programSequence.getProgramCounter() >= this.programSequence.getProgramLength();
+    atEnd(programSequence: ProgramSequence): boolean {
+        return programSequence.getProgramCounter() >= programSequence.getProgramLength();
     }
 
-    step(): Promise<void> {
+    step(programSequence: ProgramSequence): Promise<void> {
         return new Promise((resolve, reject) => {
-            if (this.atEnd()) {
+            if (this.atEnd(programSequence)) {
                 // We're at the end, nothing to do
                 resolve();
             } else {
-                this.doCommand(this.programSequence.getCurrentProgramStep()).then(() => {
+                this.doCommand(programSequence.getCurrentProgramStep()).then(() => {
                     // When the command has completed, increment
                     // the programCounter and resolve the step Promise
-                    this.requestIncrementProgramCounter();
-                    resolve();
+                    this.app.incrementProgramCounter(() => {
+                        resolve();
+                    });
                 }, (error: Error) => {
                     reject(error);
                 });
@@ -109,7 +96,7 @@ export default class Interpreter {
             promises.push(handler(this, stepTimeMs));
         }
         return Promise.all(promises);
-    };
+    }
 
     lookUpCommandHandlers(command: string): Array<CommandHandler> {
         const commandNamespaces = this.commands[command];

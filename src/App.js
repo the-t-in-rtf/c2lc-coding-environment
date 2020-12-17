@@ -102,7 +102,7 @@ export default class App extends React.Component<{}, AppState> {
             runningState: 'stopped'
         };
 
-        this.interpreter = new Interpreter(1000, this.state.programSequence, this.incrementProgramCounter, this.handleRunningStateChange);
+        this.interpreter = new Interpreter(1000, this);
 
         this.speedLookUp = [2000, 1500, 1000, 500, 250];
 
@@ -326,25 +326,29 @@ export default class App extends React.Component<{}, AppState> {
         }
     }
 
-    incrementProgramCounter = (programCounter: number) => {
+    // API for Interpreter
+
+    getProgramSequence(): ProgramSequence {
+        return this.state.programSequence;
+    }
+
+    getRunningState(): RunningState {
+        return this.state.runningState;
+    }
+
+    incrementProgramCounter(callback): void {
         this.setState((state) => {
             return {
                 programSequence: state.programSequence.incrementProgramCounter()
             }
-        });
-    };
-
-    resetProgramCounter = () => {
-        this.setState((state) => {
-            return {
-                programSequence: state.programSequence.updateProgramCounter(0)
-            }
-        });
-    };
-
-    handleRunningStateChange = (runningState: RunningState) => {
-        this.setState({ runningState });
+        }, callback);
     }
+
+    stopPlaying(): void {
+        this.setState({ runningState: 'stopped' });
+    }
+
+    // Handlers
 
     handleChangeProgram = (program: Program) => {
         this.setState({
@@ -669,14 +673,9 @@ export default class App extends React.Component<{}, AppState> {
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
         }
-        if (this.state.programSequence !== prevState.programSequence) {
-            this.interpreter.setProgramSequence(this.state.programSequence);
-        }
-        if (this.state.runningState !== prevState.runningState) {
-            this.interpreter.setRunningState(this.state.runningState);
-            if (this.state.runningState === 'running') {
-                this.interpreter.run();
-            }
+        if (this.state.runningState !== prevState.runningState
+                && this.state.runningState === 'running') {
+            this.interpreter.startRun();
         }
         /* Dash connection removed for version 0.5
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
