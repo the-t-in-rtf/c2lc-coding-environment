@@ -1,4 +1,5 @@
 // @flow
+import CharacterState from './CharacterState';
 
 export type CommandName =
     'forward1' | 'forward2' | 'forward3' |
@@ -27,6 +28,15 @@ export type ArrayLike<T> = {
     length: number,
     item: (number:number) => T
 };
+
+// TODO: Discuss how far to go in mocking this up.
+export type AudioContext = any;
+
+export interface AudioManager {
+    playAnnouncement(soundName: AnnouncedSoundName) : void;
+    playSoundForCharacterState(samplerKey: string, releaseTimeInMs: number, characterState: CharacterState) : void;
+    setAudioEnabled(value: boolean) : void;
+}
 
 // https://developer.mozilla.org/en-US/docs/Web/API/SpeechGrammar
 export type SpeechGrammar = {

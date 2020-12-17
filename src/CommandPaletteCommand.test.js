@@ -5,11 +5,11 @@ import Adapter from 'enzyme-adapter-react-16';
 import { shallow, configure } from 'enzyme';
 import CommandBlock from './CommandBlock';
 import { createIntl } from 'react-intl';
-import AudioManager from './AudioManager';
+import AudioManagerImpl from './AudioManagerImpl';
 import CommandPaletteCommand from './CommandPaletteCommand';
 
 // Mocks
-jest.mock('./AudioManager');
+jest.mock('./AudioManagerImpl');
 
 configure({ adapter: new Adapter()});
 
@@ -67,9 +67,9 @@ test('Pressed state is true when selecedCommandName is this command', () => {
 });
 
 test('Clicking the button toggles selectedCommandName and plays its sound', () => {
-    const audioManagerInstance = new AudioManager(true);
+    const audioManagerInstance = new AudioManagerImpl(true);
     // $FlowFixMe: Flow doesn't know about the Jest mock API
-    const audioManagerMock = AudioManager.mock.instances[0];
+    const audioManagerMock = AudioManagerImpl.mock.instances[0];
     const mockChangeHandler = jest.fn();
 
     const wrapper = shallow(
