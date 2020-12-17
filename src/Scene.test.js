@@ -203,13 +203,12 @@ describe('The ARIA label should tell there is a robot character with its positio
         [-100,   0, 0, 'Scene, 17 by 9 grid with a robot character outside of the scene to the left of the scene, facing up'],
         [-100, -10, 0, 'Scene, 17 by 9 grid with a robot character outside of the scene to the upper left of the scene, facing up']
     ])('x=%f, y=%f, direction=%i', (x, y, direction, expectedLabel) => {
-            const sceneWrapper = createMountScene({
-                dimensions: new SceneDimensions(17, 9),
-                characterState: new CharacterState(x, y, direction, [])
-            });
-            expect(findScene(sceneWrapper).get(0).props['aria-label']).toBe(expectedLabel);
-        }
-    );
+        const sceneWrapper = createMountScene({
+            dimensions: new SceneDimensions(17, 9),
+            characterState: new CharacterState(x, y, direction, [])
+        });
+        expect(findScene(sceneWrapper).get(0).props['aria-label']).toBe(expectedLabel);
+    });
 });
 
 describe('When the Scene renders', () => {
