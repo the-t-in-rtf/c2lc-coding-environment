@@ -2,7 +2,6 @@
 
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type {IntlShape} from 'react-intl';
-import * as ProgramUtils from './ProgramUtils';
 import type {Program} from './types';
 import React from 'react';
 import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
@@ -25,7 +24,6 @@ import './ProgramBlockEditor.scss';
 
 type ProgramBlockEditorProps = {
     intl: IntlShape,
-    activeProgramStepNum: ?number,
     actionPanelStepIndex: ?number,
     editingDisabled: boolean,
     interpreterIsRunning: boolean,
@@ -100,14 +98,14 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         if (this.props.selectedAction) {
             this.focusCommandBlockIndex = index;
             this.scrollToAddNodeIndex = index + 1;
-            this.props.onChangeProgram(ProgramUtils.insert(this.props.program,
-                index, this.props.selectedAction, 'none'));
-            this.props.programSequence.insertStep(index, this.props.selectedAction);
+            this.props.onChangeProgramSequence(
+                this.props.programSequence.insertStep(index, this.props.selectedAction)
+            );
         }
     }
 
     programStepIsActive(programStepNumber: number) {
-        if (this.props.programSequence.getProgramRunningState() === true) {
+        if (this.props.runningState === 'running') {
             return (this.props.programSequence.getProgramCounter()) === programStepNumber;
         } else {
             return false;
@@ -164,22 +162,24 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.props.audioManager.playAnnouncement('delete');
         // If there are steps following the one being deleted, focus the
         // next step. Otherwise, focus the final add node.
-        if (index < this.props.program.length - 1) {
+        if (index < this.props.programSequence.getProgramLength() - 1) {
             this.focusCommandBlockIndex = index;
         } else {
             this.focusAddNodeIndex = index;
         }
-        this.props.onChangeProgram(ProgramUtils.deleteStep(this.props.program, index));
-        this.props.programSequence.deleteStep(index);
+        this.props.onChangeProgramSequence(
+            this.props.programSequence.deleteStep(index)
+        );
         this.closeActionPanel();
     };
 
     handleActionPanelReplaceStep = (index: number) => {
         this.props.audioManager.playAnnouncement('replace');
         if (this.props.selectedAction) {
-            if (this.props.program[index] !== this.props.selectedAction) {
-                this.props.onChangeProgram(ProgramUtils.overwrite(this.props.program,
-                        index, this.props.selectedAction, 'none'));
+            if (this.props.programSequence.getProgramStepAt(index) !== this.props.selectedAction) {
+                this.props.onChangeProgramSequence(
+                    this.props.programSequence.overwriteStep(index, this.props.selectedAction)
+                );
                 this.setState({
                     replaceIsActive: false
                 });
@@ -199,36 +199,28 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     handleActionPanelMoveToPreviousStep = (index: number) => {
         this.props.audioManager.playAnnouncement('moveToPrevious');
-        if (this.props.program[index - 1] != null) {
+        if (this.props.programSequence.getProgramStepAt(index - 1) != null) {
             const previousStepIndex = index - 1;
             this.setState({
                 focusedActionPanelOptionName: 'moveToPreviousStep'
             });
-            this.props.onChangeActionPanelStepIndex(previousStepIndex)
-            this.props.onChangeProgram(
-                ProgramUtils.swapPosition(
-                    this.props.program,
-                    index,
-                    previousStepIndex
-                )
+            this.props.onChangeActionPanelStepIndex(previousStepIndex);
+            this.props.onChangeProgramSequence(
+                this.props.programSequence.swapStep(index, previousStepIndex)
             );
         }
     };
 
     handleActionPanelMoveToNextStep = (index: number) => {
         this.props.audioManager.playAnnouncement('moveToNext');
-        if (this.props.program[index + 1] != null) {
+        if (this.props.programSequence.getProgramStepAt(index + 1) != null) {
             const nextStepIndex = index + 1;
             this.setState({
                 focusedActionPanelOptionName: 'moveToNextStep'
             });
             this.props.onChangeActionPanelStepIndex(nextStepIndex);
-            this.props.onChangeProgram(
-                ProgramUtils.swapPosition(
-                    this.props.program,
-                    index,
-                    nextStepIndex
-                )
+            this.props.onChangeProgramSequence(
+                this.props.programSequence.swapStep(index, nextStepIndex)
             );
         }
     };
@@ -322,8 +314,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     { id: 'ProgramBlockEditor.betweenBlocks' },
                     {
                         command: this.props.intl.formatMessage({id: `Command.${this.props.selectedAction}`}),
-                        prevCommand: `${programStepNumber}, ${this.props.intl.formatMessage({id: `Command.${this.props.program[programStepNumber-1]}`})}`,
-                        postCommand: `${programStepNumber+1}, ${this.props.intl.formatMessage({id: `Command.${this.props.program[programStepNumber]}`})}`
+                        prevCommand: `${programStepNumber}, ${this.props.intl.formatMessage({id: `Command.${this.props.programSequence.getProgramStepAt(programStepNumber-1)}`})}`,
+                        postCommand: `${programStepNumber+1}, ${this.props.intl.formatMessage({id: `Command.${this.props.programSequence.getProgramStepAt(programStepNumber)}`})}`
                     }
                 );
             }
@@ -360,6 +352,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                     focusedOptionName={this.state.focusedActionPanelOptionName}
                                     selectedCommandName={this.props.selectedAction}
                                     program={this.props.program}
+                                    programSequence={this.props.programSequence}
                                     pressedStepIndex={programStepNumber}
                                     onDelete={this.handleActionPanelDeleteStep}
                                     onReplace={this.handleActionPanelReplaceStep}
@@ -395,11 +388,11 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     render() {
-        const contents = this.props.program.map((command, stepNumber) => {
+        const contents = this.props.programSequence.getProgram().map((command, stepNumber) => {
             return this.makeProgramBlockSection(stepNumber, command);
         });
 
-        contents.push(this.makeEndOfProgramAddNodeSection(this.props.program.length));
+        contents.push(this.makeEndOfProgramAddNodeSection(this.props.programSequence.getProgramLength()));
 
         return (
             <div className='ProgramBlockEditor__container'>
@@ -478,13 +471,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             }
             this.focusAddNodeIndex = null;
         }
-        // if (this.props.activeProgramStepNum != null) {
-        //     const element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
-        //     if (element) {
-        //         this.scrollProgramSequenceContainer(element);
-        //     }
-        // }
-        if (this.props.programSequence.getProgramRunningState() === true) {
+        if (this.props.runningState === 'running') {
             const element = this.commandBlockRefs.get(this.props.programSequence.getProgramCounter());
             if (element) {
                 this.scrollProgramSequenceContainer(element);

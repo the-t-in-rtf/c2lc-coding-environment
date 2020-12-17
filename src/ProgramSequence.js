@@ -1,21 +1,22 @@
 // @flow
 
-import * as ProgramUtils from './ProgramUtils';
-import type { Program, RunningState, CommandName } from './types';
+import type { Program, CommandName } from './types';
 
 export default class ProgramSequence {
     program: Program;
-    programCounter: ?number;
-    isRunning: RunningState;
+    programCounter: number;
 
-    constructor() {
-        this.program = [];
-        this.programCounter = 0;
-        this.isRunning = false;
+    constructor(program: Program, programCounter: number) {
+        this.program = program;
+        this.programCounter = programCounter;
     }
 
     getProgram(): Program {
         return this.program;
+    }
+
+    getProgramLength(): number {
+        return this.program.length;
     }
 
     getProgramCounter(): number {
@@ -26,46 +27,77 @@ export default class ProgramSequence {
         return this.program[this.programCounter];
     }
 
-    getProgramRunningState(): RunningState {
-        return this.isRunning;
+    getProgramStepAt(index: number): CommandName {
+        return this.program[index];
     }
 
-    updateProgram(program: Program) {
-        this.program = program;
+    updateProgram(program: Program): ProgramSequence {
+        return new ProgramSequence(program, this.programCounter);
     }
 
-    updateRunningState(runningState: RunningState) {
-        this.isRunning = runningState;
+    updateProgramCounter(programCounter: number): ProgramSequence {
+        return new ProgramSequence(this.program, programCounter);
     }
 
-    updateProgramCounter(value: number) {
-        this.programCounter = value;
+    updateProgramAndProgramCounter(program: Program, programCounter: number): ProgramSequence {
+        return new ProgramSequence(program, programCounter);
     }
 
-    insertStep(index: number, command: string) {
-        if (this.isRunning === 'paused') {
-            if (index <= this.programCounter) {
-                this.program = ProgramUtils.insert(this.program, index, command, 'none');
-                this.programCounter ++;
-            } else {
-                this.program = ProgramUtils.insert(this.program, index, command, 'none');
-            }
-        } else if (!this.isRunning) {
-            this.program = ProgramUtils.insert(this.program, index, command, 'none');
-        }
+    incrementProgramCounter(): ProgramSequence {
+        return new ProgramSequence(this.program, this.programCounter + 1);
     }
 
-    deleteStep(index: number) {
-        if (this.isRunning === 'paused') {
-            // what happens when paused and delete everything?
-            if (index <= this.programCounter && this.program.length > 1) {
-                this.program = ProgramUtils.deleteStep(this.program, index)
-                this.programCounter --;
-            } else {
-                this.program = ProgramUtils.deleteStep(this.program, index);
-            }
+    overwriteStep(index: number, command: string): ProgramSequence {
+        return this.updateProgram(this.overwrite(index, command));
+    }
+
+    insertStep(index: number, command: string): ProgramSequence {
+        if (index <= this.programCounter) {
+            return this.updateProgramAndProgramCounter(this.insert(index, command), this.programCounter + 1);
         } else {
-            this.program = ProgramUtils.deleteStep(this.program, index);
+            return this.updateProgram(this.insert(index, command));
         }
     }
+
+    deleteStep(index: number): ProgramSequence {
+        if (index < this.programCounter && this.program.length > 1) {
+            return this.updateProgramAndProgramCounter(this.delete(index), this.programCounter - 1);
+        } else {
+            return this.updateProgram(this.delete(index));
+        }
+    }
+
+    swapStep(indexFrom: number, indexTo: number): ProgramSequence {
+        return this.updateProgram(this.swapPosition(indexFrom, indexTo));
+    }
+
+    swapPosition(indexFrom: number, indexTo: number): Program {
+        // Make a shallow copy before we add to the program
+        const program = this.program.slice();
+        if (program[indexFrom] == null || program[indexTo] == null) {
+            return program;
+        }
+        const currentStep = program[indexFrom];
+        program[indexFrom] = program[indexTo];
+        program[indexTo] = currentStep;
+        return program;
+    }
+
+    insert(index: number, command: string): Program {
+        const program = this.program.slice();
+        program.splice(index, 0, command);
+        return program;
+    };
+
+    overwrite(index: number, command: string): Program {
+        const program = this.program.slice();
+        program[index] = command;
+        return program;
+    };
+
+    delete(index: number): Program {
+        const program = this.program.slice();
+        program.splice(index, 1);
+        return program;
+    };
 }

@@ -1,35 +1,27 @@
 // @flow
 
-import type {Program} from './types';
+import type { RunningState } from './types';
 import ProgramSequence from './ProgramSequence';
 
 /* eslint-disable no-use-before-define */
 export type CommandHandler = { (Interpreter, stepTimeMs: number): Promise<void> };
 /* eslint-enable no-use-before-define */
 
-export type InterpreterRunningState = { isRunning: boolean, activeStep: ?number }
-// TODO: I don't think that Interpreter having memory is quite the right
-//       factoring. But this will evolve. Maybe something like a parameterized
-//       Project<T> that contains program and memory.
-
 export default class Interpreter {
     commands: { [command: string]: { [namespace: string]: CommandHandler } };
-    program: Program;
-    programCounter: number;
-    memory: { [string]: any };
-    isRunning: boolean;
     stepTimeMs: number;
-    onRunningStateChange: (InterpreterRunningState) => void;
+    programSequence: ProgramSequence;
+    runningState: RunningState;
+    requestIncrementProgramCounter: () => void;
+    requestSetRunningState: (runningState: RunningState) => void;
 
-    constructor(onRunningStateChange: (InterpreterRunningState) => void, stepTimeMs: number, programSequence: ProgramSequence) {
+    constructor(stepTimeMs: number, programSequence: ProgramSequence, requestIncrementProgramCounter: () => void, requestSetRunningState: (runningState: RunningState) => void) {
         this.commands = {};
-        this.program = [];
-        this.programCounter = 0;
-        this.memory = {};
-        this.isRunning = false;
-        this.onRunningStateChange = onRunningStateChange;
         this.stepTimeMs = stepTimeMs;
         this.programSequence = programSequence;
+        this.runningState = 'stopped';
+        this.requestIncrementProgramCounter = requestIncrementProgramCounter;
+        this.requestSetRunningState = requestSetRunningState;
     }
 
     addCommandHandler(command: string, namespace: string, handler: CommandHandler) {
@@ -41,40 +33,36 @@ export default class Interpreter {
         commandNamespaces[namespace] = handler;
     }
 
-    setProgram(program: Program): void {
-        this.program = program;
-        this.programCounter = 0;
+    setProgramSequence(programSequence: ProgramSequence) {
+        this.programSequence = programSequence;
     }
 
-    run(program: Program): Promise<void> {
-        this.program = program;
-        this.programCounter = 0;
-        this.isRunning = true;
-        this.programSequence.updateProgramCounter(0);
-        this.programSequence.updateRunningState(true);
+    setRunningState(runningState: RunningState) {
+        this.runningState = runningState;
+    }
+
+    setStepTime(stepTimeMs: number) {
+        this.stepTimeMs = stepTimeMs;
+    }
+
+    run(): Promise<void> {
         return new Promise((resolve, reject) => {
             this.continueRun(resolve, reject);
         });
     }
 
     continueRun(resolve: (result:any) => void, reject: (error: any) => void): void {
-        if (this.isRunning) {
+        if (this.runningState === 'running') {
             if (this.atEnd()) {
-                this.isRunning = false;
-                this.onRunningStateChange({isRunning: this.isRunning, activeStep: null});
-                this.programSequence.updateRunningState(false);
-                this.programSequence.updateProgramCounter(null);
+                this.requestSetRunningState('stopped');
                 resolve();
             } else {
-                this.onRunningStateChange({isRunning: this.isRunning, activeStep: this.programCounter});
+                //this.onRunningStateChange({isRunning: this.isRunning, activeStep: this.programCounter});
                 this.step().then(() => {
                     this.continueRun(resolve, reject);
                 }, (error: Error) => {
                     // Reject the run Promise when the step Promise is rejected
-                    this.isRunning = false;
-                    this.onRunningStateChange({isRunning: this.isRunning, activeStep: null});
-                    this.programSequence.updateRunningState(false);
-                    this.programSequence.updateProgramCounter(null);
+                    this.requestSetRunningState('stopped');
                     reject(error);
                 });
             }
@@ -84,7 +72,7 @@ export default class Interpreter {
     }
 
     atEnd(): boolean {
-        return this.programCounter >= this.program.length;
+        return this.programSequence.getProgramCounter() >= this.programSequence.getProgramLength();
     }
 
     step(): Promise<void> {
@@ -93,24 +81,16 @@ export default class Interpreter {
                 // We're at the end, nothing to do
                 resolve();
             } else {
-                this.doCommand(this.program[this.programCounter]).then(() => {
+                this.doCommand(this.programSequence.getCurrentProgramStep()).then(() => {
                     // When the command has completed, increment
                     // the programCounter and resolve the step Promise
-                    this.programCounter = this.programCounter + 1;
-                    this.programSequence.updateProgramCounter(this.programSequence.getProgramCounter() + 1);
+                    this.requestIncrementProgramCounter();
                     resolve();
                 }, (error: Error) => {
                     reject(error);
                 });
             }
         });
-    }
-
-    stop(): void {
-        this.isRunning = false;
-        this.onRunningStateChange({isRunning: this.isRunning, activeStep: null});
-        this.programSequence.updateRunningState(false);
-        this.programSequence.updateProgramCounter(null);
     }
 
     doCommand(command: string): Promise<any> {
@@ -142,9 +122,5 @@ export default class Interpreter {
         } else {
             return [];
         }
-    }
-
-    setStepTime(stepTimeMs: number) {
-        this.stepTimeMs = stepTimeMs;
     }
 }

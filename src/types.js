@@ -11,7 +11,8 @@ export type EditorMode = 'text' | 'block';
 
 export type Program = Array<string>;
 
-export type RunningState = boolean | 'paused';
+// use running, paused, stopped
+export type RunningState = 'running' | 'stopped' | 'paused';
 
 export interface RobotDriver {
     connect(onDisconnected: () => void): Promise<void>;

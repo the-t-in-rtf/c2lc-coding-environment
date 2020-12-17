@@ -13,7 +13,6 @@ import DashDriver from './DashDriver';
 import * as FeatureDetection from './FeatureDetection';
 import FocusTrapManager from './FocusTrapManager';
 import Interpreter from './Interpreter';
-import type { InterpreterRunningState } from './Interpreter';
 import PlayButton from './PlayButton';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import RefreshButton from './RefreshButton';
@@ -23,10 +22,9 @@ import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
 import ProgramSequence from './ProgramSequence';
 import ProgramSpeedController from './ProgramSpeedController';
-import { programIsEmpty } from './ProgramUtils';
 import ProgramSerializer from './ProgramSerializer';
 import ShareButton from './ShareButton';
-import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
+import type { DeviceConnectionStatus, Program, RobotDriver, RunningState } from './types';
 import * as Utils from './Utils';
 import messages from './messages.json';
 import './App.scss';
@@ -54,15 +52,14 @@ type AppState = {
     characterState: CharacterState,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
-    activeProgramStepNum: ?number,
-    interpreterIsRunning: boolean,
     showDashConnectionError: boolean,
     selectedAction: ?string,
     isDraggingCommand: boolean,
     audioEnabled: boolean,
     actionPanelStepIndex: ?number,
     sceneDimensions: SceneDimensions,
-    drawingEnabled: boolean
+    drawingEnabled: boolean,
+    runningState: RunningState
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -88,25 +85,24 @@ export default class App extends React.Component<{}, AppState> {
 
         this.state = {
             program: [],
-            programSequence: new ProgramSequence(),
+            programSequence: new ProgramSequence([], 0),
             characterState: this.startingCharacterState,
             settings: {
                 language: 'en',
                 addNodeExpandedMode: true
             },
             dashConnectionStatus: 'notConnected',
-            activeProgramStepNum: null,
-            interpreterIsRunning: false,
             showDashConnectionError: false,
             selectedAction: null,
             isDraggingCommand: false,
             audioEnabled: true,
             actionPanelStepIndex: null,
             sceneDimensions: new SceneDimensions(17, 9),
-            drawingEnabled: true
+            drawingEnabled: true,
+            runningState: 'stopped'
         };
 
-        this.interpreter = new Interpreter(this.handleRunningStateChange, 1000, this.state.programSequence);
+        this.interpreter = new Interpreter(1000, this.state.programSequence, this.incrementProgramCounter, this.handleRunningStateChange);
 
         this.speedLookUp = [2000, 1500, 1000, 500, 250];
 
@@ -330,20 +326,50 @@ export default class App extends React.Component<{}, AppState> {
         }
     }
 
+    incrementProgramCounter = (programCounter: number) => {
+        this.setState((state) => {
+            return {
+                programSequence: state.programSequence.incrementProgramCounter()
+            }
+        });
+    };
+
+    resetProgramCounter = () => {
+        this.setState((state) => {
+            return {
+                programSequence: state.programSequence.updateProgramCounter(0)
+            }
+        });
+    };
+
+    handleRunningStateChange = (runningState: RunningState) => {
+        this.setState({ runningState });
+    }
+
     handleChangeProgram = (program: Program) => {
         this.setState({
             program: program
         });
     };
 
+    handleProgramSequenceChange = (programSequence: ProgramSequence) => {
+        this.setState({ programSequence });
+    }
+
     handleClickPlay = () => {
-        this.interpreter.run(this.state.program).then(
-            () => {}, // Do nothing on successful resolution
-            (error: Error) => {
-                console.log(error.name);
-                console.log(error.message);
+        this.setState((state) => {
+            return {
+                programSequence: state.programSequence.updateProgramCounter(0),
+                runningState: 'running'
             }
-        );
+        });
+        // this.interpreter.run(this.state.programSequence.getProgram()).then(
+        //     () => {}, // Do nothing on successful resolution
+        //     (error: Error) => {
+        //         console.log(error.name);
+        //         console.log(error.message);
+        //     }
+        // );
     };
 
     handleClickConnectDash = () => {
@@ -400,13 +426,6 @@ export default class App extends React.Component<{}, AppState> {
 
     handleDragEndCommand = () => {
         this.setState({ isDraggingCommand: false });
-    };
-
-    handleRunningStateChange = ( interpreterRunningState : InterpreterRunningState) => {
-        this.setState({
-            activeProgramStepNum: interpreterRunningState.activeStep,
-            interpreterIsRunning: interpreterRunningState.isRunning
-        });
     };
 
     handleChangeActionPanelStepIndex = (index: ?number) => {
@@ -547,7 +566,7 @@ export default class App extends React.Component<{}, AppState> {
                                     </div>
                                     <div className='App__refreshButton-container'>
                                         <RefreshButton
-                                            disabled={this.state.interpreterIsRunning}
+                                            disabled={this.state.runningState === 'running'}
                                             onClick={this.handleRefresh}
                                         />
                                     </div>
@@ -567,18 +586,16 @@ export default class App extends React.Component<{}, AppState> {
                             </Col>
                             <Col md={7} lg={8}>
                                 <ProgramBlockEditor
-                                    activeProgramStepNum={this.state.activeProgramStepNum}
                                     actionPanelStepIndex={this.state.actionPanelStepIndex}
-                                    editingDisabled={this.state.interpreterIsRunning === true}
-                                    interpreterIsRunning={this.state.interpreterIsRunning}
-                                    program={this.state.program}
+                                    editingDisabled={this.state.runningState === 'running'}
                                     programSequence={this.state.programSequence}
+                                    runningState={this.state.runningState}
                                     selectedAction={this.state.selectedAction}
                                     isDraggingCommand={this.state.isDraggingCommand}
                                     audioManager={this.audioManager}
                                     focusTrapManager={this.focusTrapManager}
                                     addNodeExpandedMode={this.state.settings.addNodeExpandedMode}
-                                    onChangeProgram={this.handleChangeProgram}
+                                    onChangeProgramSequence={this.handleProgramSequenceChange}
                                     onChangeActionPanelStepIndex={this.handleChangeActionPanelStepIndex}
                                     onChangeAddNodeExpandedMode={this.handleChangeAddNodeExpandedMode}
                                 />
@@ -588,10 +605,10 @@ export default class App extends React.Component<{}, AppState> {
                             <div className='App__playControl-container'>
                                 <div className='App__playButton-container'>
                                     <PlayButton
-                                        interpreterIsRunning={this.state.interpreterIsRunning}
+                                        interpreterIsRunning={this.state.runningState === 'running'}
                                         disabled={
-                                            this.state.interpreterIsRunning ||
-                                            programIsEmpty(this.state.program)}
+                                            this.state.runningState === 'running' ||
+                                            this.state.programSequence.getProgramLength() === 0}
                                         onClick={this.handleClickPlay}
                                     />
                                 </div>
@@ -623,10 +640,9 @@ export default class App extends React.Component<{}, AppState> {
             if (programQuery != null && characterStateQuery != null) {
                 try {
                     this.setState({
-                        program: this.programSerializer.deserialize(programQuery),
+                        programSequence: new ProgramSequence(this.programSerializer.deserialize(programQuery), 0, 'stopped'),
                         characterState: this.characterStateSerializer.deserialize(characterStateQuery)
                     });
-                    this.state.programSequence.updateProgram(this.programSerializer.deserialize(programQuery));
                 } catch(err) {
                     console.log(`Error parsing program: ${programQuery} or characterState: ${characterStateQuery}`);
                     console.log(err.toString());
@@ -638,9 +654,9 @@ export default class App extends React.Component<{}, AppState> {
     componentDidUpdate(prevProps: {}, prevState: AppState) {
         console.log(this.state.programSequence.getProgram());
         console.log(this.state.programSequence.getProgramCounter());
-        if (this.state.program !== prevState.program
+        if (this.state.programSequence !== prevState.programSequence
             || this.state.characterState !== prevState.characterState) {
-            const serializedProgram = this.programSerializer.serialize(this.state.program);
+            const serializedProgram = this.programSerializer.serialize(this.state.programSequence.getProgram());
             const serializedCharacterState = this.characterStateSerializer.serialize(this.state.characterState);
             window.history.pushState(
                 {
@@ -652,6 +668,15 @@ export default class App extends React.Component<{}, AppState> {
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
+        }
+        if (this.state.programSequence !== prevState.programSequence) {
+            this.interpreter.setProgramSequence(this.state.programSequence);
+        }
+        if (this.state.runningState !== prevState.runningState) {
+            this.interpreter.setRunningState(this.state.runningState);
+            if (this.state.runningState === 'running') {
+                this.interpreter.run();
+            }
         }
         /* Dash connection removed for version 0.5
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
@@ -667,7 +692,7 @@ export default class App extends React.Component<{}, AppState> {
             } else if (this.state.dashConnectionStatus === 'notConnected') {
                 // TODO: Remove Dash handlers
 
-                if (this.state.interpreterIsRunning) {
+                if (this.state.runningState === 'running) {
                     this.interpreter.stop();
                 }
             }

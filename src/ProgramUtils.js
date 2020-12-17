@@ -18,25 +18,9 @@ function expandProgram(program: Program, length: number, fill: string): Program 
     return program;
 };
 
-function insert(program: Program, index: number, command: string, fill: string): Program {
-    program = expandProgram(program, index, fill);
-    program.splice(index, 0, command);
-    return program;
-};
-
 function overwrite(program: Program, index: number, command: string, fill: string): Program {
-    program = expandProgram(program, index + 1, fill);
-    program[index] = command;
-    return program;
-};
-
-function trimEnd(program: Program, commandToTrim: string): Program {
-    // Make a shallow copy before we trim
     program = program.slice();
-    while ((program.length > 0)
-            && (program[program.length - 1] === commandToTrim)) {
-        program.pop();
-    }
+    program[index] = command;
     return program;
 };
 
@@ -64,9 +48,7 @@ function swapPosition(program: Program, indexFrom: number, indexTo: number): Pro
 export {
     deleteStep,
     expandProgram,
-    insert,
     overwrite,
-    trimEnd,
     programIsEmpty,
     swapPosition
 };

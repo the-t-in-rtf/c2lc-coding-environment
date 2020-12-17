@@ -32,7 +32,8 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
     }
 
     makeStepInfoMessage() {
-        const currentStepName = this.props.program[this.props.pressedStepIndex];
+        // const currentStepName = this.props.program[this.props.pressedStepIndex];
+        const currentStepName = this.props.programSequence.getProgramStepAt(this.props.pressedStepIndex);
 
         const ariaLabelObj = {
             'stepNumber': this.props.pressedStepIndex + 1,
@@ -53,7 +54,8 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
         }
 
         if (this.props.pressedStepIndex > 0) {
-            const prevStepName = this.props.program[this.props.pressedStepIndex - 1];
+            // const prevStepName = this.props.program[this.props.pressedStepIndex - 1];
+            const prevStepName = this.props.programSequence.getProgramStepAt(this.props.pressedStepIndex - 1);
             ariaLabelObj['previousStepInfo'] =
                 this.props.intl.formatMessage(
                     { id: 'CommandInfo.previousStep'},
@@ -64,8 +66,9 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                 );
         }
 
-        if (this.props.pressedStepIndex < (this.props.program.length - 1)) {
-            const nextStepName = this.props.program[this.props.pressedStepIndex + 1];
+        if (this.props.pressedStepIndex < (this.props.programSequence.getProgramLength() - 1)) {
+            // const nextStepName = this.props.program[this.props.pressedStepIndex + 1];
+            const nextStepName = this.props.programSequence.getProgramStepAt(this.props.pressedStepIndex + 1);
             ariaLabelObj['nextStepInfo'] =
                 this.props.intl.formatMessage(
                     { id: 'CommandInfo.nextStep'},
@@ -132,7 +135,7 @@ class ActionPanel extends React.Component<ActionPanelProps, {}> {
                 </AriaDisablingButton>
                 <AriaDisablingButton
                     name='moveToNextStep'
-                    disabled={this.props.pressedStepIndex === this.props.program.length-1}
+                    disabled={this.props.pressedStepIndex === this.props.programSequence.getProgramLength()-1}
                     disabledClassName='ActionPanel__action-buttons--disabled'
                     aria-label={this.props.intl.formatMessage({id:'ActionPanel.action.moveToNextStep'}, stepInfoMessage)}
                     className='ActionPanel__action-buttons focus-trap-action-panel__action-panel-button'
