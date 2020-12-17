@@ -38,10 +38,11 @@ class CommandPaletteCommand extends React.Component<CommandPaletteCommandProps, 
     };
 
     render() {
-        const pressed = this.props.commandName === this.props.selectedCommandName;
+        const pressed = this.props.commandName === this.props.selectedCommandName && !this.props.isDraggingCommand;
 
         const classes = classNames(
             {'command-block--pressed' : pressed},
+            {'command-block--dragged' : this.props.isDraggingCommand},
             'focus-trap-action-panel-replace__command_button'
         );
 
