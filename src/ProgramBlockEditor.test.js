@@ -5,7 +5,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import { configure, mount, shallow } from 'enzyme';
 import { Button } from 'react-bootstrap';
 import { createIntl, IntlProvider } from 'react-intl';
-import AudioManager from './AudioManager';
+import AudioManagerImpl from './AudioManagerImpl';
 import ActionPanel from './ActionPanel';
 import AriaDisablingButton from './AriaDisablingButton';
 import FocusTrapManager from './FocusTrapManager';
@@ -14,7 +14,7 @@ import ProgramBlockEditor from './ProgramBlockEditor';
 import ToggleSwitch from './ToggleSwitch';
 
 // Mocks
-jest.mock('./AudioManager');
+jest.mock('./AudioManagerImpl');
 
 configure({ adapter: new Adapter()});
 
@@ -41,10 +41,10 @@ function createShallowProgramBlockEditor(props) {
     });
 
     // $FlowFixMe: Flow doesn't know about the Jest mock API
-    AudioManager.mockClear();
-    const audioManagerInstance = new AudioManager(true);
+    AudioManagerImpl.mockClear();
+    const audioManagerInstance = new AudioManagerImpl(true);
     // $FlowFixMe: Flow doesn't know about the Jest mock API
-    const audioManagerMock: any = AudioManager.mock.instances[0];
+    const audioManagerMock: any = AudioManagerImpl.mock.instances[0];
 
     const mockChangeProgramHandler = jest.fn();
 
@@ -77,10 +77,10 @@ function createShallowProgramBlockEditor(props) {
 
 function createMountProgramBlockEditor(props) {
     // $FlowFixMe: Flow doesn't know about the Jest mock API
-    AudioManager.mockClear();
-    const audioManagerInstance = new AudioManager(true);
+    AudioManagerImpl.mockClear();
+    const audioManagerInstance = new AudioManagerImpl(true);
     // $FlowFixMe: Flow doesn't know about the Jest mock API
-    const audioManagerMock = AudioManager.mock.instances[0];
+    const audioManagerMock = AudioManagerImpl.mock.instances[0];
 
     const mockChangeProgramHandler = jest.fn();
     const mockChangeActionPanelStepIndex = jest.fn();
