@@ -159,13 +159,16 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEdi
 }
 
 .ProgramBlockEditor__program-block-connector {
+    z-index: 1;
     background-color: #939595;
-    min-width: 0.5rem;
+    min-width: 0.6rem;
     height: 0.1rem;
 }
 
 button.ProgramBlockEditor__program-block--active {
-    box-shadow: 0 0 0 0.2rem #79F1CD;
+    box-shadow:
+        0 0 0 0.2rem #FFF,
+        0 0 0 0.5rem #53A28C;
 }
 
 .ProgramBlockEditor__action-panel-container-outer {
