@@ -363,7 +363,7 @@ describe("Add program steps", () => {
         // And the program should be changed
         expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(1);
         expect(mockChangeProgramSequenceHandler.mock.calls[0][0]).toStrictEqual(
-            new ProgramSequence(['left45', 'forward1', 'forward1', 'forward1', 'forward1', 'forward1'], 0)
+            new ProgramSequence(['left45', 'forward1', 'forward1', 'forward1', 'forward1', 'forward1'], 1)
         );
     });
 
@@ -422,7 +422,7 @@ describe('Delete program steps', () => {
 
             // The program should be updated
             expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(1);
-            expect(mockChangeProgramSequenceHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
+            expect(mockChangeProgramSequenceHandler.mock.calls[0][0].program).toStrictEqual(expectedProgram);
         }
     );
 });
@@ -459,7 +459,7 @@ describe('Replace program steps', () => {
             // The program should be updated
             if (selectedAction) {
                 expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(1);
-                expect(mockChangeProgramSequenceHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
+                expect(mockChangeProgramSequenceHandler.mock.calls[0][0].program).toStrictEqual(expectedProgram);
             } else {
                 expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(0);
                 expect(wrapper.props().programSequence.getProgram()).toStrictEqual(expectedProgram);
@@ -496,7 +496,7 @@ describe('Move to previous program step', () => {
                 expect(audioManagerMock.playAnnouncement.mock.calls[0][0]).toBe('moveToPrevious');
                 // The program should be updated
                 expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(1);
-                expect(mockChangeProgramSequenceHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
+                expect(mockChangeProgramSequenceHandler.mock.calls[0][0].program).toStrictEqual(expectedProgram);
             } else {
                 // No sound should be played
                 expect(audioManagerMock.playAnnouncement.mock.calls.length).toBe(0);
@@ -536,7 +536,7 @@ describe('Move to next program step', () => {
                 expect(audioManagerMock.playAnnouncement.mock.calls[0][0]).toBe('moveToNext');
                 // The program should be updated
                 expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(1);
-                expect(mockChangeProgramSequenceHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
+                expect(mockChangeProgramSequenceHandler.mock.calls[0][0].program).toStrictEqual(expectedProgram);
             } else {
                 // No announcement should be played
                 expect(audioManagerMock.playAnnouncement.mock.calls.length).toBe(0);
@@ -574,11 +574,11 @@ describe('Autoscroll to show the active program step', () => {
     test('When active program step number is 0, scroll to the beginning of the container', () => {
         expect.assertions(3);
         const mockScrollTo = jest.fn();
-        const { wrapper } = createMountProgramBlockEditor();
+        const { wrapper } = createMountProgramBlockEditor({runningState: 'running'});
         getProgramSequenceContainer(wrapper).ref.current.scrollTo = mockScrollTo;
 
         wrapper.setProps({
-            activeProgramStepNum: 0
+            programSequence: new ProgramSequence(['forward1', 'left45', 'forward1', 'left45'], 0)
         });
 
         expect(mockScrollTo.mock.calls.length).toBe(1);
@@ -589,7 +589,7 @@ describe('Autoscroll to show the active program step', () => {
     test('When active program block is outside of the container, on the right', () => {
         expect.assertions(1);
 
-        const { wrapper } = createMountProgramBlockEditor();
+        const { wrapper } = createMountProgramBlockEditor({runningState: 'running'});
 
         // Set the container ref object to a custom object with just enough
         // of the DOM API implemented to support the scroll logic
@@ -616,7 +616,7 @@ describe('Autoscroll to show the active program step', () => {
 
         // Trigger a scroll
         wrapper.setProps({
-            activeProgramStepNum: 3
+            programSequence: new ProgramSequence(['forward1', 'left45', 'forward1', 'left45'], 3)
         });
 
         expect(programSequenceContainer.ref.current.scrollLeft).toBe(200 + 2300 - 100 - 1000);
@@ -624,7 +624,7 @@ describe('Autoscroll to show the active program step', () => {
     test('When active program block is outside of the container, on the left', () => {
         expect.assertions(1);
 
-        const { wrapper } = createMountProgramBlockEditor();
+        const { wrapper } = createMountProgramBlockEditor({runningState: 'running'});
 
         // Set the container ref object to a custom object with just enough
         // of the DOM API implemented to support the scroll logic
