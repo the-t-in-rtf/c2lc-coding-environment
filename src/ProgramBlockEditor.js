@@ -2,7 +2,7 @@
 
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type {IntlShape} from 'react-intl';
-import type {Program} from './types';
+import type { RunningState } from './types';
 import React from 'react';
 import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
 import AddNode from './AddNode';
@@ -26,15 +26,14 @@ type ProgramBlockEditorProps = {
     intl: IntlShape,
     actionPanelStepIndex: ?number,
     editingDisabled: boolean,
-    interpreterIsRunning: boolean,
-    program: Program,
     programSequence: ProgramSequence,
+    runningState: RunningState,
     selectedAction: ?string,
     isDraggingCommand: boolean,
     audioManager: AudioManager,
     focusTrapManager: FocusTrapManager,
     addNodeExpandedMode: boolean,
-    onChangeProgram: (Program) => void,
+    onChangeProgramSequence: (programSequence: ProgramSequence) => void,
     onChangeActionPanelStepIndex: (index: ?number) => void,
     onChangeAddNodeExpandedMode: (boolean) => void
 };
@@ -152,7 +151,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     };
 
     handleConfirmDeleteAll = () => {
-        this.props.onChangeProgram([]);
+        this.props.onChangeProgramSequence(
+            this.props.programSequence.updateProgram([])
+        );
         this.setState({
             showConfirmDeleteAll : false
         });
@@ -176,15 +177,17 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     handleActionPanelReplaceStep = (index: number) => {
         this.props.audioManager.playAnnouncement('replace');
         if (this.props.selectedAction) {
-            if (this.props.programSequence.getProgramStepAt(index) !== this.props.selectedAction) {
-                this.props.onChangeProgramSequence(
-                    this.props.programSequence.overwriteStep(index, this.props.selectedAction)
-                );
-                this.setState({
-                    replaceIsActive: false
-                });
-                this.focusCommandBlockIndex = index;
-                this.scrollToAddNodeIndex = index + 1;
+            if (
+                this.props.selectedAction &&
+                this.props.programSequence.getProgramStepAt(index) !== this.props.selectedAction) {
+                    this.props.onChangeProgramSequence(
+                        this.props.programSequence.overwriteStep(index, this.props.selectedAction)
+                    );
+                    this.setState({
+                        replaceIsActive: false
+                    });
+                    this.focusCommandBlockIndex = index;
+                    this.scrollToAddNodeIndex = index + 1;
             } else {
                 this.setState({
                     replaceIsActive: true
@@ -351,7 +354,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                                 <ActionPanel
                                     focusedOptionName={this.state.focusedActionPanelOptionName}
                                     selectedCommandName={this.props.selectedAction}
-                                    program={this.props.program}
                                     programSequence={this.props.programSequence}
                                     pressedStepIndex={programStepNumber}
                                     onDelete={this.handleActionPanelDeleteStep}

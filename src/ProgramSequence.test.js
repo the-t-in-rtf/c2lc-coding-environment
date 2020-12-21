@@ -1,6 +1,7 @@
 // @flow
 
 import ProgramSequence from './ProgramSequence';
+import type { Program } from './types';
 
 function checkProgramEdit(inputBefore: Program, expected: Program,
                           inputAfter: Program, result: Program) {
@@ -8,14 +9,12 @@ function checkProgramEdit(inputBefore: Program, expected: Program,
     expect(result).toEqual(expected);
 };
 
-test('ProgramSequence constructor should take program, programCounter, and isRunning parameters', () => {
+test('ProgramSequence constructor should take program and programCounter parameters', () => {
     const program = ['f1'];
     const programCounter = 0;
-    const isRunning = 'stopped';
-    const programSequence = new ProgramSequence(program, programCounter, isRunning);
+    const programSequence = new ProgramSequence(program, programCounter);
     expect(programSequence.getProgram()).toBe(program);
     expect(programSequence.getProgramCounter()).toBe(programCounter);
-    expect(programSequence.getProgramRunningState()).toBe(isRunning);
 });
 
 test.each([
@@ -29,7 +28,7 @@ test.each([
     (input: Array<string>, index: number, expected: Array<string>) => {
         expect.assertions(2);
         const inputValues = input.slice();
-        const result = new ProgramSequence(input, 0, 'stopped').insert(index, 'command1');
+        const result = new ProgramSequence(input, 0).insert(index, 'command1');
         checkProgramEdit(input, expected, inputValues, result);
     }
 );
@@ -46,7 +45,7 @@ test.each([
     (input: Array<string>, index: number, expected: Array<string>) => {
         expect.assertions(2);
         const inputValues = input.slice();
-        const result = new ProgramSequence(input, 0, 'stopped').delete(index);
+        const result = new ProgramSequence(input, 0).delete(index);
         checkProgramEdit(input, expected, inputValues, result);
     }
 );
@@ -60,13 +59,28 @@ test.each([
     (input: Array<string>, index: number, expected: Array<string>) => {
         expect.assertions(2);
         const inputValues = input.slice();
-        const result = new ProgramSequence(input, 0, 'stopped').overwrite(index, 'command1');
+        const result = new ProgramSequence(input, 0).overwrite(index, 'command1');
         checkProgramEdit(input, expected, inputValues, result);
     }
 );
 
-test('insertStep method should append a command at the end of the program property', () => {
-    const programSequence = new ProgramSequence([], 0, 'stopped');
-    expect(programSequence.insertStep())
-})
+test.each([
+    [[], 0, 2, []],
+    [['command1'], 0, 1, ['command1']],
+    [['command1', 'command2', 'command3'], 1, 2, ['command1', 'command3', 'command2' ]],
+    [['command1', 'command2', 'command3'], 0, 2, ['command3', 'command2', 'command1']]
+
+]) ('swapPosition',
+    (input: Array<string>, indexFrom: number, indexTo: number,  expected: Array<string>) => {
+        expect.assertions(2);
+        const inputValues = input.slice();
+        const result = new ProgramSequence(input, 0).swapPosition(indexFrom, indexTo);
+        checkProgramEdit(input, expected, inputValues, result);
+    }
+);
+
+// test('insertStep method should append a command at the end of the program property', () => {
+//     const programSequence = new ProgramSequence([], 0, 'stopped');
+//     expect(programSequence.insertStep())
+// })
 

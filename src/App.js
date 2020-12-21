@@ -336,7 +336,7 @@ export default class App extends React.Component<{}, AppState> {
         return this.state.runningState;
     }
 
-    incrementProgramCounter(callback): void {
+    incrementProgramCounter(callback: () => void): void {
         this.setState((state) => {
             return {
                 programSequence: state.programSequence.incrementProgramCounter()
@@ -644,7 +644,7 @@ export default class App extends React.Component<{}, AppState> {
             if (programQuery != null && characterStateQuery != null) {
                 try {
                     this.setState({
-                        programSequence: new ProgramSequence(this.programSerializer.deserialize(programQuery), 0, 'stopped'),
+                        programSequence: new ProgramSequence(this.programSerializer.deserialize(programQuery), 0),
                         characterState: this.characterStateSerializer.deserialize(characterStateQuery)
                     });
                 } catch(err) {

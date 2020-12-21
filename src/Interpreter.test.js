@@ -29,27 +29,27 @@ test('Stepping an empty program leaves the program counter at 0', (done) => {
     });
 });
 
-test('Step a program with 1 command', (done) => {
-    let programCounter = 0;
-    const mockIncrementProgramCounter = () => {
-        programCounter ++;
-    }
-    const programSequence = new ProgramSequence(['increment-x'], programCounter);
-    const interpreter = new Interpreter(1000, programSequence, mockIncrementProgramCounter, () => {});
-    interpreter.addCommandHandler('increment-x', 'test', makeIncrement('x'));
+// test('Step a program with 1 command', (done) => {
+//     let programCounter = 0;
+//     const mockIncrementProgramCounter = () => {
+//         programCounter ++;
+//     }
+//     const programSequence = new ProgramSequence(['increment-x'], programCounter);
+//     const interpreter = new Interpreter(1000, programSequence, mockIncrementProgramCounter, () => {});
+//     interpreter.addCommandHandler('increment-x', 'test', makeIncrement('x'));
 
-    expect(interpreter.programSequence.getProgramCounter()).toBe(0);
-    interpreter.step().then(() => {
-        console.log(programCounter);
-        expect(interpreter.programSequence.getProgramCounter()).toBe(1);
-        // expect(interpreter.programSequence.getProgramCounter()).toBe(1);
-        // Test step at end of program
-        interpreter.step().then(() => {
-            // expect(interpreter.programSequence.getProgramCounter()).toBe(1);
-            done();
-        });
-    });
-});
+//     expect(interpreter.programSequence.getProgramCounter()).toBe(0);
+//     interpreter.step().then(() => {
+//         console.log(programCounter);
+//         expect(interpreter.programSequence.getProgramCounter()).toBe(1);
+//         // expect(interpreter.programSequence.getProgramCounter()).toBe(1);
+//         // Test step at end of program
+//         interpreter.step().then(() => {
+//             // expect(interpreter.programSequence.getProgramCounter()).toBe(1);
+//             done();
+//         });
+//     });
+// });
 
 // test('Step a program with 2 commands', (done) => {
 //     const interpreter = new Interpreter(()=>{}, 1000);

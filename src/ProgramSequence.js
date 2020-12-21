@@ -23,11 +23,11 @@ export default class ProgramSequence {
         return this.programCounter;
     }
 
-    getCurrentProgramStep(): CommandName {
+    getCurrentProgramStep(): string {
         return this.program[this.programCounter];
     }
 
-    getProgramStepAt(index: number): CommandName {
+    getProgramStepAt(index: number): string {
         return this.program[index];
     }
 
