@@ -2,7 +2,7 @@
 
 import React from 'react';
 import AriaDisablingButton from './AriaDisablingButton';
-import ProgramSequence from './programSequence';
+import ProgramSequence from './ProgramSequence';
 import { injectIntl } from 'react-intl';
 import type {IntlShape} from 'react-intl';
 import { ReactComponent as MovePreviousIcon } from './svg/MovePrevious.svg';

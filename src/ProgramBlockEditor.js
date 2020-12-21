@@ -67,7 +67,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         }
     }
 
-    scrollProgramSequenceContainer(toElement) {
+    scrollProgramSequenceContainer(toElement: HTMLElement) {
         if (this.programSequenceContainerRef.current) {
             const containerElem = this.programSequenceContainerRef.current;
             if (toElement.dataset.stepnumber === '0') {

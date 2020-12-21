@@ -687,7 +687,7 @@ test('The editor scrolls when a step is added to the end of the program', () => 
     );
 
     // And updating the program triggers auto scroll
-    wrapper.setProps({ programSequence: new ProgramSequence(mockChangeProgramSequenceHandler.mock.calls[0][0], 0) });
+    wrapper.setProps({ programSequence: mockChangeProgramSequenceHandler.mock.calls[0][0] });
     expect(mockScrollIntoView.mock.calls.length).toBe(1);
     expect(mockScrollIntoView.mock.calls[0][0]).toStrictEqual({
         behavior: 'auto',
