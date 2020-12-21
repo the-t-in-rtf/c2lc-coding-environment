@@ -27,7 +27,7 @@ import ProgramSpeedController from './ProgramSpeedController';
 import { programIsEmpty } from './ProgramUtils';
 import ProgramSerializer from './ProgramSerializer';
 import ShareButton from './ShareButton';
-import type { AudioManager, DeviceConnectionStatus, Program, RobotDriver } from './types';
+import type { AudioManager, DeviceConnectionStatus, Program, RobotDriver, ThemeName } from './types';
 import * as Utils from './Utils';
 import messages from './messages.json';
 import './App.scss';
