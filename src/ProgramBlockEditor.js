@@ -474,10 +474,15 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             this.focusAddNodeIndex = null;
         }
         if (this.props.activeProgramStepNum != null) {
-            const activeProgramStep = this.commandBlockRefs.get(this.props.activeProgramStepNum);
-            const nextProgramStep = this.commandBlockRefs.get(parseInt(this.props.activeProgramStepNum) + 1);
+            // Take a snapshot of activeProgramStepNum that we know is non-null
+            // (this is primarily to keep Flow happy as it doesn't know that
+            // subsequent lines don't change it).
+            const activeProgramStepNum = this.props.activeProgramStepNum;
+
+            const activeProgramStep = this.commandBlockRefs.get(activeProgramStepNum);
+            const nextProgramStep = this.commandBlockRefs.get(activeProgramStepNum + 1);
             const lastAddNode = this.addNodeRefs.get(this.props.program.length);
-            if (this.props.activeProgramStepNum === 0) {
+            if (activeProgramStepNum === 0) {
                 this.scrollProgramSequenceContainer(activeProgramStep);
             } else if (nextProgramStep) {
                 this.scrollProgramSequenceContainer(nextProgramStep);

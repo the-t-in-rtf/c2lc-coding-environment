@@ -599,7 +599,7 @@ describe('Autoscroll to show a step after the active program step', () => {
             scrollLeft: 200
         };
 
-        // Set the active block location
+        // Set the location of the next block
         const nextProgramStep = getProgramBlockAtPosition(wrapper, 3);
         // $FlowFixMe: Flow complains that getBoundingClientRect is not writable
         nextProgramStep.getDOMNode().getBoundingClientRect = () => {
@@ -634,10 +634,10 @@ describe('Autoscroll to show a step after the active program step', () => {
             scrollLeft: 2000
         };
 
-        // Set the active block location
-        const activeProgramBlock = getProgramBlockAtPosition(wrapper, 3);
+        // Set the location of the next block
+        const nextProgramStep = getProgramBlockAtPosition(wrapper, 3);
         // $FlowFixMe: Flow complains that getBoundingClientRect is not writable
-        activeProgramBlock.getDOMNode().getBoundingClientRect = () => {
+        nextProgramStep.getDOMNode().getBoundingClientRect = () => {
             return {
                 left: -200,
                 right: -100
