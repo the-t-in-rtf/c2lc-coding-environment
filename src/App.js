@@ -20,16 +20,18 @@ import ProgramBlockEditor from './ProgramBlockEditor';
 import RefreshButton from './RefreshButton';
 import Scene from './Scene';
 import SceneDimensions from './SceneDimensions';
+import ThemeSelector from './ThemeSelector';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
 import ProgramSpeedController from './ProgramSpeedController';
 import { programIsEmpty } from './ProgramUtils';
 import ProgramSerializer from './ProgramSerializer';
 import ShareButton from './ShareButton';
-import type { AudioManager, DeviceConnectionStatus, Program, RobotDriver } from './types';
+import type { AudioManager, DeviceConnectionStatus, Program, RobotDriver, ThemeName } from './types';
 import * as Utils from './Utils';
 import messages from './messages.json';
 import './App.scss';
+import './Themes.css';
 import './vendor/dragdroptouch/DragDropTouch.js';
 /* Dash connection removed for version 0.5
 import BluetoothApiWarning from './BluetoothApiWarning';
@@ -45,7 +47,8 @@ type AppContext = {
 
 type AppSettings = {
     language: string,
-    addNodeExpandedMode: boolean
+    addNodeExpandedMode: boolean,
+    theme: ThemeName
 };
 
 type AppState = {
@@ -93,7 +96,8 @@ export default class App extends React.Component<{}, AppState> {
             characterState: this.startingCharacterState,
             settings: {
                 language: 'en',
-                addNodeExpandedMode: true
+                addNodeExpandedMode: true,
+                theme: 'default'
             },
             dashConnectionStatus: 'notConnected',
             activeProgramStepNum: null,
@@ -494,6 +498,10 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
+    handleChangeTheme = (theme: ThemeName) => {
+        this.setStateSettings({ theme });
+    }
+
     render() {
         return (
             <IntlProvider
@@ -503,7 +511,7 @@ export default class App extends React.Component<{}, AppState> {
                     onClick={this.handleRootClick}
                     onKeyDown={this.handleRootKeyDown}>
                     <header className='App__header'>
-                        <Container>
+                        <Container className='App__title'>
                             <Row className='App__header-row'>
                                 <h1 className='App__app-heading'>
                                     <FormattedMessage id='App.appHeading'/>
@@ -524,11 +532,14 @@ export default class App extends React.Component<{}, AppState> {
                                         <FormattedMessage id='App.connectToDash' />
                                     </DeviceConnectControl>
                                     */}
+                                    <ThemeSelector onSelect={this.handleChangeTheme} />
                                 </div>
                             </Row>
                         </Container>
                     </header>
-                    <Container role='main' className='mb-5'>
+                    <Container
+                        className='App__container mb-5'
+                        role='main'>
                         {/* Dash connection removed for version 0.5
                         {!this.appContext.bluetoothApiIsAvailable &&
                             <Row className='App__bluetooth-api-warning-section'>
@@ -542,6 +553,7 @@ export default class App extends React.Component<{}, AppState> {
                             <Scene
                                 dimensions={this.state.sceneDimensions}
                                 characterState={this.state.characterState}
+                                theme={this.state.settings.theme}
                             />
                             <div className='App__scene-controls'>
                                 <div className='App__scene-controls-group'>
@@ -561,7 +573,7 @@ export default class App extends React.Component<{}, AppState> {
                             </div>
                         </div>
                         <Row className='App__program-section' noGutters={true}>
-                            <Col md={5} lg={4} className='pr-md-4 mb-4 mb-md-0'>
+                            <Col md={6} lg={4} className='pr-md-4 mb-4 mb-md-0'>
                                 <div className='App__command-palette'>
                                     <h2 className='App__command-palette-heading'>
                                         <FormattedMessage id='CommandPalette.movementsTitle' />
@@ -571,7 +583,7 @@ export default class App extends React.Component<{}, AppState> {
                                     </div>
                                 </div>
                             </Col>
-                            <Col md={7} lg={8}>
+                            <Col md={6} lg={8}>
                                 <ProgramBlockEditor
                                     activeProgramStepNum={this.state.activeProgramStepNum}
                                     actionPanelStepIndex={this.state.actionPanelStepIndex}
@@ -583,6 +595,7 @@ export default class App extends React.Component<{}, AppState> {
                                     audioManager={this.audioManager}
                                     focusTrapManager={this.focusTrapManager}
                                     addNodeExpandedMode={this.state.settings.addNodeExpandedMode}
+                                    theme={this.state.settings.theme}
                                     onChangeProgram={this.handleChangeProgram}
                                     onChangeActionPanelStepIndex={this.handleChangeActionPanelStepIndex}
                                     onChangeAddNodeExpandedMode={this.handleChangeAddNodeExpandedMode}
@@ -625,6 +638,7 @@ export default class App extends React.Component<{}, AppState> {
             const params = new C2lcURLParams(window.location.search);
             const programQuery = params.getProgram();
             const characterStateQuery = params.getCharacterState();
+            const themeQuery = params.getTheme();
             if (programQuery != null && characterStateQuery != null) {
                 try {
                     this.setState({
@@ -636,9 +650,11 @@ export default class App extends React.Component<{}, AppState> {
                     console.log(err.toString());
                 }
             }
+            this.setStateSettings({ theme: Utils.getThemeFromString(themeQuery, 'default') });
         } else {
             const localProgram = window.localStorage.getItem('c2lc-program');
             const localCharacterState = window.localStorage.getItem('c2lc-characterState');
+            const localTheme = window.localStorage.getItem('c2lc-theme');
             if (localProgram != null && localCharacterState != null) {
                 try {
                     this.setState({
@@ -650,28 +666,41 @@ export default class App extends React.Component<{}, AppState> {
                     console.log(err.toString());
                 }
             }
+            this.setStateSettings({ theme: Utils.getThemeFromString(localTheme, 'default') });
         }
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
         if (this.state.program !== prevState.program
-            || this.state.characterState !== prevState.characterState) {
+            || this.state.characterState !== prevState.characterState
+            || this.state.settings.theme !== prevState.settings.theme) {
             const serializedProgram = this.programSerializer.serialize(this.state.program);
             const serializedCharacterState = this.characterStateSerializer.serialize(this.state.characterState);
             window.history.pushState(
                 {
                     p: serializedProgram,
-                    c: serializedCharacterState
+                    c: serializedCharacterState,
+                    t: this.state.settings.theme
                 },
                 '',
-                Utils.generateEncodedProgramURL(this.version, serializedProgram, serializedCharacterState)
+                Utils.generateEncodedProgramURL(this.version, this.state.settings.theme, serializedProgram, serializedCharacterState)
             );
             window.localStorage.setItem('c2lc-version', this.version);
             window.localStorage.setItem('c2lc-program', serializedProgram);
             window.localStorage.setItem('c2lc-characterState', serializedCharacterState);
+            window.localStorage.setItem('c2lc-theme', this.state.settings.theme);
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
+        }
+        if (this.state.settings.theme !== prevState.settings.theme) {
+            if (document.body) {
+                if (this.state.settings.theme === 'default') {
+                    document.body.className = '';
+                } else {
+                    document.body.className = `${this.state.settings.theme}-theme`;
+                }
+            }
         }
         /* Dash connection removed for version 0.5
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
