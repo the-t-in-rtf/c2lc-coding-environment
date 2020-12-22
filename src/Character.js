@@ -4,20 +4,20 @@ import React from 'react';
 import { ReactComponent as RobotIcon } from './svg/Robot.svg';
 import { ReactComponent as SpaceShipIcon } from './svg/SpaceShip.svg';
 import { ReactComponent as RabbitIcon } from './svg/Rabbit.svg';
-import './RobotCharacter.scss';
+import './Character.scss';
 
-type RobotCharacterProps = {
+type CharacterProps = {
     theme: string,
     transform: string,
     width: number
 };
 
-export default class RobotCharacter extends React.Component<RobotCharacterProps, {}> {
+export default class Character extends React.Component<CharacterProps, {}> {
     getThemedCharacter = () => {
         if (this.props.theme === 'space') {
             return (
                 <SpaceShipIcon
-                    className='RobotCharacter__icon'
+                    className='Character__icon'
                     x={-this.props.width/2}
                     y={-this.props.width/2}
                     width={this.props.width}
@@ -26,7 +26,7 @@ export default class RobotCharacter extends React.Component<RobotCharacterProps,
         } else if (this.props.theme === 'forest') {
             return (
                 <RabbitIcon
-                    className='RobotCharacter__icon'
+                    className='Character__icon'
                     x={-this.props.width/2}
                     y={-this.props.width/2}
                     width={this.props.width}
@@ -35,7 +35,7 @@ export default class RobotCharacter extends React.Component<RobotCharacterProps,
         } else {
             return (
                 <RobotIcon
-                    className='RobotCharacter__icon'
+                    className='Character__icon'
                     x={-this.props.width/2}
                     y={-this.props.width/2}
                     width={this.props.width}
@@ -47,7 +47,7 @@ export default class RobotCharacter extends React.Component<RobotCharacterProps,
     render() {
         return (
             <g
-                className='RobotCharacter'
+                className='Character'
                 transform={this.props.transform}>
                 {this.getThemedCharacter()}
             </g>

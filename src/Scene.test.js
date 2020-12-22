@@ -53,20 +53,20 @@ function findGridLabels(sceneWrapper) {
     return sceneWrapper.find('.Scene__grid-label');
 }
 
-function findRobotCharacter(sceneWrapper) {
-    return sceneWrapper.find('.RobotCharacter');
+function findCharacter(sceneWrapper) {
+    return sceneWrapper.find('.Character');
 }
 
-function findRobotCharacterIcon(sceneWrapper) {
-    return sceneWrapper.find('.RobotCharacter__icon');
+function findCharacterIcon(sceneWrapper) {
+    return sceneWrapper.find('.Character__icon');
 }
 
-function findRobotCharacterPath(sceneWrapper) {
+function findCharacterPath(sceneWrapper) {
     return sceneWrapper.find('.Scene__path-line');
 }
 
 // TODO: This function is reproducing logic from Scene (the 0.8) and
-//       RobotCharacter (everything else) and it will be easily
+//       Character (everything else) and it will be easily
 //       broken. Is there a better approach here that tests that the
 //       character is rendered as expected, but it less brittle?
 function calculateCharacterDimensions() {
@@ -219,14 +219,14 @@ describe('When the Scene renders', () => {
             dimensions: new SceneDimensions(1, 1)
         });
         const expectedCharacterDimensions = calculateCharacterDimensions();
-        expect(findRobotCharacterIcon(sceneWrapper).hostNodes().length).toBe(1);
-        expect(findRobotCharacterIcon(sceneWrapper).get(0).props.x)
+        expect(findCharacterIcon(sceneWrapper).hostNodes().length).toBe(1);
+        expect(findCharacterIcon(sceneWrapper).get(0).props.x)
             .toBeCloseTo(expectedCharacterDimensions.x, 5);
-        expect(findRobotCharacterIcon(sceneWrapper).get(0).props.y)
+        expect(findCharacterIcon(sceneWrapper).get(0).props.y)
             .toBeCloseTo(expectedCharacterDimensions.y, 5);
-        expect(findRobotCharacterIcon(sceneWrapper).get(0).props.width)
+        expect(findCharacterIcon(sceneWrapper).get(0).props.width)
             .toBeCloseTo(expectedCharacterDimensions.width, 5);
-        expect(findRobotCharacterIcon(sceneWrapper).get(0).props.height)
+        expect(findCharacterIcon(sceneWrapper).get(0).props.height)
             .toBeCloseTo(expectedCharacterDimensions.height, 5);
     });
 });
@@ -238,7 +238,7 @@ describe('When the robot character renders, transform should apply', () => {
             dimensions: new SceneDimensions(1, 1),
             characterState: new CharacterState(0, 0, 2, [])
         });
-        const robotCharacter = findRobotCharacter(sceneWrapper);
+        const robotCharacter = findCharacter(sceneWrapper);
         expect(robotCharacter.get(0).props.transform)
             .toBe('translate(0 0) rotate(0 0 0)');
     });
@@ -248,7 +248,7 @@ describe('When the robot character renders, transform should apply', () => {
             dimensions: new SceneDimensions(20, 20),
             characterState: new CharacterState(10, 8, 4, [])
         });
-        const robotCharacter = findRobotCharacter(sceneWrapper);
+        const robotCharacter = findCharacter(sceneWrapper);
         expect(robotCharacter.get(0).props.transform)
             .toBe('translate(10 8) rotate(90 0 0)');
     });
@@ -258,7 +258,7 @@ describe('When the robot character renders, transform should apply', () => {
             dimensions: new SceneDimensions(20, 20),
             characterState: new CharacterState(0, 9, 0, [])
         });
-        const robotCharacter = findRobotCharacter(sceneWrapper);
+        const robotCharacter = findCharacter(sceneWrapper);
         expect(robotCharacter.get(0).props.transform)
             .toBe('translate(0 9) rotate(-90 0 0)');
     });
@@ -280,7 +280,7 @@ describe('Draw character when out of bounds', () => {
                 dimensions: new SceneDimensions(5, 3),
                 characterState: new CharacterState(x, y, 2, [])
             });
-            const robotCharacter = findRobotCharacter(sceneWrapper);
+            const robotCharacter = findCharacter(sceneWrapper);
             expect(robotCharacter.get(0).props.transform)
                 .toBe(`translate(${expectedDrawX} ${expectedDrawY}) rotate(0 0 0)`);
         }
@@ -293,7 +293,7 @@ describe('When the Character has a path, it is drawn on the Scene', () => {
         const sceneWrapper = createMountScene({
             characterState: new CharacterState(0, 0, 2, [])
         });
-        const robotCharacterPath = findRobotCharacterPath(sceneWrapper);
+        const robotCharacterPath = findCharacterPath(sceneWrapper);
         expect(robotCharacterPath.length).toBe(0);
     });
 
@@ -302,7 +302,7 @@ describe('When the Character has a path, it is drawn on the Scene', () => {
         const sceneWrapper = createMountScene({
             characterState: new CharacterState(0, 0, 2, [{x1: 100, y1: 200, x2: 300, y2: 400}])
         });
-        const robotCharacterPath = findRobotCharacterPath(sceneWrapper);
+        const robotCharacterPath = findCharacterPath(sceneWrapper);
         expect(robotCharacterPath.length).toBe(1);
         expect(robotCharacterPath.get(0).props.x1).toBe(100);
         expect(robotCharacterPath.get(0).props.y1).toBe(200);
@@ -319,7 +319,7 @@ describe('When the Character has a path, it is drawn on the Scene', () => {
                     {x1: 500, y1: 600, x2: 700, y2: 800}
                 ])
         });
-        const robotCharacterPath = findRobotCharacterPath(sceneWrapper);
+        const robotCharacterPath = findCharacterPath(sceneWrapper);
         expect(robotCharacterPath.length).toBe(2);
         expect(robotCharacterPath.get(0).props.x1).toBe(100);
         expect(robotCharacterPath.get(0).props.y1).toBe(200);

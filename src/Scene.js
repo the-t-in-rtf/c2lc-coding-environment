@@ -2,7 +2,7 @@
 
 import React from 'react';
 import CharacterState from './CharacterState';
-import RobotCharacter from './RobotCharacter';
+import Character from './Character';
 import SceneDimensions from './SceneDimensions';
 import { injectIntl } from 'react-intl';
 import type {IntlShape} from 'react-intl';
@@ -212,7 +212,7 @@ class Scene extends React.Component<SceneProps, {}> {
                         {this.drawGrid()}
                         <g clipPath='url(#Scene-clippath)'>
                             {this.drawCharacterPath()}
-                            <RobotCharacter
+                            <Character
                                 theme={this.props.theme}
                                 transform={robotCharacterTransform}
                                 width={0.9}
