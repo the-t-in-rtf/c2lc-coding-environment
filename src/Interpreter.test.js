@@ -131,14 +131,88 @@ test('Do a command with a program', (done) => {
 
 test('Doing an unknown command rejects with Error', () => {
     const { interpreter } = createInterpreter();
-    return expect(interpreter.doCommand('unknown-command')).rejects.toThrow('Unknown command: unknown-command');
+    return expect(
+        interpreter.doCommand('unknown-command')
+    ).rejects.toThrow('Unknown command: unknown-command');
 });
 
 test('step() Promise is rejected on first command error', (done) => {
     const { interpreter, appMock } = createInterpreter();
-    interpreter.step(new ProgramSequence(['unknown-command1', 'unknown-command2'], 0)).then(() => {}, (error: Error) => {
+    interpreter.step(
+        new ProgramSequence(['unknown-command1', 'unknown-command2'], 0)
+    ).then(() => {}, (error: Error) => {
         expect(appMock.incrementProgramCounter.mock.calls.length).toBe(0);
         expect(error.message).toBe('Unknown command: unknown-command1');
+        done();
+    });
+});
+
+test('Run a program with one command from beginning to end without an error', (done) => {
+    const { interpreter, appMock } = createInterpreter();
+    const mockCommandHandler = createMockCommandHandler();
+    interpreter.addCommandHandler('command', 'test', mockCommandHandler);
+
+    appMock.getRunningState.mockImplementation(() => {return 'running'});
+    appMock.getProgramSequence.mockImplementationOnce(() => {
+        return new ProgramSequence(['command'], 0)
+    });
+    appMock.getProgramSequence.mockImplementationOnce(() => {
+        return new ProgramSequence(['command'], 1)
+    });
+
+    interpreter.startRun().then(() => {
+        expect(mockCommandHandler.mock.calls.length).toBe(1);
+        expect(appMock.incrementProgramCounter.mock.calls.length).toBe(1);
+        expect(appMock.stopPlaying.mock.calls.length).toBe(1);
+        done();
+    });
+});
+
+test('Run a program with three commands from beginning to end without an error', (done) => {
+    const { interpreter, appMock } = createInterpreter();
+    const mockCommandHandler = createMockCommandHandler();
+    interpreter.addCommandHandler('command', 'test', mockCommandHandler);
+
+    appMock.getRunningState.mockImplementation(() => {return 'running'});
+    appMock.getProgramSequence.mockImplementationOnce(() => {
+        return new ProgramSequence(['command', 'command', 'command'], 0)
+    });
+    appMock.getProgramSequence.mockImplementationOnce(() => {
+        return new ProgramSequence(['command', 'command', 'command'], 1)
+    });
+    appMock.getProgramSequence.mockImplementationOnce(() => {
+        return new ProgramSequence(['command', 'command', 'command'], 2)
+    });
+    appMock.getProgramSequence.mockImplementationOnce(() => {
+        return new ProgramSequence(['command', 'command', 'command'], 3)
+    });
+
+    interpreter.startRun().then(() => {
+        expect(mockCommandHandler.mock.calls.length).toBe(3);
+        expect(appMock.incrementProgramCounter.mock.calls.length).toBe(3);
+        expect(appMock.stopPlaying.mock.calls.length).toBe(1);
+        done();
+    });
+});
+
+test('Do not continue through program if runningState changes to stopped', (done) => {
+    const { interpreter, appMock } = createInterpreter();
+    const mockCommandHandler = createMockCommandHandler();
+    const anotherMockCommandHandler = createMockCommandHandler();
+    interpreter.addCommandHandler('command', 'test', mockCommandHandler);
+    interpreter.addCommandHandler('anotherCommand', 'test', anotherMockCommandHandler);
+
+    appMock.getRunningState.mockImplementationOnce(() => {return 'running'});
+    appMock.getRunningState.mockImplementationOnce(() => {return 'stopped'});
+
+    appMock.getProgramSequence.mockImplementationOnce(() => {
+        return new ProgramSequence(['command', 'anotherCommand'], 0)
+    });
+
+    interpreter.startRun().then(() => {
+        expect(mockCommandHandler.mock.calls.length).toBe(1);
+        expect(anotherMockCommandHandler.mock.calls.length).toBe(0);
+        expect(appMock.incrementProgramCounter.mock.calls.length).toBe(1);
         done();
     });
 });
