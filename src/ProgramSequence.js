@@ -1,6 +1,6 @@
 // @flow
 
-import type { Program, CommandName } from './types';
+import type { Program } from './types';
 
 export default class ProgramSequence {
     program: Program;

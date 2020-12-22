@@ -2,13 +2,12 @@
 
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type {IntlShape} from 'react-intl';
-import type { RunningState } from './types';
+import type {AudioManager, RunningState} from './types';
 import React from 'react';
 import ConfirmDeleteAllModal from './ConfirmDeleteAllModal';
 import AddNode from './AddNode';
 import ActionPanel from './ActionPanel';
 import AriaDisablingButton from './AriaDisablingButton';
-import AudioManager from './AudioManager';
 import FocusTrapManager from './FocusTrapManager';
 import CommandBlock from './CommandBlock';
 import classNames from 'classnames';
@@ -17,6 +16,8 @@ import ToggleSwitch from './ToggleSwitch';
 import { ReactComponent as AddIcon } from './svg/Add.svg';
 import { ReactComponent as DeleteAllIcon } from './svg/DeleteAll.svg';
 import { ReactComponent as RobotIcon } from './svg/Robot.svg';
+import { ReactComponent as SpaceShipIcon } from './svg/SpaceShip.svg';
+import { ReactComponent as RabbitIcon } from './svg/Rabbit.svg';
 import './ProgramBlockEditor.scss';
 
 // TODO: Send focus to Delete toggle button on close of Delete All confirmation
@@ -33,6 +34,7 @@ type ProgramBlockEditorProps = {
     audioManager: AudioManager,
     focusTrapManager: FocusTrapManager,
     addNodeExpandedMode: boolean,
+    theme: string,
     onChangeProgramSequence: (programSequence: ProgramSequence) => void,
     onChangeActionPanelStepIndex: (index: ?number) => void,
     onChangeAddNodeExpandedMode: (boolean) => void
@@ -180,14 +182,14 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             if (
                 this.props.selectedAction &&
                 this.props.programSequence.getProgramStepAt(index) !== this.props.selectedAction) {
-                    this.props.onChangeProgramSequence(
-                        this.props.programSequence.overwriteStep(index, this.props.selectedAction)
-                    );
-                    this.setState({
-                        replaceIsActive: false
-                    });
-                    this.focusCommandBlockIndex = index;
-                    this.scrollToAddNodeIndex = index + 1;
+                this.props.onChangeProgramSequence(
+                    this.props.programSequence.overwriteStep(index, this.props.selectedAction)
+                );
+                this.setState({
+                    replaceIsActive: false
+                });
+                this.focusCommandBlockIndex = index;
+                this.scrollToAddNodeIndex = index + 1;
             } else {
                 this.setState({
                     replaceIsActive: true
@@ -389,6 +391,26 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         )
     }
 
+    getThemedCharacterAriaLabel() {
+        if (this.props.theme === 'space') {
+            return this.props.intl.formatMessage({id:'ProgramBlockEditor.spaceShipCharacter'});
+        } else if (this.props.theme === 'forest') {
+            return this.props.intl.formatMessage({id:'ProgramBlockEditor.rabbitCharacter'});
+        } else {
+            return this.props.intl.formatMessage({id:'ProgramBlockEditor.robotCharacter'});
+        }
+    }
+
+    getThemedCharacter() {
+        if (this.props.theme === 'space') {
+            return <SpaceShipIcon className='ProgramBlockEditor__character-column-character' />
+        } else if (this.props.theme === 'forest') {
+            return <RabbitIcon className='ProgramBlockEditor__character-column-character' />
+        } else {
+            return <RobotIcon className='ProgramBlockEditor__character-column-character' />
+        }
+    }
+
     render() {
         const contents = this.props.programSequence.getProgram().map((command, stepNumber) => {
             return this.makeProgramBlockSection(stepNumber, command);
@@ -430,8 +452,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         <div
                             className='ProgramBlockEditor__character-column-character-container'
                             role='img'
-                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.robotCharacter'})}>
-                            <RobotIcon className='ProgramBlockEditor__chracter-column-character' />
+                            aria-label={this.getThemedCharacterAriaLabel()}>
+                            {this.getThemedCharacter()}
                         </div>
                     </h3>
                 </div>
