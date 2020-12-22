@@ -6,21 +6,17 @@ import { configure, mount } from 'enzyme';
 import { IntlProvider } from 'react-intl';
 import messages from './messages.json';
 import ThemeSelector from './ThemeSelector';
+import type { ThemeName } from './types';
 
 configure({ adapter: new Adapter() });
 
 function createMountThemeSelector(props) {
-    const mockSelectHandler = jest.fn();
-
     const wrapper = mount(
         React.createElement(
             ThemeSelector,
-            Object.assign(
-                {
-                    onSelect: mockSelectHandler
-                },
-                props
-            )
+            {
+                onSelect: (value: ThemeName) => {}
+            }
         ),
         {
             wrappingComponent: IntlProvider,
@@ -32,10 +28,7 @@ function createMountThemeSelector(props) {
         }
     );
 
-    return {
-        wrapper,
-        mockSelectHandler
-    };
+    return wrapper;
 }
 
 function getThemeSelector(wrapper) {
@@ -45,7 +38,7 @@ function getThemeSelector(wrapper) {
 describe('When rendering selector options', () => {
     test('there should be default, forest, and space options', () => {
         expect.assertions(3);
-        const { wrapper } = createMountThemeSelector();
+        const wrapper = createMountThemeSelector();
         const selectorOptions = getThemeSelector(wrapper).get(0).props.children;
         expect(selectorOptions[0].props.eventKey).toBe('default');
         expect(selectorOptions[1].props.eventKey).toBe('space');

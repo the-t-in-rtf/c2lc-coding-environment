@@ -159,8 +159,12 @@ function getProgramSequenceContainer(programBlockEditorWrapper) {
     return programBlockEditorWrapper.find('.ProgramBlockEditor__program-sequence-scroll-container').get(0);
 }
 
-function getChracterColumnCharacter(programBlockEditorWrapper) {
-    return programBlockEditorWrapper.find('.ProgramBlockEditor__chracter-column-character').get(0);
+function getCharacterColumnCharacterContainer(programBlockEditorWrapper) {
+    return programBlockEditorWrapper.find('.ProgramBlockEditor__character-column-character-container').get(0);
+}
+
+function getCharacterColumnCharacter(programBlockEditorWrapper) {
+    return programBlockEditorWrapper.find('.ProgramBlockEditor__character-column-character').get(0);
 }
 
 describe('Program rendering', () => {
@@ -701,18 +705,21 @@ test('The editor scrolls when a step is added to the end of the program', () => 
 
 describe('Themed character icon should be rendered on the character column', () => {
     test('default', () => {
-        expect.assertions(1);
+        expect.assertions(2);
         const { wrapper } = createMountProgramBlockEditor();
-        expect(getChracterColumnCharacter(wrapper).type.render().props.children).toBe('Robot.svg');
+        expect(getCharacterColumnCharacterContainer(wrapper).props['aria-label']).toBe('Robot character');
+        expect(getCharacterColumnCharacter(wrapper).type.render().props.children).toBe('Robot.svg');
     });
     test('forest', () => {
-        expect.assertions(1);
+        expect.assertions(2);
         const { wrapper } = createMountProgramBlockEditor({theme: 'forest'});
-        expect(getChracterColumnCharacter(wrapper).type.render().props.children).toBe('Rabbit.svg');
+        expect(getCharacterColumnCharacterContainer(wrapper).props['aria-label']).toBe('Rabbit character');
+        expect(getCharacterColumnCharacter(wrapper).type.render().props.children).toBe('Rabbit.svg');
     });
     test('space', () => {
-        expect.assertions(1);
+        expect.assertions(2);
         const { wrapper } = createMountProgramBlockEditor({theme: 'space'});
-        expect(getChracterColumnCharacter(wrapper).type.render().props.children).toBe('SpaceShip.svg');
+        expect(getCharacterColumnCharacterContainer(wrapper).props['aria-label']).toBe('Space Ship character');
+        expect(getCharacterColumnCharacter(wrapper).type.render().props.children).toBe('SpaceShip.svg');
     });
 });

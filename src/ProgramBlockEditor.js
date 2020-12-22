@@ -392,13 +392,23 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         )
     }
 
+    getThemedCharacterAriaLabel() {
+        if (this.props.theme === 'space') {
+            return this.props.intl.formatMessage({id:'ProgramBlockEditor.spaceShipCharacter'});
+        } else if (this.props.theme === 'forest') {
+            return this.props.intl.formatMessage({id:'ProgramBlockEditor.rabbitCharacter'});
+        } else {
+            return this.props.intl.formatMessage({id:'ProgramBlockEditor.robotCharacter'});
+        }
+    }
+
     getThemedCharacter() {
         if (this.props.theme === 'space') {
-            return <SpaceShipIcon className='ProgramBlockEditor__chracter-column-character' />
+            return <SpaceShipIcon className='ProgramBlockEditor__character-column-character' />
         } else if (this.props.theme === 'forest') {
-            return <RabbitIcon className='ProgramBlockEditor__chracter-column-character' />
+            return <RabbitIcon className='ProgramBlockEditor__character-column-character' />
         } else {
-            return <RobotIcon className='ProgramBlockEditor__chracter-column-character' />
+            return <RobotIcon className='ProgramBlockEditor__character-column-character' />
         }
     }
 
@@ -443,7 +453,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         <div
                             className='ProgramBlockEditor__character-column-character-container'
                             role='img'
-                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.robotCharacter'})}>
+                            aria-label={this.getThemedCharacterAriaLabel()}>
                             {this.getThemedCharacter()}
                         </div>
                     </h3>

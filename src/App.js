@@ -498,7 +498,7 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
-    handleOnChangeTheme = (theme: ThemeName) => {
+    handleChangeTheme = (theme: ThemeName) => {
         this.setStateSettings({ theme });
     }
 
@@ -532,13 +532,13 @@ export default class App extends React.Component<{}, AppState> {
                                         <FormattedMessage id='App.connectToDash' />
                                     </DeviceConnectControl>
                                     */}
-                                    <ThemeSelector onSelect={this.handleOnChangeTheme} />
+                                    <ThemeSelector onSelect={this.handleChangeTheme} />
                                 </div>
                             </Row>
                         </Container>
                     </header>
                     <Container
-                        className={`App__container mb-5`}
+                        className='App__container mb-5'
                         role='main'>
                         {/* Dash connection removed for version 0.5
                         {!this.appContext.bluetoothApiIsAvailable &&
@@ -695,7 +695,7 @@ export default class App extends React.Component<{}, AppState> {
         }
         if (this.state.settings.theme !== prevState.settings.theme) {
             if (document.body) {
-                if(this.state.settings.theme === 'default') {
+                if (this.state.settings.theme === 'default') {
                     document.body.className = '';
                 } else {
                     document.body.className = `${this.state.settings.theme}-theme`;
