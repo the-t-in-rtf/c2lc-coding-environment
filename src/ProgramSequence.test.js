@@ -3,8 +3,10 @@
 import ProgramSequence from './ProgramSequence';
 import type { Program } from './types';
 
-function checkProgramEdit(inputBefore: Program, expected: Program,
-                          inputAfter: Program, result: Program) {
+function checkProgramEdit(
+    inputBefore: Program, expected: Program,
+    inputAfter: Program, result: Program)
+{
     expect(inputAfter).toEqual(inputBefore);
     expect(result).toEqual(expected);
 };

@@ -3,7 +3,6 @@
 import App from './App';
 import Interpreter from './Interpreter';
 import ProgramSequence from './ProgramSequence';
-import type {CommandHandler} from './Interpreter';
 
 jest.mock('./App');
 
@@ -93,8 +92,7 @@ test('Step a program with 2 handlers for the same command', (done) => {
 });
 
 test('Stepping a program with an unknown command rejects with Error', () => {
-    const { interpreter, appMock } = createInterpreter();
-    const mockCommandHandler = createMockCommandHandler();
+    const { interpreter } = createInterpreter();
 
     return expect(interpreter.step(new ProgramSequence(['unknown-command'], 0)))
         .rejects.toThrow('Unknown command: unknown-command');
