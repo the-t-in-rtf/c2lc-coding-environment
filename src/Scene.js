@@ -193,7 +193,7 @@ class Scene extends React.Component<SceneProps, {}> {
 
         // Subtract 90 degrees from the character bearing as the character
         // image is drawn upright when it is facing East
-        const robotCharacterTransform = `translate(${this.getCharacterDrawXPos()} ${this.getCharacterDrawYPos()}) rotate(${this.props.characterState.getDirectionDegrees() - 90} 0 0)`;
+        const characterTransform = `translate(${this.getCharacterDrawXPos()} ${this.getCharacterDrawYPos()}) rotate(${this.props.characterState.getDirectionDegrees() - 90} 0 0)`;
 
         return (
             <div>
@@ -214,7 +214,7 @@ class Scene extends React.Component<SceneProps, {}> {
                             {this.drawCharacterPath()}
                             <Character
                                 theme={this.props.theme}
-                                transform={robotCharacterTransform}
+                                transform={characterTransform}
                                 width={0.9}
                             />
                         </g>

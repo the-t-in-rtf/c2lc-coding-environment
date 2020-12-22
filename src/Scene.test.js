@@ -213,7 +213,7 @@ describe('The ARIA label should tell there is a character with its position', ()
 });
 
 describe('When the Scene renders', () => {
-    test('Should render the robot character component', () => {
+    test('Should render the character component', () => {
         expect.assertions(5);
         const sceneWrapper = createMountScene({
             dimensions: new SceneDimensions(1, 1)
@@ -231,7 +231,7 @@ describe('When the Scene renders', () => {
     });
 });
 
-describe('When the robot character renders, transform should apply', () => {
+describe('When the character renders, transform should apply', () => {
     test('When xPos = 0, yPos = 0, direction = 2', () => {
         expect.assertions(1);
         const sceneWrapper = createMountScene({

@@ -13,7 +13,7 @@ const defaultCharacterProps = {
     width: 3
 };
 
-function createMountRobotChracter(props) {
+function createMountCharacter(props) {
     const wrapper = mount(
         React.createElement(
             Character,
@@ -35,17 +35,17 @@ function findCharacter(wrapper) {
 describe('Right character should render based on theme props', () => {
     test('default', () => {
         expect.assertions(1);
-        const robotCharacterWrapper = createMountRobotChracter();
-        expect(findCharacter(robotCharacterWrapper).get(0).type.render().props.children).toBe('Robot.svg');
+        const wrapper = createMountCharacter();
+        expect(findCharacter(wrapper).get(0).type.render().props.children).toBe('Robot.svg');
     });
     test('forest', () => {
         expect.assertions(1);
-        const robotCharacterWrapper = createMountRobotChracter({theme: 'forest'});
-        expect(findCharacter(robotCharacterWrapper).get(0).type.render().props.children).toBe('Rabbit.svg');
+        const wrapper = createMountCharacter({theme: 'forest'});
+        expect(findCharacter(wrapper).get(0).type.render().props.children).toBe('Rabbit.svg');
     });
     test('space', () => {
         expect.assertions(1);
-        const robotCharacterWrapper = createMountRobotChracter({theme: 'space'});
-        expect(findCharacter(robotCharacterWrapper).get(0).type.render().props.children).toBe('SpaceShip.svg');
+        const wrapper = createMountCharacter({theme: 'space'});
+        expect(findCharacter(wrapper).get(0).type.render().props.children).toBe('SpaceShip.svg');
     });
 })
