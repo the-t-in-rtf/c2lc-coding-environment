@@ -25,7 +25,6 @@ const defaultProgramBlockEditorProps = {
     interpreterIsRunning: false,
     programSequence: new ProgramSequence(['forward1', 'left45', 'forward1', 'left45'], 0),
     runningState: 'stopped',
-    activeProgramStepNum: null,
     actionPanelStepIndex: null,
     selectedAction: null,
     editingDisabled: false,
@@ -727,5 +726,15 @@ describe('Themed character icon should be rendered on the character column', () 
         const { wrapper } = createMountProgramBlockEditor({theme: 'space'});
         expect(getCharacterColumnCharacterContainer(wrapper).props['aria-label']).toBe('Space Ship character');
         expect(getCharacterColumnCharacter(wrapper).type.render().props.children).toBe('SpaceShip.svg');
+    });
+});
+
+describe('When runningState property changes to paused', () => {
+    test('className of the currentStep should have --paused', () => {
+        expect.assertions(1);
+        const { wrapper } = createMountProgramBlockEditor({ runningState: 'paused' });
+        const currentStep = getProgramBlockAtPosition(wrapper, 0);
+
+        expect(currentStep.get(0).props.className.includes('ProgramBlockEditor__program-block--paused')).toBe(true);
     });
 });

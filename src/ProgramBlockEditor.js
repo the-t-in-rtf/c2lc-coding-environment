@@ -268,11 +268,14 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     makeProgramBlock(programStepNumber: number, command: string) {
         const active = this.programStepIsActive(programStepNumber);
+        const paused = this.props.runningState === 'paused' &&
+            this.props.programSequence.getProgramCounter() === programStepNumber;
         const hasActionPanelControl = this.props.actionPanelStepIndex === programStepNumber;
         const classes = classNames(
             'ProgramBlockEditor__program-block',
             active && 'ProgramBlockEditor__program-block--active',
-            hasActionPanelControl && 'focus-trap-action-panel__program-block'
+            hasActionPanelControl && 'focus-trap-action-panel__program-block',
+            paused && 'ProgramBlockEditor__program-block--paused'
         );
         const ariaLabel = this.props.intl.formatMessage(
             { id: 'ProgramBlockEditor.command' },
