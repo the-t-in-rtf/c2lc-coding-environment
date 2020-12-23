@@ -366,12 +366,24 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     handleClickPlay = () => {
-        this.setState((state) => {
-            return {
-                programSequence: state.programSequence.updateProgramCounter(0),
-                runningState: 'running'
-            }
-        });
+        switch (this.state.runningState) {
+            case 'running':
+                this.setState({ runningState: 'paused' });
+                break;
+            case 'paused':
+                this.setState({ runningState: 'running' });
+                break;
+            case 'stopped':
+                this.setState((state) => {
+                    return {
+                        programSequence: state.programSequence.updateProgramCounter(0),
+                        runningState: 'running'
+                    };
+                });
+                break;
+            default:
+                break;
+        }
     };
 
     handleClickConnectDash = () => {
@@ -617,9 +629,7 @@ export default class App extends React.Component<{}, AppState> {
                                 <div className='App__playButton-container'>
                                     <PlayButton
                                         interpreterIsRunning={this.state.runningState === 'running'}
-                                        disabled={
-                                            this.state.runningState === 'running' ||
-                                            this.state.programSequence.getProgramLength() === 0}
+                                        disabled={this.state.programSequence.getProgramLength() === 0}
                                         onClick={this.handleClickPlay}
                                     />
                                 </div>
@@ -713,6 +723,11 @@ export default class App extends React.Component<{}, AppState> {
                 } else {
                     document.body.className = `${this.state.settings.theme}-theme`;
                 }
+            }
+        }
+        if (this.state.programSequence !== prevState.programSequence) {
+            if (this.state.programSequence.getProgramLength() === 0) {
+                this.setState({ runningState: 'stopped' });
             }
         }
         /* Dash connection removed for version 0.5
