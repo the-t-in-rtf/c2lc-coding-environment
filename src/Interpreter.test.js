@@ -241,3 +241,12 @@ test('Each command handler get called with step time specified in the class prop
     expect(mockCommandHandler.mock.calls.length).toBe(2);
     expect(mockCommandHandler.mock.calls[1][1]).toBe(interpreter.stepTimeMs);
 });
+
+test('ContinueRun will not continue, when continueRunActive property of Interpreter is set to true, ', (done) => {
+    const { interpreter, appMock } = createInterpreter();
+    interpreter.continueRunActive = true;
+    interpreter.startRun().then(() => {
+        expect(appMock.getRunningState.mock.calls.length).toBe(0);
+        done();
+    })
+});

@@ -11,11 +11,13 @@ export default class Interpreter {
     commands: { [command: string]: { [namespace: string]: CommandHandler } };
     stepTimeMs: number;
     app: App;
+    continueRunActive: boolean;
 
     constructor(stepTimeMs: number, app: App) {
         this.commands = {};
         this.stepTimeMs = stepTimeMs;
         this.app = app;
+        this.continueRunActive = false;
     }
 
     addCommandHandler(command: string, namespace: string, handler: CommandHandler) {
@@ -32,16 +34,22 @@ export default class Interpreter {
     }
 
     startRun(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.continueRun(resolve, reject);
-        });
+        if (!this.continueRunActive) {
+            return new Promise((resolve, reject) => {
+                this.continueRun(resolve, reject);
+            });
+        } else {
+            return Promise.resolve();
+        }
     }
 
     continueRun(resolve: (result:any) => void, reject: (error: any) => void): void {
+        this.continueRunActive = true;
         if (this.app.getRunningState() === 'running') {
             const programSequence = this.app.getProgramSequence();
             if (this.atEnd(programSequence)) {
                 this.app.stopPlaying();
+                this.continueRunActive = false;
                 resolve();
             } else {
                 this.step(programSequence).then(() => {
@@ -49,10 +57,12 @@ export default class Interpreter {
                 }, (error: Error) => {
                     // Reject the run Promise when the step Promise is rejected
                     this.app.stopPlaying();
+                    this.continueRunActive = false;
                     reject(error);
                 });
             }
         } else {
+            this.continueRunActive = false;
             resolve();
         }
     }
