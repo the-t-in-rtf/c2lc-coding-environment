@@ -134,11 +134,13 @@ test('Doing an unknown command rejects with Error', () => {
     ).rejects.toThrow('Unknown command: unknown-command');
 });
 
-test('step() Promise is rejected on first command error', (done) => {
+test('startRun() Promise is rejected on first command error', (done) => {
     const { interpreter, appMock } = createInterpreter();
-    interpreter.step(
-        new ProgramSequence(['unknown-command1', 'unknown-command2'], 0)
-    ).catch((error) => {
+    appMock.getRunningState.mockImplementation(() => {return 'running'});
+    appMock.getProgramSequence.mockImplementationOnce(() => {
+        return new ProgramSequence(['unknown-command1', 'unknown-command2'], 0);
+    });
+    interpreter.startRun().catch((error) => {
         expect(appMock.incrementProgramCounter.mock.calls.length).toBe(0);
         expect(error.message).toBe('Unknown command: unknown-command1');
         done();
