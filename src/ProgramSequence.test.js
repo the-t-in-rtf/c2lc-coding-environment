@@ -12,12 +12,57 @@ function checkProgramEdit(
 };
 
 test('ProgramSequence constructor should take program and programCounter parameters', () => {
+    expect.assertions(2);
     const program = ['f1'];
     const programCounter = 0;
     const programSequence = new ProgramSequence(program, programCounter);
     expect(programSequence.getProgram()).toBe(program);
     expect(programSequence.getProgramCounter()).toBe(programCounter);
 });
+
+test('updateProgramCounter should only update programCounter', () => {
+    expect.assertions(2);
+    const program = ['f1'];
+    let programSequence = new ProgramSequence(program, 0);
+    const newProgramCounter = 1;
+    programSequence = programSequence.updateProgramCounter(newProgramCounter);
+    expect(programSequence.getProgram()).toBe(program);
+    expect(programSequence.getProgramCounter()).toBe(newProgramCounter);
+});
+
+test('incrementProgramCounter should increment programCounter by 1', () => {
+    expect.assertions(1);
+    let programSequence = new ProgramSequence([], 0);
+    programSequence = programSequence.incrementProgramCounter();
+    expect(programSequence.getProgramCounter()).toBe(1);
+});
+
+test('deleteStep updates programCounter if deleted program step index is less than the programCounter', () => {
+    expect.assertions(2);
+    let programSequence = new ProgramSequence(['f1', 'f2'], 1);
+    programSequence = programSequence.deleteStep(0);
+    expect(programSequence.getProgram()).toStrictEqual(['f2']);
+    expect(programSequence.getProgramCounter()).toBe(0);
+});
+
+test('deleteStep should not update programCounter if deleted program step index is equal, or more than the programCounter', () => {
+    expect.assertions(4);
+    let programSequence = new ProgramSequence(['f1', 'f2', 'f3'], 1);
+    programSequence = programSequence.deleteStep(2);
+    expect(programSequence.getProgram()).toStrictEqual(['f1', 'f2']);
+    expect(programSequence.getProgramCounter()).toBe(1);
+    programSequence = programSequence.deleteStep(1);
+    expect(programSequence.getProgram()).toStrictEqual(['f1']);
+    expect(programSequence.getProgramCounter()).toBe(1);
+});
+
+test('insertStep should increment programCounter', () => {
+    expect.assertions(2);
+    let programSequence = new ProgramSequence([], 0);
+    programSequence = programSequence.insertStep(0, 'f1');
+    expect(programSequence.getProgram()).toStrictEqual(['f1']);
+    expect(programSequence.getProgramCounter()).toBe(1);
+})
 
 test.each([
     [[], 0, ['command1']],
@@ -80,9 +125,4 @@ test.each([
         checkProgramEdit(input, expected, inputValues, result);
     }
 );
-
-// test('insertStep method should append a command at the end of the program property', () => {
-//     const programSequence = new ProgramSequence([], 0, 'stopped');
-//     expect(programSequence.insertStep())
-// })
 
