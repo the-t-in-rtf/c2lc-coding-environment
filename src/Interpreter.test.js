@@ -138,7 +138,7 @@ test('step() Promise is rejected on first command error', (done) => {
     const { interpreter, appMock } = createInterpreter();
     interpreter.step(
         new ProgramSequence(['unknown-command1', 'unknown-command2'], 0)
-    ).then(() => {}, (error: Error) => {
+    ).catch((error) => {
         expect(appMock.incrementProgramCounter.mock.calls.length).toBe(0);
         expect(error.message).toBe('Unknown command: unknown-command1');
         done();
