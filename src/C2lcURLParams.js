@@ -18,4 +18,8 @@ export default class C2lcURLParams {
     getCharacterState() {
         return this.urlSearchParams.get('c');
     }
+
+    getTheme() {
+        return this.urlSearchParams.get('t');
+    }
 }
