@@ -58,33 +58,33 @@ test('CharacterState.pathEquals', () => {
     expect(new CharacterState(0, 0, 0, twoSegments).pathEquals(oneSegment, 1)).toBeFalsy();
 
     expect(new CharacterState(0, 0, 0, oneSegment).pathEquals([
-            {x1: 100, y1: 200, x2: 300, y2: 400}
-        ], 1)).toBeTruthy();
+        {x1: 100, y1: 200, x2: 300, y2: 400}
+    ], 1)).toBeTruthy();
 
     expect(new CharacterState(0, 0, 0, twoSegments).pathEquals([
-            {x1: 100, y1: 200, x2: 300, y2: 400},
-            {x1: 500, y1: 600, x2: 700, y2: 800}
-        ], 1)).toBeTruthy();
+        {x1: 100, y1: 200, x2: 300, y2: 400},
+        {x1: 500, y1: 600, x2: 700, y2: 800}
+    ], 1)).toBeTruthy();
 
     expect(new CharacterState(0, 0, 0, twoSegments).pathEquals([
-            {x1: 100, y1: 200, x2: 300, y2: 400},
-            {x1: 501, y1: 600, x2: 700, y2: 800}
-        ], 1)).toBeFalsy();
+        {x1: 100, y1: 200, x2: 300, y2: 400},
+        {x1: 501, y1: 600, x2: 700, y2: 800}
+    ], 1)).toBeFalsy();
 
     expect(new CharacterState(0, 0, 0, twoSegments).pathEquals([
-            {x1: 100, y1: 200, x2: 300, y2: 400},
-            {x1: 500, y1: 601, x2: 700, y2: 800}
-        ], 1)).toBeFalsy();
+        {x1: 100, y1: 200, x2: 300, y2: 400},
+        {x1: 500, y1: 601, x2: 700, y2: 800}
+    ], 1)).toBeFalsy();
 
     expect(new CharacterState(0, 0, 0, twoSegments).pathEquals([
-            {x1: 100, y1: 200, x2: 300, y2: 400},
-            {x1: 500, y1: 600, x2: 701, y2: 800}
-        ], 1)).toBeFalsy();
+        {x1: 100, y1: 200, x2: 300, y2: 400},
+        {x1: 500, y1: 600, x2: 701, y2: 800}
+    ], 1)).toBeFalsy();
 
     expect(new CharacterState(0, 0, 0, twoSegments).pathEquals([
-            {x1: 100, y1: 200, x2: 300, y2: 400},
-            {x1: 500, y1: 600, x2: 700, y2: 801}
-        ], 1)).toBeFalsy();
+        {x1: 100, y1: 200, x2: 300, y2: 400},
+        {x1: 500, y1: 600, x2: 700, y2: 801}
+    ], 1)).toBeFalsy();
 });
 
 test('CharacterState.getDirectionDegrees() should return the direction in degrees', () => {

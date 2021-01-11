@@ -5,7 +5,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import { configure, mount, shallow } from 'enzyme';
 import { Button } from 'react-bootstrap';
 import { createIntl, IntlProvider } from 'react-intl';
-import AudioManager from './AudioManager';
+import AudioManagerImpl from './AudioManagerImpl';
 import ActionPanel from './ActionPanel';
 import AriaDisablingButton from './AriaDisablingButton';
 import FocusTrapManager from './FocusTrapManager';
@@ -14,7 +14,7 @@ import ProgramBlockEditor from './ProgramBlockEditor';
 import ToggleSwitch from './ToggleSwitch';
 
 // Mocks
-jest.mock('./AudioManager');
+jest.mock('./AudioManagerImpl');
 
 configure({ adapter: new Adapter()});
 
@@ -30,7 +30,8 @@ const defaultProgramBlockEditorProps = {
     replaceIsActive: false,
     isDraggingCommand: false,
     focusTrapManager: new FocusTrapManager(),
-    addNodeExpandedMode: false
+    addNodeExpandedMode: false,
+    theme: 'default'
 };
 
 function createShallowProgramBlockEditor(props) {
@@ -41,10 +42,10 @@ function createShallowProgramBlockEditor(props) {
     });
 
     // $FlowFixMe: Flow doesn't know about the Jest mock API
-    AudioManager.mockClear();
-    const audioManagerInstance = new AudioManager(true);
+    AudioManagerImpl.mockClear();
+    const audioManagerInstance = new AudioManagerImpl(true);
     // $FlowFixMe: Flow doesn't know about the Jest mock API
-    const audioManagerMock: any = AudioManager.mock.instances[0];
+    const audioManagerMock: any = AudioManagerImpl.mock.instances[0];
 
     const mockChangeProgramHandler = jest.fn();
 
@@ -77,10 +78,10 @@ function createShallowProgramBlockEditor(props) {
 
 function createMountProgramBlockEditor(props) {
     // $FlowFixMe: Flow doesn't know about the Jest mock API
-    AudioManager.mockClear();
-    const audioManagerInstance = new AudioManager(true);
+    AudioManagerImpl.mockClear();
+    const audioManagerInstance = new AudioManagerImpl(true);
     // $FlowFixMe: Flow doesn't know about the Jest mock API
-    const audioManagerMock = AudioManager.mock.instances[0];
+    const audioManagerMock = AudioManagerImpl.mock.instances[0];
 
     const mockChangeProgramHandler = jest.fn();
     const mockChangeActionPanelStepIndex = jest.fn();
@@ -156,6 +157,14 @@ function getExpandAddNodeToggleSwitch(programBlockEditorWrapper) {
 
 function getProgramSequenceContainer(programBlockEditorWrapper) {
     return programBlockEditorWrapper.find('.ProgramBlockEditor__program-sequence-scroll-container').get(0);
+}
+
+function getCharacterColumnCharacterContainer(programBlockEditorWrapper) {
+    return programBlockEditorWrapper.find('.ProgramBlockEditor__character-column-character-container').get(0);
+}
+
+function getCharacterColumnCharacter(programBlockEditorWrapper) {
+    return programBlockEditorWrapper.find('.ProgramBlockEditor__character-column-character').get(0);
 }
 
 describe('Program rendering', () => {
@@ -565,7 +574,7 @@ describe('Delete All button can be disabled', () => {
     });
 });
 
-describe('Autoscroll to show the active program step', () => {
+describe('Autoscroll to show a step after the active program step', () => {
     test('When active program step number is 0, scroll to the beginning of the container', () => {
         expect.assertions(3);
         const mockScrollTo = jest.fn();
@@ -581,7 +590,7 @@ describe('Autoscroll to show the active program step', () => {
         expect(mockScrollTo.mock.calls[0][0]).toBe(0);
         expect(mockScrollTo.mock.calls[0][1]).toBe(0);
     });
-    test('When active program block is outside of the container, on the right', () => {
+    test('When a step after active program block is outside of the container, on the right', () => {
         expect.assertions(1);
 
         const { wrapper } = createMountProgramBlockEditor();
@@ -599,10 +608,10 @@ describe('Autoscroll to show the active program step', () => {
             scrollLeft: 200
         };
 
-        // Set the active block location
-        const activeProgramBlock = getProgramBlockAtPosition(wrapper, 3);
+        // Set the location of the next block
+        const nextProgramStep = getProgramBlockAtPosition(wrapper, 3);
         // $FlowFixMe: Flow complains that getBoundingClientRect is not writable
-        activeProgramBlock.getDOMNode().getBoundingClientRect = () => {
+        nextProgramStep.getDOMNode().getBoundingClientRect = () => {
             return {
                 left: 2000,
                 right: 2300
@@ -611,12 +620,12 @@ describe('Autoscroll to show the active program step', () => {
 
         // Trigger a scroll
         wrapper.setProps({
-            activeProgramStepNum: 3
+            activeProgramStepNum: 2
         });
 
         expect(programSequenceContainer.ref.current.scrollLeft).toBe(200 + 2300 - 100 - 1000);
     });
-    test('When active program block is outside of the container, on the left', () => {
+    test('When a step after active program block is outside of the container, on the left', () => {
         expect.assertions(1);
 
         const { wrapper } = createMountProgramBlockEditor();
@@ -634,10 +643,45 @@ describe('Autoscroll to show the active program step', () => {
             scrollLeft: 2000
         };
 
-        // Set the active block location
-        const activeProgramBlock = getProgramBlockAtPosition(wrapper, 3);
+        // Set the location of the next block
+        const nextProgramStep = getProgramBlockAtPosition(wrapper, 3);
         // $FlowFixMe: Flow complains that getBoundingClientRect is not writable
-        activeProgramBlock.getDOMNode().getBoundingClientRect = () => {
+        nextProgramStep.getDOMNode().getBoundingClientRect = () => {
+            return {
+                left: -200,
+                right: -100
+            };
+        };
+
+        // Trigger a scroll
+        wrapper.setProps({
+            activeProgramStepNum: 2
+        });
+
+        expect(programSequenceContainer.ref.current.scrollLeft).toBe(2000 - 100 - 200);
+    });
+    test('When active program block is the last program block, autoscroll to the last add node', () => {
+        expect.assertions(1);
+
+        const { wrapper } = createMountProgramBlockEditor();
+
+        // Set the container ref object to a custom object with just enough
+        // of the DOM API implemented to support the scroll logic
+        const programSequenceContainer = getProgramSequenceContainer(wrapper);
+        programSequenceContainer.ref.current = {
+            getBoundingClientRect: () => {
+                return {
+                    left : 100
+                };
+            },
+            clientWidth: 1000,
+            scrollLeft: 2000
+        };
+
+        // Set the last add node location
+        const lastAddNode = getAddNodeButtonAtPosition(wrapper, 0);
+        // $FlowFixMe: Flow complains that getBoundingClientRect is not writable
+        lastAddNode.getDOMNode().getBoundingClientRect = () => {
             return {
                 left: -200,
                 right: -100
@@ -650,7 +694,7 @@ describe('Autoscroll to show the active program step', () => {
         });
 
         expect(programSequenceContainer.ref.current.scrollLeft).toBe(2000 - 100 - 200);
-    });
+    })
 });
 
 test('The editor scrolls when a step is added to the end of the program', () => {
@@ -692,4 +736,25 @@ test('The editor scrolls when a step is added to the end of the program', () => 
 
     // (The index used to get the add note button position is zero because the add nodes aren't expanded).
     expect(mockScrollIntoView.mock.instances[0]).toBe(getAddNodeButtonAtPosition(wrapper, 0).getDOMNode());
+});
+
+describe('Themed character icon should be rendered on the character column', () => {
+    test('default', () => {
+        expect.assertions(2);
+        const { wrapper } = createMountProgramBlockEditor();
+        expect(getCharacterColumnCharacterContainer(wrapper).props['aria-label']).toBe('Robot character');
+        expect(getCharacterColumnCharacter(wrapper).type.render().props.children).toBe('Robot.svg');
+    });
+    test('forest', () => {
+        expect.assertions(2);
+        const { wrapper } = createMountProgramBlockEditor({theme: 'forest'});
+        expect(getCharacterColumnCharacterContainer(wrapper).props['aria-label']).toBe('Rabbit character');
+        expect(getCharacterColumnCharacter(wrapper).type.render().props.children).toBe('Rabbit.svg');
+    });
+    test('space', () => {
+        expect.assertions(2);
+        const { wrapper } = createMountProgramBlockEditor({theme: 'space'});
+        expect(getCharacterColumnCharacterContainer(wrapper).props['aria-label']).toBe('Space Ship character');
+        expect(getCharacterColumnCharacter(wrapper).type.render().props.children).toBe('SpaceShip.svg');
+    });
 });
