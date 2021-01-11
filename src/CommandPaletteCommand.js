@@ -11,6 +11,7 @@ import type {AudioManager, CommandName} from './types';
 type CommandPaletteCommandProps = {
     commandName: CommandName,
     intl: IntlShape,
+    isDraggingCommand: boolean,
     selectedCommandName: ?string,
     audioManager: AudioManager,
     onChange: (commandName: ?string) => void,
