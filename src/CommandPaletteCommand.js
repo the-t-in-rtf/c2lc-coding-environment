@@ -3,10 +3,9 @@
 import React from 'react';
 import CommandBlock from './CommandBlock';
 import classNames from 'classnames';
-import AudioManager from './AudioManager';
 import { injectIntl } from 'react-intl';
 import type {IntlShape} from 'react-intl';
-import type {CommandName} from './types';
+import type {AudioManager, CommandName} from './types';
 
 
 type CommandPaletteCommandProps = {
