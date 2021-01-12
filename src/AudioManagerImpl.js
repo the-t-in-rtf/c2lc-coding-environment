@@ -109,7 +109,7 @@ export default class AudioManager {
 
     playAnnouncement(messageIdSuffix: string, intl: IntlShape) {
         if (this.audioEnabled) {
-            if (window.speechSynthesis.speaking) {
+            if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
                 window.speechSynthesis.cancel();
             }
             const messageId = "Announcement." + messageIdSuffix;
