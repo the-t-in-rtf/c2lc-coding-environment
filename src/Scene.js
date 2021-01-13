@@ -2,7 +2,7 @@
 
 import React from 'react';
 import CharacterState from './CharacterState';
-import RobotCharacter from './RobotCharacter';
+import Character from './Character';
 import SceneDimensions from './SceneDimensions';
 import { injectIntl } from 'react-intl';
 import type {IntlShape} from 'react-intl';
@@ -12,6 +12,7 @@ import './Scene.scss';
 export type SceneProps = {
     dimensions: SceneDimensions,
     characterState: CharacterState,
+    theme: string,
     intl: IntlShape
 };
 
@@ -192,7 +193,7 @@ class Scene extends React.Component<SceneProps, {}> {
 
         // Subtract 90 degrees from the character bearing as the character
         // image is drawn upright when it is facing East
-        const robotCharacterTransform = `translate(${this.getCharacterDrawXPos()} ${this.getCharacterDrawYPos()}) rotate(${this.props.characterState.getDirectionDegrees() - 90} 0 0)`;
+        const characterTransform = `translate(${this.getCharacterDrawXPos()} ${this.getCharacterDrawYPos()}) rotate(${this.props.characterState.getDirectionDegrees() - 90} 0 0)`;
 
         return (
             <div>
@@ -211,9 +212,10 @@ class Scene extends React.Component<SceneProps, {}> {
                         {this.drawGrid()}
                         <g clipPath='url(#Scene-clippath)'>
                             {this.drawCharacterPath()}
-                            <RobotCharacter
-                                transform={robotCharacterTransform}
-                                width={0.6}
+                            <Character
+                                theme={this.props.theme}
+                                transform={characterTransform}
+                                width={0.9}
                             />
                         </g>
                     </svg>

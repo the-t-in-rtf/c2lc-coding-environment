@@ -16,6 +16,8 @@ import ToggleSwitch from './ToggleSwitch';
 import { ReactComponent as AddIcon } from './svg/Add.svg';
 import { ReactComponent as DeleteAllIcon } from './svg/DeleteAll.svg';
 import { ReactComponent as RobotIcon } from './svg/Robot.svg';
+import { ReactComponent as SpaceShipIcon } from './svg/SpaceShip.svg';
+import { ReactComponent as RabbitIcon } from './svg/Rabbit.svg';
 import './ProgramBlockEditor.scss';
 
 // TODO: Send focus to Delete toggle button on close of Delete All confirmation
@@ -33,6 +35,7 @@ type ProgramBlockEditorProps = {
     audioManager: AudioManager,
     focusTrapManager: FocusTrapManager,
     addNodeExpandedMode: boolean,
+    theme: string,
     onChangeProgram: (Program) => void,
     onChangeActionPanelStepIndex: (index: ?number) => void,
     onChangeAddNodeExpandedMode: (boolean) => void
@@ -70,9 +73,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     scrollProgramSequenceContainer(toElement) {
         if (this.programSequenceContainerRef.current) {
             const containerElem = this.programSequenceContainerRef.current;
-            if (toElement.dataset.stepnumber === '0') {
+            if (toElement != null && toElement.dataset.stepnumber === '0') {
                 containerElem.scrollTo(0, 0);
-            } else {
+            } else if (toElement != null){
                 const containerLeft = containerElem.getBoundingClientRect().left;
                 const containerWidth = containerElem.clientWidth;
                 const toElementLeft = toElement.getBoundingClientRect().left;
@@ -389,6 +392,26 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         )
     }
 
+    getThemedCharacterAriaLabel() {
+        if (this.props.theme === 'space') {
+            return this.props.intl.formatMessage({id:'ProgramBlockEditor.spaceShipCharacter'});
+        } else if (this.props.theme === 'forest') {
+            return this.props.intl.formatMessage({id:'ProgramBlockEditor.rabbitCharacter'});
+        } else {
+            return this.props.intl.formatMessage({id:'ProgramBlockEditor.robotCharacter'});
+        }
+    }
+
+    getThemedCharacter() {
+        if (this.props.theme === 'space') {
+            return <SpaceShipIcon className='ProgramBlockEditor__character-column-character' />
+        } else if (this.props.theme === 'forest') {
+            return <RabbitIcon className='ProgramBlockEditor__character-column-character' />
+        } else {
+            return <RobotIcon className='ProgramBlockEditor__character-column-character' />
+        }
+    }
+
     render() {
         const contents = this.props.program.map((command, stepNumber) => {
             return this.makeProgramBlockSection(stepNumber, command);
@@ -430,8 +453,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         <div
                             className='ProgramBlockEditor__character-column-character-container'
                             role='img'
-                            aria-label={this.props.intl.formatMessage({id:'ProgramBlockEditor.robotCharacter'})}>
-                            <RobotIcon className='ProgramBlockEditor__chracter-column-character' />
+                            aria-label={this.getThemedCharacterAriaLabel()}>
+                            {this.getThemedCharacter()}
                         </div>
                     </h3>
                 </div>
@@ -474,9 +497,20 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             this.focusAddNodeIndex = null;
         }
         if (this.props.activeProgramStepNum != null) {
-            const element = this.commandBlockRefs.get(this.props.activeProgramStepNum);
-            if (element) {
-                this.scrollProgramSequenceContainer(element);
+            // Take a snapshot of activeProgramStepNum that we know is non-null
+            // (this is primarily to keep Flow happy as it doesn't know that
+            // subsequent lines don't change it).
+            const activeProgramStepNum = this.props.activeProgramStepNum;
+
+            const activeProgramStep = this.commandBlockRefs.get(activeProgramStepNum);
+            const nextProgramStep = this.commandBlockRefs.get(activeProgramStepNum + 1);
+            const lastAddNode = this.addNodeRefs.get(this.props.program.length);
+            if (activeProgramStepNum === 0) {
+                this.scrollProgramSequenceContainer(activeProgramStep);
+            } else if (nextProgramStep) {
+                this.scrollProgramSequenceContainer(nextProgramStep);
+            } else {
+                this.scrollProgramSequenceContainer(lastAddNode);
             }
         }
         if (this.props.actionPanelStepIndex != null) {

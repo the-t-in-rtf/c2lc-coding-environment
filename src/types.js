@@ -10,6 +10,8 @@ export type DeviceConnectionStatus = 'notConnected' | 'connecting' | 'connected'
 
 export type EditorMode = 'text' | 'block';
 
+export type ThemeName = 'default' | 'forest' | 'space';
+
 export type Program = Array<string>;
 
 export interface RobotDriver {
