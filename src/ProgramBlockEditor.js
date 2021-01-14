@@ -55,6 +55,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     focusAddNodeIndex: ?number;
     scrollToAddNodeIndex: ?number;
     programSequenceContainerRef: { current: null | HTMLDivElement };
+    lastCalculatedClosestAddNode: number;
 
     constructor(props: ProgramBlockEditorProps) {
         super(props);
@@ -64,6 +65,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         this.focusAddNodeIndex = null;
         this.scrollToAddNodeIndex = null;
         this.programSequenceContainerRef = React.createRef();
+        this.lastCalculatedClosestAddNode = Date.now();
         this.state = {
             showConfirmDeleteAll : false,
             focusedActionPanelOptionName: null,
@@ -287,11 +289,16 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     handleDragCommandOverProgramArea = (event: DragEvent) => {
         event.preventDefault();
 
-        const closestAddNodeIndex = this.findAddNodeClosestToEvent(event);
+        // Only attempt to recalculate the closest node every 100ms.
+        const timeStamp = Date.now();
+        if (timeStamp - this.lastCalculatedClosestAddNode > 100) {
+            const closestAddNodeIndex = this.findAddNodeClosestToEvent(event);
+            this.lastCalculatedClosestAddNode = timeStamp;
 
-        this.setState({
-            closestAddNodeIndex: closestAddNodeIndex
-        });
+            this.setState({
+                closestAddNodeIndex: closestAddNodeIndex
+            });
+        }
     }
 
     // TODO: Discuss removing this once we have a good way to test drag and drop.
