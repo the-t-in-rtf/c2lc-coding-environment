@@ -4,9 +4,9 @@ The Inclusive Coding Environment is a new educational coding tool designed for l
 
 ![inclusive coding environment UI](./inclusive-coding-env.png)
 
-To try the latest development version of the Inclusive Coding Environment, visit our [development build](https://c2lc-dev.web.app/).
+To try the latest development version of the Inclusive Coding Environment, visit our [development build](https://develop-0-6--c2lc-build.netlify.app).
 
-Currently, the Inclusive Coding Environment supports the [Dash](https://www.makewonder.com/robots/dash/) robot. We'll be adding support for new robots in upcoming releases.
+Currently, the Inclusive Coding Environment doesn't support physical robot connection. We'll be adding support for physical robot connections in upcoming releases.
 
 ## Installation for Developers
 
@@ -50,7 +50,7 @@ Before submitting pull requests, please make sure all static type checks and tes
 
 ## License
 
-The Inclusive Coding Environment is open source software, distributed under the [BSD-3](https://github.com/codelearncreate/c2lc-coding-environment/blob/master/LICENSE.txt) license.
+The Inclusive Coding Environment is open source software, distributed under the [BSD-3](LICENSE.txt) license.
 
 ## Dependencies
 
