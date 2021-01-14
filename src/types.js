@@ -34,7 +34,7 @@ export type ArrayLike<T> = {
 export type AudioContext = any;
 
 export interface AudioManager {
-    playAnnouncement(messageIdSuffix: string, intl: IntlShape) : void;
+    playAnnouncement(messageIdSuffix: string, intl: IntlShape, messageOptions?: any) : void;
     playSoundForCharacterState(samplerKey: string, releaseTimeInMs: number, characterState: CharacterState) : void;
     setAudioEnabled(value: boolean) : void;
 }

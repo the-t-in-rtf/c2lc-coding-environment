@@ -107,13 +107,13 @@ export default class AudioManager {
         this.samplers.movement.connect(this.panner);
     }
 
-    playAnnouncement(messageIdSuffix: string, intl: IntlShape) {
+    playAnnouncement(messageIdSuffix: string, intl: IntlShape, messagePayload: any) {
         if (this.audioEnabled) {
             if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
                 window.speechSynthesis.cancel();
             }
             const messageId = "Announcement." + messageIdSuffix;
-            const toAnnounce = intl.formatMessage({ id: messageId});
+            const toAnnounce = intl.formatMessage({ id: messageId}, messagePayload);
             const utterance = new SpeechSynthesisUtterance(toAnnounce);
             window.speechSynthesis.speak(utterance);
         }

@@ -160,7 +160,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     };
 
     handleActionPanelDeleteStep = (index: number) => {
-        this.props.audioManager.playAnnouncement('delete', this.props.intl);
+        const commandString = this.props.intl.formatMessage({ id: "Announcement." + this.props.program[index]});
+
+        this.props.audioManager.playAnnouncement('delete', this.props.intl, { command: commandString});
         // If there are steps following the one being deleted, focus the
         // next step. Otherwise, focus the final add node.
         if (index < this.props.program.length - 1) {
@@ -173,7 +175,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     };
 
     handleActionPanelReplaceStep = (index: number) => {
-        this.props.audioManager.playAnnouncement('replace', this.props.intl);
+        const oldCommandString = this.props.intl.formatMessage({ id: "Announcement." + this.props.program[index]});
+        const newCommandString = this.props.intl.formatMessage({ id: "Announcement." + (this.props.selectedAction || "") });
+
+        this.props.audioManager.playAnnouncement('replace', this.props.intl, { oldCommand: oldCommandString, newCommand: newCommandString});
         if (this.props.selectedAction) {
             if (this.props.program[index] !== this.props.selectedAction) {
                 this.props.onChangeProgram(ProgramUtils.overwrite(this.props.program,
@@ -244,7 +249,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     };
 
     handleClickAddNode = (stepNumber: number) => {
-        this.props.audioManager.playAnnouncement('add', this.props.intl);
+        const commandString = this.props.intl.formatMessage({ id: "Announcement." + (this.props.selectedAction || "") });
+
+        this.props.audioManager.playAnnouncement('add', this.props.intl, { command: commandString});
         this.insertSelectedCommandIntoProgram(stepNumber);
     };
 
