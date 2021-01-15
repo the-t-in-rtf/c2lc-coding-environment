@@ -727,6 +727,11 @@ export default class App extends React.Component<{}, AppState> {
         }
         if (this.state.programSequence !== prevState.programSequence) {
             if (this.state.programSequence.getProgramLength() === 0) {
+                // All steps have been deleted
+                this.setState({ runningState: 'stopped' });
+            } else if (this.state.programSequence.getProgramCounter()
+                    >= this.state.programSequence.getProgramLength()) {
+                // All steps from the programCounter onward have been deleted
                 this.setState({ runningState: 'stopped' });
             }
         }
