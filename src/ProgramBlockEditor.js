@@ -499,9 +499,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             this.focusAddNodeIndex = null;
         }
         if (this.props.runningState === 'running') {
-            // Take a snapshot of activeProgramStepNum that we know is non-null
-            // (this is primarily to keep Flow happy as it doesn't know that
-            // subsequent lines don't change it).
             const activeProgramStepNum = this.props.programSequence.getProgramCounter();
 
             const activeProgramStep = this.commandBlockRefs.get(activeProgramStepNum);
