@@ -1,7 +1,8 @@
 // @flow
-
 import React from 'react';
-import { IntlProvider, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import type {IntlShape} from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
 import AudioManagerImpl from './AudioManagerImpl';
 import CharacterState from './CharacterState';
@@ -29,7 +30,6 @@ import ProgramSerializer from './ProgramSerializer';
 import ShareButton from './ShareButton';
 import type { AudioManager, DeviceConnectionStatus, Program, RobotDriver, ThemeName } from './types';
 import * as Utils from './Utils';
-import messages from './messages.json';
 import './App.scss';
 import './Themes.css';
 import './vendor/dragdroptouch/DragDropTouch.js';
@@ -41,6 +41,7 @@ import DeviceConnectControl from './DeviceConnectControl';
 // Uncomment to use the FakeRobotDriver (see driver construction below also)
 //import FakeRobotDriver from './FakeRobotDriver';
 
+
 type AppContext = {
     bluetoothApiIsAvailable: boolean
 };
@@ -49,6 +50,10 @@ type AppSettings = {
     language: string,
     addNodeExpandedMode: boolean,
     theme: ThemeName
+};
+
+type AppProps = {
+    intl: IntlShape
 };
 
 type AppState = {
@@ -67,7 +72,7 @@ type AppState = {
     drawingEnabled: boolean
 };
 
-export default class App extends React.Component<{}, AppState> {
+class App extends React.Component<AppProps, AppState> {
     version: string;
     appContext: AppContext;
     dashDriver: RobotDriver;
@@ -333,6 +338,15 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     getSelectedCommandName() {
+        const messagePayload = {};
+        const announcementKey = this.state.selectedAction !== null ? "movementSelected" : "noMovementSelected";
+        if (this.state.selectedAction) {
+            const commandString = this.props.intl.formatMessage({ id: "Announcement." + this.state.selectedAction});
+            messagePayload.command = commandString;
+        }
+
+        this.audioManager.playAnnouncement(announcementKey, this.props.intl, messagePayload);
+
         if (this.state.selectedAction !== null) {
             return this.state.selectedAction;
         } else {
@@ -503,134 +517,130 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     render() {
-        return (
-            <IntlProvider
-                locale={this.state.settings.language}
-                messages={messages[this.state.settings.language]}>
-                <div
-                    onClick={this.handleRootClick}
-                    onKeyDown={this.handleRootKeyDown}>
-                    <header className='App__header'>
-                        <Container className='App__title'>
-                            <Row className='App__header-row'>
-                                <h1 className='App__app-heading'>
-                                    <FormattedMessage id='App.appHeading'/>
-                                </h1>
-                                <div className='App__header-right'>
-                                    <div className='App__audio-toggle-switch'>
-                                        <AudioFeedbackToggleSwitch
-                                            value={this.state.audioEnabled}
-                                            onChange={this.handleToggleAudioFeedback} />
-                                    </div>
-                                    {/* Dash connection removed for version 0.5
-                                    <DeviceConnectControl
-                                        disabled={
-                                            !this.appContext.bluetoothApiIsAvailable ||
-                                            this.state.dashConnectionStatus === 'connected' }
-                                        connectionStatus={this.state.dashConnectionStatus}
-                                        onClickConnect={this.handleClickConnectDash}>
-                                        <FormattedMessage id='App.connectToDash' />
-                                    </DeviceConnectControl>
-                                    */}
-                                    <ThemeSelector onSelect={this.handleChangeTheme} />
+        return (<React.Fragment>
+            <div
+                onClick={this.handleRootClick}
+                onKeyDown={this.handleRootKeyDown}>
+                <header className='App__header'>
+                    <Container className='App__title'>
+                        <Row className='App__header-row'>
+                            <h1 className='App__app-heading'>
+                                <FormattedMessage id='App.appHeading'/>
+                            </h1>
+                            <div className='App__header-right'>
+                                <div className='App__audio-toggle-switch'>
+                                    <AudioFeedbackToggleSwitch
+                                        value={this.state.audioEnabled}
+                                        onChange={this.handleToggleAudioFeedback} />
                                 </div>
-                            </Row>
-                        </Container>
-                    </header>
-                    <Container
-                        className='App__container mb-5'
-                        role='main'>
-                        {/* Dash connection removed for version 0.5
-                        {!this.appContext.bluetoothApiIsAvailable &&
-                            <Row className='App__bluetooth-api-warning-section'>
-                                <Col>
-                                    <BluetoothApiWarning/>
-                                </Col>
-                            </Row>
-                        }
-                        */}
-                        <div className='App__scene-container'>
-                            <Scene
-                                dimensions={this.state.sceneDimensions}
-                                characterState={this.state.characterState}
-                                theme={this.state.settings.theme}
-                            />
-                            <div className='App__scene-controls'>
-                                <div className='App__scene-controls-group'>
-                                    <div className='App__penDown-toggle-switch-container'>
-                                        <PenDownToggleSwitch
-                                            className='App__penDown-toggle-switch'
-                                            value={this.state.drawingEnabled}
-                                            onChange={this.handleTogglePenDown}/>
-                                    </div>
-                                    <div className='App__refreshButton-container'>
-                                        <RefreshButton
-                                            disabled={this.state.interpreterIsRunning}
-                                            onClick={this.handleRefresh}
-                                        />
-                                    </div>
-                                </div>
+                                {/* Dash connection removed for version 0.5
+                                <DeviceConnectControl
+                                    disabled={
+                                        !this.appContext.bluetoothApiIsAvailable ||
+                                        this.state.dashConnectionStatus === 'connected' }
+                                    connectionStatus={this.state.dashConnectionStatus}
+                                    onClickConnect={this.handleClickConnectDash}>
+                                    <FormattedMessage id='App.connectToDash' />
+                                </DeviceConnectControl>
+                                */}
+                                <ThemeSelector onSelect={this.handleChangeTheme} />
                             </div>
-                        </div>
-                        <Row className='App__program-section' noGutters={true}>
-                            <Col md={6} lg={4} className='pr-md-4 mb-4 mb-md-0'>
-                                <div className='App__command-palette'>
-                                    <h2 className='App__command-palette-heading'>
-                                        <FormattedMessage id='CommandPalette.movementsTitle' />
-                                    </h2>
-                                    <div className='App__command-palette-commands'>
-                                        {this.renderCommandBlocks()}
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col md={6} lg={8}>
-                                <ProgramBlockEditor
-                                    activeProgramStepNum={this.state.activeProgramStepNum}
-                                    actionPanelStepIndex={this.state.actionPanelStepIndex}
-                                    editingDisabled={this.state.interpreterIsRunning === true}
-                                    interpreterIsRunning={this.state.interpreterIsRunning}
-                                    program={this.state.program}
-                                    selectedAction={this.state.selectedAction}
-                                    isDraggingCommand={this.state.isDraggingCommand}
-                                    audioManager={this.audioManager}
-                                    focusTrapManager={this.focusTrapManager}
-                                    addNodeExpandedMode={this.state.settings.addNodeExpandedMode}
-                                    theme={this.state.settings.theme}
-                                    onChangeProgram={this.handleChangeProgram}
-                                    onChangeActionPanelStepIndex={this.handleChangeActionPanelStepIndex}
-                                    onChangeAddNodeExpandedMode={this.handleChangeAddNodeExpandedMode}
-                                />
+                        </Row>
+                    </Container>
+                </header>
+                <Container
+                    className='App__container mb-5'
+                    role='main'>
+                    {/* Dash connection removed for version 0.5
+                    {!this.appContext.bluetoothApiIsAvailable &&
+                        <Row className='App__bluetooth-api-warning-section'>
+                            <Col>
+                                <BluetoothApiWarning/>
                             </Col>
                         </Row>
-                        <div className='App__playAndShare-container'>
-                            <div className='App__playControl-container'>
-                                <div className='App__playButton-container'>
-                                    <PlayButton
-                                        interpreterIsRunning={this.state.interpreterIsRunning}
-                                        disabled={
-                                            this.state.interpreterIsRunning ||
-                                            programIsEmpty(this.state.program)}
-                                        onClick={this.handleClickPlay}
+                    }
+                    */}
+                    <div className='App__scene-container'>
+                        <Scene
+                            dimensions={this.state.sceneDimensions}
+                            characterState={this.state.characterState}
+                            theme={this.state.settings.theme}
+                        />
+                        <div className='App__scene-controls'>
+                            <div className='App__scene-controls-group'>
+                                <div className='App__penDown-toggle-switch-container'>
+                                    <PenDownToggleSwitch
+                                        className='App__penDown-toggle-switch'
+                                        value={this.state.drawingEnabled}
+                                        onChange={this.handleTogglePenDown}/>
+                                </div>
+                                <div className='App__refreshButton-container'>
+                                    <RefreshButton
+                                        disabled={this.state.interpreterIsRunning}
+                                        onClick={this.handleRefresh}
                                     />
                                 </div>
-                                <ProgramSpeedController
-                                    values={this.speedLookUp}
-                                    onChange={this.handleChangeProgramSpeed}
-                                />
-                            </div>
-                            <div className='App__shareButton-container'>
-                                <ShareButton/>
                             </div>
                         </div>
-                    </Container>
-                </div>
+                    </div>
+                    <Row className='App__program-section' noGutters={true}>
+                        <Col md={6} lg={4} className='pr-md-4 mb-4 mb-md-0'>
+                            <div className='App__command-palette'>
+                                <h2 className='App__command-palette-heading'>
+                                    <FormattedMessage id='CommandPalette.movementsTitle' />
+                                </h2>
+                                <div className='App__command-palette-commands'>
+                                    {this.renderCommandBlocks()}
+                                </div>
+                            </div>
+                        </Col>
+                        <Col md={6} lg={8}>
+                            <ProgramBlockEditor
+                                activeProgramStepNum={this.state.activeProgramStepNum}
+                                actionPanelStepIndex={this.state.actionPanelStepIndex}
+                                editingDisabled={this.state.interpreterIsRunning === true}
+                                interpreterIsRunning={this.state.interpreterIsRunning}
+                                program={this.state.program}
+                                selectedAction={this.state.selectedAction}
+                                isDraggingCommand={this.state.isDraggingCommand}
+                                audioManager={this.audioManager}
+                                focusTrapManager={this.focusTrapManager}
+                                addNodeExpandedMode={this.state.settings.addNodeExpandedMode}
+                                theme={this.state.settings.theme}
+                                onChangeProgram={this.handleChangeProgram}
+                                onChangeActionPanelStepIndex={this.handleChangeActionPanelStepIndex}
+                                onChangeAddNodeExpandedMode={this.handleChangeAddNodeExpandedMode}
+                            />
+                        </Col>
+                    </Row>
+                    <div className='App__playAndShare-container'>
+                        <div className='App__playControl-container'>
+                            <div className='App__playButton-container'>
+                                <PlayButton
+                                    interpreterIsRunning={this.state.interpreterIsRunning}
+                                    disabled={
+                                        this.state.interpreterIsRunning ||
+                                        programIsEmpty(this.state.program)}
+                                    onClick={this.handleClickPlay}
+                                />
+                            </div>
+                            <ProgramSpeedController
+                                values={this.speedLookUp}
+                                onChange={this.handleChangeProgramSpeed}
+                            />
+                        </div>
+                        <div className='App__shareButton-container'>
+                            <ShareButton/>
+                        </div>
+                    </div>
+                </Container>
+            </div>
 
-                <DashConnectionErrorModal
-                    show={this.state.showDashConnectionError}
-                    onCancel={this.handleCancelDashConnection}
-                    onRetry={this.handleClickConnectDash}/>
-            </IntlProvider>
-        );
+            <DashConnectionErrorModal
+                show={this.state.showDashConnectionError}
+                onCancel={this.handleCancelDashConnection}
+                onRetry={this.handleClickConnectDash}/>
+        </React.Fragment>);
     }
 
     componentDidMount() {
@@ -724,3 +734,5 @@ export default class App extends React.Component<{}, AppState> {
         */
     }
 }
+
+export default injectIntl(App);
