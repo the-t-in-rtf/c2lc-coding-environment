@@ -1,6 +1,6 @@
 @import 'variables';
 
-button.btn.PlayButton {
+button.btn.PlayButton--play {
     margin-top: 0.5rem;
     padding: 0.6rem 0.45rem 0.6rem 0.75rem;
     border: 1px solid #FFF;
@@ -8,7 +8,7 @@ button.btn.PlayButton {
     background-color: #FFF;
 }
 
-button.btn.PlayButton--playing {
+button.btn.PlayButton--pause {
     margin-top: 0.5rem;
     padding: 0.6rem 0.6rem 0.6rem 0.6rem;
     border: 1px solid #FFF;
@@ -16,14 +16,14 @@ button.btn.PlayButton--playing {
     background-color: #FFF;
 }
 
-button.btn.PlayButton svg,
-button.btn.PlayButton--playing svg {
+button.btn.PlayButton--play svg,
+button.btn.PlayButton--pause svg {
     fill: #000;
     width: 1.7rem;
     height: 1.7rem;
 }
 
-button.btn.PlayButton:not(:focus) {
+button.btn.PlayButton--play:not(:focus) {
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
 }
 

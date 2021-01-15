@@ -22,10 +22,10 @@ class PlayButton extends React.Component<PlayButtonProps, {}> {
                 aria-label={
                     this.props.interpreterIsRunning ?
                         this.props.intl.formatMessage({id:'PlayButton.pause'}) :
-                        this.props.intl.formatMessage({id:'PlayButton.run'})}
+                        this.props.intl.formatMessage({id:'PlayButton.play'})}
                 className={this.props.interpreterIsRunning ?
-                    'PlayButton--playing' :
-                    'PlayButton'}
+                    'PlayButton--pause' :
+                    'PlayButton--play'}
                 disabledClassName='PlayButton--disabled'
                 disabled={this.props.disabled}
                 onClick={this.props.onClick}
