@@ -692,7 +692,8 @@ export default class App extends React.Component<{}, AppState> {
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
         if (this.state.programSequence !== prevState.programSequence
-            || this.state.characterState !== prevState.characterState) {
+            || this.state.characterState !== prevState.characterState
+            || this.state.settings.theme !== prevState.settings.theme) {
             const serializedProgram = this.programSerializer.serialize(this.state.programSequence.getProgram());
             const serializedCharacterState = this.characterStateSerializer.serialize(this.state.characterState);
             window.history.pushState(
