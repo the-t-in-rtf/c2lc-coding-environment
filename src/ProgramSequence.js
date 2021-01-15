@@ -48,27 +48,39 @@ export default class ProgramSequence {
     }
 
     overwriteStep(index: number, command: string): ProgramSequence {
-        return this.updateProgram(this.overwrite(index, command));
+        const program = this.program.slice();
+        program[index] = command;
+        return this.updateProgram(program);
     }
 
     insertStep(index: number, command: string): ProgramSequence {
+        const program = this.program.slice();
+        program.splice(index, 0, command);
         if (index <= this.programCounter) {
-            return this.updateProgramAndProgramCounter(this.insert(index, command), this.programCounter + 1);
+            return this.updateProgramAndProgramCounter(program, this.programCounter + 1);
         } else {
-            return this.updateProgram(this.insert(index, command));
+            return this.updateProgram(program);
         }
     }
 
     deleteStep(index: number): ProgramSequence {
+        const program = this.program.slice();
+        program.splice(index, 1);
         if (index < this.programCounter && this.program.length > 1) {
-            return this.updateProgramAndProgramCounter(this.delete(index), this.programCounter - 1);
+            return this.updateProgramAndProgramCounter(program, this.programCounter - 1);
         } else {
-            return this.updateProgram(this.delete(index));
+            return this.updateProgram(program);
         }
     }
 
     swapStep(indexFrom: number, indexTo: number): ProgramSequence {
-        return this.updateProgram(this.swapPosition(indexFrom, indexTo));
+        const program = this.program.slice();
+        if (program[indexFrom] != null && program[indexTo] != null) {
+            const currentStep = program[indexFrom];
+            program[indexFrom] = program[indexTo];
+            program[indexTo] = currentStep;
+        }
+        return this.updateProgram(program);
     }
 
     swapPosition(indexFrom: number, indexTo: number): Program {
@@ -82,22 +94,4 @@ export default class ProgramSequence {
         program[indexTo] = currentStep;
         return program;
     }
-
-    insert(index: number, command: string): Program {
-        const program = this.program.slice();
-        program.splice(index, 0, command);
-        return program;
-    };
-
-    overwrite(index: number, command: string): Program {
-        const program = this.program.slice();
-        program[index] = command;
-        return program;
-    };
-
-    delete(index: number): Program {
-        const program = this.program.slice();
-        program.splice(index, 1);
-        return program;
-    };
 }
