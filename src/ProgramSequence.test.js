@@ -77,20 +77,29 @@ test('insertStep should increment programCounter if the step being inserted is a
     expect(programSequence.getProgram()).toStrictEqual(['f1', 'f1', 'f2', 'f2']);
     expect(programSequence.getProgramCounter()).toBe(1);
     checkProgramEdit(programInput, expectedProgramOutput, programInputValues, programSequence.getProgram());
+});
+
+test('overwriteStep should replace a command with specified index with a new command', () => {
+    expect.assertions(3);
+    let programSequence = new ProgramSequence(['f1', 'f2'], 0);
+    const programInput = programSequence.getProgram();
+    const programInputValues = programInput.slice();
+    const expectedProgramOutput = ['f1', 'f3'];
+    programSequence = programSequence.overwriteStep(1, 'f3');
+    expect(programSequence.getProgram()).toStrictEqual(['f1', 'f3']);
+    checkProgramEdit(programInput, expectedProgramOutput, programInputValues, programSequence.getProgram());
 })
 
-
-test.each([
-    [[], 0, 2, []],
-    [['command1'], 0, 1, ['command1']],
-    [['command1', 'command2', 'command3'], 1, 2, ['command1', 'command3', 'command2' ]],
-    [['command1', 'command2', 'command3'], 0, 2, ['command3', 'command2', 'command1']]
-]) ('swapPosition',
-    (input: Array<string>, indexFrom: number, indexTo: number,  expected: Array<string>) => {
-        expect.assertions(2);
-        const inputValues = input.slice();
-        const result = new ProgramSequence(input, 0).swapPosition(indexFrom, indexTo);
-        checkProgramEdit(input, expected, inputValues, result);
-    }
-);
+test('swapStep should switch positions of selected two steps', () => {
+    expect.assertions(4);
+    let programSequence = new ProgramSequence(['f1', 'f2', 'f3'], 0);
+    const programInput = programSequence.getProgram();
+    const programInputValues = programInput.slice();
+    const expectedProgramOutput = ['f1', 'f3', 'f2'];
+    programSequence = programSequence.swapStep(0, 3);
+    expect(programSequence.getProgram()).toStrictEqual(['f1', 'f2', 'f3']);
+    programSequence = programSequence.swapStep(1, 2);
+    expect(programSequence.getProgram()).toStrictEqual(['f1', 'f3', 'f2']);
+    checkProgramEdit(programInput, expectedProgramOutput, programInputValues, programSequence.getProgram());
+});
 
