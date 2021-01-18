@@ -82,16 +82,4 @@ export default class ProgramSequence {
         }
         return this.updateProgram(program);
     }
-
-    swapPosition(indexFrom: number, indexTo: number): Program {
-        // Make a shallow copy before we add to the program
-        const program = this.program.slice();
-        if (program[indexFrom] == null || program[indexTo] == null) {
-            return program;
-        }
-        const currentStep = program[indexFrom];
-        program[indexFrom] = program[indexTo];
-        program[indexTo] = currentStep;
-        return program;
-    }
 }
