@@ -338,15 +338,6 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     getSelectedCommandName() {
-        const messagePayload = {};
-        const announcementKey = this.state.selectedAction !== null ? "movementSelected" : "noMovementSelected";
-        if (this.state.selectedAction) {
-            const commandString = this.props.intl.formatMessage({ id: "Announcement." + this.state.selectedAction});
-            messagePayload.command = commandString;
-        }
-
-        this.audioManager.playAnnouncement(announcementKey, this.props.intl, messagePayload);
-
         if (this.state.selectedAction !== null) {
             return this.state.selectedAction;
         } else {
@@ -712,6 +703,20 @@ class App extends React.Component<AppProps, AppState> {
                 }
             }
         }
+        if (this.state.selectedAction !== prevState.selectedAction) {
+            const messagePayload = {};
+            const announcementKey = this.state.selectedAction !== null ?
+                "movementSelected" : "noMovementSelected";
+            if (this.state.selectedAction) {
+                const commandString = this.props.intl.formatMessage({
+                    id: "Announcement." + this.state.selectedAction
+                });
+                messagePayload.command = commandString;
+            }
+            this.audioManager.playAnnouncement(announcementKey,
+                    this.props.intl, messagePayload);
+        }
+
         /* Dash connection removed for version 0.5
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
