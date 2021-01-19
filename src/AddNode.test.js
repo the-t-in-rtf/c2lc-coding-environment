@@ -91,13 +91,6 @@ describe('Given expandedMode is true and disabled is false', () => {
         expect(mockClickHandler.mock.calls[0][0]).toBe(expectedProgramStepNumber);
         expect(mockDropHandler.mock.calls.length).toBe(0);
     });
-
-    test('When there is a drop, then the onDrop handler should be called', () => {
-        wrapper.find(expandedDropAreaSelector).hostNodes().simulate('drop');
-        expect(mockDropHandler.mock.calls.length).toBe(1);
-        expect(mockDropHandler.mock.calls[0][0]).toBe(expectedProgramStepNumber);
-        expect(mockClickHandler.mock.calls.length).toBe(0);
-    });
 });
 
 describe('Given expandedMode is true and disabled is true', () => {

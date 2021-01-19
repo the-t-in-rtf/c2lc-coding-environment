@@ -19,35 +19,11 @@ type AddNodeProps = {
 
 const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
     (props, ref) => {
-        const [isDragOver, setIsDragOver] = useState(false);
-
-        /* istanbul ignore next */
-        const handleDragOver = (e: SyntheticDragEvent<HTMLButtonElement>) => {
-            if (props.isDraggingCommand) {
-                e.preventDefault();
-                setIsDragOver(true);
-            }
-        };
+        const [isDragOver] = useState(false);
 
         const handleClick = (e: SyntheticEvent<HTMLButtonElement>) => {
             const stepNumber = parseInt(e.currentTarget.dataset.stepnumber, 10);
             props.onClick(stepNumber);
-        };
-
-        /* istanbul ignore next */
-        const handleDrop = (e: SyntheticDragEvent<HTMLButtonElement>) => {
-            e.preventDefault();
-            if (!props.disabled) {
-                const stepNumber = parseInt(e.currentTarget.dataset.stepnumber, 10);
-                props.onDrop(stepNumber);
-            }
-            setIsDragOver(false);
-        };
-
-        /* istanbul ignore next */
-        const handleDragLeave = (e: SyntheticDragEvent<HTMLButtonElement>) => {
-            e.preventDefault();
-            setIsDragOver(false);
         };
 
         /* istanbul ignore next */
@@ -62,9 +38,6 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
                     <div className='AddNode__drop-area-container'>
                         <div className='AddNode__expanded-drop-area'
                             data-stepnumber={props.programStepNumber}
-                            onDragOver={handleDragOver}
-                            onDragLeave={handleDragLeave}
-                            onDrop={handleDrop}
                         />
                     </div>
                     <AriaDisablingButton
@@ -86,9 +59,6 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
                     <div className='AddNode__drop-area-container'>
                         <div className='AddNode__collapsed-drop-area'
                             ref={ref}
-                            onDragOver={handleDragOver}
-                            onDragLeave={handleDragLeave}
-                            onDrop={handleDrop}
                         />
                     </div>
                     <div className='AddNode__collapsed-icon'>
