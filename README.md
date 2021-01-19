@@ -1,12 +1,11 @@
 # Coding to Learn and Create - Inclusive Coding Environment
 
-The Inclusive Coding Environment is a new educational coding tool designed for learners with disabilities. Learners can create code sequences that control the movement of a Bluetooth-connected robot. The Environment can be used with a mouse, touchscreen, or keyboard, and supports assistive technologies such as screen readers. It is a web application that works in the Chrome browser.
+The Inclusive Coding Environment is a new educational coding tool designed for learners with disabilities. The Environment can be used with a mouse, touchscreen, or keyboard, and supports assistive technologies such as screen readers. It is a web application that works in the Chrome browser.
 
 ![inclusive coding environment UI](./inclusive-coding-env.png)
 
-To try the latest development version of the Inclusive Coding Environment, visit our [development build](https://develop-0-6--c2lc-build.netlify.app).
-
-Currently, the Inclusive Coding Environment doesn't support physical robot connection. We'll be adding support for physical robot connections in upcoming releases.
+To try the latest version of the Inclusive Coding Environment,
+visit our [coding environment online](https://build.codelearncreate.org/).
 
 ## Installation for Developers
 
