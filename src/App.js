@@ -53,7 +53,8 @@ type AppSettings = {
 };
 
 type AppProps = {
-    intl: IntlShape
+    intl: IntlShape,
+    audioManager?: AudioManager
 };
 
 type AppState = {
@@ -72,7 +73,7 @@ type AppState = {
     drawingEnabled: boolean
 };
 
-class App extends React.Component<AppProps, AppState> {
+export class App extends React.Component<AppProps, AppState> {
     version: string;
     appContext: AppContext;
     dashDriver: RobotDriver;
@@ -319,7 +320,10 @@ class App extends React.Component<AppProps, AppState> {
         // this.dashDriver = new FakeRobotDriver();
         this.dashDriver = new DashDriver();
 
-        if (FeatureDetection.webAudioApiIsAvailable()) {
+        if (props.audioManager) {
+            this.audioManager = props.audioManager
+        }
+        else if (FeatureDetection.webAudioApiIsAvailable()) {
             this.audioManager = new AudioManagerImpl(this.state.audioEnabled);
         }
         else {
