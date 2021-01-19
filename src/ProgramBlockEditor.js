@@ -49,6 +49,7 @@ type ProgramBlockEditorState = {
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
+    programBlockEditorRef: any;
     commandBlockRefs: Map<number, HTMLElement>;
     addNodeRefs: Map<number, HTMLElement>;
     focusCommandBlockIndex: ?number;
@@ -59,6 +60,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     constructor(props: ProgramBlockEditorProps) {
         super(props);
+        this.programBlockEditorRef = React.createRef();
         this.commandBlockRefs = new Map();
         this.addNodeRefs = new Map();
         this.focusCommandBlockIndex = null;
@@ -304,9 +306,20 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     // TODO: Discuss removing this once we have a good way to test drag and drop.
     /* istanbul ignore next */
     handleDragLeaveOnProgramArea = (event: DragEvent) => {
-        this.setState({
-            closestAddNodeIndex: -1
-        });
+        const myBounds = this.programBlockEditorRef.current.getBoundingClientRect();
+        // Dragging over child elements with implicit drag and drop results in flickering.  Check to confirm whether we've actually left the area.
+        if (event.clientX >= myBounds.left &&
+            event.clientX <= (myBounds.left + myBounds.width) &&
+            event.clientY >= myBounds.top &&
+            event.clientY <= (myBounds.top + myBounds.height)) {
+            // console.log("ignored spurious drag exit");
+        }
+        else {
+            // console.log("drag leaving program area");
+            this.setState({
+                closestAddNodeIndex: -1
+            });
+        }
     }
 
     // TODO: Discuss removing this once we have a good way to test drag and drop.
@@ -495,6 +508,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         return (
             <div
                 className='ProgramBlockEditor__container'
+                ref={this.programBlockEditorRef}
             >
                 <div className='ProgramBlockEditor__header'>
                     <h2 className='ProgramBlockEditor__heading'>
