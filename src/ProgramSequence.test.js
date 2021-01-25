@@ -3,17 +3,9 @@
 import ProgramSequence from './ProgramSequence';
 import type { Program } from './types';
 
-function checkProgramEdit(
-    inputBefore: Program, expected: Program,
-    inputAfter: Program, result: Program)
-{
-    expect(inputAfter).toEqual(inputBefore);
-    expect(result).toEqual(expected);
-};
-
 test('ProgramSequence constructor should take program and programCounter parameters', () => {
     expect.assertions(2);
-    const program = ['f1'];
+    const program = ['forward1'];
     const programCounter = 0;
     const programSequence = new ProgramSequence(program, programCounter);
     expect(programSequence.getProgram()).toBe(program);
@@ -22,7 +14,7 @@ test('ProgramSequence constructor should take program and programCounter paramet
 
 test('updateProgramCounter should only update programCounter', () => {
     expect.assertions(2);
-    const program = ['f1'];
+    const program = ['forward1'];
     let programSequence = new ProgramSequence(program, 0);
     const newProgramCounter = 1;
     programSequence = programSequence.updateProgramCounter(newProgramCounter);
@@ -37,69 +29,80 @@ test('incrementProgramCounter should increment programCounter by 1', () => {
     expect(programSequence.getProgramCounter()).toBe(1);
 });
 
-test('deleteStep updates programCounter if deleted program step index is less than the programCounter', () => {
-    expect.assertions(4);
-    let programSequence = new ProgramSequence(['f1', 'f2'], 1);
-    const programInput = programSequence.getProgram();
-    const programInputValues = programInput.slice();
-    const expectedProgramOutput = ['f2'];
-    programSequence = programSequence.deleteStep(0);
-    expect(programSequence.getProgram()).toStrictEqual(['f2']);
-    expect(programSequence.getProgramCounter()).toBe(0);
-    checkProgramEdit(programInput, expectedProgramOutput, programInputValues, programSequence.getProgram());
-});
+test.each([
+    [[], 0, 0, [], 0],
+    [['forward1'], 0, 0, [], 0],
+    [['forward1', 'forward2'], 0, 0, ['forward2'], 0],
+    [['forward1', 'forward2'], 0, 1, ['forward1'], 0],
+    [['forward1', 'forward2'], 1, 0, ['forward2'], 0],
+    [['forward1', 'forward2'], 1, 1, ['forward1'], 1],
+    [['forward1', 'forward2', 'forward3'], 1, 0, ['forward2', 'forward3'], 0],
+    [['forward1', 'forward2', 'forward3'], 1, 1, ['forward1', 'forward3'], 1],
+    [['forward1', 'forward2', 'forward3'], 1, 2, ['forward1', 'forward2'], 1]
+])('deleteStep',
+    (program: Program, programCounter: number, index: number,
+        expectedProgram: Program, expectedProgramCounter: number) => {
+        expect.assertions(3);
+        const programBefore = program.slice();
+        const programSequence = new ProgramSequence(program, programCounter);
+        const result = programSequence.deleteStep(index);
+        expect(result.getProgram()).toStrictEqual(expectedProgram);
+        expect(result.getProgramCounter()).toBe(expectedProgramCounter);
+        expect(programSequence.getProgram()).toStrictEqual(programBefore);
+    }
+);
 
-test('deleteStep should not update programCounter if deleted program step index is equal, or more than the programCounter', () => {
-    expect.assertions(6);
-    let programSequence = new ProgramSequence(['f1', 'f2', 'f3'], 1);
-    const programInput = programSequence.getProgram();
-    const programInputValues = programInput.slice();
-    const expectedProgramOutput = ['f1'];
-    programSequence = programSequence.deleteStep(2);
-    expect(programSequence.getProgram()).toStrictEqual(['f1', 'f2']);
-    expect(programSequence.getProgramCounter()).toBe(1);
-    programSequence = programSequence.deleteStep(1);
-    expect(programSequence.getProgram()).toStrictEqual(['f1']);
-    expect(programSequence.getProgramCounter()).toBe(1);
-    checkProgramEdit(programInput, expectedProgramOutput, programInputValues, programSequence.getProgram());
-});
+test.each([
+    [[], 0, 0, ['left45'], 1],
+    [['forward1'], 0, 0, ['left45', 'forward1'], 1],
+    [['forward1', 'forward2', 'forward3'], 1, 0, ['left45', 'forward1', 'forward2', 'forward3'], 2],
+    [['forward1', 'forward2', 'forward3'], 1, 1, ['forward1', 'left45', 'forward2', 'forward3'], 2],
+    [['forward1', 'forward2', 'forward3'], 1, 2, ['forward1', 'forward2', 'left45', 'forward3'], 1]
+])('insertStep',
+    (program: Program, programCounter: number, index: number,
+        expectedProgram: Program, expectedProgramCounter: number) => {
+        expect.assertions(3);
+        const programBefore = program.slice();
+        const programSequence = new ProgramSequence(program, programCounter);
+        const result = programSequence.insertStep(index, 'left45');
+        expect(result.getProgram()).toStrictEqual(expectedProgram);
+        expect(result.getProgramCounter()).toBe(expectedProgramCounter);
+        expect(programSequence.getProgram()).toStrictEqual(programBefore);
+    }
+);
 
-test('insertStep should increment programCounter if the step being inserted is at or before the programCounter', () => {
-    expect.assertions(6);
-    let programSequence = new ProgramSequence(['f1', 'f2'], 0);
-    const programInput = programSequence.getProgram();
-    const programInputValues = programInput.slice();
-    const expectedProgramOutput = ['f1', 'f1', 'f2', 'f2'];
-    programSequence = programSequence.insertStep(0, 'f1');
-    expect(programSequence.getProgram()).toStrictEqual(['f1', 'f1', 'f2']);
-    expect(programSequence.getProgramCounter()).toBe(1);
-    programSequence = programSequence.insertStep(2, 'f2');
-    expect(programSequence.getProgram()).toStrictEqual(['f1', 'f1', 'f2', 'f2']);
-    expect(programSequence.getProgramCounter()).toBe(1);
-    checkProgramEdit(programInput, expectedProgramOutput, programInputValues, programSequence.getProgram());
-});
+test.each([
+    [['forward1', 'forward2'], 0, 0, ['left45', 'forward2'], 0],
+    [['forward1', 'forward2'], 0, 1, ['forward1', 'left45'], 0],
+    [['forward1', 'forward2'], 1, 0, ['left45', 'forward2'], 1],
+    [['forward1', 'forward2'], 1, 1, ['forward1', 'left45'], 1]
+])('overwriteStep',
+    (program: Program, programCounter: number, index: number,
+        expectedProgram: Program, expectedProgramCounter: number) => {
+        expect.assertions(3);
+        const programBefore = program.slice();
+        const programSequence = new ProgramSequence(program, programCounter);
+        const result = programSequence.overwriteStep(index, 'left45');
+        expect(result.getProgram()).toStrictEqual(expectedProgram);
+        expect(result.getProgramCounter()).toBe(expectedProgramCounter);
+        expect(programSequence.getProgram()).toStrictEqual(programBefore);
+    }
+);
 
-test('overwriteStep should replace a command with specified index with a new command', () => {
-    expect.assertions(3);
-    let programSequence = new ProgramSequence(['f1', 'f2'], 0);
-    const programInput = programSequence.getProgram();
-    const programInputValues = programInput.slice();
-    const expectedProgramOutput = ['f1', 'f3'];
-    programSequence = programSequence.overwriteStep(1, 'f3');
-    expect(programSequence.getProgram()).toStrictEqual(['f1', 'f3']);
-    checkProgramEdit(programInput, expectedProgramOutput, programInputValues, programSequence.getProgram());
-})
-
-test('swapStep should switch positions of selected two steps', () => {
-    expect.assertions(4);
-    let programSequence = new ProgramSequence(['f1', 'f2', 'f3'], 0);
-    const programInput = programSequence.getProgram();
-    const programInputValues = programInput.slice();
-    const expectedProgramOutput = ['f1', 'f3', 'f2'];
-    programSequence = programSequence.swapStep(0, 3);
-    expect(programSequence.getProgram()).toStrictEqual(['f1', 'f2', 'f3']);
-    programSequence = programSequence.swapStep(1, 2);
-    expect(programSequence.getProgram()).toStrictEqual(['f1', 'f3', 'f2']);
-    checkProgramEdit(programInput, expectedProgramOutput, programInputValues, programSequence.getProgram());
-});
-
+test.each([
+    [['forward1', 'forward2', 'forward3'], 1, 0, 0, ['forward1', 'forward2', 'forward3'], 1],
+    [['forward1', 'forward2', 'forward3'], 1, 0, 1, ['forward2', 'forward1', 'forward3'], 1],
+    [['forward1', 'forward2', 'forward3'], 1, 0, 2, ['forward3', 'forward2', 'forward1'], 1]
+])('swapStep',
+    (program: Program, programCounter: number,
+        indexFrom: number, indexTo: number,
+        expectedProgram: Program, expectedProgramCounter: number) => {
+        expect.assertions(3);
+        const programBefore = program.slice();
+        const programSequence = new ProgramSequence(program, programCounter);
+        const result = programSequence.swapStep(indexFrom, indexTo);
+        expect(result.getProgram()).toStrictEqual(expectedProgram);
+        expect(result.getProgramCounter()).toBe(expectedProgramCounter);
+        expect(programSequence.getProgram()).toStrictEqual(programBefore);
+    }
+);
