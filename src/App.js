@@ -179,6 +179,63 @@ export default class App extends React.Component<{}, AppState> {
         );
 
         this.interpreter.addCommandHandler(
+            'backward1',
+            'moveCharacter',
+            (interpreter, stepTimeMs) => {
+                // TODO: Enable announcements again.
+                // this.audioManager.playAnnouncement('backward1');
+                this.setState((state) => {
+                    const newCharacterState = state.characterState.backward(1, state.drawingEnabled);
+
+                    // We have to start the sound here because this is where we know the new character state.
+                    this.audioManager.playSoundForCharacterState("movement", stepTimeMs, newCharacterState);
+                    return {
+                        characterState: newCharacterState
+                    };
+                });
+                return Utils.makeDelayedPromise(stepTimeMs);
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'backward2',
+            'moveCharacter',
+            (interpreter, stepTimeMs) => {
+                // TODO: Enable announcements again.
+                // this.audioManager.playAnnouncement('backward2');
+                this.setState((state) => {
+                    const newCharacterState = state.characterState.backward(2, state.drawingEnabled);
+
+                    // We have to start the sound here because this is where we know the new character state.
+                    this.audioManager.playSoundForCharacterState("movement", stepTimeMs, newCharacterState);
+                    return {
+                        characterState: newCharacterState
+                    };
+                });
+                return Utils.makeDelayedPromise(stepTimeMs);
+            }
+        );
+
+        this.interpreter.addCommandHandler(
+            'backward3',
+            'moveCharacter',
+            (interpreter, stepTimeMs) => {
+                // TODO: Enable announcements again.
+                // this.audioManager.playAnnouncement('backward3');
+                this.setState((state) => {
+                    const newCharacterState = state.characterState.backward(3, state.drawingEnabled);
+
+                    // We have to start the sound here because this is where we know the new character state.
+                    this.audioManager.playSoundForCharacterState("movement", stepTimeMs, newCharacterState);
+                    return {
+                        characterState: newCharacterState
+                    };
+                });
+                return Utils.makeDelayedPromise(stepTimeMs);
+            }
+        );
+
+        this.interpreter.addCommandHandler(
             'left45',
             'moveCharacter',
             (interpreter, stepTimeMs) => {
@@ -471,6 +528,7 @@ export default class App extends React.Component<{}, AppState> {
     renderCommandBlocks = () => {
         const commandNames = [
             'forward1', 'forward2', 'forward3',
+            'backward1', 'backward2',  'backward3',
             'left45', 'left90', 'left180',
             'right45', 'right90', 'right180'
         ];

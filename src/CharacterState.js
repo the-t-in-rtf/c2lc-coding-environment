@@ -108,6 +108,63 @@ export default class CharacterState {
         );
     }
 
+    backward(distance: number, drawingEnabled: boolean): CharacterState {
+        let xOffset = 0;
+        let yOffset = 0;
+
+        switch(this.direction) {
+            case 0:
+                xOffset = 0;
+                yOffset = distance;
+                break;
+            case 1:
+                xOffset = -distance;
+                yOffset = +distance;
+                break;
+            case 2:
+                xOffset = -distance;
+                yOffset = 0;
+                break;
+            case 3:
+                xOffset = -distance;
+                yOffset = -distance;
+                break;
+            case 4:
+                xOffset = 0;
+                yOffset = -distance;
+                break;
+            case 5:
+                xOffset = distance;
+                yOffset = -distance;
+                break;
+            case 6:
+                xOffset = distance;
+                yOffset = 0;
+                break;
+            case 7:
+                xOffset = distance;
+                yOffset = distance;
+                break;
+            default:
+                throw new Error('CharacterState direction must be an integer in range 0-7 inclusive');
+        }
+
+        const newPathSegment = {
+            x1: this.xPos,
+            y1: this.yPos,
+            x2: this.xPos + xOffset,
+            y2: this.yPos + yOffset
+        };
+        return new CharacterState(
+            this.xPos + xOffset,
+            this.yPos + yOffset,
+            this.direction,
+            drawingEnabled ?
+                this.path.concat([newPathSegment]) :
+                this.path
+        );
+    }
+
     turnLeft(amountEighthsOfTurn: number): CharacterState {
         return new CharacterState(
             this.xPos,
