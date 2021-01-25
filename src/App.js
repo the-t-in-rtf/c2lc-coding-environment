@@ -3,7 +3,7 @@
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
-import AudioManager from './AudioManager';
+import AudioManagerImpl from './AudioManagerImpl';
 import CharacterState from './CharacterState';
 import CharacterStateSerializer from './CharacterStateSerializer';
 import CommandPaletteCommand from './CommandPaletteCommand';
@@ -11,25 +11,27 @@ import C2lcURLParams from './C2lcURLParams';
 import DashConnectionErrorModal from './DashConnectionErrorModal';
 import DashDriver from './DashDriver';
 import * as FeatureDetection from './FeatureDetection';
+import FakeAudioManager from './FakeAudioManager';
 import FocusTrapManager from './FocusTrapManager';
 import Interpreter from './Interpreter';
-import type { InterpreterRunningState } from './Interpreter';
 import PlayButton from './PlayButton';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import RefreshButton from './RefreshButton';
 import Scene from './Scene';
 import SceneDimensions from './SceneDimensions';
 import StopButton from './StopButton';
+import ThemeSelector from './ThemeSelector';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
+import ProgramSequence from './ProgramSequence';
 import ProgramSpeedController from './ProgramSpeedController';
-import { programIsEmpty } from './ProgramUtils';
 import ProgramSerializer from './ProgramSerializer';
 import ShareButton from './ShareButton';
-import type { DeviceConnectionStatus, Program, RobotDriver } from './types';
+import type { AudioManager, DeviceConnectionStatus, RobotDriver, RunningState, ThemeName } from './types';
 import * as Utils from './Utils';
 import messages from './messages.json';
 import './App.scss';
+import './Themes.css';
 import './vendor/dragdroptouch/DragDropTouch.js';
 /* Dash connection removed for version 0.5
 import BluetoothApiWarning from './BluetoothApiWarning';
@@ -45,26 +47,27 @@ type AppContext = {
 
 type AppSettings = {
     language: string,
-    addNodeExpandedMode: boolean
+    addNodeExpandedMode: boolean,
+    theme: ThemeName
 };
 
 type AppState = {
-    program: Program,
+    programSequence: ProgramSequence,
     characterState: CharacterState,
     settings: AppSettings,
     dashConnectionStatus: DeviceConnectionStatus,
-    activeProgramStepNum: ?number,
-    interpreterIsRunning: boolean,
     showDashConnectionError: boolean,
     selectedAction: ?string,
     isDraggingCommand: boolean,
     audioEnabled: boolean,
     actionPanelStepIndex: ?number,
     sceneDimensions: SceneDimensions,
-    drawingEnabled: boolean
+    drawingEnabled: boolean,
+    runningState: RunningState
 };
 
 export default class App extends React.Component<{}, AppState> {
+    version: string;
     appContext: AppContext;
     dashDriver: RobotDriver;
     interpreter: Interpreter;
@@ -78,6 +81,8 @@ export default class App extends React.Component<{}, AppState> {
     constructor(props: any) {
         super(props);
 
+        this.version = '0.6';
+
         this.appContext = {
             bluetoothApiIsAvailable: FeatureDetection.bluetoothApiIsAvailable()
         };
@@ -86,25 +91,25 @@ export default class App extends React.Component<{}, AppState> {
         this.startingCharacterState = new CharacterState(0, 0, 2, []);
 
         this.state = {
-            program: [],
+            programSequence: new ProgramSequence([], 0),
             characterState: this.startingCharacterState,
             settings: {
                 language: 'en',
-                addNodeExpandedMode: true
+                addNodeExpandedMode: true,
+                theme: 'default'
             },
             dashConnectionStatus: 'notConnected',
-            activeProgramStepNum: null,
-            interpreterIsRunning: false,
             showDashConnectionError: false,
             selectedAction: null,
             isDraggingCommand: false,
             audioEnabled: true,
             actionPanelStepIndex: null,
             sceneDimensions: new SceneDimensions(17, 9),
-            drawingEnabled: true
+            drawingEnabled: true,
+            runningState: 'stopped'
         };
 
-        this.interpreter = new Interpreter(this.handleRunningStateChange, 1000);
+        this.interpreter = new Interpreter(1000, this);
 
         this.speedLookUp = [2000, 1500, 1000, 500, 250];
 
@@ -307,7 +312,12 @@ export default class App extends React.Component<{}, AppState> {
         // this.dashDriver = new FakeRobotDriver();
         this.dashDriver = new DashDriver();
 
-        this.audioManager = new AudioManager(this.state.audioEnabled);
+        if (FeatureDetection.webAudioApiIsAvailable()) {
+            this.audioManager = new AudioManagerImpl(this.state.audioEnabled);
+        }
+        else {
+            this.audioManager = new FakeAudioManager();
+        }
 
         this.focusTrapManager = new FocusTrapManager();
     }
@@ -328,24 +338,57 @@ export default class App extends React.Component<{}, AppState> {
         }
     }
 
-    handleChangeProgram = (program: Program) => {
-        this.setState({
-            program: program
-        });
-    };
+    // API for Interpreter
+
+    getProgramSequence(): ProgramSequence {
+        return this.state.programSequence;
+    }
+
+    getRunningState(): RunningState {
+        return this.state.runningState;
+    }
+
+    incrementProgramCounter(callback: () => void): void {
+        this.setState((state) => {
+            return {
+                programSequence: state.programSequence.incrementProgramCounter()
+            }
+        }, callback);
+    }
+
+    stopPlaying(): void {
+        this.setState({ runningState: 'stopped' });
+    }
+
+    // Handlers
+
+    handleProgramSequenceChange = (programSequence: ProgramSequence) => {
+        this.setState({ programSequence });
+    }
 
     handleClickPlay = () => {
-        this.interpreter.run(this.state.program).then(
-            () => {}, // Do nothing on successful resolution
-            (error: Error) => {
-                console.log(error.name);
-                console.log(error.message);
-            }
-        );
+        switch (this.state.runningState) {
+            case 'running':
+                this.setState({ runningState: 'paused' });
+                break;
+            case 'paused':
+                this.setState({ runningState: 'running' });
+                break;
+            case 'stopped':
+                this.setState((state) => {
+                    return {
+                        programSequence: state.programSequence.updateProgramCounter(0),
+                        runningState: 'running'
+                    };
+                });
+                break;
+            default:
+                break;
+        }
     };
 
     handleClickStop = () => {
-        this.interpreter.stop();
+        this.setState({ runningState: 'stopped' });
     }
 
     handleClickConnectDash = () => {
@@ -402,13 +445,6 @@ export default class App extends React.Component<{}, AppState> {
 
     handleDragEndCommand = () => {
         this.setState({ isDraggingCommand: false });
-    };
-
-    handleRunningStateChange = ( interpreterRunningState : InterpreterRunningState) => {
-        this.setState({
-            activeProgramStepNum: interpreterRunningState.activeStep,
-            interpreterIsRunning: interpreterRunningState.isRunning
-        });
     };
 
     handleChangeActionPanelStepIndex = (index: ?number) => {
@@ -490,16 +526,20 @@ export default class App extends React.Component<{}, AppState> {
         });
     }
 
+    handleChangeTheme = (theme: ThemeName) => {
+        this.setStateSettings({ theme });
+    }
+
     render() {
         return (
             <IntlProvider
-                    locale={this.state.settings.language}
-                    messages={messages[this.state.settings.language]}>
+                locale={this.state.settings.language}
+                messages={messages[this.state.settings.language]}>
                 <div
                     onClick={this.handleRootClick}
                     onKeyDown={this.handleRootKeyDown}>
                     <header className='App__header'>
-                        <Container>
+                        <Container className='App__title'>
                             <Row className='App__header-row'>
                                 <h1 className='App__app-heading'>
                                     <FormattedMessage id='App.appHeading'/>
@@ -520,11 +560,14 @@ export default class App extends React.Component<{}, AppState> {
                                         <FormattedMessage id='App.connectToDash' />
                                     </DeviceConnectControl>
                                     */}
+                                    <ThemeSelector onSelect={this.handleChangeTheme} />
                                 </div>
                             </Row>
                         </Container>
                     </header>
-                    <Container role='main' className='mb-5'>
+                    <Container
+                        className='App__container mb-5'
+                        role='main'>
                         {/* Dash connection removed for version 0.5
                         {!this.appContext.bluetoothApiIsAvailable &&
                             <Row className='App__bluetooth-api-warning-section'>
@@ -538,6 +581,7 @@ export default class App extends React.Component<{}, AppState> {
                             <Scene
                                 dimensions={this.state.sceneDimensions}
                                 characterState={this.state.characterState}
+                                theme={this.state.settings.theme}
                             />
                             <div className='App__scene-controls'>
                                 <div className='App__scene-controls-group'>
@@ -549,7 +593,7 @@ export default class App extends React.Component<{}, AppState> {
                                     </div>
                                     <div className='App__refreshButton-container'>
                                         <RefreshButton
-                                            disabled={this.state.interpreterIsRunning}
+                                            disabled={this.state.runningState === 'running'}
                                             onClick={this.handleRefresh}
                                         />
                                     </div>
@@ -557,7 +601,7 @@ export default class App extends React.Component<{}, AppState> {
                             </div>
                         </div>
                         <Row className='App__program-section' noGutters={true}>
-                            <Col md={5} lg={4} className='pr-md-4 mb-4 mb-md-0'>
+                            <Col md={6} lg={4} className='pr-md-4 mb-4 mb-md-0'>
                                 <div className='App__command-palette'>
                                     <h2 className='App__command-palette-heading'>
                                         <FormattedMessage id='CommandPalette.movementsTitle' />
@@ -567,19 +611,19 @@ export default class App extends React.Component<{}, AppState> {
                                     </div>
                                 </div>
                             </Col>
-                            <Col md={7} lg={8}>
+                            <Col md={6} lg={8}>
                                 <ProgramBlockEditor
-                                    activeProgramStepNum={this.state.activeProgramStepNum}
                                     actionPanelStepIndex={this.state.actionPanelStepIndex}
-                                    editingDisabled={this.state.interpreterIsRunning === true}
-                                    interpreterIsRunning={this.state.interpreterIsRunning}
-                                    program={this.state.program}
+                                    editingDisabled={this.state.runningState === 'running'}
+                                    programSequence={this.state.programSequence}
+                                    runningState={this.state.runningState}
                                     selectedAction={this.state.selectedAction}
                                     isDraggingCommand={this.state.isDraggingCommand}
                                     audioManager={this.audioManager}
                                     focusTrapManager={this.focusTrapManager}
                                     addNodeExpandedMode={this.state.settings.addNodeExpandedMode}
-                                    onChangeProgram={this.handleChangeProgram}
+                                    theme={this.state.settings.theme}
+                                    onChangeProgramSequence={this.handleProgramSequenceChange}
                                     onChangeActionPanelStepIndex={this.handleChangeActionPanelStepIndex}
                                     onChangeAddNodeExpandedMode={this.handleChangeAddNodeExpandedMode}
                                 />
@@ -589,14 +633,12 @@ export default class App extends React.Component<{}, AppState> {
                             <div className='App__playControl-container'>
                                 <div className='App__playButton-container'>
                                     <PlayButton
-                                        interpreterIsRunning={this.state.interpreterIsRunning}
-                                        disabled={
-                                            this.state.interpreterIsRunning ||
-                                            programIsEmpty(this.state.program)}
+                                        interpreterIsRunning={this.state.runningState === 'running'}
+                                        disabled={this.state.programSequence.getProgramLength() === 0}
                                         onClick={this.handleClickPlay}
                                     />
                                     <StopButton
-                                        disabled={!this.state.interpreterIsRunning}
+                                        disabled={this.state.runningState === 'stopped'}
                                         onClick={this.handleClickStop}/>
                                 </div>
                                 <ProgramSpeedController
@@ -620,14 +662,15 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     componentDidMount() {
-        if (window.location.search != null) {
+        if (window.location.search != null && window.location.search !== '') {
             const params = new C2lcURLParams(window.location.search);
             const programQuery = params.getProgram();
             const characterStateQuery = params.getCharacterState();
+            const themeQuery = params.getTheme();
             if (programQuery != null && characterStateQuery != null) {
                 try {
                     this.setState({
-                        program: this.programSerializer.deserialize(programQuery),
+                        programSequence: new ProgramSequence(this.programSerializer.deserialize(programQuery), 0),
                         characterState: this.characterStateSerializer.deserialize(characterStateQuery)
                     });
                 } catch(err) {
@@ -635,24 +678,71 @@ export default class App extends React.Component<{}, AppState> {
                     console.log(err.toString());
                 }
             }
+            this.setStateSettings({ theme: Utils.getThemeFromString(themeQuery, 'default') });
+        } else {
+            const localProgram = window.localStorage.getItem('c2lc-program');
+            const localCharacterState = window.localStorage.getItem('c2lc-characterState');
+            const localTheme = window.localStorage.getItem('c2lc-theme');
+            if (localProgram != null && localCharacterState != null) {
+                try {
+                    this.setState({
+                        programSequence: new ProgramSequence(this.programSerializer.deserialize(localProgram), 0),
+                        characterState: this.characterStateSerializer.deserialize(localCharacterState)
+                    });
+                } catch(err) {
+                    console.log(`Error parsing program: ${localProgram} or characterState: ${localCharacterState}`);
+                    console.log(err.toString());
+                }
+            }
+            this.setStateSettings({ theme: Utils.getThemeFromString(localTheme, 'default') });
         }
     }
 
     componentDidUpdate(prevProps: {}, prevState: AppState) {
-        if (this.state.program !== prevState.program
-            || this.state.characterState !== prevState.characterState) {
-            const serializedProgram = this.programSerializer.serialize(this.state.program);
+        if (this.state.programSequence !== prevState.programSequence
+            || this.state.characterState !== prevState.characterState
+            || this.state.settings.theme !== prevState.settings.theme) {
+            const serializedProgram = this.programSerializer.serialize(this.state.programSequence.getProgram());
             const serializedCharacterState = this.characterStateSerializer.serialize(this.state.characterState);
             window.history.pushState(
                 {
                     p: serializedProgram,
-                    c: serializedCharacterState
+                    c: serializedCharacterState,
+                    t: this.state.settings.theme
                 },
                 '',
-                Utils.generateEncodedProgramURL('0.5', serializedProgram, serializedCharacterState));
+                Utils.generateEncodedProgramURL(this.version, this.state.settings.theme, serializedProgram, serializedCharacterState)
+            );
+            window.localStorage.setItem('c2lc-version', this.version);
+            window.localStorage.setItem('c2lc-program', serializedProgram);
+            window.localStorage.setItem('c2lc-characterState', serializedCharacterState);
+            window.localStorage.setItem('c2lc-theme', this.state.settings.theme);
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
+        }
+        if (this.state.runningState !== prevState.runningState
+                && this.state.runningState === 'running') {
+            this.interpreter.startRun();
+        }
+        if (this.state.settings.theme !== prevState.settings.theme) {
+            if (document.body) {
+                if (this.state.settings.theme === 'default') {
+                    document.body.className = '';
+                } else {
+                    document.body.className = `${this.state.settings.theme}-theme`;
+                }
+            }
+        }
+        if (this.state.programSequence !== prevState.programSequence) {
+            if (this.state.programSequence.getProgramLength() === 0) {
+                // All steps have been deleted
+                this.setState({ runningState: 'stopped' });
+            } else if (this.state.programSequence.getProgramCounter()
+                    >= this.state.programSequence.getProgramLength()) {
+                // All steps from the programCounter onward have been deleted
+                this.setState({ runningState: 'stopped' });
+            }
         }
         /* Dash connection removed for version 0.5
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
@@ -668,7 +758,7 @@ export default class App extends React.Component<{}, AppState> {
             } else if (this.state.dashConnectionStatus === 'notConnected') {
                 // TODO: Remove Dash handlers
 
-                if (this.state.interpreterIsRunning) {
+                if (this.state.runningState === 'running) {
                     this.interpreter.stop();
                 }
             }

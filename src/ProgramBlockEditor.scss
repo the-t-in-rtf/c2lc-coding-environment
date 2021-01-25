@@ -1,7 +1,11 @@
 @import 'variables';
 
+@keyframes pausedAnimation {
+    50% {box-shadow: 0 0 0 0.4rem #79F1CD;}
+}
+
 .ProgramBlockEditor__container {
-    background: #F1F1F1;
+    background-color: #F1F1F1;
     display: grid;
     height: 100%;
     grid-template-columns: 6rem auto;
@@ -120,7 +124,7 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEdi
     box-shadow: 0 0 1rem rgba(70, 70, 70, 0.4);
 }
 
-.ProgramBlockEditor__chracter-column-character {
+.ProgramBlockEditor__character-column-character {
     width: 3rem;
     height: 3rem;
 }
@@ -166,6 +170,10 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEdi
 
 button.ProgramBlockEditor__program-block--active {
     box-shadow: 0 0 0 0.2rem #79F1CD;
+}
+
+button.ProgramBlockEditor__program-block--paused {
+    animation: pausedAnimation 2s infinite;
 }
 
 .ProgramBlockEditor__action-panel-container-outer {
