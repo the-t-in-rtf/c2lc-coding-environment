@@ -117,7 +117,13 @@ body {
 }
 
 .App__playButton-container {
+    display: flex;
+    justify-content: center;
     margin-bottom: 1rem;
+}
+
+.App__playButton {
+    margin-right: 1.5rem;
 }
 
 .App__shareButton-container {

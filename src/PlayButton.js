@@ -2,6 +2,7 @@
 
 import React from 'react';
 import AriaDisablingButton from './AriaDisablingButton';
+import classNames from 'classnames';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { ReactComponent as PlayIcon } from './svg/Play.svg';
@@ -10,6 +11,7 @@ import './PlayButton.scss';
 
 type PlayButtonProps = {
     intl: IntlShape,
+    className: string,
     interpreterIsRunning: boolean,
     disabled: boolean,
     onClick: () => void
@@ -17,15 +19,18 @@ type PlayButtonProps = {
 
 class PlayButton extends React.Component<PlayButtonProps, {}> {
     render() {
+        const classes = classNames(
+            this.props.className,
+            this.props.interpreterIsRunning && 'PlayButton--pause',
+            !this.props.interpreterIsRunning && 'PlayButton--play'
+        );
         return (
             <AriaDisablingButton
                 aria-label={
                     this.props.interpreterIsRunning ?
                         this.props.intl.formatMessage({id:'PlayButton.pause'}) :
                         this.props.intl.formatMessage({id:'PlayButton.play'})}
-                className={this.props.interpreterIsRunning ?
-                    'PlayButton--pause' :
-                    'PlayButton--play'}
+                className={classes}
                 disabledClassName='PlayButton--disabled'
                 disabled={this.props.disabled}
                 onClick={this.props.onClick}
