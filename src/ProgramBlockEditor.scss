@@ -1,5 +1,9 @@
 @import 'variables';
 
+@keyframes pausedAnimation {
+    50% {box-shadow: 0 0 0 0.4rem #79F1CD;}
+}
+
 .ProgramBlockEditor__container {
     background-color: #F1F1F1;
     display: grid;
@@ -39,6 +43,10 @@
     float: left;
 }
 
+.ProgramBlockEditor__add-node-toggle-switch:focus {
+    box-shadow: 0 0 0 $c2lc-focus-indicator-width #299DCE;
+}
+
 .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch--checked {
     background: #000;
 }
@@ -56,17 +64,11 @@ button.btn.ProgramBlockEditor__program-deleteAll-button:not(:focus) {
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
 }
 
-button.btn.ProgramBlockEditor__program-deleteAll-button:hover {
-    box-shadow: 0 0 0 $c2lc-hover-indicator-width $c2lc-focus-indicator-color;
-    z-index: 1;
-    background-color: #e5e5e5;
-}
-
 button.btn.ProgramBlockEditor__program-deleteAll-button--pressed {
     background-color: #000;
 }
 
-button.btn.ProgramBlockEditor__program-deleteAll-button--disabled {
+button.btn.ProgramBlockEditor__program-deleteAll-button.ProgramBlockEditor__program-deleteAll-button--disabled {
     background-color: $c2lc-primary-button-color;
     cursor: default;
 }
@@ -87,6 +89,11 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEdi
 
 button.btn.ProgramBlockEditor__program-deleteAll-button--disabled svg {
     stroke: $c2lc-disabled-color;
+}
+
+button.btn.ProgramBlockEditor__program-deleteAll-button:hover {
+    box-shadow: 0 0 0 $c2lc-hover-indicator-width $c2lc-focus-indicator-color;
+    background-color: #e5e5e5;
 }
 
 button.btn.ProgramBlockEditor__program-deleteAll-button--pressed svg,
@@ -177,6 +184,10 @@ button.ProgramBlockEditor__program-block--active {
         top: -0.7rem;
         left: -0.75rem;
     }
+}
+
+button.ProgramBlockEditor__program-block--paused {
+    animation: pausedAnimation 2s infinite;
 }
 
 .ProgramBlockEditor__action-panel-container-outer {
