@@ -14,5 +14,5 @@
 
 .form-control-range:focus,
 .form-control-range:focus::-webkit-slider-runnable-track{
-    outline: #007bff auto;
+    outline: $c2lc-focus-indicator-color auto;
 }
