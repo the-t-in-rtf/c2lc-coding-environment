@@ -25,7 +25,9 @@ import ThemeSelector from './ThemeSelector';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
 import ProgramSequence from './ProgramSequence';
+import ProgramSpeedController from './ProgramSpeedController';
 import ProgramSerializer from './ProgramSerializer';
+import ShareButton from './ShareButton';
 import type { AudioManager, DeviceConnectionStatus, RobotDriver, RunningState, ThemeName } from './types';
 import * as Utils from './Utils';
 import './App.scss';
@@ -647,6 +649,13 @@ export class App extends React.Component<AppProps, AppState> {
                                     disabled={this.state.runningState === 'stopped'}
                                     onClick={this.handleClickStop}/>
                             </div>
+                            <ProgramSpeedController
+                                values={this.speedLookUp}
+                                onChange={this.handleChangeProgramSpeed}
+                            />
+                        </div>
+                        <div className='App__shareButton-container'>
+                            <ShareButton/>
                         </div>
                     </div>
                 </Container>
