@@ -20,6 +20,7 @@ import ProgramBlockEditor from './ProgramBlockEditor';
 import RefreshButton from './RefreshButton';
 import Scene from './Scene';
 import SceneDimensions from './SceneDimensions';
+import StopButton from './StopButton';
 import ThemeSelector from './ThemeSelector';
 import AudioFeedbackToggleSwitch from './AudioFeedbackToggleSwitch';
 import PenDownToggleSwitch from './PenDownToggleSwitch';
@@ -395,6 +396,10 @@ export class App extends React.Component<AppProps, AppState> {
         }
     };
 
+    handleClickStop = () => {
+        this.setState({ runningState: 'stopped' });
+    }
+
     handleClickConnectDash = () => {
         this.setState({
             dashConnectionStatus: 'connecting',
@@ -601,6 +606,7 @@ export class App extends React.Component<AppProps, AppState> {
                             </div>
                         </div>
                     </div>
+
                     <Row className='App__program-section' noGutters={true}>
                         <Col md={6} lg={4} className='pr-md-4 mb-4 mb-md-0'>
                             <div className='App__command-palette'>
@@ -634,18 +640,15 @@ export class App extends React.Component<AppProps, AppState> {
                         <div className='App__playControl-container'>
                             <div className='App__playButton-container'>
                                 <PlayButton
+                                    className='App__playButton'
                                     interpreterIsRunning={this.state.runningState === 'running'}
-                                    disabled={this.state.runningState === 'running'}
+                                    disabled={this.state.programSequence.getProgramLength() === 0}
                                     onClick={this.handleClickPlay}
                                 />
+                                <StopButton
+                                    disabled={this.state.runningState === 'stopped'}
+                                    onClick={this.handleClickStop}/>
                             </div>
-                            <ProgramSpeedController
-                                values={this.speedLookUp}
-                                onChange={this.handleChangeProgramSpeed}
-                            />
-                        </div>
-                        <div className='App__shareButton-container'>
-                            <ShareButton/>
                         </div>
                     </div>
                 </Container>
