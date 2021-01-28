@@ -45,7 +45,8 @@ export default class Interpreter {
 
     continueRun(resolve: (result:any) => void, reject: (error: any) => void): void {
         this.continueRunActive = true;
-        if (this.app.getRunningState() === 'running') {
+        const runningState = this.app.getRunningState();
+        if (runningState === 'running') {
             const programSequence = this.app.getProgramSequence();
             if (this.atEnd(programSequence)) {
                 this.app.stopPlaying();
@@ -62,6 +63,11 @@ export default class Interpreter {
                 });
             }
         } else {
+            if (runningState === 'stopRequested') {
+                this.app.setRunningState('stopped');
+            } else if (runningState === 'pauseRequested') {
+                this.app.setRunningState('paused');
+            }
             this.continueRunActive = false;
             resolve();
         }
