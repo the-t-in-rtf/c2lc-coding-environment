@@ -106,7 +106,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     programStepIsActive(programStepNumber: number) {
-        if (this.props.runningState === 'running') {
+        if (this.props.runningState === 'running'
+            || this.props.runningState === 'stopRequested'
+            || this.props.runningState === 'pauseRequested') {
             return (this.props.programSequence.getProgramCounter()) === programStepNumber;
         } else {
             return false;
