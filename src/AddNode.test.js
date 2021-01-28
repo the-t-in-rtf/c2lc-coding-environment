@@ -7,9 +7,7 @@ import AddNode from './AddNode';
 
 configure({ adapter: new Adapter()});
 
-const expandedDropAreaSelector = '.AddNode__expanded-drop-area';
 const expandedButtonSelector = '.AddNode__expanded-button';
-const collapsedDropAreaSelector = '.AddNode__collapsed-drop-area';
 const collapsedIconSelector = '.AddNode__collapsed-icon';
 
 function mountAddNode(props) {
@@ -50,9 +48,7 @@ test('Given expandedMode is false, it should be in collapsed state', () => {
     const { wrapper } = mountAddNode({
         expandedMode: false
     });
-    expect(wrapper.exists(expandedDropAreaSelector)).toBe(false);
     expect(wrapper.exists(expandedButtonSelector)).toBe(false);
-    expect(wrapper.exists(collapsedDropAreaSelector)).toBe(true);
     expect(wrapper.exists(collapsedIconSelector)).toBe(true);
 });
 
@@ -69,9 +65,7 @@ describe('Given expandedMode is true and disabled is false', () => {
     });
 
     test('It should be in expanded state', () => {
-        expect(wrapper.exists(expandedDropAreaSelector)).toBe(true);
         expect(wrapper.exists(expandedButtonSelector)).toBe(true);
-        expect(wrapper.exists(collapsedDropAreaSelector)).toBe(false);
         expect(wrapper.exists(collapsedIconSelector)).toBe(false);
     });
 
@@ -104,9 +98,7 @@ describe('Given expandedMode is true and disabled is true', () => {
     });
 
     test('It should be in expanded state', () => {
-        expect(wrapper.exists(expandedDropAreaSelector)).toBe(true);
         expect(wrapper.exists(expandedButtonSelector)).toBe(true);
-        expect(wrapper.exists(collapsedDropAreaSelector)).toBe(false);
         expect(wrapper.exists(collapsedIconSelector)).toBe(false);
     });
 

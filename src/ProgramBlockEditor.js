@@ -535,7 +535,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     </h3>
                 </div>
                 <div
-                    className={'ProgramBlockEditor__program-sequence-scroll-container' + (!this.props.editingDisabled && this.props.isDraggingCommand ? " ProgramBlockEditor__program-sequence-scroll-container--isDragging": "") }
+                    className={'ProgramBlockEditor__program-sequence-scroll-container' + (!this.props.editingDisabled && this.props.isDraggingCommand ? ' ProgramBlockEditor__program-sequence-scroll-container--isDragging': '') }
                     ref={this.programSequenceContainerRef}
                     onDragOver={this.handleDragCommandOverProgramArea}
                     onDragLeave={this.handleDragLeaveOnProgramArea}
