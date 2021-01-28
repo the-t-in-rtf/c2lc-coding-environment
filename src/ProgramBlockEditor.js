@@ -280,14 +280,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     // TODO: Discuss removing this once we have a good way to test drag and drop.
     /* istanbul ignore next */
-    handleDropCommandOnAddNode = (stepNumber: number) => {
-        // TODO: How to get to the event? Do we need this at all?
-        // event.preventDefault();
-        this.insertSelectedCommandIntoProgram(stepNumber);
-    };
-
-    // TODO: Discuss removing this once we have a good way to test drag and drop.
-    /* istanbul ignore next */
     handleDragCommandOverProgramArea = (event: DragEvent) => {
         event.preventDefault();
 
@@ -308,13 +300,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     handleDragLeaveOnProgramArea = (event: DragEvent) => {
         const myBounds = this.programBlockEditorRef.current.getBoundingClientRect();
         // Dragging over child elements with implicit drag and drop results in flickering.  Check to confirm whether we've actually left the area.
-        if (event.clientX >= myBounds.left &&
-            event.clientX <= (myBounds.left + myBounds.width) &&
-            event.clientY >= myBounds.top &&
-            event.clientY <= (myBounds.top + myBounds.height)) {
-            // console.log("ignored spurious drag exit");
-        }
-        else {
+        if (event.clientX < myBounds.left ||
+            event.clientX > (myBounds.left + myBounds.width) ||
+            event.clientY < myBounds.top ||
+            event.clientY > (myBounds.top + myBounds.height)) {
             // console.log("drag leaving program area");
             this.setState({
                 closestAddNodeIndex: -1
@@ -432,7 +421,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         this.props.editingDisabled ||
                         (!this.commandIsSelected() && !this.props.isDraggingCommand)}
                     onClick={this.handleClickAddNode}
-                    onDrop={this.handleDropCommandOnAddNode}
                 />
                 <div className='ProgramBlockEditor__program-block-connector' />
                 <div className='ProgramBlockEditor__program-block-with-panel'>
@@ -472,7 +460,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         this.props.editingDisabled ||
                         (!this.commandIsSelected() && !this.props.isDraggingCommand)}
                     onClick={this.handleClickAddNode}
-                    onDrop={this.handleDropCommandOnAddNode}
                 />
             </React.Fragment>
         )
@@ -548,7 +535,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                     </h3>
                 </div>
                 <div
-                    className={'ProgramBlockEditor__program-sequence-scroll-container' + (!this.props.editingDisabled && this.props.isDraggingCommand ? " isDragging": "") } ref={this.programSequenceContainerRef}
+                    className={'ProgramBlockEditor__program-sequence-scroll-container' + (!this.props.editingDisabled && this.props.isDraggingCommand ? " ProgramBlockEditor__program-sequence-scroll-container--isDragging": "") }
+                    ref={this.programSequenceContainerRef}
                     onDragOver={this.handleDragCommandOverProgramArea}
                     onDragLeave={this.handleDragLeaveOnProgramArea}
                     onDrop={this.handleDropCommandOnProgramArea}

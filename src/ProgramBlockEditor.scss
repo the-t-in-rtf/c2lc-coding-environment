@@ -195,6 +195,6 @@ button.ProgramBlockEditor__program-block--active {
     top: #{-$c2lc-action-panel-height * 1.3};
 }
 
-.ProgramBlockEditor__program-sequence-scroll-container.isDragging {
+.ProgramBlockEditor__program-sequence-scroll-container--isDragging {
     box-shadow: 0 0 0 0.4rem #53A28C;
 }

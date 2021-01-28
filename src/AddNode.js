@@ -13,8 +13,7 @@ type AddNodeProps = {
     'aria-label': string,
     isDraggingCommand: boolean,
     closestAddNodeIndex: number,
-    onClick: (stepNumber: number) => void,
-    onDrop: (stepNumber: number) => void
+    onClick: (stepNumber: number) => void
 };
 
 const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
