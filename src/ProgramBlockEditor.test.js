@@ -767,12 +767,48 @@ describe('Themed character icon should be rendered on the character column', () 
     });
 });
 
-describe('When runningState property changes to paused', () => {
+describe('When runningState property is paused and programCounter is the same as current step index', () => {
     test('className of the currentStep should have --paused', () => {
         expect.assertions(1);
         const { wrapper } = createMountProgramBlockEditor({ runningState: 'paused' });
         const currentStep = getProgramBlockAtPosition(wrapper, 0);
 
         expect(currentStep.get(0).props.className.includes('ProgramBlockEditor__program-block--paused')).toBe(true);
+    });
+});
+
+describe('When runningState property is pauseRequested and programCounter is the same as current step index + 1', () => {
+    test('className of next step of the currentStep should have --paused', () => {
+        expect.assertions(1);
+        const { wrapper } = createMountProgramBlockEditor({ runningState: 'pauseRequested' });
+        const pausedStep = getProgramBlockAtPosition(wrapper, 1);
+
+        expect(pausedStep.get(0).props.className.includes('ProgramBlockEditor__program-block--paused')).toBe(true);
+    });
+});
+
+describe('When runningState is running, stopRequested, or pauseRequested and programCounter is the same as current step index', () => {
+    test('className of the currentStep should have --active', () => {
+        expect.assertions(5);
+        const { wrapper } = createMountProgramBlockEditor({ runningState: 'running' });
+        let currentStep = getProgramBlockAtPosition(wrapper, 0);
+
+        expect(currentStep.get(0).props.className.includes('ProgramBlockEditor__program-block--active')).toBe(true);
+
+        wrapper.setProps({ runningState: 'stopRequested' });
+        currentStep = getProgramBlockAtPosition(wrapper, 0);
+        expect(currentStep.get(0).props.className.includes('ProgramBlockEditor__program-block--active')).toBe(true);
+
+        wrapper.setProps({ runningState: 'pauseRequested'});
+        currentStep = getProgramBlockAtPosition(wrapper, 0);
+        expect(currentStep.get(0).props.className.includes('ProgramBlockEditor__program-block--active')).toBe(true);
+
+        wrapper.setProps({ runningState: 'paused'});
+        currentStep = getProgramBlockAtPosition(wrapper, 0);
+        expect(currentStep.get(0).props.className.includes('ProgramBlockEditor__program-block--active')).toBe(false);
+
+        wrapper.setProps({ runningState: 'stopped'});
+        currentStep = getProgramBlockAtPosition(wrapper, 0);
+        expect(currentStep.get(0).props.className.includes('ProgramBlockEditor__program-block--active')).toBe(false);
     });
 });
