@@ -280,49 +280,55 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     // TODO: Discuss removing this once we have a good way to test drag and drop.
     /* istanbul ignore next */
     handleDragCommandOverProgramArea = (event: DragEvent) => {
-        event.preventDefault();
+        if (!this.props.editingDisabled) {
+            event.preventDefault();
 
-        // Only attempt to recalculate the closest node every 100ms.
-        const timeStamp = Date.now();
-        if (timeStamp - this.lastCalculatedClosestAddNode > 100) {
-            const closestAddNodeIndex = this.findAddNodeClosestToEvent(event);
-            this.lastCalculatedClosestAddNode = timeStamp;
+            // Only attempt to recalculate the closest node every 100ms.
+            const timeStamp = Date.now();
+            if (timeStamp - this.lastCalculatedClosestAddNode > 100) {
+                const closestAddNodeIndex = this.findAddNodeClosestToEvent(event);
+                this.lastCalculatedClosestAddNode = timeStamp;
 
-            this.setState({
-                closestAddNodeIndex: closestAddNodeIndex
-            });
+                this.setState({
+                    closestAddNodeIndex: closestAddNodeIndex
+                });
+            }
         }
     }
 
     // TODO: Discuss removing this once we have a good way to test drag and drop.
     /* istanbul ignore next */
     handleDragLeaveOnProgramArea = (event: DragEvent) => {
-        const myBounds = this.programBlockEditorRef.current.getBoundingClientRect();
-        // Dragging over child elements with implicit drag and drop results in flickering.  Check to confirm whether we've actually left the area.
-        if (event.clientX < myBounds.left ||
-            event.clientX > (myBounds.left + myBounds.width) ||
-            event.clientY < myBounds.top ||
-            event.clientY > (myBounds.top + myBounds.height)) {
-            // console.log("drag leaving program area");
-            this.setState({
-                closestAddNodeIndex: -1
-            });
+        if (!this.props.editingDisabled) {
+            const myBounds = this.programBlockEditorRef.current.getBoundingClientRect();
+            // Dragging over child elements with implicit drag and drop results in flickering.  Check to confirm whether we've actually left the area.
+            if (event.clientX < myBounds.left ||
+                event.clientX > (myBounds.left + myBounds.width) ||
+                event.clientY < myBounds.top ||
+                event.clientY > (myBounds.top + myBounds.height)) {
+                // console.log("drag leaving program area");
+                this.setState({
+                    closestAddNodeIndex: -1
+                });
+            }
         }
     }
 
     // TODO: Discuss removing this once we have a good way to test drag and drop.
     /* istanbul ignore next */
     handleDropCommandOnProgramArea = (event: DragEvent) => {
-        event.preventDefault();
+        if (!this.props.editingDisabled) {
+            event.preventDefault();
 
-        // Nothing should be highlighted once the drop completes.
-        this.setState({
-            closestAddNodeIndex: -1
-        });
+            // Nothing should be highlighted once the drop completes.
+            this.setState({
+                closestAddNodeIndex: -1
+            });
 
-        const closestAddNodeIndex = this.findAddNodeClosestToEvent(event);
-        // TODO: Make sure an announcement is triggered.
-        this.insertSelectedCommandIntoProgram(closestAddNodeIndex);
+            const closestAddNodeIndex = this.findAddNodeClosestToEvent(event);
+            // TODO: Make sure an announcement is triggered.
+            this.insertSelectedCommandIntoProgram(closestAddNodeIndex);
+        }
     }
 
     /* istanbul ignore next */
