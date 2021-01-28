@@ -270,8 +270,15 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     makeProgramBlock(programStepNumber: number, command: string) {
         const active = this.programStepIsActive(programStepNumber);
-        const paused = this.props.runningState === 'paused' &&
-            this.props.programSequence.getProgramCounter() === programStepNumber;
+        const paused = (this.props.runningState === 'paused'
+            && programStepNumber === this.props.programSequence.getProgramCounter())
+            || (this.props.runningState === 'pauseRequested'
+            // When the running state is pauseRequested, show the pause indication
+            // on the next step. This indicates where the program will pause, and relies on
+            // the fact that the next step is the one with index programCounter + 1.
+            // This is currently true but we will need to revisit this logic when we introduce
+            // control flow or blocks into the language.
+            && programStepNumber === this.props.programSequence.getProgramCounter() + 1);
         const hasActionPanelControl = this.props.actionPanelStepIndex === programStepNumber;
         const classes = classNames(
             'ProgramBlockEditor__program-block',
