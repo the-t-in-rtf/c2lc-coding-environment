@@ -49,7 +49,7 @@ export default class Interpreter {
         if (runningState === 'running') {
             const programSequence = this.app.getProgramSequence();
             if (this.atEnd(programSequence)) {
-                this.app.stopPlaying();
+                this.app.setRunningState('stopped');
                 this.continueRunActive = false;
                 resolve();
             } else {
@@ -57,7 +57,7 @@ export default class Interpreter {
                     this.continueRun(resolve, reject);
                 }, (error: Error) => {
                     // Reject the run Promise when the step Promise is rejected
-                    this.app.stopPlaying();
+                    this.app.setRunningState('stopped');
                     this.continueRunActive = false;
                     reject(error);
                 });
