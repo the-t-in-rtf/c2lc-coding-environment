@@ -163,7 +163,7 @@ test('Run a program with one command from beginning to end without an error', (d
     interpreter.startRun().then(() => {
         expect(mockCommandHandler.mock.calls.length).toBe(1);
         expect(appMock.incrementProgramCounter.mock.calls.length).toBe(1);
-        expect(appMock.stopPlaying.mock.calls.length).toBe(1);
+        expect(appMock.setRunningState.mock.calls.length).toBe(1);
         done();
     });
 });
@@ -190,7 +190,7 @@ test('Run a program with three commands from beginning to end without an error',
     interpreter.startRun().then(() => {
         expect(mockCommandHandler.mock.calls.length).toBe(3);
         expect(appMock.incrementProgramCounter.mock.calls.length).toBe(3);
-        expect(appMock.stopPlaying.mock.calls.length).toBe(1);
+        expect(appMock.setRunningState.mock.calls.length).toBe(1);
         done();
     });
 });
@@ -251,4 +251,18 @@ test('ContinueRun will not continue, when continueRunActive property of Interpre
         expect(appMock.getRunningState.mock.calls.length).toBe(0);
         done();
     })
+});
+
+test('When runningState is stopRequested or pauseRequested, call setRunningState in App', () => {
+    const { interpreter, appMock } =createInterpreter();
+    appMock.getRunningState.mockImplementationOnce(() => {return 'stopRequested'});
+    appMock.getRunningState.mockImplementationOnce(() => {return 'pauseRequested'});
+    interpreter.startRun().then(() => {
+        expect(appMock.setRunningState.mock.calls.length).toBe(1);
+        done();
+    });
+    interpreter.startRun().then(() => {
+        expect(appMock.setRunningState.mock.calls.length).toBe(2);
+        done();
+    });
 });
