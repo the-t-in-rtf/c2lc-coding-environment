@@ -253,7 +253,7 @@ test('ContinueRun will not continue, when continueRunActive property of Interpre
     })
 });
 
-test('When runningState is stopRequested or pauseRequested, call setRunningState in App', () => {
+test('When runningState is stopRequested or pauseRequested, call setRunningState in App', (done) => {
     const { interpreter, appMock } =createInterpreter();
     appMock.getRunningState.mockImplementationOnce(() => {return 'stopRequested'});
     appMock.getRunningState.mockImplementationOnce(() => {return 'pauseRequested'});
