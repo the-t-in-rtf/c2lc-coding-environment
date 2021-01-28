@@ -360,6 +360,10 @@ export default class App extends React.Component<{}, AppState> {
         this.setState({ runningState: 'stopped' });
     }
 
+    setRunningState(runningState: RunningState): void {
+        this.setState({ runningState });
+    }
+
     // Handlers
 
     handleProgramSequenceChange = (programSequence: ProgramSequence) => {
@@ -369,11 +373,13 @@ export default class App extends React.Component<{}, AppState> {
     handleClickPlay = () => {
         switch (this.state.runningState) {
             case 'running':
-                this.setState({ runningState: 'paused' });
+                this.setState({ runningState: 'pauseRequested' });
                 break;
+            case 'pauseRequested': //fall through
             case 'paused':
                 this.setState({ runningState: 'running' });
                 break;
+            case 'stopRequested': //fall through
             case 'stopped':
                 this.setState((state) => {
                     return {
@@ -388,7 +394,7 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickStop = () => {
-        this.setState({ runningState: 'stopped' });
+        this.setState({ runningState: 'stopRequested' });
     }
 
     handleClickConnectDash = () => {
@@ -639,7 +645,9 @@ export default class App extends React.Component<{}, AppState> {
                                         onClick={this.handleClickPlay}
                                     />
                                     <StopButton
-                                        disabled={this.state.runningState === 'stopped'}
+                                        disabled={
+                                            this.state.runningState === 'stopped'
+                                            || this.state.runningState === 'stopRequested'}
                                         onClick={this.handleClickStop}/>
                                 </div>
                                 <ProgramSpeedController
