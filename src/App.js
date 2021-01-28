@@ -338,6 +338,16 @@ export default class App extends React.Component<{}, AppState> {
         }
     }
 
+    setRunningState(runningState: RunningState): void {
+        this.setState((state) => {
+            if (runningState === 'stopRequested' && state.runningState === 'paused') {
+                return { runningState: 'stopped' };
+            } else {
+                return { runningState };
+            }
+        });
+    }
+
     // API for Interpreter
 
     getProgramSequence(): ProgramSequence {
@@ -354,14 +364,6 @@ export default class App extends React.Component<{}, AppState> {
                 programSequence: state.programSequence.incrementProgramCounter()
             }
         }, callback);
-    }
-
-    stopPlaying(): void {
-        this.setState({ runningState: 'stopped' });
-    }
-
-    setRunningState(runningState: RunningState): void {
-        this.setState({ runningState });
     }
 
     // Handlers
@@ -394,7 +396,7 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickStop = () => {
-        this.setState({ runningState: 'stopRequested' });
+        this.setRunningState('stopRequested');
     }
 
     handleClickConnectDash = () => {
@@ -620,7 +622,9 @@ export default class App extends React.Component<{}, AppState> {
                             <Col md={6} lg={8}>
                                 <ProgramBlockEditor
                                     actionPanelStepIndex={this.state.actionPanelStepIndex}
-                                    editingDisabled={this.state.runningState === 'running'}
+                                    editingDisabled={
+                                        !(this.state.runningState === 'stopped'
+                                        || this.state.runningState === 'paused')}
                                     programSequence={this.state.programSequence}
                                     runningState={this.state.runningState}
                                     selectedAction={this.state.selectedAction}
