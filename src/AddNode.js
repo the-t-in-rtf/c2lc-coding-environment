@@ -34,11 +34,6 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
         if (props.expandedMode || isNearestDragNode || (isDragOver && !props.disabled)) {
             return (
                 <div className={addNodeClasses}>
-                    <div className='AddNode__drop-area-container'>
-                        <div className='AddNode__expanded-drop-area'
-                            data-stepnumber={props.programStepNumber}
-                        />
-                    </div>
                     <AriaDisablingButton
                         className={"AddNode__expanded-button" + (isNearestDragNode ? " isDragTarget" : "")}
                         data-stepnumber={props.programStepNumber}
@@ -55,11 +50,6 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
         } else {
             return (
                 <div className={addNodeClasses}>
-                    <div className='AddNode__drop-area-container'>
-                        <div className='AddNode__collapsed-drop-area'
-                            ref={ref}
-                        />
-                    </div>
                     <div className='AddNode__collapsed-icon'>
                         <AddIcon />
                     </div>

@@ -48,10 +48,6 @@ button.btn.AddNode__expanded-button svg {
     stroke: #FFF;
 }
 
-.AddNode__drop-area-container {
-    position: relative;
-}
-
 .AddNode--is-dragging-command .AddNode__expanded-drop-area {
     top: calc(
         #{-$addNodeDropAreaHeight / 2}
