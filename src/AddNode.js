@@ -49,7 +49,7 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
             );
         } else {
             return (
-                <div className={addNodeClasses}>
+                <div ref={ref} className={addNodeClasses}>
                     <div className='AddNode__collapsed-icon'>
                         <AddIcon />
                     </div>
