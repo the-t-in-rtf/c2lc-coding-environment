@@ -48,6 +48,7 @@ type ProgramBlockEditorState = {
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
+    programBlockEditorRef: any;
     commandBlockRefs: Map<number, HTMLElement>;
     addNodeRefs: Map<number, HTMLElement>;
     focusCommandBlockIndex: ?number;
@@ -58,6 +59,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     constructor(props: ProgramBlockEditorProps) {
         super(props);
+        this.programBlockEditorRef = React.createRef();
         this.commandBlockRefs = new Map();
         this.addNodeRefs = new Map();
         this.focusCommandBlockIndex = null;
@@ -298,9 +300,30 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     /* istanbul ignore next */
     handleDragLeaveOnProgramArea = (event: DragEvent) => {
         if (!this.props.editingDisabled) {
-            this.setState({
-                closestAddNodeIndex: -1
-            });
+            if (!this.programBlockEditorRef.current.contains(event.relatedTarget)) {
+                this.setState({
+                    closestAddNodeIndex: -1
+                });
+            };
+            // const myBounds = this.programBlockEditorRef.current.getBoundingClientRect();
+            // // Dragging over child elements with implicit drag and drop results in flickering.  Check to confirm whether we've actually left the area.
+            // if (event.clientX < myBounds.left ||
+            //     event.clientX > (myBounds.left + myBounds.width) ||
+            //     event.clientY < myBounds.top ||
+            //     event.clientY > (myBounds.top + myBounds.height)) {
+            //     this.setState({
+            //         closestAddNodeIndex: -1
+            //     });
+            // }
+            // // TODO: Remove
+            // else {
+            //     debugger;
+            //     console.log(
+            //         "client at (" + event.clientX + ", " + event.clientY + "), bounding box goes from (" +
+            //         myBounds.left + "," + myBounds.top + ") to (" + (myBounds.left + myBounds.width) +
+            //         "," + (myBounds.top + myBounds.height) + ")."
+            //     );
+            // }
         }
     }
 
@@ -493,6 +516,7 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         return (
             <div
                 className='ProgramBlockEditor__container'
+                ref={this.programBlockEditorRef}
             >
                 <div className='ProgramBlockEditor__header'>
                     <h2 className='ProgramBlockEditor__heading'>
