@@ -300,30 +300,17 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     /* istanbul ignore next */
     handleDragLeaveOnProgramArea = (event: DragEvent) => {
         if (!this.props.editingDisabled) {
-            if (!this.programBlockEditorRef.current.contains(event.relatedTarget)) {
+            // Ignore anything that we "contain", except for our upstairs and lefthand neighbours.
+            if (!event.relatedTarget ||
+                // $FlowFixMe: Flow doesn't recognise the relatedTarget property.
+                event.relatedTarget.className === "ProgramBlockEditor__header" ||
+                event.relatedTarget.className === "ProgramBlockEditor__container" ||
+                !this.programBlockEditorRef.current.contains(event.relatedTarget)
+            ) {
                 this.setState({
                     closestAddNodeIndex: -1
                 });
-            };
-            // const myBounds = this.programBlockEditorRef.current.getBoundingClientRect();
-            // // Dragging over child elements with implicit drag and drop results in flickering.  Check to confirm whether we've actually left the area.
-            // if (event.clientX < myBounds.left ||
-            //     event.clientX > (myBounds.left + myBounds.width) ||
-            //     event.clientY < myBounds.top ||
-            //     event.clientY > (myBounds.top + myBounds.height)) {
-            //     this.setState({
-            //         closestAddNodeIndex: -1
-            //     });
-            // }
-            // // TODO: Remove
-            // else {
-            //     debugger;
-            //     console.log(
-            //         "client at (" + event.clientX + ", " + event.clientY + "), bounding box goes from (" +
-            //         myBounds.left + "," + myBounds.top + ") to (" + (myBounds.left + myBounds.width) +
-            //         "," + (myBounds.top + myBounds.height) + ")."
-            //     );
-            // }
+            }
         }
     }
 
