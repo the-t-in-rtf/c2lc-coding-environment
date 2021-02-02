@@ -118,6 +118,7 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEdi
     border-width: 0.1rem 0 0.1rem 0.1rem;
     border-color: #8F8F8F;
     border-style: solid;
+    pointer-events: none;
 }
 
 .ProgramBlockEditor__character-column-character-container {
@@ -151,6 +152,7 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEdi
     align-items: center;
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
+    pointer-events: none;
 }
 
 .ProgramBlockEditor__start-indicator {
