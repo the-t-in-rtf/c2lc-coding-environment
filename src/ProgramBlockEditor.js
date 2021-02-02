@@ -48,7 +48,6 @@ type ProgramBlockEditorState = {
 };
 
 class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, ProgramBlockEditorState> {
-    programBlockEditorRef: any;
     commandBlockRefs: Map<number, HTMLElement>;
     addNodeRefs: Map<number, HTMLElement>;
     focusCommandBlockIndex: ?number;
@@ -59,7 +58,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     constructor(props: ProgramBlockEditorProps) {
         super(props);
-        this.programBlockEditorRef = React.createRef();
         this.commandBlockRefs = new Map();
         this.addNodeRefs = new Map();
         this.focusCommandBlockIndex = null;
@@ -499,7 +497,6 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         return (
             <div
                 className='ProgramBlockEditor__container'
-                ref={this.programBlockEditorRef}
             >
                 <div className='ProgramBlockEditor__header'>
                     <h2 className='ProgramBlockEditor__heading'>
