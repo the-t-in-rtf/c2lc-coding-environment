@@ -300,21 +300,17 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     /* istanbul ignore next */
     handleDragLeaveOnProgramArea = (event: DragEvent) => {
         if (!this.props.editingDisabled) {
-            // const myBounds = this.programBlockEditorRef.current.getBoundingClientRect();
-            // // Dragging over child elements with implicit drag and drop results in flickering.  Check to confirm whether we've actually left the area.
-            // if (event.clientX < myBounds.left ||
-            //     event.clientX > (myBounds.left + myBounds.width) ||
-            //     event.clientY < myBounds.top ||
-            //     event.clientY > (myBounds.top + myBounds.height)) {
-            //     // console.log("drag leaving program area");
-            //     this.setState({
-            //         closestAddNodeIndex: -1
-            //     });
-            // }
-            this.setState({
-                closestAddNodeIndex: -1
-            });
-
+            const myBounds = this.programBlockEditorRef.current.getBoundingClientRect();
+            // Dragging over child elements with implicit drag and drop results in flickering.  Check to confirm whether we've actually left the area.
+            if (event.clientX < myBounds.left ||
+                event.clientX > (myBounds.left + myBounds.width) ||
+                event.clientY < myBounds.top ||
+                event.clientY > (myBounds.top + myBounds.height)) {
+                // console.log("drag leaving program area");
+                this.setState({
+                    closestAddNodeIndex: -1
+                });
+            }
         }
     }
 
