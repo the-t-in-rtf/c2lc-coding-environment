@@ -300,13 +300,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     /* istanbul ignore next */
     handleDragLeaveOnProgramArea = (event: DragEvent) => {
         if (!this.props.editingDisabled) {
-            // Ignore anything that we "contain", except for our upstairs and lefthand neighbours.
-            if (!event.relatedTarget ||
-                // $FlowFixMe: Flow doesn't recognise the relatedTarget property.
-                event.relatedTarget.className === "ProgramBlockEditor__header" ||
-                event.relatedTarget.className === "ProgramBlockEditor__container" ||
-                !this.programBlockEditorRef.current.contains(event.relatedTarget)
-            ) {
+            // Ignore drag leave events triggered by entering anything that we "contain".
+            // $FlowFixMe: Flow doesn't recognise the relatedTarget property.
+            if (!this.programSequenceContainerRef.current.contains(event.relatedTarget)) {
                 this.setState({
                     closestAddNodeIndex: -1
                 });
