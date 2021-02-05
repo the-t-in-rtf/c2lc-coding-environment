@@ -14,7 +14,7 @@ To try the latest version of the Inclusive Coding Environment, visit our
 Running this project requires [npm and Node.js](https://www.npmjs.com/get-npm). Once you download or fork the source
 code, you will need to install the required dependencies using a command like:
 
-```
+```shell
 npm install
 ```
 
@@ -22,7 +22,7 @@ npm install
 
 To start the app in development mode, use a command like:
 
-```
+```shell
 npm start
 ```
 
@@ -34,7 +34,7 @@ will also see any lint errors in the console (see [our Contributor's guide for d
 
 To run the tests in this package, use a command like:
 
-```
+```shell
 npm test
 ```
 
@@ -66,4 +66,3 @@ We would like to thank these amazing open source projects and libraries that we 
 | [github.com/react-bootstrap/react-bootstrap](https://github.com/react-bootstrap/react-bootstrap) | MIT License |
 | [github.com/sass/node-sass](https://github.com/sass/node-sass) | MIT License |
 | [loading.io/](https://loading.io/) | [Loading.io Free License](https://loading.io/license/#free-license) |
-

@@ -26,5 +26,3 @@ zone of "out of bounds" cells bordering those.
 |    10 |   G#1 |   D#1 |   A#1 |    F1 |    C1 |    G1 |    D1 |    A1 |    E1 |    B1 |   F#1 |   C#1 |   G#1 |   D#1 |   A#1 |    F1 |    C1 |    G1 |    D1 |    A1 |    E1 |    B1 |   F#1 |   C#1 |   G#1 |
 |    11 |    C1 |    G1 |    D1 |    A1 |    E1 |    B1 |   F#1 |   C#1 |   G#1 |   D#1 |   A#1 |    F1 |    C1 |    G1 |    D1 |    A1 |    E1 |    B1 |   F#1 |   C#1 |   G#1 |   D#1 |   A#1 |    F1 |    C1 |
 |    12 |    E1 |    B1 |   F#1 |   C#1 |   G#1 |   D#1 |   A#1 |    F1 |    C1 |    G1 |    D1 |    A1 |    E1 |    B1 |   F#1 |   C#1 |   G#1 |   D#1 |   A#1 |    F1 |    C1 |    G1 |    D1 |    A1 |    E1 |
-
-

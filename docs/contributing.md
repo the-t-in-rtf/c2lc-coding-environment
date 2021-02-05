@@ -27,7 +27,7 @@ follows:
 
 For more details about the technologies used and the standards for an acceptable pull request, please read on.
 
-## Accessibility 
+## Accessibility
 
 Accessibility is an important part of our project, and all work submitted against our repository is expected to preserve
 or improve the level of accessibility of the project.
@@ -50,9 +50,9 @@ to work with React:
 - Use [prototype method syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Prototype_methods)
   for class methods
 - Use public class field syntax for React event handlers
-    - [Handling Events (React documentation)](https://reactjs.org/docs/handling-events.html)
-    - [Event Handling for React (Flow documentation)](https://flow.org/en/docs/react/events/)
-    - [Ecma TC39 "Class field declarations for JavaScript" proposal](https://github.com/tc39/proposal-class-fields)
+  - [Handling Events (React documentation)](https://reactjs.org/docs/handling-events.html)
+  - [Event Handling for React (Flow documentation)](https://flow.org/en/docs/react/events/)
+  - [Ecma TC39 "Class field declarations for JavaScript" proposal](https://github.com/tc39/proposal-class-fields)
 - Provide dependencies to an object instance via constructor parameters
 - Prefer single quotes for string literals
 
@@ -72,7 +72,7 @@ be found in our [`package.json` file](../package.json).
 
 You can check your work in progress against our coding conventions using a command like:
 
-```
+```shell
 npx eslint .
 ```
 
@@ -84,14 +84,14 @@ checks before submitting your pull request.
 We are using [Flow](https://flow.org/) as our static type checker. Contributions are expected to include Flow type
 annotations and to ensure that both the type checks pass. You can run the type checks using a command like:
 
-```
+```shell
 npx flow
 ```
 
 We use a package called `flow-coverage-report` to test how much of our work includes type annotations. To see the
-current level of coverage (and confirm whether your changes meet our coverage threshold), you can use a command like: 
+current level of coverage (and confirm whether your changes meet our coverage threshold), you can use a command like:
 
-```
+```shell
 npx flow-coverage-report --config .flowcoverage-main-threshold
 ```
 
@@ -106,13 +106,13 @@ tests for a given component should match the component's name, so tests for `MyC
 
 Tests can be run using a command like:
 
-```
+```shell
 npm test
 ```
 
 To check that your work in progress meets our standards for test code coverage, you can use a command like:
 
-```
+```shell
 npm test -- --verbose --coverage
 ```
 
