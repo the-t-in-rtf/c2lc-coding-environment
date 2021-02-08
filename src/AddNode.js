@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useState } from 'react';
+import React from 'react';
 import AriaDisablingButton from './AriaDisablingButton';
 import { ReactComponent as AddIcon } from './svg/Add.svg';
 import classNames from 'classnames';
@@ -18,8 +18,6 @@ type AddNodeProps = {
 
 const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
     (props, ref) => {
-        const [isDragOver] = useState(false);
-
         const handleClick = (e: SyntheticEvent<HTMLButtonElement>) => {
             const stepNumber = parseInt(e.currentTarget.dataset.stepnumber, 10);
             props.onClick(stepNumber);
@@ -31,7 +29,8 @@ const AddNode = React.forwardRef<AddNodeProps, HTMLDivElement>(
         );
 
         const isNearestDragNode = ( props.programStepNumber === props.closestAddNodeIndex);
-        if (props.expandedMode || isNearestDragNode || (isDragOver && !props.disabled)) {
+
+        if (props.expandedMode || isNearestDragNode) {
             return (
                 <div className={addNodeClasses}>
                     <AriaDisablingButton
