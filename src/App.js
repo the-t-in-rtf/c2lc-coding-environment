@@ -542,6 +542,7 @@ export default class App extends React.Component<{}, AppState> {
                     role='main'
                     onClick={this.handleRootClick}
                     onKeyDown={this.handleRootKeyDown}>
+                    <div className='App__header-background' />
                     <header className='App__header'>
                         <div className='App__title'>
                             <Row className='App__header-row'>
@@ -630,23 +631,25 @@ export default class App extends React.Component<{}, AppState> {
                             onChangeAddNodeExpandedMode={this.handleChangeAddNodeExpandedMode}
                         />
                     </div>
+                    <div className='App__playAndShare-background' />
                     <div className='App__playAndShare-container'>
                         <div className='App__playControl-container'>
                             <div className='App__playButton-container'>
                                 <PlayButton
-                                    className='App__playButton'
+                                    className='App__playControlButton'
                                     interpreterIsRunning={this.state.runningState === 'running'}
                                     disabled={this.state.programSequence.getProgramLength() === 0}
                                     onClick={this.handleClickPlay}
                                 />
                                 <StopButton
+                                    className='App__playControlButton'
                                     disabled={this.state.runningState === 'stopped'}
                                     onClick={this.handleClickStop}/>
+                                <ProgramSpeedController
+                                    values={this.speedLookUp}
+                                    onChange={this.handleChangeProgramSpeed}
+                                />
                             </div>
-                            <ProgramSpeedController
-                                values={this.speedLookUp}
-                                onChange={this.handleChangeProgramSpeed}
-                            />
                         </div>
                         <div className='App__shareButton-container'>
                             <ShareButton/>
