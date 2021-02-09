@@ -196,7 +196,7 @@ class Scene extends React.Component<SceneProps, {}> {
         const characterTransform = `translate(${this.getCharacterDrawXPos()} ${this.getCharacterDrawYPos()}) rotate(${this.props.characterState.getDirectionDegrees() - 90} 0 0)`;
 
         return (
-            <div>
+            <div className='Scene-container'>
                 <span
                     className='Scene'
                     role='img'
