@@ -299,8 +299,27 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     handleDragLeaveOnProgramArea = (event: DragEvent) => {
         if (!this.props.editingDisabled) {
             // Ignore drag leave events triggered by entering anything that we "contain".
+            // We have to use two strategies depending on the browser (see below).
+
+            // If the related target is null (hi, Safari!), use the element bounds instead.
+            // See: https://bugs.webkit.org/show_bug.cgi?id=66547
+            if (event.relatedTarget === null) {
+                // $FlowFixMe: Flow doesn't understand how we access the client bounds.
+                const myBounds = this.programSequenceContainerRef.current.getBoundingClientRect();
+                if (event.clientX <= myBounds.left ||
+                    event.clientX >= (myBounds.left + myBounds.width) ||
+                    event.clientY <= myBounds.top ||
+                    event.clientY >= (myBounds.top + myBounds.height)) {
+                    this.setState({
+                        closestAddNodeIndex: -1
+                    });
+                }
+
+            }
+            // For everything else, we can just check to see if the element triggering the dragLeave event is one of
+            // our descendents.
             // $FlowFixMe: Flow doesn't recognise the relatedTarget property.
-            if (!this.programSequenceContainerRef.current.contains(event.relatedTarget)) {
+            else if (!this.programSequenceContainerRef.current.contains(event.relatedTarget)) {
                 this.setState({
                     closestAddNodeIndex: -1
                 });
