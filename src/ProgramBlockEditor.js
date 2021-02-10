@@ -346,7 +346,10 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
             });
 
             const closestAddNodeIndex = this.findAddNodeClosestToEvent(event);
-            // TODO: Make sure an announcement is triggered.
+
+            const commandString = this.props.intl.formatMessage({ id: "Announcement." + (this.props.selectedAction || "") });
+            this.props.audioManager.playAnnouncement('add', this.props.intl, { command: commandString});
+
             this.insertSelectedCommandIntoProgram(closestAddNodeIndex);
         }
     }
