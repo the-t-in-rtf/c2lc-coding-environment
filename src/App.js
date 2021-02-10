@@ -520,6 +520,7 @@ export class App extends React.Component<AppProps, AppState> {
                     commandName={value}
                     selectedCommandName={this.getSelectedCommandName()}
                     audioManager={this.audioManager}
+                    isDraggingCommand={this.state.isDraggingCommand}
                     onChange={this.handleCommandFromCommandPalette}
                     onDragStart={this.handleDragStartCommand}
                     onDragEnd={this.handleDragEndCommand}/>
