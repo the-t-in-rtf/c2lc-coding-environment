@@ -14,6 +14,9 @@ export type ThemeName = 'default' | 'forest' | 'space';
 
 export type Program = Array<string>;
 
+// use running, paused, stopped
+export type RunningState = 'running' | 'stopped' | 'paused';
+
 export interface RobotDriver {
     connect(onDisconnected: () => void): Promise<void>;
     forward(): Promise<void>;
