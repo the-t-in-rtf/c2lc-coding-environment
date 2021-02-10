@@ -1,6 +1,6 @@
 // @flow
 
-import App from './App';
+import {App} from './App';
 import Interpreter from './Interpreter';
 import ProgramSequence from './ProgramSequence';
 
