@@ -3,6 +3,7 @@
 import { Midi, Panner, Sampler } from 'tone';
 import CharacterState from './CharacterState';
 import type {IntlShape} from 'react-intl';
+import {AudioManager} from './types';
 
 function octaveModulo (rawPitch: number) : number {
     const adjustedPitch = rawPitch % 12;
@@ -39,7 +40,7 @@ export function getNoteForState (characterState: CharacterState) : string {
     return noteName;
 }
 
-export default class AudioManager {
+export default class AudioManagerImpl implements AudioManager {
     audioEnabled: boolean;
     panner: Panner;
     samplers: {
