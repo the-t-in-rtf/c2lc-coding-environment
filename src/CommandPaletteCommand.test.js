@@ -22,7 +22,6 @@ const intl = createIntl({
     locale: 'en',
     defaultLocale: 'en',
     messages: {
-        'Announcement.forward1': 'forward1',
         'Command.forward1' : 'forward1'
     }
 });
@@ -63,7 +62,7 @@ test('Pressed state is true when selecedCommandName is this command', () => {
     expect(getAriaPressedValue(wrapper)).toBe(true);
 });
 
-test('Clicking the button toggles selectedCommandName and plays a sound', () => {
+test('Clicking the button toggles selectedCommandName', () => {
     const mockChangeHandler = jest.fn();
 
     const wrapper = shallow(
