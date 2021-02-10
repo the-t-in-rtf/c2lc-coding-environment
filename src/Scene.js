@@ -77,14 +77,15 @@ class Scene extends React.Component<SceneProps, {}> {
     }
 
     drawCharacterPath() {
+        const halfGridCellWidth = 0.5;
         return this.props.characterState.path.map((pathSegment, i) => {
             return <line
                 className='Scene__path-line'
                 key={`path-${i}`}
-                x1={pathSegment.x1}
-                y1={pathSegment.y1}
-                x2={pathSegment.x2}
-                y2={pathSegment.y2} />
+                x1={pathSegment.x1 - halfGridCellWidth}
+                y1={pathSegment.y1 - halfGridCellWidth}
+                x2={pathSegment.x2 - halfGridCellWidth}
+                y2={pathSegment.y2 - halfGridCellWidth} />
         });
     }
 
@@ -162,7 +163,7 @@ class Scene extends React.Component<SceneProps, {}> {
     getCharacterDrawXPos() {
         switch (this.props.dimensions.getBoundsStateX(this.props.characterState.xPos)) {
             case 'inBounds':
-                return this.props.characterState.xPos;
+                return this.props.characterState.xPos - 0.5;
             case 'outOfBoundsAbove':
                 return this.props.dimensions.getMaxX() - 0.1;
             case 'outOfBoundsBelow':
@@ -175,7 +176,7 @@ class Scene extends React.Component<SceneProps, {}> {
     getCharacterDrawYPos() {
         switch (this.props.dimensions.getBoundsStateY(this.props.characterState.yPos)) {
             case 'inBounds':
-                return this.props.characterState.yPos;
+                return this.props.characterState.yPos - 0.5;
             case 'outOfBoundsAbove':
                 return this.props.dimensions.getMaxY() - 0.1;
             case 'outOfBoundsBelow':
