@@ -42,13 +42,14 @@ it('Should play a sound when selectedCommandName changes', () => {
 
     // Update the selectedAction
     app.setState({ selectedAction: "forward1"}, function () {
-        debugger;
         expect(audioManagerMock.playAnnouncement.mock.calls.length).toBe(1);
         expect(audioManagerMock.playAnnouncement.mock.calls[0][0]).toBe('movementSelected');
+        expect(audioManagerMock.playAnnouncement.mock.calls[0][2]).toStrictEqual({
+            "command": "forward 1 square"
+        });
     });
 
     app.setState({ selectedAction: null}, function () {
-        debugger;
         expect(audioManagerMock.playAnnouncement.mock.calls.length).toBe(2);
         expect(audioManagerMock.playAnnouncement.mock.calls[1][0]).toBe('noMovementSelected');
     });
