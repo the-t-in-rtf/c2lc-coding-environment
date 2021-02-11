@@ -1,7 +1,9 @@
 @import 'variables';
 
 @keyframes pausedAnimation {
-    50% {box-shadow: 0 0 0 0.4rem #79F1CD;}
+    0% {box-shadow: 0 0 0 0.7rem #53A28C;}
+    50% {box-shadow: 0 0 0 0.4rem #53A28C;}
+    100% {box-shadow: 0 0 0 0.7rem #53A28C;}
 }
 
 .ProgramBlockEditor__container {
@@ -168,15 +170,16 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEdi
 
 .ProgramBlockEditor__program-block-connector {
     background-color: #939595;
-    min-width: 0.5rem;
+    min-width: 0.8rem;
     height: 0.1rem;
 }
 
 button.ProgramBlockEditor__program-block--active {
-    box-shadow: 0 0 0 0.2rem #79F1CD;
+    box-shadow: 0 0 0 0.7rem #53A28C;
 }
 
 button.ProgramBlockEditor__program-block--paused {
+    animation-timing-function: ease;
     animation: pausedAnimation 2s infinite;
 }
 
