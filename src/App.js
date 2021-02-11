@@ -349,6 +349,8 @@ export class App extends React.Component<AppProps, AppState> {
 
     setRunningState(runningState: RunningState): void {
         this.setState((state) => {
+            // If stop is requested when we are in the 'paused' state,
+            // then go straight to 'stopped'
             if (runningState === 'stopRequested' && state.runningState === 'paused') {
                 return { runningState: 'stopped' };
             } else {
@@ -386,11 +388,11 @@ export class App extends React.Component<AppProps, AppState> {
             case 'running':
                 this.setState({ runningState: 'pauseRequested' });
                 break;
-            case 'pauseRequested': //fall through
+            case 'pauseRequested': // Fall through
             case 'paused':
                 this.setState({ runningState: 'running' });
                 break;
-            case 'stopRequested': //fall through
+            case 'stopRequested': // Fall through
             case 'stopped':
                 this.setState((state) => {
                     return {

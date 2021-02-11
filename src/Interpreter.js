@@ -63,6 +63,10 @@ export default class Interpreter {
                 });
             }
         } else {
+            // The interpreter has reached the end of execution.
+            // If the running state is 'stopRequested' or 'pauseRequested',
+            // then transition to the 'stopped' or 'paused' runningState,
+            // as appropriate.
             if (runningState === 'stopRequested') {
                 this.app.setRunningState('stopped');
             } else if (runningState === 'pauseRequested') {
