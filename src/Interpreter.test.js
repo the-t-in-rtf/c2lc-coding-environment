@@ -164,6 +164,7 @@ test('Run a program with one command from beginning to end without an error', (d
         expect(mockCommandHandler.mock.calls.length).toBe(1);
         expect(appMock.incrementProgramCounter.mock.calls.length).toBe(1);
         expect(appMock.setRunningState.mock.calls.length).toBe(1);
+        expect(appMock.setRunningState.mock.calls[0][0]).toBe('stopped');
         done();
     });
 });
@@ -191,6 +192,7 @@ test('Run a program with three commands from beginning to end without an error',
         expect(mockCommandHandler.mock.calls.length).toBe(3);
         expect(appMock.incrementProgramCounter.mock.calls.length).toBe(3);
         expect(appMock.setRunningState.mock.calls.length).toBe(1);
+        expect(appMock.setRunningState.mock.calls[0][0]).toBe('stopped');
         done();
     });
 });
@@ -259,10 +261,12 @@ test('When runningState is stopRequested or pauseRequested, call setRunningState
     appMock.getRunningState.mockImplementationOnce(() => {return 'pauseRequested'});
     interpreter.startRun().then(() => {
         expect(appMock.setRunningState.mock.calls.length).toBe(1);
+        expect(appMock.setRunningState.mock.calls[0][0]).toBe('stopped');
         done();
     });
     interpreter.startRun().then(() => {
         expect(appMock.setRunningState.mock.calls.length).toBe(2);
+        expect(appMock.setRunningState.mock.calls[1][0]).toBe('paused');
         done();
     });
 });
