@@ -75,6 +75,10 @@ button.btn.command-block.command-block--pressed:active {
     border: $c2lc-button-border-width dashed #000000;
 }
 
+button.btn.command-block--dragged {
+    border: $c2lc-button-border-width solid #000000;
+}
+
 .command-block-svg {
     width: 3.5rem;
     height: 3.5rem;

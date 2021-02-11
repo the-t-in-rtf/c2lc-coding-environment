@@ -1,7 +1,8 @@
 // @flow
-
 import React from 'react';
-import { IntlProvider, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import type {IntlShape} from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
 import AudioManagerImpl from './AudioManagerImpl';
 import CharacterState from './CharacterState';
@@ -29,7 +30,6 @@ import ProgramSerializer from './ProgramSerializer';
 import ShareButton from './ShareButton';
 import type { AudioManager, DeviceConnectionStatus, RobotDriver, RunningState, ThemeName } from './types';
 import * as Utils from './Utils';
-import messages from './messages.json';
 import './App.scss';
 import './Themes.css';
 import './vendor/dragdroptouch/DragDropTouch.js';
@@ -41,6 +41,7 @@ import DeviceConnectControl from './DeviceConnectControl';
 // Uncomment to use the FakeRobotDriver (see driver construction below also)
 //import FakeRobotDriver from './FakeRobotDriver';
 
+
 type AppContext = {
     bluetoothApiIsAvailable: boolean
 };
@@ -49,6 +50,11 @@ type AppSettings = {
     language: string,
     addNodeExpandedMode: boolean,
     theme: ThemeName
+};
+
+type AppProps = {
+    intl: IntlShape,
+    audioManager?: AudioManager
 };
 
 type AppState = {
@@ -66,7 +72,7 @@ type AppState = {
     runningState: RunningState
 };
 
-export default class App extends React.Component<{}, AppState> {
+export class App extends React.Component<AppProps, AppState> {
     version: string;
     appContext: AppContext;
     dashDriver: RobotDriver;
@@ -122,7 +128,7 @@ export default class App extends React.Component<{}, AppState> {
             'moveCharacter',
             (interpreter, stepTimeMs) => {
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('forward1');
+                // this.audioManager.playAnnouncement('forward1', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.forward(1, state.drawingEnabled);
 
@@ -142,7 +148,7 @@ export default class App extends React.Component<{}, AppState> {
             'moveCharacter',
             (interpreter, stepTimeMs) => {
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('forward2');
+                // this.audioManager.playAnnouncement('forward2', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.forward(2, state.drawingEnabled);
 
@@ -162,7 +168,7 @@ export default class App extends React.Component<{}, AppState> {
             'moveCharacter',
             (interpreter, stepTimeMs) => {
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('forward3');
+                // this.audioManager.playAnnouncement('forward3', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.forward(3, state.drawingEnabled);
 
@@ -184,7 +190,7 @@ export default class App extends React.Component<{}, AppState> {
                 const soundTime = stepTimeMs / 4;
 
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('left45');
+                // this.audioManager.playAnnouncement('left45', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnLeft(1);
 
@@ -207,7 +213,7 @@ export default class App extends React.Component<{}, AppState> {
                 const soundTime = stepTimeMs / 2;
 
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('left90');
+                // this.audioManager.playAnnouncement('left90', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnLeft(2);
 
@@ -227,7 +233,7 @@ export default class App extends React.Component<{}, AppState> {
             'moveCharacter',
             (interpreter, stepTimeMs) => {
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('left180');
+                // this.audioManager.playAnnouncement('left180', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnLeft(4);
 
@@ -250,7 +256,7 @@ export default class App extends React.Component<{}, AppState> {
                 const soundTime = stepTimeMs / 2;
 
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('right45');
+                // this.audioManager.playAnnouncement('right45', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnRight(1);
 
@@ -273,7 +279,7 @@ export default class App extends React.Component<{}, AppState> {
                 const soundTime = stepTimeMs / 2;
 
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('right90');
+                // this.audioManager.playAnnouncement('right90', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnRight(2);
 
@@ -293,7 +299,7 @@ export default class App extends React.Component<{}, AppState> {
             'moveCharacter',
             (interpreter, stepTimeMs) => {
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('right180');
+                // this.audioManager.playAnnouncement('right180', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnRight(4);
 
@@ -312,7 +318,10 @@ export default class App extends React.Component<{}, AppState> {
         // this.dashDriver = new FakeRobotDriver();
         this.dashDriver = new DashDriver();
 
-        if (FeatureDetection.webAudioApiIsAvailable()) {
+        if (props.audioManager) {
+            this.audioManager = props.audioManager
+        }
+        else if (FeatureDetection.webAudioApiIsAvailable()) {
             this.audioManager = new AudioManagerImpl(this.state.audioEnabled);
         }
         else {
@@ -519,6 +528,7 @@ export default class App extends React.Component<{}, AppState> {
                     commandName={value}
                     selectedCommandName={this.getSelectedCommandName()}
                     audioManager={this.audioManager}
+                    isDraggingCommand={this.state.isDraggingCommand}
                     onChange={this.handleCommandFromCommandPalette}
                     onDragStart={this.handleDragStartCommand}
                     onDragEnd={this.handleDragEndCommand}/>
@@ -540,9 +550,7 @@ export default class App extends React.Component<{}, AppState> {
 
     render() {
         return (
-            <IntlProvider
-                locale={this.state.settings.language}
-                messages={messages[this.state.settings.language]}>
+            <React.Fragment>
                 <div
                     onClick={this.handleRootClick}
                     onKeyDown={this.handleRootKeyDown}>
@@ -608,6 +616,7 @@ export default class App extends React.Component<{}, AppState> {
                                 </div>
                             </div>
                         </div>
+
                         <Row className='App__program-section' noGutters={true}>
                             <Col md={6} lg={4} className='pr-md-4 mb-4 mb-md-0'>
                                 <div className='App__command-palette'>
@@ -625,11 +634,11 @@ export default class App extends React.Component<{}, AppState> {
                                     editingDisabled={
                                         !(this.state.runningState === 'stopped'
                                         || this.state.runningState === 'paused')}
+                                    audioManager={this.audioManager}
                                     programSequence={this.state.programSequence}
                                     runningState={this.state.runningState}
                                     selectedAction={this.state.selectedAction}
                                     isDraggingCommand={this.state.isDraggingCommand}
-                                    audioManager={this.audioManager}
                                     focusTrapManager={this.focusTrapManager}
                                     addNodeExpandedMode={this.state.settings.addNodeExpandedMode}
                                     theme={this.state.settings.theme}
@@ -665,12 +674,11 @@ export default class App extends React.Component<{}, AppState> {
                         </div>
                     </Container>
                 </div>
-
                 <DashConnectionErrorModal
                     show={this.state.showDashConnectionError}
                     onCancel={this.handleCancelDashConnection}
                     onRetry={this.handleClickConnectDash}/>
-            </IntlProvider>
+            </React.Fragment>
         );
     }
 
@@ -747,6 +755,20 @@ export default class App extends React.Component<{}, AppState> {
                 }
             }
         }
+        if (this.state.selectedAction !== prevState.selectedAction) {
+            const messagePayload = {};
+            const announcementKey = this.state.selectedAction ?
+                "movementSelected" : "noMovementSelected";
+            if (this.state.selectedAction) {
+                const commandString = this.props.intl.formatMessage({
+                    id: "Announcement." + this.state.selectedAction
+                });
+                messagePayload.command = commandString;
+            }
+            this.audioManager.playAnnouncement(announcementKey,
+                    this.props.intl, messagePayload);
+        }
+
         if (this.state.programSequence !== prevState.programSequence) {
             if (this.state.programSequence.getProgramLength() === 0) {
                 // All steps have been deleted
@@ -757,6 +779,7 @@ export default class App extends React.Component<{}, AppState> {
                 this.setState({ runningState: 'stopped' });
             }
         }
+
         /* Dash connection removed for version 0.5
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
@@ -779,3 +802,5 @@ export default class App extends React.Component<{}, AppState> {
         */
     }
 }
+
+export default injectIntl(App);

@@ -1,6 +1,6 @@
 // @flow
 
-import App from './App';
+import {App} from './App';
 import ProgramSequence from './ProgramSequence';
 
 /* eslint-disable no-use-before-define */
