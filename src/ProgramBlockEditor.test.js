@@ -767,8 +767,8 @@ describe('Themed character icon should be rendered on the character column', () 
     });
 });
 
-describe('When runningState property is paused and programCounter is the same as current step index', () => {
-    test('className of the currentStep should have --paused', () => {
+describe('When runningState property is paused and programCounter is 0', () => {
+    test('className of step 0 should have --paused', () => {
         expect.assertions(1);
         const { wrapper } = createMountProgramBlockEditor({ runningState: 'paused' });
         const currentStep = getProgramBlockAtPosition(wrapper, 0);
@@ -777,8 +777,8 @@ describe('When runningState property is paused and programCounter is the same as
     });
 });
 
-describe('When runningState property is pauseRequested and programCounter is the same as current step index + 1', () => {
-    test('className of next step of the currentStep should have --paused', () => {
+describe('When runningState property is pauseRequested and programCounter is 0', () => {
+    test('className of step 1 should have --paused', () => {
         expect.assertions(1);
         const { wrapper } = createMountProgramBlockEditor({ runningState: 'pauseRequested' });
         const pausedStep = getProgramBlockAtPosition(wrapper, 1);
@@ -787,8 +787,8 @@ describe('When runningState property is pauseRequested and programCounter is the
     });
 });
 
-describe('When runningState is running, stopRequested, or pauseRequested and programCounter is the same as current step index', () => {
-    test('className of the currentStep should have --active', () => {
+describe('When runningState is running, stopRequested, or pauseRequested, and programCounter is 0', () => {
+    test('className of step 0 should have --active', () => {
         expect.assertions(5);
         const { wrapper } = createMountProgramBlockEditor({ runningState: 'running' });
         let currentStep = getProgramBlockAtPosition(wrapper, 0);
