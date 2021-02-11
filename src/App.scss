@@ -84,7 +84,8 @@ body {
     grid-row-start: 2;
     grid-row-end: 3;
     background-color: #F1F1F1;
-    height: 4rem;
+    height: auto;
+    padding: 0.35rem 0;
     border-width: 0 0 $c2lc-scene-border-width 0;
     border-color: $c2lc-scene-border-color;
     border-style: $c2lc-scene-border-style;

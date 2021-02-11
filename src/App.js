@@ -599,12 +599,10 @@ export default class App extends React.Component<{}, AppState> {
                         />
                         <div className='App__scene-controls'>
                             <div className='App__scene-controls-group'>
-                                <div className='App__penDown-toggle-switch-container'>
-                                    <PenDownToggleSwitch
-                                        className='App__penDown-toggle-switch'
-                                        value={this.state.drawingEnabled}
-                                        onChange={this.handleTogglePenDown}/>
-                                </div>
+                                <PenDownToggleSwitch
+                                    className='App__penDown-toggle-switch'
+                                    value={this.state.drawingEnabled}
+                                    onChange={this.handleTogglePenDown}/>
                                 <div className='App__refreshButton-container'>
                                     <RefreshButton
                                         disabled={this.state.runningState === 'running'}
