@@ -11,7 +11,7 @@
     display: grid;
     height: 100%;
     grid-template-columns: 6rem auto;
-    grid-template-rows: auto auto;
+    grid-template-rows: min-content auto;
 }
 
 .ProgramBlockEditor__header {
