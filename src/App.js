@@ -1,8 +1,9 @@
 // @flow
-
 import React from 'react';
-import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Row } from 'react-bootstrap';
+import { FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
+import type {IntlShape} from 'react-intl';
 import AudioManagerImpl from './AudioManagerImpl';
 import CharacterState from './CharacterState';
 import CharacterStateSerializer from './CharacterStateSerializer';
@@ -28,7 +29,6 @@ import ProgramSerializer from './ProgramSerializer';
 import ShareButton from './ShareButton';
 import type { AudioManager, DeviceConnectionStatus, RobotDriver, RunningState, ThemeName } from './types';
 import * as Utils from './Utils';
-import messages from './messages.json';
 import './App.scss';
 import './Themes.css';
 import './vendor/dragdroptouch/DragDropTouch.js';
@@ -43,6 +43,7 @@ import DeviceConnectControl from './DeviceConnectControl';
 // Uncomment to use the FakeRobotDriver (see driver construction below also)
 //import FakeRobotDriver from './FakeRobotDriver';
 
+
 type AppContext = {
     bluetoothApiIsAvailable: boolean
 };
@@ -51,6 +52,11 @@ type AppSettings = {
     language: string,
     addNodeExpandedMode: boolean,
     theme: ThemeName
+};
+
+type AppProps = {
+    intl: IntlShape,
+    audioManager?: AudioManager
 };
 
 type AppState = {
@@ -68,7 +74,7 @@ type AppState = {
     runningState: RunningState
 };
 
-export default class App extends React.Component<{}, AppState> {
+export class App extends React.Component<AppProps, AppState> {
     version: string;
     appContext: AppContext;
     dashDriver: RobotDriver;
@@ -124,7 +130,7 @@ export default class App extends React.Component<{}, AppState> {
             'moveCharacter',
             (interpreter, stepTimeMs) => {
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('forward1');
+                // this.audioManager.playAnnouncement('forward1', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.forward(1, state.drawingEnabled);
 
@@ -144,7 +150,7 @@ export default class App extends React.Component<{}, AppState> {
             'moveCharacter',
             (interpreter, stepTimeMs) => {
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('forward2');
+                // this.audioManager.playAnnouncement('forward2', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.forward(2, state.drawingEnabled);
 
@@ -164,7 +170,7 @@ export default class App extends React.Component<{}, AppState> {
             'moveCharacter',
             (interpreter, stepTimeMs) => {
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('forward3');
+                // this.audioManager.playAnnouncement('forward3', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.forward(3, state.drawingEnabled);
 
@@ -186,7 +192,7 @@ export default class App extends React.Component<{}, AppState> {
                 const soundTime = stepTimeMs / 4;
 
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('left45');
+                // this.audioManager.playAnnouncement('left45', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnLeft(1);
 
@@ -209,7 +215,7 @@ export default class App extends React.Component<{}, AppState> {
                 const soundTime = stepTimeMs / 2;
 
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('left90');
+                // this.audioManager.playAnnouncement('left90', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnLeft(2);
 
@@ -229,7 +235,7 @@ export default class App extends React.Component<{}, AppState> {
             'moveCharacter',
             (interpreter, stepTimeMs) => {
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('left180');
+                // this.audioManager.playAnnouncement('left180', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnLeft(4);
 
@@ -252,7 +258,7 @@ export default class App extends React.Component<{}, AppState> {
                 const soundTime = stepTimeMs / 2;
 
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('right45');
+                // this.audioManager.playAnnouncement('right45', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnRight(1);
 
@@ -275,7 +281,7 @@ export default class App extends React.Component<{}, AppState> {
                 const soundTime = stepTimeMs / 2;
 
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('right90');
+                // this.audioManager.playAnnouncement('right90', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnRight(2);
 
@@ -295,7 +301,7 @@ export default class App extends React.Component<{}, AppState> {
             'moveCharacter',
             (interpreter, stepTimeMs) => {
                 // TODO: Enable announcements again.
-                // this.audioManager.playAnnouncement('right180');
+                // this.audioManager.playAnnouncement('right180', this.props.intl);
                 this.setState((state) => {
                     const newCharacterState = state.characterState.turnRight(4);
 
@@ -314,7 +320,10 @@ export default class App extends React.Component<{}, AppState> {
         // this.dashDriver = new FakeRobotDriver();
         this.dashDriver = new DashDriver();
 
-        if (FeatureDetection.webAudioApiIsAvailable()) {
+        if (props.audioManager) {
+            this.audioManager = props.audioManager
+        }
+        else if (FeatureDetection.webAudioApiIsAvailable()) {
             this.audioManager = new AudioManagerImpl(this.state.audioEnabled);
         }
         else {
@@ -340,6 +349,18 @@ export default class App extends React.Component<{}, AppState> {
         }
     }
 
+    setRunningState(runningState: RunningState): void {
+        this.setState((state) => {
+            // If stop is requested when we are in the 'paused' state,
+            // then go straight to 'stopped'
+            if (runningState === 'stopRequested' && state.runningState === 'paused') {
+                return { runningState: 'stopped' };
+            } else {
+                return { runningState };
+            }
+        });
+    }
+
     // API for Interpreter
 
     getProgramSequence(): ProgramSequence {
@@ -358,10 +379,6 @@ export default class App extends React.Component<{}, AppState> {
         }, callback);
     }
 
-    stopPlaying(): void {
-        this.setState({ runningState: 'stopped' });
-    }
-
     // Handlers
 
     handleProgramSequenceChange = (programSequence: ProgramSequence) => {
@@ -371,11 +388,13 @@ export default class App extends React.Component<{}, AppState> {
     handleClickPlay = () => {
         switch (this.state.runningState) {
             case 'running':
-                this.setState({ runningState: 'paused' });
+                this.setState({ runningState: 'pauseRequested' });
                 break;
+            case 'pauseRequested': // Fall through
             case 'paused':
                 this.setState({ runningState: 'running' });
                 break;
+            case 'stopRequested': // Fall through
             case 'stopped':
                 this.setState((state) => {
                     return {
@@ -390,7 +409,7 @@ export default class App extends React.Component<{}, AppState> {
     };
 
     handleClickStop = () => {
-        this.setState({ runningState: 'stopped' });
+        this.setRunningState('stopRequested');
     }
 
     handleClickConnectDash = () => {
@@ -513,6 +532,7 @@ export default class App extends React.Component<{}, AppState> {
                     commandName={value}
                     selectedCommandName={this.getSelectedCommandName()}
                     audioManager={this.audioManager}
+                    isDraggingCommand={this.state.isDraggingCommand}
                     onChange={this.handleCommandFromCommandPalette}
                     onDragStart={this.handleDragStartCommand}
                     onDragEnd={this.handleDragEndCommand}/>
@@ -534,9 +554,7 @@ export default class App extends React.Component<{}, AppState> {
 
     render() {
         return (
-            <IntlProvider
-                locale={this.state.settings.language}
-                messages={messages[this.state.settings.language]}>
+            <React.Fragment>
                 <div
                     className='App__container'
                     role='main'
@@ -641,7 +659,9 @@ export default class App extends React.Component<{}, AppState> {
                                 />
                                 <StopButton
                                     className='App__playControlButton'
-                                    disabled={this.state.runningState === 'stopped'}
+                                    disabled={
+                                        this.state.runningState === 'stopped'
+                                        || this.state.runningState === 'stopRequested'}
                                     onClick={this.handleClickStop}/>
                                 <ProgramSpeedController
                                     values={this.speedLookUp}
@@ -654,12 +674,11 @@ export default class App extends React.Component<{}, AppState> {
                         </div>
                     </div>
                 </div>
-
                 <DashConnectionErrorModal
                     show={this.state.showDashConnectionError}
                     onCancel={this.handleCancelDashConnection}
                     onRetry={this.handleClickConnectDash}/>
-            </IntlProvider>
+            </React.Fragment>
         );
     }
 
@@ -736,6 +755,20 @@ export default class App extends React.Component<{}, AppState> {
                 }
             }
         }
+        if (this.state.selectedAction !== prevState.selectedAction) {
+            const messagePayload = {};
+            const announcementKey = this.state.selectedAction ?
+                "movementSelected" : "noMovementSelected";
+            if (this.state.selectedAction) {
+                const commandString = this.props.intl.formatMessage({
+                    id: "Announcement." + this.state.selectedAction
+                });
+                messagePayload.command = commandString;
+            }
+            this.audioManager.playAnnouncement(announcementKey,
+                    this.props.intl, messagePayload);
+        }
+
         if (this.state.programSequence !== prevState.programSequence) {
             if (this.state.programSequence.getProgramLength() === 0) {
                 // All steps have been deleted
@@ -746,6 +779,7 @@ export default class App extends React.Component<{}, AppState> {
                 this.setState({ runningState: 'stopped' });
             }
         }
+
         /* Dash connection removed for version 0.5
         if (this.state.dashConnectionStatus !== prevState.dashConnectionStatus) {
             console.log(this.state.dashConnectionStatus);
@@ -768,3 +802,5 @@ export default class App extends React.Component<{}, AppState> {
         */
     }
 }
+
+export default injectIntl(App);
