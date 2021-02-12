@@ -28,6 +28,7 @@ import ProgramSequence from './ProgramSequence';
 import ProgramSpeedController from './ProgramSpeedController';
 import ProgramSerializer from './ProgramSerializer';
 import ShareButton from './ShareButton';
+import ActionsMenu from './ActionsMenu';
 import type { AudioManager, DeviceConnectionStatus, RobotDriver, RunningState, ThemeName } from './types';
 import * as Utils from './Utils';
 import './App.scss';
@@ -69,7 +70,9 @@ type AppState = {
     actionPanelStepIndex: ?number,
     sceneDimensions: SceneDimensions,
     drawingEnabled: boolean,
-    runningState: RunningState
+    runningState: RunningState,
+    allowedActions: Map<string,boolean>,
+    usedActions: Map<string,boolean>
 };
 
 export class App extends React.Component<AppProps, AppState> {
@@ -95,25 +98,6 @@ export class App extends React.Component<AppProps, AppState> {
 
         // Begin facing East
         this.startingCharacterState = new CharacterState(0, 0, 2, []);
-
-        this.state = {
-            programSequence: new ProgramSequence([], 0),
-            characterState: this.startingCharacterState,
-            settings: {
-                language: 'en',
-                addNodeExpandedMode: true,
-                theme: 'default'
-            },
-            dashConnectionStatus: 'notConnected',
-            showDashConnectionError: false,
-            selectedAction: null,
-            isDraggingCommand: false,
-            audioEnabled: true,
-            actionPanelStepIndex: null,
-            sceneDimensions: new SceneDimensions(17, 9),
-            drawingEnabled: true,
-            runningState: 'stopped'
-        };
 
         this.interpreter = new Interpreter(1000, this);
 
@@ -314,6 +298,36 @@ export class App extends React.Component<AppProps, AppState> {
             }
         );
 
+        // We have to calculate the allowed commands and initialise the state here because this is the point at which
+        // the interpreter's commands are populated.
+
+        // TODO: Make this persist in the URL.
+        const allowedActions = new Map();
+        Object.keys(this.interpreter.commands).forEach((commandName) => {
+            allowedActions.set(commandName, true);
+        });
+
+        this.state = {
+            programSequence: new ProgramSequence([], 0),
+            characterState: this.startingCharacterState,
+            settings: {
+                language: 'en',
+                addNodeExpandedMode: true,
+                theme: 'default'
+            },
+            dashConnectionStatus: 'notConnected',
+            showDashConnectionError: false,
+            selectedAction: null,
+            isDraggingCommand: false,
+            audioEnabled: true,
+            actionPanelStepIndex: null,
+            sceneDimensions: new SceneDimensions(17, 9),
+            drawingEnabled: true,
+            runningState: 'stopped',
+            allowedActions: allowedActions,
+            usedActions: new Map()
+        };
+
         // For FakeRobotDriver, replace with:
         // this.dashDriver = new FakeRobotDriver();
         this.dashDriver = new DashDriver();
@@ -372,7 +386,16 @@ export class App extends React.Component<AppProps, AppState> {
     // Handlers
 
     handleProgramSequenceChange = (programSequence: ProgramSequence) => {
-        this.setState({ programSequence });
+        // Calculate  "used actions".
+        const usedActions = new Map();
+        programSequence.program.forEach((commandName) => {
+            usedActions.set(commandName, true);
+        });
+
+        this.setState({
+            programSequence: programSequence,
+            usedActions: usedActions
+        });
     }
 
     handleClickPlay = () => {
@@ -501,6 +524,18 @@ export class App extends React.Component<AppProps, AppState> {
         });
     }
 
+    handleToggleAllowedCommand = (event: Event, commandName: string) => {
+        if (this.state.usedActions.get(commandName)) {
+            event.preventDefault();
+        }
+        else {
+            const newAllowedActions= new Map(this.state.allowedActions);
+            const currentIsAllowed = this.state.allowedActions.get(commandName);
+            newAllowedActions.set(commandName, !currentIsAllowed);
+            this.setState({ allowedActions: newAllowedActions})
+        }
+    }
+
     handleChangeProgramSpeed = (stepTimeMs: number) => {
         this.interpreter.setStepTime(stepTimeMs);
     }
@@ -514,17 +549,20 @@ export class App extends React.Component<AppProps, AppState> {
         const commandBlocks = [];
 
         for (const [index, value] of commandNames.entries()) {
-            commandBlocks.push(
-                <CommandPaletteCommand
-                    key={`CommandBlock-${index}`}
-                    commandName={value}
-                    selectedCommandName={this.getSelectedCommandName()}
-                    audioManager={this.audioManager}
-                    isDraggingCommand={this.state.isDraggingCommand}
-                    onChange={this.handleCommandFromCommandPalette}
-                    onDragStart={this.handleDragStartCommand}
-                    onDragEnd={this.handleDragEndCommand}/>
-            )
+            const isAllowed = this.state.allowedActions.get(value);
+            if (isAllowed) {
+                commandBlocks.push(
+                    <CommandPaletteCommand
+                        key={`CommandBlock-${index}`}
+                        commandName={value}
+                        selectedCommandName={this.getSelectedCommandName()}
+                        audioManager={this.audioManager}
+                        isDraggingCommand={this.state.isDraggingCommand}
+                        onChange={this.handleCommandFromCommandPalette}
+                        onDragStart={this.handleDragStartCommand}
+                        onDragEnd={this.handleDragEndCommand}/>
+                );
+            }
         }
 
         return commandBlocks;
@@ -611,6 +649,13 @@ export class App extends React.Component<AppProps, AppState> {
 
                         <Row className='App__program-section' noGutters={true}>
                             <Col md={6} lg={4} className='pr-md-4 mb-4 mb-md-0'>
+                                <ActionsMenu
+                                    allowedActions={this.state.allowedActions}
+                                    changeHandler={this.handleToggleAllowedCommand}
+                                    editingDisabled={this.state.runningState === 'running'}
+                                    intl={this.props.intl}
+                                    usedActions={this.state.usedActions}
+                                />
                                 <div className='App__command-palette'>
                                     <h2 className='App__command-palette-heading'>
                                         <FormattedMessage id='CommandPalette.movementsTitle' />

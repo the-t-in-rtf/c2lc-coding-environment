@@ -21,6 +21,11 @@ configure({ adapter: new Adapter()});
 
 // TODO: Mock the FocusTrapManager
 
+const mockAllowedActions = new Map();
+["forward1", "forward2", "forward3", "left45", "left90", "left180", "right45", "right90", "right180"].forEach((commandName) => {
+    mockAllowedActions.set(commandName, true);
+});
+
 const defaultProgramBlockEditorProps = {
     interpreterIsRunning: false,
     programSequence: new ProgramSequence(['forward1', 'left45', 'forward1', 'left45'], 0),
@@ -32,7 +37,8 @@ const defaultProgramBlockEditorProps = {
     isDraggingCommand: false,
     focusTrapManager: new FocusTrapManager(),
     addNodeExpandedMode: false,
-    theme: 'default'
+    theme: 'default',
+    allowedActions: mockAllowedActions
 };
 
 function createShallowProgramBlockEditor(props) {

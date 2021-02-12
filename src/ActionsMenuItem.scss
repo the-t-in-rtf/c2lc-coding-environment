@@ -1,0 +1,23 @@
+.ActionsMenuItem__button {
+    display: inline-block;
+    border: 0;
+    background-color: inherit;
+}
+
+.ActionsMenuItem__button-label {
+    margin-left: 0.5rem;
+}
+
+.ActionsMenuItem__row {
+    border-bottom: 1px solid #cccccc;
+    margin-top: 0.5rem;
+}
+
+.ActionsMenuItem__row:last-of-type {
+    border-bottom: none;
+}
+
+.ActionsMenuItem__text--disabled {
+    text-decoration: line-through;
+    color: #cccccc;
+}
