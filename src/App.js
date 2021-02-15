@@ -29,6 +29,7 @@ import ProgramSpeedController from './ProgramSpeedController';
 import ProgramSerializer from './ProgramSerializer';
 import ShareButton from './ShareButton';
 import ActionsMenu from './ActionsMenu';
+import type {ActionToggleRegister} from './ActionsMenu';
 import type { AudioManager, DeviceConnectionStatus, RobotDriver, RunningState, ThemeName } from './types';
 import * as Utils from './Utils';
 import './App.scss';
@@ -71,8 +72,8 @@ type AppState = {
     sceneDimensions: SceneDimensions,
     drawingEnabled: boolean,
     runningState: RunningState,
-    allowedActions: Map<string,boolean>,
-    usedActions: Map<string,boolean>
+    allowedActions: ActionToggleRegister,
+    usedActions: ActionToggleRegister
 };
 
 export class App extends React.Component<AppProps, AppState> {
@@ -302,9 +303,9 @@ export class App extends React.Component<AppProps, AppState> {
         // the interpreter's commands are populated.
 
         // TODO: Make this persist in the URL.
-        const allowedActions = new Map();
+        const allowedActions = {};
         Object.keys(this.interpreter.commands).forEach((commandName) => {
-            allowedActions.set(commandName, true);
+            allowedActions[commandName] = true;
         });
 
         this.state = {
@@ -325,7 +326,7 @@ export class App extends React.Component<AppProps, AppState> {
             drawingEnabled: true,
             runningState: 'stopped',
             allowedActions: allowedActions,
-            usedActions: new Map()
+            usedActions: {}
         };
 
         // For FakeRobotDriver, replace with:
@@ -387,9 +388,9 @@ export class App extends React.Component<AppProps, AppState> {
 
     handleProgramSequenceChange = (programSequence: ProgramSequence) => {
         // Calculate  "used actions".
-        const usedActions = new Map();
+        const usedActions = {};
         programSequence.program.forEach((commandName) => {
-            usedActions.set(commandName, true);
+            usedActions[commandName] = true;
         });
 
         this.setState({
@@ -525,13 +526,13 @@ export class App extends React.Component<AppProps, AppState> {
     }
 
     handleToggleAllowedCommand = (event: Event, commandName: string) => {
-        if (this.state.usedActions.get(commandName)) {
+        if (this.state.usedActions[commandName]) {
             event.preventDefault();
         }
         else {
-            const newAllowedActions= new Map(this.state.allowedActions);
-            const currentIsAllowed = this.state.allowedActions.get(commandName);
-            newAllowedActions.set(commandName, !currentIsAllowed);
+            const newAllowedActions= Object.assign({}, this.state.allowedActions);
+            const currentIsAllowed = this.state.allowedActions[commandName];
+            newAllowedActions[commandName] = !currentIsAllowed;
             this.setState({ allowedActions: newAllowedActions})
         }
     }
@@ -549,7 +550,7 @@ export class App extends React.Component<AppProps, AppState> {
         const commandBlocks = [];
 
         for (const [index, value] of commandNames.entries()) {
-            const isAllowed = this.state.allowedActions.get(value);
+            const isAllowed = this.state.allowedActions[value];
             if (isAllowed) {
                 commandBlocks.push(
                     <CommandPaletteCommand

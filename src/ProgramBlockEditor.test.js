@@ -21,10 +21,17 @@ configure({ adapter: new Adapter()});
 
 // TODO: Mock the FocusTrapManager
 
-const mockAllowedActions = new Map();
-["forward1", "forward2", "forward3", "left45", "left90", "left180", "right45", "right90", "right180"].forEach((commandName) => {
-    mockAllowedActions.set(commandName, true);
-});
+const mockAllowedActions = {
+    "forward1": true,
+    "forward2": true,
+    "forward3": true,
+    "left45": true,
+    "left90": true,
+    "left180": true,
+    "right45": true,
+    "right90": true,
+    "right180": true
+};
 
 const defaultProgramBlockEditorProps = {
     interpreterIsRunning: false,

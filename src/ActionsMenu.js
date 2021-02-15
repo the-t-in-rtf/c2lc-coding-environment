@@ -10,14 +10,26 @@ import ActionsMenuItem from './ActionsMenuItem';
 
 import './ActionsMenu.scss';
 
+export type ActionToggleRegister = {
+    forward1?: boolean,
+    forward2?: boolean,
+    forward3?: boolean,
+    left45?: boolean,
+    left90?: boolean,
+    left180?: boolean,
+    right45?: boolean,
+    right90?: boolean,
+    right180?: boolean
+};
+
 type ActionsMenuProps = {
     intl: IntlShape,
-    changeHandler: (event: Event, commandName: string) => void,
-    editingDisabled: boolean,
+    changeHandler?: (event: Event, commandName: string) => void,
+    editingDisabled?: boolean,
     // TODO: Flesh this definition out.
     menuItems: {},
-    allowedActions: Map<string, boolean>,
-    usedActions: Map<string, boolean>
+    allowedActions: ActionToggleRegister,
+    usedActions: ActionToggleRegister
 };
 
 type ActionsMenuState = {
@@ -26,7 +38,9 @@ type ActionsMenuState = {
 
 class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
     static defaultProps = {
-        usedActions: new Map(),
+        changeHandler: () => {},
+        editingDisabled: false,
+        usedActions: {},
         menuItems: {
             forward1: {
                 isAllowed: true,
@@ -84,7 +98,7 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
                         <ActionsMenuToggle
                             className='ActionsMenu__header-toggle'
                             intl={this.props.intl}
-                            editingDisabled={this.props.editingDisabled}
+                            editingDisabled={!!this.props.editingDisabled}
                             onClick={this.showHideMenu}
                         />
                     </Col>
@@ -106,11 +120,13 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
         const actionsMenuItems = [];
         // TODO: Discuss how to evolve this into a deeper structure when we add groups and things other than actions.
         Object.keys(this.props.menuItems).forEach((itemKey) => {
-            const isAllowed = this.props.allowedActions.get(itemKey);
-            const isUsed = this.props.usedActions.get(itemKey);
+            const isAllowed: boolean = !!this.props.allowedActions[itemKey];
+            const isUsed: boolean = !!this.props.usedActions[itemKey];
             // TODO: Add a mechanism for values to come back to us.
             const itemChangeHandler = (event: Event) => {
-                this.props.changeHandler(event, itemKey);
+                if (this.props.changeHandler) {
+                    this.props.changeHandler(event, itemKey);
+                }
             };
             actionsMenuItems.push(
                 <ActionsMenuItem
