@@ -151,8 +151,8 @@ class Scene extends React.Component<SceneProps, {}> {
                 {
                     numColumns: this.props.dimensions.getWidth(),
                     numRows: this.props.dimensions.getHeight(),
-                    xPos: String.fromCharCode(64 + Math.trunc(xPos) + Math.ceil(numColumns/2)),
-                    yPos: Math.trunc(yPos) + Math.ceil(numRows/2),
+                    xPos: String.fromCharCode(65 + xPos),
+                    yPos: Math.trunc(yPos + 1),
                     direction
                 }
             )
