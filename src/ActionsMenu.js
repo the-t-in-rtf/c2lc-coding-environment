@@ -10,17 +10,7 @@ import ActionsMenuItem from './ActionsMenuItem';
 
 import './ActionsMenu.scss';
 
-export type ActionToggleRegister = {
-    forward1?: boolean,
-    forward2?: boolean,
-    forward3?: boolean,
-    left45?: boolean,
-    left90?: boolean,
-    left180?: boolean,
-    right45?: boolean,
-    right90?: boolean,
-    right180?: boolean
-};
+import type {ActionToggleRegister} from './types';
 
 type ActionsMenuProps = {
     intl: IntlShape,

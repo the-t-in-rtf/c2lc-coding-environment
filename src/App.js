@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { injectIntl } from 'react-intl';
 import type {IntlShape} from 'react-intl';
 import { Col, Container, Row } from 'react-bootstrap';
+import AllowedActionsSerializer from './AllowedActionsSerializer';
 import AudioManagerImpl from './AudioManagerImpl';
 import CharacterState from './CharacterState';
 import CharacterStateSerializer from './CharacterStateSerializer';
@@ -29,8 +30,7 @@ import ProgramSpeedController from './ProgramSpeedController';
 import ProgramSerializer from './ProgramSerializer';
 import ShareButton from './ShareButton';
 import ActionsMenu from './ActionsMenu';
-import type {ActionToggleRegister} from './ActionsMenu';
-import type { AudioManager, DeviceConnectionStatus, RobotDriver, RunningState, ThemeName } from './types';
+import type { ActionToggleRegister, AudioManager, DeviceConnectionStatus, RobotDriver, RunningState, ThemeName } from './types';
 import * as Utils from './Utils';
 import './App.scss';
 import './Themes.css';
@@ -86,6 +86,7 @@ export class App extends React.Component<AppProps, AppState> {
     startingCharacterState: CharacterState;
     programSerializer: ProgramSerializer;
     characterStateSerializer: CharacterStateSerializer;
+    allowedActionsSerializer: AllowedActionsSerializer;
     speedLookUp: Array<number>;
 
     constructor(props: any) {
@@ -107,6 +108,8 @@ export class App extends React.Component<AppProps, AppState> {
         this.programSerializer = new ProgramSerializer();
 
         this.characterStateSerializer = new CharacterStateSerializer();
+
+        this.allowedActionsSerializer = new AllowedActionsSerializer();
 
         this.interpreter.addCommandHandler(
             'forward1',
@@ -384,15 +387,19 @@ export class App extends React.Component<AppProps, AppState> {
         this.setState({ runningState: 'stopped' });
     }
 
-    // Handlers
-
-    handleProgramSequenceChange = (programSequence: ProgramSequence) => {
+    calculateUsedActions = (programSequence: ProgramSequence): ActionToggleRegister => {
         // Calculate  "used actions".
         const usedActions = {};
         programSequence.program.forEach((commandName) => {
             usedActions[commandName] = true;
         });
+        return usedActions;
+    }
 
+    // Handlers
+
+    handleProgramSequenceChange = (programSequence: ProgramSequence) => {
+        const usedActions: ActionToggleRegister = this.calculateUsedActions(programSequence);
         this.setState({
             programSequence: programSequence,
             usedActions: usedActions
@@ -722,11 +729,17 @@ export class App extends React.Component<AppProps, AppState> {
             const programQuery = params.getProgram();
             const characterStateQuery = params.getCharacterState();
             const themeQuery = params.getTheme();
-            if (programQuery != null && characterStateQuery != null) {
+            const allowedActionsQuery = params.getAllowedActions();
+            if (programQuery != null && characterStateQuery != null && allowedActionsQuery != null) {
                 try {
+                    const programSequence: ProgramSequence = new ProgramSequence(this.programSerializer.deserialize(programQuery), 0);
+                    const usedActions: ActionToggleRegister = this.calculateUsedActions(programSequence);
+
                     this.setState({
-                        programSequence: new ProgramSequence(this.programSerializer.deserialize(programQuery), 0),
-                        characterState: this.characterStateSerializer.deserialize(characterStateQuery)
+                        programSequence: programSequence,
+                        characterState: this.characterStateSerializer.deserialize(characterStateQuery),
+                        allowedActions: this.allowedActionsSerializer.deserialize(allowedActionsQuery),
+                        usedActions: usedActions
                     });
                 } catch(err) {
                     console.log(`Error parsing program: ${programQuery} or characterState: ${characterStateQuery}`);
@@ -738,11 +751,16 @@ export class App extends React.Component<AppProps, AppState> {
             const localProgram = window.localStorage.getItem('c2lc-program');
             const localCharacterState = window.localStorage.getItem('c2lc-characterState');
             const localTheme = window.localStorage.getItem('c2lc-theme');
+            const localAllowedActions = window.localStorage.getItem('c2lc-allowedActions');
             if (localProgram != null && localCharacterState != null) {
                 try {
+                    const programSequence: ProgramSequence = new ProgramSequence(this.programSerializer.deserialize(localProgram), 0);
+                    const usedActions: ActionToggleRegister = this.calculateUsedActions(programSequence);
                     this.setState({
-                        programSequence: new ProgramSequence(this.programSerializer.deserialize(localProgram), 0),
-                        characterState: this.characterStateSerializer.deserialize(localCharacterState)
+                        programSequence: programSequence,
+                        characterState: this.characterStateSerializer.deserialize(localCharacterState),
+                        allowedActions: this.allowedActionsSerializer.deserialize(localAllowedActions),
+                        usedActions: usedActions
                     });
                 } catch(err) {
                     console.log(`Error parsing program: ${localProgram} or characterState: ${localCharacterState}`);
@@ -756,22 +774,26 @@ export class App extends React.Component<AppProps, AppState> {
     componentDidUpdate(prevProps: {}, prevState: AppState) {
         if (this.state.programSequence !== prevState.programSequence
             || this.state.characterState !== prevState.characterState
-            || this.state.settings.theme !== prevState.settings.theme) {
+            || this.state.settings.theme !== prevState.settings.theme
+            || this.state.allowedActions !== prevState.allowedActions) {
             const serializedProgram = this.programSerializer.serialize(this.state.programSequence.getProgram());
             const serializedCharacterState = this.characterStateSerializer.serialize(this.state.characterState);
+            const serializedAllowedActions = this.allowedActionsSerializer.serialize(this.state.allowedActions);
             window.history.pushState(
                 {
                     p: serializedProgram,
                     c: serializedCharacterState,
-                    t: this.state.settings.theme
+                    t: this.state.settings.theme,
+                    a: serializedAllowedActions
                 },
                 '',
-                Utils.generateEncodedProgramURL(this.version, this.state.settings.theme, serializedProgram, serializedCharacterState)
+                Utils.generateEncodedProgramURL(this.version, this.state.settings.theme, serializedProgram, serializedCharacterState, serializedAllowedActions)
             );
             window.localStorage.setItem('c2lc-version', this.version);
             window.localStorage.setItem('c2lc-program', serializedProgram);
             window.localStorage.setItem('c2lc-characterState', serializedCharacterState);
             window.localStorage.setItem('c2lc-theme', this.state.settings.theme);
+            window.localStorage.setItem('c2lc-allowedActions', serializedAllowedActions);
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
