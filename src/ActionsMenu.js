@@ -94,6 +94,7 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
         );
     }
 
+    /* istanbul ignore next */
     handleKeyDown = (event: SyntheticKeyboardEvent<HTMLElement>) => {
         if (event.key === 'Escape') {
             this.showHideMenu();

@@ -14,6 +14,7 @@ type ActionsMenuToggleProps = {
 };
 
 class ActionsMenuToggle extends React.Component<ActionsMenuToggleProps, {}> {
+    /* istanbul ignore next */
     handleKeyDown = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
         if (e.key === ' ' || e.key === 'Enter') {
             e.preventDefault();
