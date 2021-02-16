@@ -94,6 +94,12 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
         );
     }
 
+    handleKeyDown = (event: SyntheticKeyboardEvent<HTMLElement>) => {
+        if (event.key === 'Escape') {
+            this.showHideMenu();
+        }
+    }
+
     showHideMenu = () => {
         if (!this.props.editingDisabled) {
             this.setState((state) => {
@@ -125,7 +131,7 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
                 />
             );
         });
-        return (<div className="ActionsMenu__menu">
+        return (<div className="ActionsMenu__menu" onBlur={this.showHideMenu} onKeyDown={this.handleKeyDown}>
             {actionsMenuItems}
         </div>);
     }
