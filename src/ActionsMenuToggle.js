@@ -14,13 +14,22 @@ type ActionsMenuToggleProps = {
 };
 
 class ActionsMenuToggle extends React.Component<ActionsMenuToggleProps, {}> {
+    handleKeyDown = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            this.props.onClick();
+        }
+    }
+
     render() {
         return (
             <div
                 aria-label={this.props.intl.formatMessage({id:'ActionsMenu.toggleActionsMenu'})}
+                tabIndex='0'
                 className='ActionsMenu__toggle-button'
                 disabled={this.props.editingDisabled}
                 onClick={this.props.onClick}
+                onKeyDown={this.handleKeyDown}
             >
                 <EllipsisIcon className='ActionsMenu__toggle-button-svg'/>
             </div>
