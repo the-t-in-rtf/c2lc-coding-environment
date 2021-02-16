@@ -34,7 +34,7 @@ function createActionsMenu(props) {
                 {
                     editingDisabled: false,
                     allowedActions: mockAllowedActions,
-                    onChange: mockChangeHandler
+                    changeHandler: mockChangeHandler
                 },
                 props
             )
@@ -83,4 +83,17 @@ it("Cannot be toggled open when editing is disabled.", () => {
 
     const actionMenuItems = wrapper.find(ActionsMenuItem);
     expect(actionMenuItems.length).toBe(0);
+});
+
+it("Can be used to toggle individual items.", () => {
+    const { wrapper, mockChangeHandler } = createActionsMenu();
+    const actionsMenuToggle = wrapper.find(ActionsMenuToggle);
+    actionsMenuToggle.simulate("click");
+
+    const checkboxes = wrapper.find("input");
+    const firstCheckbox = checkboxes.first();
+    firstCheckbox.simulate("change");
+    expect(mockChangeHandler.mock.calls.length).toBe(1);
+    expect(mockChangeHandler.mock.calls[0][1]).toBe("forward1");
+
 });
