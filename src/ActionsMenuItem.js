@@ -1,7 +1,5 @@
 // @flow
 import React from 'react';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
@@ -39,19 +37,17 @@ export class ActionsMenuItem extends React.Component< ActionsMenuItemProps, {} >
         );
 
         return (
-            <Row className="ActionsMenuItem__row">
-                <Col sm={12} md={6} className={'ActionsMenuItem__text' + (this.props.isAllowed ? '' : '--disabled')}>
+            <div className="ActionsMenuItem">
+                <div className={'ActionsMenuItem__text' + (this.props.isAllowed ? '' : ' ActionsMenuItem__text--disabled')}>
                     {commandNameShort}
-                </Col>
-                <Col sm={12} md={6}>
-                    <button className="ActionsMenuItem__button" aria-label={showHideAriaLabel}>
-                        <input type="checkbox" onChange={this.props.onChange} checked={this.props.isAllowed} disabled={this.props.isUsed}/>
-                        <span className="ActionsMenuItem__button-label">
-                            {showHideLabel}
-                        </span>
-                    </button>
-                </Col>
-            </Row>
+                </div>
+                <button className="ActionsMenuItem__button" aria-label={showHideAriaLabel}>
+                    <input type="checkbox" onChange={this.props.onChange} checked={this.props.isAllowed} disabled={this.props.isUsed}/>
+                    <span className="ActionsMenuItem__button-label">
+                        {showHideLabel}
+                    </span>
+                </button>
+            </div>
         );
     };
 };

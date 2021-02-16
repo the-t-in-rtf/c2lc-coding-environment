@@ -1,5 +1,6 @@
 .ActionsMenuItem__button {
-    display: inline-block;
+    width: 4rem;
+    float: right;
     border: 0;
     background-color: inherit;
 }
@@ -8,13 +9,19 @@
     margin-left: 0.5rem;
 }
 
-.ActionsMenuItem__row {
-    border-bottom: 1px solid #cccccc;
-    margin-top: 0.5rem;
+.ActionsMenuItem {
+    border-top: 1px solid #cccccc;
+    clear: both;
+    margin: 0.5rem;
+    white-space: nowrap;
 }
 
-.ActionsMenuItem__row:last-of-type {
-    border-bottom: none;
+.ActionsMenuItem:first-of-type {
+    border-top: none;
+}
+
+.ActionsMenuItem__text {
+    float: left;
 }
 
 .ActionsMenuItem__text--disabled {

@@ -1,7 +1,5 @@
 // @flow
 import React from 'react';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import type {IntlShape} from 'react-intl';
 
@@ -78,22 +76,20 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
     render() {
         return (
             <React.Fragment>
-                <Row className='ActionsMenu__header'>
-                    <Col md={10}>
-                        <h2 className='ActionsMenu__header-heading'>
-                            <FormattedMessage id='ActionsMenu.title' />
-                        </h2>
-                    </Col>
-                    <Col md={2}>
-                        <ActionsMenuToggle
-                            className='ActionsMenu__header-toggle'
-                            intl={this.props.intl}
-                            editingDisabled={!!this.props.editingDisabled}
-                            onClick={this.showHideMenu}
-                        />
-                    </Col>
-                </Row>
-                { (!this.props.editingDisabled && this.state.showMenu) ? this.generateMenu(): undefined}
+                <div className='ActionsMenu__header'>
+                    <h2 className='ActionsMenu__header-heading'>
+                        <FormattedMessage id='ActionsMenu.title' />
+                    </h2>
+                    <ActionsMenuToggle
+                        className='ActionsMenu__header-toggle'
+                        intl={this.props.intl}
+                        editingDisabled={!!this.props.editingDisabled}
+                        onClick={this.showHideMenu}
+                    />
+
+                    { (!this.props.editingDisabled && this.state.showMenu) ? this.generateMenu(): undefined}
+                </div>
+
             </React.Fragment>
         );
     }

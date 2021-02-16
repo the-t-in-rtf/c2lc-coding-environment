@@ -5,6 +5,8 @@ import type {IntlShape} from 'react-intl';
 
 import { ReactComponent as EllipsisIcon } from './svg/Ellipsis.svg';
 
+import './ActionsMenuToggle.scss';
+
 type ActionsMenuToggleProps = {
     intl: IntlShape,
     editingDisabled: boolean,
