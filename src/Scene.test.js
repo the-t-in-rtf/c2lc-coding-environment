@@ -147,19 +147,19 @@ describe('When the Scene renders', () => {
 
         // Row labels
 
-        expect(findGridLabels(sceneWrapper).get(0).props.x).toBe(-1.5 - expectedRowLabelOffset);
-        expect(findGridLabels(sceneWrapper).get(0).props.y).toBe(-0.5);
-        expect(findGridLabels(sceneWrapper).get(1).props.x).toBe(-1.5 - expectedRowLabelOffset);
-        expect(findGridLabels(sceneWrapper).get(1).props.y).toBe(0.5);
+        expect(findGridLabels(sceneWrapper).get(0).props.x).toBe(-0.5 - expectedRowLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(0).props.y).toBe(0);
+        expect(findGridLabels(sceneWrapper).get(1).props.x).toBe(-0.5 - expectedRowLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(1).props.y).toBe(1);
 
         // Column labels
 
-        expect(findGridLabels(sceneWrapper).get(2).props.x).toBe(-1);
-        expect(findGridLabels(sceneWrapper).get(2).props.y).toBe(-1 - expectedColumnLabelOffset);
-        expect(findGridLabels(sceneWrapper).get(3).props.x).toBe(0);
-        expect(findGridLabels(sceneWrapper).get(3).props.y).toBe(-1 - expectedColumnLabelOffset);
-        expect(findGridLabels(sceneWrapper).get(4).props.x).toBe(1);
-        expect(findGridLabels(sceneWrapper).get(4).props.y).toBe(-1 - expectedColumnLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(2).props.x).toBe(0);
+        expect(findGridLabels(sceneWrapper).get(2).props.y).toBe(-0.5 - expectedColumnLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(3).props.x).toBe(1);
+        expect(findGridLabels(sceneWrapper).get(3).props.y).toBe(-0.5 - expectedColumnLabelOffset);
+        expect(findGridLabels(sceneWrapper).get(4).props.x).toBe(2);
+        expect(findGridLabels(sceneWrapper).get(4).props.y).toBe(-0.5 - expectedColumnLabelOffset);
 
         // Grid lines
 
@@ -167,34 +167,34 @@ describe('When the Scene renders', () => {
 
         // Grid rows
 
-        expect(findGridLines(sceneWrapper).get(0).props.x1).toBe(-1.5);
-        expect(findGridLines(sceneWrapper).get(0).props.y1).toBe(0);
-        expect(findGridLines(sceneWrapper).get(0).props.x2).toBe(1.5);
-        expect(findGridLines(sceneWrapper).get(0).props.y2).toBe(0);
+        expect(findGridLines(sceneWrapper).get(0).props.x1).toBe(-0.5);
+        expect(findGridLines(sceneWrapper).get(0).props.y1).toBe(0.5);
+        expect(findGridLines(sceneWrapper).get(0).props.x2).toBe(2.5);
+        expect(findGridLines(sceneWrapper).get(0).props.y2).toBe(0.5);
 
         // Grid columns
 
-        expect(findGridLines(sceneWrapper).get(1).props.x1).toBe(-0.5);
-        expect(findGridLines(sceneWrapper).get(1).props.y1).toBe(-1);
-        expect(findGridLines(sceneWrapper).get(1).props.x2).toBe(-0.5);
-        expect(findGridLines(sceneWrapper).get(1).props.y2).toBe(1);
-        expect(findGridLines(sceneWrapper).get(2).props.x1).toBe(0.5);
-        expect(findGridLines(sceneWrapper).get(2).props.y1).toBe(-1);
-        expect(findGridLines(sceneWrapper).get(2).props.x2).toBe(0.5);
-        expect(findGridLines(sceneWrapper).get(2).props.y2).toBe(1);
+        expect(findGridLines(sceneWrapper).get(1).props.x1).toBe(0.5);
+        expect(findGridLines(sceneWrapper).get(1).props.y1).toBe(-0.5);
+        expect(findGridLines(sceneWrapper).get(1).props.x2).toBe(0.5);
+        expect(findGridLines(sceneWrapper).get(1).props.y2).toBe(1.5);
+        expect(findGridLines(sceneWrapper).get(2).props.x1).toBe(1.5);
+        expect(findGridLines(sceneWrapper).get(2).props.y1).toBe(-0.5);
+        expect(findGridLines(sceneWrapper).get(2).props.x2).toBe(1.5);
+        expect(findGridLines(sceneWrapper).get(2).props.y2).toBe(1.5);
     });
 });
 
 describe('The ARIA label should tell there is a character with its position', () => {
     test.each([
-        [0, 1, 0, 'Scene, 17 by 9 grid with a character at column I, row 6 facing up'],
-        [1, 2, 1, 'Scene, 17 by 9 grid with a character at column J, row 7 facing upper right'],
-        [0, 1, 2, 'Scene, 17 by 9 grid with a character at column I, row 6 facing right'],
-        [0, 1, 3, 'Scene, 17 by 9 grid with a character at column I, row 6 facing lower right'],
-        [0, 1, 4, 'Scene, 17 by 9 grid with a character at column I, row 6 facing down'],
-        [0, 1, 5, 'Scene, 17 by 9 grid with a character at column I, row 6 facing lower left'],
-        [0, 1, 6, 'Scene, 17 by 9 grid with a character at column I, row 6 facing left'],
-        [0, 1, 7, 'Scene, 17 by 9 grid with a character at column I, row 6 facing upper left'],
+        [0, 1, 0, 'Scene, 17 by 9 grid with a character at column A, row 2 facing up'],
+        [1, 2, 1, 'Scene, 17 by 9 grid with a character at column B, row 3 facing upper right'],
+        [0, 1, 2, 'Scene, 17 by 9 grid with a character at column A, row 2 facing right'],
+        [0, 1, 3, 'Scene, 17 by 9 grid with a character at column A, row 2 facing lower right'],
+        [0, 1, 4, 'Scene, 17 by 9 grid with a character at column A, row 2 facing down'],
+        [0, 1, 5, 'Scene, 17 by 9 grid with a character at column A, row 2 facing lower left'],
+        [0, 1, 6, 'Scene, 17 by 9 grid with a character at column A, row 2 facing left'],
+        [0, 1, 7, 'Scene, 17 by 9 grid with a character at column A, row 2 facing upper left'],
         [   0, -10, 0, 'Scene, 17 by 9 grid with a character outside of the scene above the scene, facing up'],
         [ 100, -10, 6, 'Scene, 17 by 9 grid with a character outside of the scene to the upper right of the scene, facing left'],
         [ 100,   0, 0, 'Scene, 17 by 9 grid with a character outside of the scene to the right of the scene, facing up'],
@@ -266,14 +266,14 @@ describe('When the character renders, transform should apply', () => {
 
 describe('Draw character when out of bounds', () => {
     test.each([
-        [  0, -2,  0  , -1.4 ], // N
-        [  3, -2,  2.4, -1.4 ], // NE
-        [  3,  0,  2.4,  0   ], // E
-        [  3,  2,  2.4,  1.4 ], // SE
-        [  0,  2,  0  ,  1.4 ], // S
-        [ -3,  2, -2.4,  1.4 ], // SW
-        [ -3,  0, -2.4,  0   ], // W
-        [ -3, -2, -2.4, -1.4 ]  // NW
+        [  0, -2,  0  , -0.4 ], // N
+        [  6, -2,  4.4, -0.4 ], // NE
+        [  6,  0,  4.4,  0   ], // E
+        [  6,  4,  4.4,  2.4 ], // SE
+        [  0,  4,  0  ,  2.4 ], // S
+        [ -3,  4, -0.4,  2.4], // SW
+        [ -3,  0, -0.4,  0   ], // W
+        [ -3, -2, -0.4, -0.4 ]  // NW
     ])('x=%f, y=%f, expectedDrawX=%f, expectedDrawY=%f',
         (x, y, expectedDrawX, expectedDrawY) => {
             const sceneWrapper = createMountScene({

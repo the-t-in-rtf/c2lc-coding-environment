@@ -1,26 +1,42 @@
 @import 'variables';
 
 body {
-    overflow-y: scroll;
+    overflow-y: hidden;
     overflow-x: hidden;
 }
 
 .App__container {
     background-color: #FFF;
-    width: 80%;
-    padding: 1rem 2rem 3rem 3rem;
-    margin: auto;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr min-content minmax(auto, 78rem) 1fr;
+    grid-template-rows: 70px auto 1fr 90px;
+    row-gap: 1rem;
+    height: 100vh;
+}
+
+.App__header-background {
+    background-color: #000;
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
 }
 
 .App__header {
-    display: flex;
     color: #FFF;
+    display: flex;
+    box-sizing: border-box;
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
 }
 
 .App__title {
-    width: 80%;
-    background-color: #000;
-    padding: 0.5rem 2rem 0.5rem 3rem;
+    width: 100%;
+    padding: 0 2rem;
+    margin: auto 0;
 }
 
 .App__header-row {
@@ -49,13 +65,28 @@ body {
 }
 
 .App__scene-container {
-    margin-top: 2rem;
+    margin-right: 1rem;
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    min-height: 12rem;
+    min-width: 19.5rem;
+    max-width: 78rem;
+    display: grid;
+    grid-template-rows: auto min-content;
+    border-width: $c2lc-scene-border-width $c2lc-scene-border-width 0 $c2lc-scene-border-width;
+    border-color: $c2lc-scene-border-color;
+    border-style: $c2lc-scene-border-style;
 }
 
 .App__scene-controls {
+    grid-row-start: 2;
+    grid-row-end: 3;
     background-color: #F1F1F1;
-    height: 4rem;
-    border-width: 0 $c2lc-scene-border-width $c2lc-scene-border-width $c2lc-scene-border-width;
+    height: auto;
+    padding: 0.35rem 0;
+    border-width: 0 0 $c2lc-scene-border-width 0;
     border-color: $c2lc-scene-border-color;
     border-style: $c2lc-scene-border-style;
     display: grid;
@@ -73,56 +104,79 @@ body {
     margin-left: 50px;
 }
 
-.App__program-section {
-    margin-top: 1.5rem;
-}
-
 .App__command-palette {
     background-color: #F1F1F1;
-    height: 100%;
-    padding-top: 1rem;
     text-align: center;
+    margin: 0 1rem;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 4;
+    overflow: hidden;
 }
 
 .App__command-palette-heading {
     font-weight: bold;
     font-size: inherit;
-    margin: 0 0 2rem 0;
+    margin: 2rem 0;
+}
+
+.App__command-palette-command-container {
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    overflow-y: scroll;
 }
 
 .App__command-palette-commands {
-    // width = #items * itemWidth + gapWidth * (#items - 1)
-    width: 14rem;
-    margin: 3rem auto 0 auto;
+    width: 6rem;
     display: grid;
-    grid-template-columns: repeat(3, 4rem);
+    grid-template-columns: repeat(2, 2.5rem);
     grid-gap: 1rem;
 }
 
-.App__playAndShare-container {
+.App__program-block-editor {
+    margin-right: 1rem;
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 3;
+    grid-row-end: 4;
+    height: auto;
+}
+
+.App__playAndShare-background {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 4;
+    grid-row-end: 5;
     background-color: #F1F1F1;
-    height: 10rem;
-    margin-top: 1rem;
+    height: 7rem;
+}
+
+.App__playAndShare-container {
+    padding: 0 1rem;
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 4;
+    grid-row-end: 5;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
 }
 
 .App__playControl-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 0.5rem;
-    grid-column-start: 2;
-    grid-column-end: 3;
+    align-items: flex-start;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    margin: auto 0;
 }
 
 .App__playButton-container {
     display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
 }
 
-.App__playButton {
+.App__playControlButton {
     margin-right: 1.5rem;
 }
 
@@ -130,27 +184,21 @@ body {
     align-items: flex-end;
     display: flex;
     flex-direction: column;
-    grid-column-start: 3;
-    grid-column-end: 4;
+    grid-column-start: 2;
+    grid-column-end: 3;
     justify-content: center;
-    padding-right: 2rem;
 }
 
 @media only screen and (max-width: 768px) {
-    .App__playAndShare-container {
-        grid-template-rows: 1fr 1fr;
+    .App__command-palette-commands {
+        width: 6rem;
+        padding-left: 1rem;
+        grid-template-columns: repeat(1, 4rem);
     }
-    .App__playControl-container {
-        grid-row-start: 1;
-        grid-row-end: 2;
-    }
-    .App__shareButton-container {
-        padding-right: 0;
-        align-items: flex-start;
-        flex-direction: row;
-        grid-column-start: 2;
-        grid-column-end: 3;
-        grid-row-start: 2;
-        grid-row-end: 3;
+}
+
+@media only screen and (max-width: 414px) {
+    body {
+        overflow: scroll;
     }
 }
