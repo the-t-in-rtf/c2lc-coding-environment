@@ -110,7 +110,9 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     programStepIsActive(programStepNumber: number) {
-        if (this.props.runningState === 'running') {
+        if (this.props.runningState === 'running'
+            || this.props.runningState === 'stopRequested'
+            || this.props.runningState === 'pauseRequested') {
             return (this.props.programSequence.getProgramCounter()) === programStepNumber;
         } else {
             return false;
@@ -370,8 +372,21 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
 
     makeProgramBlock(programStepNumber: number, command: string) {
         const active = this.programStepIsActive(programStepNumber);
-        const paused = this.props.runningState === 'paused' &&
-            this.props.programSequence.getProgramCounter() === programStepNumber;
+        // When the runningState is 'paused', show the pause indicator on
+        // programSequence.getProgramCounter(). And when the runningState is
+        // 'pauseRequested', show the pause indicator on
+        // programSequence.getProgramCounter() + 1, to indicate where the
+        // program will pause when the running state transitions to 'paused'.
+        // Showing the pause indicator on
+        // programSequence.getProgramCounter() + 1 when in 'pauseRequested'
+        // works because the next step after programSequence.getProgramCounter()
+        // is the one with index programCounter + 1. This is currently true but
+        // we will need to revisit this logic when we introduce control flow or
+        // blocks into the language.
+        const paused = (this.props.runningState === 'paused'
+            && programStepNumber === this.props.programSequence.getProgramCounter())
+            || (this.props.runningState === 'pauseRequested'
+            && programStepNumber === this.props.programSequence.getProgramCounter() + 1);
         const hasActionPanelControl = this.props.actionPanelStepIndex === programStepNumber;
         const classes = classNames(
             'ProgramBlockEditor__program-block',

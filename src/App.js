@@ -365,6 +365,18 @@ export class App extends React.Component<AppProps, AppState> {
         }
     }
 
+    setRunningState(runningState: RunningState): void {
+        this.setState((state) => {
+            // If stop is requested when we are in the 'paused' state,
+            // then go straight to 'stopped'
+            if (runningState === 'stopRequested' && state.runningState === 'paused') {
+                return { runningState: 'stopped' };
+            } else {
+                return { runningState };
+            }
+        });
+    }
+
     // API for Interpreter
 
     getProgramSequence(): ProgramSequence {
@@ -383,9 +395,6 @@ export class App extends React.Component<AppProps, AppState> {
         }, callback);
     }
 
-    stopPlaying(): void {
-        this.setState({ runningState: 'stopped' });
-    }
 
     calculateUsedActions = (programSequence: ProgramSequence): ActionToggleRegister => {
         // Calculate  "used actions".
@@ -409,11 +418,13 @@ export class App extends React.Component<AppProps, AppState> {
     handleClickPlay = () => {
         switch (this.state.runningState) {
             case 'running':
-                this.setState({ runningState: 'paused' });
+                this.setState({ runningState: 'pauseRequested' });
                 break;
+            case 'pauseRequested': // Fall through
             case 'paused':
                 this.setState({ runningState: 'running' });
                 break;
+            case 'stopRequested': // Fall through
             case 'stopped':
                 this.setState((state) => {
                     return {
@@ -428,7 +439,7 @@ export class App extends React.Component<AppProps, AppState> {
     };
 
     handleClickStop = () => {
-        this.setState({ runningState: 'stopped' });
+        this.setRunningState('stopRequested');
     }
 
     handleClickConnectDash = () => {
@@ -676,8 +687,10 @@ export class App extends React.Component<AppProps, AppState> {
                             <Col md={6} lg={8}>
                                 <ProgramBlockEditor
                                     actionPanelStepIndex={this.state.actionPanelStepIndex}
+                                    editingDisabled={
+                                        !(this.state.runningState === 'stopped'
+                                        || this.state.runningState === 'paused')}
                                     audioManager={this.audioManager}
-                                    editingDisabled={this.state.runningState === 'running'}
                                     programSequence={this.state.programSequence}
                                     runningState={this.state.runningState}
                                     selectedAction={this.state.selectedAction}
@@ -701,7 +714,9 @@ export class App extends React.Component<AppProps, AppState> {
                                         onClick={this.handleClickPlay}
                                     />
                                     <StopButton
-                                        disabled={this.state.runningState === 'stopped'}
+                                        disabled={
+                                            this.state.runningState === 'stopped'
+                                            || this.state.runningState === 'stopRequested'}
                                         onClick={this.handleClickStop}/>
                                 </div>
                                 <ProgramSpeedController
