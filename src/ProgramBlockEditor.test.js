@@ -9,6 +9,7 @@ import AudioManagerImpl from './AudioManagerImpl';
 import ActionPanel from './ActionPanel';
 import AriaDisablingButton from './AriaDisablingButton';
 import FocusTrapManager from './FocusTrapManager';
+import ProgramSequence from './ProgramSequence';
 import messages from './messages.json';
 import ProgramBlockEditor from './ProgramBlockEditor';
 import ToggleSwitch from './ToggleSwitch';
@@ -21,9 +22,9 @@ configure({ adapter: new Adapter()});
 // TODO: Mock the FocusTrapManager
 
 const defaultProgramBlockEditorProps = {
-    program: ['forward1', 'left45', 'forward1', 'left45'],
     interpreterIsRunning: false,
-    activeProgramStepNum: null,
+    programSequence: new ProgramSequence(['forward1', 'left45', 'forward1', 'left45'], 0),
+    runningState: 'stopped',
     actionPanelStepIndex: null,
     selectedAction: null,
     editingDisabled: false,
@@ -47,7 +48,7 @@ function createShallowProgramBlockEditor(props) {
     // $FlowFixMe: Flow doesn't know about the Jest mock API
     const audioManagerMock: any = AudioManagerImpl.mock.instances[0];
 
-    const mockChangeProgramHandler = jest.fn();
+    const mockChangeProgramSequenceHandler = jest.fn();
 
     const mockChangeAddNodeExpandedModeHandler = jest.fn();
 
@@ -60,7 +61,7 @@ function createShallowProgramBlockEditor(props) {
                 {
                     intl: intl,
                     audioManager: audioManagerInstance,
-                    onChangeProgram: mockChangeProgramHandler,
+                    onChangeProgramSequence: mockChangeProgramSequenceHandler,
                     onChangeAddNodeExpandedMode: mockChangeAddNodeExpandedModeHandler
                 },
                 props
@@ -71,7 +72,7 @@ function createShallowProgramBlockEditor(props) {
     return {
         wrapper,
         audioManagerMock,
-        mockChangeProgramHandler,
+        mockChangeProgramSequenceHandler,
         mockChangeAddNodeExpandedModeHandler
     };
 }
@@ -83,7 +84,7 @@ function createMountProgramBlockEditor(props) {
     // $FlowFixMe: Flow doesn't know about the Jest mock API
     const audioManagerMock = AudioManagerImpl.mock.instances[0];
 
-    const mockChangeProgramHandler = jest.fn();
+    const mockChangeProgramSequenceHandler = jest.fn();
     const mockChangeActionPanelStepIndex = jest.fn();
     const mockChangeAddNodeExpandedModeHandler = jest.fn();
 
@@ -95,7 +96,7 @@ function createMountProgramBlockEditor(props) {
                 defaultProgramBlockEditorProps,
                 {
                     audioManager: audioManagerInstance,
-                    onChangeProgram: mockChangeProgramHandler,
+                    onChangeProgramSequence: mockChangeProgramSequenceHandler,
                     onChangeActionPanelStepIndex: mockChangeActionPanelStepIndex,
                     onChangeAddNodeExpandedMode: mockChangeAddNodeExpandedModeHandler
                 },
@@ -115,7 +116,7 @@ function createMountProgramBlockEditor(props) {
     return {
         wrapper,
         audioManagerMock,
-        mockChangeProgramHandler,
+        mockChangeProgramSequenceHandler,
         mockChangeActionPanelStepIndex,
         mockChangeAddNodeExpandedModeHandler
     };
@@ -232,7 +233,7 @@ describe("Add nodes", () => {
         expect.assertions(3);
 
         const { wrapper } = createMountProgramBlockEditor({
-            program: ['forward1', 'right45'],
+            programSequence: new ProgramSequence(['forward1', 'right45'], 0),
             addNodeExpandedMode: true
         });
 
@@ -250,7 +251,7 @@ describe("Add nodes", () => {
         expect.assertions(3);
 
         const { wrapper } = createMountProgramBlockEditor({
-            program: ['forward1', 'right45'],
+            programSequence: new ProgramSequence(['forward1', 'right45'], 0),
             selectedAction: 'left45',
             addNodeExpandedMode: true
         });
@@ -276,7 +277,7 @@ describe("Add nodes", () => {
         expect.assertions(1);
 
         const { wrapper } = createMountProgramBlockEditor({
-            program: [],
+            programSequence: new ProgramSequence([], 0),
             selectedAction: 'left45'
         });
 
@@ -292,7 +293,7 @@ describe("Add nodes", () => {
         expect.assertions(1);
 
         const { wrapper } = createMountProgramBlockEditor({
-            program: []
+            programSequence: new ProgramSequence([], 0)
         });
 
         const soleAddButton  = getAddNodeButtonAtPosition(wrapper, 0);
@@ -327,8 +328,8 @@ describe("Add program steps", () => {
         expect.assertions(4);
 
         // Given a program of 5 forwards and 'left45' as the selected command
-        const { wrapper, audioManagerMock, mockChangeProgramHandler } = createMountProgramBlockEditor({
-            program: ['forward1', 'forward1', 'forward1', 'forward1', 'forward1'],
+        const { wrapper, audioManagerMock, mockChangeProgramSequenceHandler } = createMountProgramBlockEditor({
+            programSequence: new ProgramSequence(['forward1', 'forward1', 'forward1', 'forward1', 'forward1'], 0),
             selectedAction: 'left45'
         });
 
@@ -342,17 +343,18 @@ describe("Add program steps", () => {
         expect(audioManagerMock.playAnnouncement.mock.calls[0][0]).toBe('add');
 
         // And the program should be changed
-        expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
-        expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(
-            ['forward1', 'forward1', 'forward1', 'forward1', 'forward1', 'left45']);
+        expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(1);
+        expect(mockChangeProgramSequenceHandler.mock.calls[0][0]).toStrictEqual(
+            new ProgramSequence(['forward1', 'forward1', 'forward1', 'forward1', 'forward1', 'left45'], 0)
+        );
     });
 
     test('We should be able to add a step at the beginning of the program', () => {
         expect.assertions(4);
 
         // Given a program of 5 forwards and 'left45' as the selected command
-        const { wrapper, audioManagerMock, mockChangeProgramHandler } = createMountProgramBlockEditor({
-            program: ['forward1', 'forward1', 'forward1', 'forward1', 'forward1'],
+        const { wrapper, audioManagerMock, mockChangeProgramSequenceHandler } = createMountProgramBlockEditor({
+            programSequence: new ProgramSequence(['forward1', 'forward1', 'forward1', 'forward1', 'forward1'], 0),
             selectedAction: 'left45',
             addNodeExpandedMode: true
         });
@@ -367,17 +369,18 @@ describe("Add program steps", () => {
         expect(audioManagerMock.playAnnouncement.mock.calls[0][0]).toBe('add');
 
         // And the program should be changed
-        expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
-        expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(
-            ['left45', 'forward1', 'forward1', 'forward1', 'forward1', 'forward1']);
+        expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(1);
+        expect(mockChangeProgramSequenceHandler.mock.calls[0][0]).toStrictEqual(
+            new ProgramSequence(['left45', 'forward1', 'forward1', 'forward1', 'forward1', 'forward1'], 1)
+        );
     });
 
     test('We should be able to add a step in the middle of the program', () => {
         expect.assertions(4);
 
         // Given a program of 5 forwards and 'left45' as the selected command
-        const { wrapper, audioManagerMock, mockChangeProgramHandler } = createMountProgramBlockEditor({
-            program: ['forward1', 'forward1', 'forward1', 'forward1', 'forward1'],
+        const { wrapper, audioManagerMock, mockChangeProgramSequenceHandler } = createMountProgramBlockEditor({
+            programSequence: new ProgramSequence(['forward1', 'forward1', 'forward1', 'forward1', 'forward1'], 0),
             selectedAction: 'left45',
             addNodeExpandedMode: true
         });
@@ -391,9 +394,10 @@ describe("Add program steps", () => {
         expect(audioManagerMock.playAnnouncement.mock.calls[0][0]).toBe('add');
 
         // And the program should be changed
-        expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
-        expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(
-            ['forward1', 'forward1', 'forward1', "left45", 'forward1', 'forward1']);
+        expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(1);
+        expect(mockChangeProgramSequenceHandler.mock.calls[0][0]).toStrictEqual(
+            new ProgramSequence(['forward1', 'forward1', 'forward1', "left45", 'forward1', 'forward1'], 0)
+        );
     });
 });
 
@@ -404,7 +408,7 @@ describe('Delete program steps', () => {
         [ 3, ['forward1', 'left45', 'forward1']]
     ])('While the action panel is open, when block %i is clicked, then program should be updated',
         (stepNum, expectedProgram) => {
-            const { wrapper, audioManagerMock, mockChangeProgramHandler, mockChangeActionPanelStepIndex } = createMountProgramBlockEditor();
+            const { wrapper, audioManagerMock, mockChangeProgramSequenceHandler, mockChangeActionPanelStepIndex } = createMountProgramBlockEditor();
             const programBlock = getProgramBlockAtPosition(wrapper, stepNum);
             programBlock.simulate('click');
 
@@ -425,8 +429,8 @@ describe('Delete program steps', () => {
             expect(audioManagerMock.playAnnouncement.mock.calls[0][0]).toBe('delete');
 
             // The program should be updated
-            expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
-            expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
+            expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(1);
+            expect(mockChangeProgramSequenceHandler.mock.calls[0][0].program).toStrictEqual(expectedProgram);
         }
     );
 });
@@ -438,7 +442,7 @@ describe('Replace program steps', () => {
     ]) ('Replace a program if selectedAction is not null',
         (stepNum, expectedProgram, selectedAction) => {
             expect.assertions(7);
-            const { wrapper, audioManagerMock, mockChangeProgramHandler, mockChangeActionPanelStepIndex } = createMountProgramBlockEditor({
+            const { wrapper, audioManagerMock, mockChangeProgramSequenceHandler, mockChangeActionPanelStepIndex } = createMountProgramBlockEditor({
                 selectedAction
             });
             const programBlock = getProgramBlockAtPosition(wrapper, stepNum);
@@ -462,11 +466,11 @@ describe('Replace program steps', () => {
 
             // The program should be updated
             if (selectedAction) {
-                expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
-                expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
+                expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(1);
+                expect(mockChangeProgramSequenceHandler.mock.calls[0][0].program).toStrictEqual(expectedProgram);
             } else {
-                expect(mockChangeProgramHandler.mock.calls.length).toBe(0);
-                expect(wrapper.props().program).toStrictEqual(expectedProgram);
+                expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(0);
+                expect(wrapper.props().programSequence.getProgram()).toStrictEqual(expectedProgram);
             }
         }
     );
@@ -478,7 +482,7 @@ describe('Move to previous program step', () => {
         [ 2, ['forward1', 'forward1', 'left45', 'left45']]
     ]) ('Changes position with a step before, if there is a step',
         (stepNum, expectedProgram) => {
-            const { wrapper, audioManagerMock, mockChangeProgramHandler, mockChangeActionPanelStepIndex } = createMountProgramBlockEditor();
+            const { wrapper, audioManagerMock, mockChangeProgramSequenceHandler, mockChangeActionPanelStepIndex } = createMountProgramBlockEditor();
             const programBlock = getProgramBlockAtPosition(wrapper, stepNum);
             programBlock.simulate('click');
 
@@ -499,14 +503,14 @@ describe('Move to previous program step', () => {
                 expect(audioManagerMock.playAnnouncement.mock.calls.length).toBe(1);
                 expect(audioManagerMock.playAnnouncement.mock.calls[0][0]).toBe('moveToPrevious');
                 // The program should be updated
-                expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
-                expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
+                expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(1);
+                expect(mockChangeProgramSequenceHandler.mock.calls[0][0].program).toStrictEqual(expectedProgram);
             } else {
                 // No sound should be played
                 expect(audioManagerMock.playAnnouncement.mock.calls.length).toBe(0);
                 // The program should not be updated
-                expect(mockChangeProgramHandler.mock.calls.length).toBe(0);
-                expect(wrapper.props().program).toStrictEqual(expectedProgram);
+                expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(0);
+                expect(wrapper.props().programSequence.getProgram()).toStrictEqual(expectedProgram);
             }
         }
     )
@@ -518,7 +522,7 @@ describe('Move to next program step', () => {
         [ 3, ['forward1', 'left45', 'forward1', 'left45']]
     ]) ('Changes position with a step after, if there is a step',
         (stepNum, expectedProgram) => {
-            const { wrapper, audioManagerMock, mockChangeProgramHandler, mockChangeActionPanelStepIndex } = createMountProgramBlockEditor();
+            const { wrapper, audioManagerMock, mockChangeProgramSequenceHandler, mockChangeActionPanelStepIndex } = createMountProgramBlockEditor();
             const programBlock = getProgramBlockAtPosition(wrapper, stepNum);
             programBlock.simulate('click');
 
@@ -539,14 +543,14 @@ describe('Move to next program step', () => {
                 expect(audioManagerMock.playAnnouncement.mock.calls.length).toBe(1);
                 expect(audioManagerMock.playAnnouncement.mock.calls[0][0]).toBe('moveToNext');
                 // The program should be updated
-                expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
-                expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(expectedProgram);
+                expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(1);
+                expect(mockChangeProgramSequenceHandler.mock.calls[0][0].program).toStrictEqual(expectedProgram);
             } else {
                 // No announcement should be played
                 expect(audioManagerMock.playAnnouncement.mock.calls.length).toBe(0);
                 // The program should not be updated
-                expect(mockChangeProgramHandler.mock.calls.length).toBe(0);
-                expect(wrapper.props().program).toStrictEqual(expectedProgram);
+                expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(0);
+                expect(wrapper.props().programSequence.getProgram()).toStrictEqual(expectedProgram);
             }
         }
     )
@@ -578,11 +582,11 @@ describe('Autoscroll to show a step after the active program step', () => {
     test('When active program step number is 0, scroll to the beginning of the container', () => {
         expect.assertions(3);
         const mockScrollTo = jest.fn();
-        const { wrapper } = createMountProgramBlockEditor();
+        const { wrapper } = createMountProgramBlockEditor({runningState: 'running'});
         getProgramSequenceContainer(wrapper).ref.current.scrollTo = mockScrollTo;
 
         wrapper.setProps({
-            activeProgramStepNum: 0
+            programSequence: new ProgramSequence(['forward1', 'left45', 'forward1', 'left45'], 0)
         });
 
         expect(mockScrollTo.mock.calls.length).toBe(1);
@@ -593,7 +597,7 @@ describe('Autoscroll to show a step after the active program step', () => {
     test('When a step after active program block is outside of the container, on the right', () => {
         expect.assertions(1);
 
-        const { wrapper } = createMountProgramBlockEditor();
+        const { wrapper } = createMountProgramBlockEditor({runningState: 'running'});
 
         // Set the container ref object to a custom object with just enough
         // of the DOM API implemented to support the scroll logic
@@ -620,7 +624,8 @@ describe('Autoscroll to show a step after the active program step', () => {
 
         // Trigger a scroll
         wrapper.setProps({
-            activeProgramStepNum: 2
+            runningState: 'running',
+            programSequence: new ProgramSequence(['forward1', 'left45', 'forward1', 'left45'], 2)
         });
 
         expect(programSequenceContainer.ref.current.scrollLeft).toBe(200 + 2300 - 100 - 1000);
@@ -628,7 +633,7 @@ describe('Autoscroll to show a step after the active program step', () => {
     test('When a step after active program block is outside of the container, on the left', () => {
         expect.assertions(1);
 
-        const { wrapper } = createMountProgramBlockEditor();
+        const { wrapper } = createMountProgramBlockEditor({runningState: 'running'});
 
         // Set the container ref object to a custom object with just enough
         // of the DOM API implemented to support the scroll logic
@@ -655,7 +660,8 @@ describe('Autoscroll to show a step after the active program step', () => {
 
         // Trigger a scroll
         wrapper.setProps({
-            activeProgramStepNum: 2
+            runningState: 'running',
+            programSequence: new ProgramSequence(['forward1', 'left45', 'forward1', 'left45'], 2)
         });
 
         expect(programSequenceContainer.ref.current.scrollLeft).toBe(2000 - 100 - 200);
@@ -690,7 +696,8 @@ describe('Autoscroll to show a step after the active program step', () => {
 
         // Trigger a scroll
         wrapper.setProps({
-            activeProgramStepNum: 3
+            runningState: 'running',
+            programSequence: new ProgramSequence(['forward1', 'left45', 'forward1', 'left45'], 3)
         });
 
         expect(programSequenceContainer.ref.current.scrollLeft).toBe(2000 - 100 - 200);
@@ -705,8 +712,8 @@ test('The editor scrolls when a step is added to the end of the program', () => 
     window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
 
     // Given a program of 5 forwards and 'left45' as the selected command
-    const { wrapper, audioManagerMock, mockChangeProgramHandler } = createMountProgramBlockEditor({
-        program: ['forward1', 'forward1', 'forward1', 'forward1', 'forward1'],
+    const { wrapper, audioManagerMock, mockChangeProgramSequenceHandler } = createMountProgramBlockEditor({
+        programSequence: new ProgramSequence(['forward1', 'forward1', 'forward1', 'forward1', 'forward1'], 0),
         selectedAction: 'left45'
     });
 
@@ -720,12 +727,13 @@ test('The editor scrolls when a step is added to the end of the program', () => 
     expect(audioManagerMock.playAnnouncement.mock.calls[0][0]).toBe('add');
 
     // And the program should be changed
-    expect(mockChangeProgramHandler.mock.calls.length).toBe(1);
-    expect(mockChangeProgramHandler.mock.calls[0][0]).toStrictEqual(
-        ['forward1', 'forward1', 'forward1', 'forward1', 'forward1', 'left45']);
+    expect(mockChangeProgramSequenceHandler.mock.calls.length).toBe(1);
+    expect(mockChangeProgramSequenceHandler.mock.calls[0][0]).toStrictEqual(
+        new ProgramSequence(['forward1', 'forward1', 'forward1', 'forward1', 'forward1', 'left45'], 0)
+    );
 
     // And updating the program triggers auto scroll
-    wrapper.setProps({ program: mockChangeProgramHandler.mock.calls[0][0] });
+    wrapper.setProps({ programSequence: mockChangeProgramSequenceHandler.mock.calls[0][0] });
     expect(mockScrollIntoView.mock.calls.length).toBe(1);
     expect(mockScrollIntoView.mock.calls[0][0]).toStrictEqual({
         behavior: 'auto',
@@ -756,5 +764,51 @@ describe('Themed character icon should be rendered on the character column', () 
         const { wrapper } = createMountProgramBlockEditor({theme: 'space'});
         expect(getCharacterColumnCharacterContainer(wrapper).props['aria-label']).toBe('Space Ship character');
         expect(getCharacterColumnCharacter(wrapper).type.render().props.children).toBe('SpaceShip.svg');
+    });
+});
+
+describe('When runningState property is paused and programCounter is 0', () => {
+    test('className of step 0 should have --paused', () => {
+        expect.assertions(1);
+        const { wrapper } = createMountProgramBlockEditor({ runningState: 'paused' });
+        const currentStep = getProgramBlockAtPosition(wrapper, 0);
+
+        expect(currentStep.get(0).props.className.includes('ProgramBlockEditor__program-block--paused')).toBe(true);
+    });
+});
+
+describe('When runningState property is pauseRequested and programCounter is 0', () => {
+    test('className of step 1 should have --paused', () => {
+        expect.assertions(1);
+        const { wrapper } = createMountProgramBlockEditor({ runningState: 'pauseRequested' });
+        const pausedStep = getProgramBlockAtPosition(wrapper, 1);
+
+        expect(pausedStep.get(0).props.className.includes('ProgramBlockEditor__program-block--paused')).toBe(true);
+    });
+});
+
+describe('When runningState is running, stopRequested, or pauseRequested, and programCounter is 0', () => {
+    test('className of step 0 should have --active', () => {
+        expect.assertions(5);
+        const { wrapper } = createMountProgramBlockEditor({ runningState: 'running' });
+        let currentStep = getProgramBlockAtPosition(wrapper, 0);
+
+        expect(currentStep.get(0).props.className.includes('ProgramBlockEditor__program-block--active')).toBe(true);
+
+        wrapper.setProps({ runningState: 'stopRequested' });
+        currentStep = getProgramBlockAtPosition(wrapper, 0);
+        expect(currentStep.get(0).props.className.includes('ProgramBlockEditor__program-block--active')).toBe(true);
+
+        wrapper.setProps({ runningState: 'pauseRequested'});
+        currentStep = getProgramBlockAtPosition(wrapper, 0);
+        expect(currentStep.get(0).props.className.includes('ProgramBlockEditor__program-block--active')).toBe(true);
+
+        wrapper.setProps({ runningState: 'paused'});
+        currentStep = getProgramBlockAtPosition(wrapper, 0);
+        expect(currentStep.get(0).props.className.includes('ProgramBlockEditor__program-block--active')).toBe(false);
+
+        wrapper.setProps({ runningState: 'stopped'});
+        currentStep = getProgramBlockAtPosition(wrapper, 0);
+        expect(currentStep.get(0).props.className.includes('ProgramBlockEditor__program-block--active')).toBe(false);
     });
 });
