@@ -102,27 +102,43 @@ test('The character can move in 8 directions (N, NE, E, SE, S, SW, W, NW)', () =
     // N
     (expect(new CharacterState(0, 0, 0, []).forward(100, true)): any)
         .toHaveCharacterState(0, -100, 0, [{x1: 0, y1: 0, x2: 0, y2: -100}]);
+    (expect(new CharacterState(0, 0, 4, []).backward(100, true)): any)
+        .toHaveCharacterState(0, -100, 4, [{x1: 0, y1: 0, x2: 0, y2: -100}]);
     // NE
     (expect(new CharacterState(0, 0, 1, []).forward(100, true)): any)
         .toHaveCharacterState(100, -100, 1, [{x1: 0, y1: 0, x2: 100, y2: -100}]);
+    (expect(new CharacterState(0, 0, 5, []).backward(100, true)): any)
+        .toHaveCharacterState(100, -100, 5, [{x1: 0, y1: 0, x2: 100, y2: -100}]);
     // E
     (expect(new CharacterState(0, 0, 2, []).forward(100, true)): any)
         .toHaveCharacterState(100, 0, 2, [{x1: 0, y1: 0, x2: 100, y2: 0}]);
+    (expect(new CharacterState(0, 0, 6, []).backward(100, true)): any)
+        .toHaveCharacterState(100, 0, 6, [{x1: 0, y1: 0, x2: 100, y2: 0}]);
     // SE
     (expect(new CharacterState(0, 0, 3, []).forward(100, true)): any)
         .toHaveCharacterState(100, 100, 3, [{x1: 0, y1: 0, x2: 100, y2: 100}]);
+    (expect(new CharacterState(0, 0, 7, []).backward(100, true)): any)
+        .toHaveCharacterState(100, 100, 7, [{x1: 0, y1: 0, x2: 100, y2: 100}]);
     // S
     (expect(new CharacterState(0, 0, 4, []).forward(100, true)): any)
         .toHaveCharacterState(0, 100, 4, [{x1: 0, y1: 0, x2: 0, y2: 100}]);
+    (expect(new CharacterState(0, 0, 0, []).backward(100, true)): any)
+        .toHaveCharacterState(0, 100, 0, [{x1: 0, y1: 0, x2: 0, y2: 100}]);
     // SW
     (expect(new CharacterState(0, 0, 5, []).forward(100, true)): any)
         .toHaveCharacterState(-100, 100, 5, [{x1: 0, y1: 0, x2: -100, y2: 100}]);
+    (expect(new CharacterState(0, 0, 1, []).backward(100, true)): any)
+        .toHaveCharacterState(-100, 100, 1, [{x1: 0, y1: 0, x2: -100, y2: 100}]);
     // W
     (expect(new CharacterState(0, 0, 6, []).forward(100, true)): any)
         .toHaveCharacterState(-100, 0, 6, [{x1: 0, y1: 0, x2: -100, y2: 0}]);
+    (expect(new CharacterState(0, 0, 2, []).backward(100, true)): any)
+        .toHaveCharacterState(-100, 0, 2, [{x1: 0, y1: 0, x2: -100, y2: 0}]);
     // NW
     (expect(new CharacterState(0, 0, 7, []).forward(100, true)): any)
         .toHaveCharacterState(-100, -100, 7, [{x1: 0, y1: 0, x2: -100, y2: -100}]);
+    (expect(new CharacterState(0, 0, 3, []).backward(100, true)): any)
+        .toHaveCharacterState(-100, -100, 3, [{x1: 0, y1: 0, x2: -100, y2: -100}]);
 });
 
 test('Turn Left moves anti-clockwise and wraps at N', () => {
@@ -161,6 +177,25 @@ test('Each Forward move should create a path segment', () => {
         ]);
 });
 
+test('Each Backward move should create a path segment', () => {
+    (expect(new CharacterState(0, 0, 6, []).backward(100, true).backward(100, true)): any)
+        .toHaveCharacterState(200, 0, 6, [
+            {x1: 0, y1: 0, x2: 100, y2: 0},
+            {x1: 100, y1: 0, x2: 200, y2: 0}
+        ]);
+    (expect(new CharacterState(0, 0, 6, []).backward(100, true).turnLeft(2).backward(100, true)): any)
+        .toHaveCharacterState(100, -100, 4, [
+            {x1: 0, y1: 0, x2: 100, y2: 0},
+            {x1: 100, y1: 0, x2: 100, y2: -100}
+        ]);
+    (expect(new CharacterState(0, 0, 6, []).backward(100, true).turnRight(2).backward(100, true)): any)
+        .toHaveCharacterState(100, 100, 0, [
+            {x1: 0, y1: 0, x2: 100, y2: 0},
+            {x1: 100, y1: 0, x2: 100, y2: 100}
+        ]);
+});
+
+
 test('Forward move should not create a path segment, when drawingEnabled is false', () => {
     (expect(new CharacterState(0, 0, 2, []).forward(100, false)): any)
         .toHaveCharacterState(100, 0, 2, []);
@@ -176,8 +211,23 @@ test('Forward move should not create a path segment, when drawingEnabled is fals
         .toHaveCharacterState(300, 0, 2, []);
 });
 
-test('When direction is not an integer in range 0-7, forward() should throw an Error', () => {
-    expect.assertions(3);
+test('Backward move should not create a path segment, when drawingEnabled is false', () => {
+    (expect(new CharacterState(0, 0, 6, []).backward(100, false)): any)
+        .toHaveCharacterState(100, 0, 6, []);
+    (expect(new CharacterState(0, 0, 6, []).backward(100, false).backward(200, true)): any)
+        .toHaveCharacterState(300, 0, 6, [
+            {x1: 100, y1: 0, x2: 300, y2: 0}
+        ]);
+    (expect(new CharacterState(0, 0, 6, []).backward(100, true).backward(200, false)): any)
+        .toHaveCharacterState(300, 0, 6, [
+            {x1: 0, y1: 0, x2: 100, y2: 0}
+        ]);
+    (expect(new CharacterState(0, 0, 6, []).backward(100, false).backward(200, false)): any)
+        .toHaveCharacterState(300, 0, 6, []);
+});
+
+test('When direction is not an integer in range 0-7, forward() and backward() should throw an Error', () => {
+    expect.assertions(6);
 
     expect(() => {
         (new CharacterState(0, 0, -1, [])).forward(1, false);
@@ -189,5 +239,17 @@ test('When direction is not an integer in range 0-7, forward() should throw an E
 
     expect(() => {
         (new CharacterState(0, 0, 0.5, [])).forward(1, false);
+    }).toThrowError(/^CharacterState direction must be an integer in range 0-7 inclusive$/);
+
+    expect(() => {
+        (new CharacterState(0, 0, -1, [])).backward(1, false);
+    }).toThrowError(/^CharacterState direction must be an integer in range 0-7 inclusive$/);
+
+    expect(() => {
+        (new CharacterState(0, 0, 8, [])).backward(1, false);
+    }).toThrowError(/^CharacterState direction must be an integer in range 0-7 inclusive$/);
+
+    expect(() => {
+        (new CharacterState(0, 0, 0.5, [])).backward(1, false);
     }).toThrowError(/^CharacterState direction must be an integer in range 0-7 inclusive$/);
 });
