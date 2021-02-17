@@ -77,15 +77,6 @@ export default class ProgramParser {
         }
     }
 
-    getInteger(): number {
-        let digits = '';
-        while (this.isDigit()) {
-            digits += this.ch;
-            this.nextCh();
-        }
-        return parseInt(digits, 10);
-    }
-
     nextCh() {
         if (this.textIndex >= this.text.length) {
             this.ch = 'eof';
@@ -93,9 +84,5 @@ export default class ProgramParser {
             this.ch = this.text.charAt(this.textIndex);
             this.textIndex += 1;
         }
-    }
-
-    isDigit(): boolean {
-        return (this.ch >= '0' && this.ch <= '9');
     }
 };
