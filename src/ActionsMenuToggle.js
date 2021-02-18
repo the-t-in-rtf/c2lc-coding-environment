@@ -10,7 +10,7 @@ import './ActionsMenuToggle.scss';
 type ActionsMenuToggleProps = {
     intl: IntlShape,
     editingDisabled: boolean,
-    onClick: () => void
+    handleShowHideMenu: () => void
 };
 
 class ActionsMenuToggle extends React.Component<ActionsMenuToggleProps, {}> {
@@ -18,8 +18,13 @@ class ActionsMenuToggle extends React.Component<ActionsMenuToggleProps, {}> {
     handleKeyDown = (e: SyntheticKeyboardEvent<HTMLInputElement>) => {
         if (e.key === ' ' || e.key === 'Enter') {
             e.preventDefault();
-            this.props.onClick();
+            this.props.handleShowHideMenu();
         }
+    }
+
+    onClick = (e: SyntheticEvent<HTMLElement>) => {
+        e.preventDefault();
+        this.props.handleShowHideMenu();
     }
 
     render() {
@@ -29,7 +34,7 @@ class ActionsMenuToggle extends React.Component<ActionsMenuToggleProps, {}> {
                 tabIndex='0'
                 className='ActionsMenu__toggle-button'
                 disabled={this.props.editingDisabled}
-                onClick={this.props.onClick}
+                onClick={this.onClick}
                 onKeyDown={this.handleKeyDown}
             >
                 <EllipsisIcon className='ActionsMenu__toggle-button-svg'/>

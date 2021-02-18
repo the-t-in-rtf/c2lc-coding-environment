@@ -1,26 +1,27 @@
 .ActionsMenu__header {
-    position:relative;
     background-color: #cecccc;
-    margin-right: 0;
-    padding-bottom: 0.05rem;
-    padding-top: 0.05rem;
-    text-align:center;
+    display: grid;
+    grid-template-columns: 1fr min-content 1fr;
+    position:relative;
 }
 
 .ActionsMenu__header-heading {
     font-size: inherit;
     font-weight: bold;
-    padding-top: 0.1rem;
+    grid-column-end: 3;
+    grid-column-start: 2;
+    margin: auto 0;
 }
 
 .ActionsMenu__menu {
     background-color: #ffffff;
     border-color: #cecccc;
-    border-style: none solid solid solid;
+    border-style: solid;
+    border-width: 0.3rem;
     left: 8rem;
     overflow: visible;
     position: absolute;
-    top: 1.5rem;
+    top: -0.3rem;
     width: 12rem;
 }
 

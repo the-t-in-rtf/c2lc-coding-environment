@@ -68,8 +68,8 @@ it("Can be toggled open.", () => {
 
     expect(actionsMenu.state("showMenu")).toBe(true);
 
-    const actionMenuItems = wrapper.find(ActionsMenuItem);
-    expect(actionMenuItems.length).toBe(9);
+    const actionsMenuItems = wrapper.find(ActionsMenuItem);
+    expect(actionsMenuItems.length).toBe(9);
 });
 
 it("Cannot be toggled open when editing is disabled.", () => {
@@ -81,8 +81,8 @@ it("Cannot be toggled open when editing is disabled.", () => {
 
     expect(actionsMenu.state("showMenu")).toBe(false);
 
-    const actionMenuItems = wrapper.find(ActionsMenuItem);
-    expect(actionMenuItems.length).toBe(0);
+    const actionsMenuItems = wrapper.find(ActionsMenuItem);
+    expect(actionsMenuItems.length).toBe(0);
 });
 
 it("Can be used to toggle individual items.", () => {

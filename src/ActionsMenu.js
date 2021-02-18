@@ -5,6 +5,7 @@ import type {IntlShape} from 'react-intl';
 
 import ActionsMenuToggle from './ActionsMenuToggle';
 import ActionsMenuItem from './ActionsMenuItem';
+import FocusTrapManager from './FocusTrapManager';
 
 import './ActionsMenu.scss';
 
@@ -25,6 +26,8 @@ type ActionsMenuState = {
 };
 
 class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
+    focusTrapManager: FocusTrapManager;
+
     static defaultProps = {
         changeHandler: () => {},
         editingDisabled: false,
@@ -71,12 +74,14 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
     constructor (props: ActionsMenuProps) {
         super(props);
         this.state = { showMenu: false };
+        this.focusTrapManager = new FocusTrapManager();
+        this.focusTrapManager.setFocusTrap(this.handleCloseActionMenuFocusTrap, [".ActionsMenuItem__button"], ".ActionsMenu__toggle-button");
     }
 
     render() {
         return (
             <React.Fragment>
-                <div className='ActionsMenu__header'>
+                <div className='ActionsMenu__header' onKeyDown={this.focusTrapManager.handleKeyDown}>
                     <h2 className='ActionsMenu__header-heading'>
                         <FormattedMessage id='ActionsMenu.title' />
                     </h2>
@@ -84,7 +89,7 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
                         className='ActionsMenu__header-toggle'
                         intl={this.props.intl}
                         editingDisabled={!!this.props.editingDisabled}
-                        onClick={this.showHideMenu}
+                        handleShowHideMenu={this.showHideMenu}
                     />
 
                     { (!this.props.editingDisabled && this.state.showMenu) ? this.generateMenu(): undefined}
@@ -95,10 +100,22 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
     }
 
     /* istanbul ignore next */
+    handleClick = (event: SyntheticEvent<HTMLElement>) => {
+        event.preventDefault();
+        this.showHideMenu();
+    };
+
+    /* istanbul ignore next */
     handleKeyDown = (event: SyntheticKeyboardEvent<HTMLElement>) => {
         if (event.key === 'Escape') {
+            event.preventDefault();
             this.showHideMenu();
         }
+    }
+
+    /* istanbul ignore next */
+    handleCloseActionMenuFocusTrap = () => {
+        this.setState({ showMenu: false });
     }
 
     showHideMenu = () => {
@@ -132,7 +149,7 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
                 />
             );
         });
-        return (<div className="ActionsMenu__menu" onBlur={this.showHideMenu} onKeyDown={this.handleKeyDown}>
+        return (<div className="ActionsMenu__menu" onKeyDown={this.handleKeyDown}>
             {actionsMenuItems}
         </div>);
     }
