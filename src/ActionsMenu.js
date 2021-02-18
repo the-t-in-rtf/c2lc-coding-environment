@@ -33,6 +33,19 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
         editingDisabled: false,
         usedActions: {},
         menuItems: {
+            // TODO: Uncomment these out once C2LC-206 is merged.
+            // backward1: {
+            //     isAllowed: true,
+            //     labelKey: "Command.backward1"
+            // },
+            // backward2: {
+            //     isAllowed: true,
+            //     labelKey: "Command.backward2"
+            // },
+            // backward3: {
+            //     isAllowed: true,
+            //     labelKey: "Command.backward3"
+            // },
             forward1: {
                 isAllowed: true,
                 labelKey: "Command.forward1"
@@ -42,7 +55,7 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
                 labelKey: "Command.forward2"
             },
             forward3: {
-                isAllowed: false,
+                isAllowed: true,
                 labelKey: "Command.forward3"
             },
             left45: {
@@ -54,7 +67,7 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
                 labelKey: "Command.left90"
             },
             left180: {
-                isAllowed: false,
+                isAllowed: true,
                 labelKey: "Command.left180"
             },
             right45: {
@@ -66,7 +79,7 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
                 labelKey: "Command.right90"
             },
             right180: {
-                isAllowed: false,
+                isAllowed: true,
                 labelKey: "Command.right180"
             }
         }

@@ -99,6 +99,9 @@ export type SpeechRecognition = {
 };
 
 export type ActionToggleRegister = {
+    backward1?: boolean,
+    backward2?: boolean,
+    backward3?: boolean,
     forward1?: boolean,
     forward2?: boolean,
     forward3?: boolean,
