@@ -10,8 +10,8 @@ body {
     box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr min-content minmax(auto, 78rem) 1fr;
-    grid-template-rows: 70px auto 1fr 90px;
-    row-gap: 1rem;
+    grid-template-rows: 60px auto 1fr 90px;
+    row-gap: 0.5rem;
     height: 100vh;
 }
 
@@ -65,7 +65,7 @@ body {
 }
 
 .App__scene-container {
-    margin-right: 1rem;
+    margin-right: 0.5rem;
     grid-column-start: 3;
     grid-column-end: 4;
     grid-row-start: 2;
@@ -107,7 +107,7 @@ body {
 .App__command-palette {
     background-color: #F1F1F1;
     text-align: center;
-    margin: 0 1rem;
+    margin: 0 0.5rem;
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 2;
@@ -136,7 +136,7 @@ body {
 }
 
 .App__program-block-editor {
-    margin-right: 1rem;
+    margin-right: 0.5rem;
     grid-column-start: 3;
     grid-column-end: 4;
     grid-row-start: 3;
