@@ -41,7 +41,7 @@ export class ActionsMenuItem extends React.Component< ActionsMenuItemProps, {} >
                 <div className={'ActionsMenuItem__text' + (this.props.isAllowed ? '' : ' ActionsMenuItem__text--disabled')}>
                     {commandNameShort}
                 </div>
-                <div className="ActionsMenuItem__option" onClick={this.props.onChange}>
+                <div className="ActionsMenuItem__option">
                     <input
                         className="ActionsMenuItem__checkbox"
                         type="checkbox"

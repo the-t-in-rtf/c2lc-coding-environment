@@ -31,6 +31,7 @@ class ActionsMenuToggle extends React.Component<ActionsMenuToggleProps, {}> {
     render() {
         return (
             <div
+                role='button'
                 aria-controls='ActionsMenu'
                 aria-label={this.props.intl.formatMessage({id:'ActionsMenu.toggleActionsMenu'})}
                 aria-expanded={this.props.showMenu}
