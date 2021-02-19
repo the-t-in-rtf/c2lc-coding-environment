@@ -10,6 +10,7 @@ import './ActionsMenuToggle.scss';
 type ActionsMenuToggleProps = {
     intl: IntlShape,
     editingDisabled: boolean,
+    showMenu: boolean;
     handleShowHideMenu: () => void
 };
 
@@ -30,7 +31,9 @@ class ActionsMenuToggle extends React.Component<ActionsMenuToggleProps, {}> {
     render() {
         return (
             <div
+                aria-controls='ActionsMenu'
                 aria-label={this.props.intl.formatMessage({id:'ActionsMenu.toggleActionsMenu'})}
+                aria-expanded={this.props.showMenu}
                 tabIndex='0'
                 className='ActionsMenu__toggle-button'
                 disabled={this.props.editingDisabled}

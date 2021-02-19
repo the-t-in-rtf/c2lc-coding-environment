@@ -88,7 +88,7 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
         super(props);
         this.state = { showMenu: false };
         this.focusTrapManager = new FocusTrapManager();
-        this.focusTrapManager.setFocusTrap(this.handleCloseActionMenuFocusTrap, [".ActionsMenuItem__button"], ".ActionsMenu__toggle-button");
+        this.focusTrapManager.setFocusTrap(this.handleCloseActionMenuFocusTrap, [".ActionsMenu__toggle-button", ".ActionsMenuItem__checkbox"], ".ActionsMenu__toggle-button");
     }
 
     render() {
@@ -103,6 +103,7 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
                         intl={this.props.intl}
                         editingDisabled={!!this.props.editingDisabled}
                         handleShowHideMenu={this.showHideMenu}
+                        showMenu={this.state.showMenu}
                     />
 
                     { (!this.props.editingDisabled && this.state.showMenu) ? this.generateMenu(): undefined}
@@ -162,7 +163,11 @@ class ActionsMenu extends React.Component<ActionsMenuProps, ActionsMenuState> {
                 />
             );
         });
-        return (<div className="ActionsMenu__menu" onKeyDown={this.handleKeyDown}>
+        return (<div
+            id="ActionsMenu"
+            className="ActionsMenu__menu"
+            onKeyDown={this.handleKeyDown}
+        >
             {actionsMenuItems}
         </div>);
     }

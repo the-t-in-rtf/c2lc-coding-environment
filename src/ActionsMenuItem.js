@@ -41,18 +41,20 @@ export class ActionsMenuItem extends React.Component< ActionsMenuItemProps, {} >
                 <div className={'ActionsMenuItem__text' + (this.props.isAllowed ? '' : ' ActionsMenuItem__text--disabled')}>
                     {commandNameShort}
                 </div>
-                <button className="ActionsMenuItem__button" aria-label={showHideAriaLabel} onClick={this.props.onChange}>
+                <div className="ActionsMenuItem__option" onClick={this.props.onChange}>
                     <input
+                        className="ActionsMenuItem__checkbox"
                         type="checkbox"
-                        onChange={this.props.onChange}
+                        aria-label={showHideAriaLabel}
+                        id={commandNameShort}
                         checked={this.props.isAllowed}
-                        disabled={this.props.isUsed}
-                        tabIndex={-1}
+                        aria-disabled={this.props.isUsed}
+                        onChange={this.props.onChange}
                     />
-                    <span className="ActionsMenuItem__button-label">
+                    <label htmlFor={commandNameShort} className="ActionsMenuItem__option-label">
                         {showHideLabel}
-                    </span>
-                </button>
+                    </label>
+                </div>
             </div>
         );
     };

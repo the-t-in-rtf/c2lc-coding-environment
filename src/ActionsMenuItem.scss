@@ -1,18 +1,7 @@
-.ActionsMenuItem__button {
-    width: 4rem;
-    float: right;
-    border: 0;
-    background-color: inherit;
-}
-
-.ActionsMenuItem__button-label {
-    margin-left: 0.5rem;
-}
-
 .ActionsMenuItem {
     border-top: 1px solid #cccccc;
     clear: both;
-    margin: 0.5rem;
+    margin: 0 0.5rem;
     white-space: nowrap;
 }
 
@@ -20,8 +9,27 @@
     border-top: none;
 }
 
+.ActionsMenuItem__checkbox {
+    margin: auto 0;
+}
+
+.ActionsMenuItem__option {
+    background-color: inherit;
+    border: 0;
+    display: flex;
+    float: right;
+    justify-content: space-between;
+    padding: 0.2rem 0;
+    width: 4rem;
+}
+
+.ActionsMenuItem__option-label {
+    margin: auto;
+}
+
 .ActionsMenuItem__text {
     float: left;
+    padding: 0.2rem 0;
 }
 
 .ActionsMenuItem__text--disabled {
