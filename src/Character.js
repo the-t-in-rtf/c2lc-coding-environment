@@ -7,14 +7,14 @@ import { ReactComponent as RabbitIcon } from './svg/Rabbit.svg';
 import './Character.scss';
 
 type CharacterProps = {
-    theme: string,
+    world: string,
     transform: string,
     width: number
 };
 
 export default class Character extends React.Component<CharacterProps, {}> {
     getThemedCharacter = () => {
-        if (this.props.theme === 'space') {
+        if (this.props.world === 'space') {
             return (
                 <SpaceShipIcon
                     className='Character__icon'
@@ -23,7 +23,7 @@ export default class Character extends React.Component<CharacterProps, {}> {
                     width={this.props.width}
                     height={this.props.width} />
             )
-        } else if (this.props.theme === 'forest') {
+        } else if (this.props.world === 'forest') {
             return (
                 <RabbitIcon
                     className='Character__icon'
