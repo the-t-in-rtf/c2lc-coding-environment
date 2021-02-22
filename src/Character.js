@@ -13,6 +13,10 @@ type CharacterProps = {
 };
 
 export default class Character extends React.Component<CharacterProps, {}> {
+    constructor(props: CharacterProps) {
+        super(props);
+        this.characterRef = React.createRef();
+    }
     getThemedCharacter = () => {
         if (this.props.theme === 'space') {
             return (
@@ -47,10 +51,25 @@ export default class Character extends React.Component<CharacterProps, {}> {
     render() {
         return (
             <g
+                ref={this.characterRef}
                 className='Character'
                 transform={this.props.transform}>
                 {this.getThemedCharacter()}
             </g>
         );
+    }
+
+    componentDidMount() {
+        if (this.characterRef.current.scrollIntoView) {
+            this.characterRef.current.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
+        }
+    }
+
+    componentDidUpdate(prevProps: CharacterProps, prevState: {}) {
+        if (prevProps.transform !== this.props.transform) {
+            if (this.characterRef.current.scrollIntoView) {
+                this.characterRef.current.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
+            }
+        }
     }
 }
