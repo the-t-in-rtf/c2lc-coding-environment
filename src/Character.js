@@ -13,10 +13,14 @@ type CharacterProps = {
 };
 
 export default class Character extends React.Component<CharacterProps, {}> {
+    // TODO: Implement flow type for SVGElement
+    characterRef: any;
+
     constructor(props: CharacterProps) {
         super(props);
         this.characterRef = React.createRef();
     }
+
     getThemedCharacter = () => {
         if (this.props.theme === 'space') {
             return (
