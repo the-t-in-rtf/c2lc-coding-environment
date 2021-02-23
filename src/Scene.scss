@@ -2,8 +2,7 @@
 
 // Grid for Scene-container is set in App.scss
 .Scene-container {
-    grid-row-start: 1;
-    grid-row-end: 2;
+    height: 100%;
     overflow: scroll;
 }
 
