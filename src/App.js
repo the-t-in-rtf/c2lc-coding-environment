@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import { Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { injectIntl } from 'react-intl';
 import type {IntlShape} from 'react-intl';
@@ -560,34 +559,31 @@ export class App extends React.Component<AppProps, AppState> {
                     role='main'
                     onClick={this.handleRootClick}
                     onKeyDown={this.handleRootKeyDown}>
-                    <div className='App__header-background' />
                     <header className='App__header'>
-                        <div className='App__title'>
-                            <Row className='App__header-row'>
-                                <h1 className='App__app-heading'>
-                                    <FormattedMessage id='App.appHeading'/>
-                                </h1>
-                                <div className='App__header-right'>
-                                    <div className='App__audio-toggle-switch'>
-                                        <AudioFeedbackToggleSwitch
-                                            value={this.state.audioEnabled}
-                                            onChange={this.handleToggleAudioFeedback} />
-                                    </div>
-                                    {/* Dash connection removed for version 0.5
-                                    <DeviceConnectControl
-                                        disabled={
-                                            !this.appContext.bluetoothApiIsAvailable ||
-                                            this.state.dashConnectionStatus === 'connected' }
-                                        connectionStatus={this.state.dashConnectionStatus}
-                                        onClickConnect={this.handleClickConnectDash}>
-                                        <FormattedMessage id='App.connectToDash' />
-                                    </DeviceConnectControl>
-                                    */}
-                                    {/* Put ThemeSelector back in C2LC-289
-                                    <ThemeSelector onSelect={this.handleChangeTheme} />
-                                    */}
+                        <div className='App__header-row'>
+                            <h1 className='App__app-heading'>
+                                <FormattedMessage id='App.appHeading'/>
+                            </h1>
+                            <div className='App__header-audio-toggle'>
+                                <div className='App__audio-toggle-switch'>
+                                    <AudioFeedbackToggleSwitch
+                                        value={this.state.audioEnabled}
+                                        onChange={this.handleToggleAudioFeedback} />
                                 </div>
-                            </Row>
+                                {/* Dash connection removed for version 0.5
+                                <DeviceConnectControl
+                                    disabled={
+                                        !this.appContext.bluetoothApiIsAvailable ||
+                                        this.state.dashConnectionStatus === 'connected' }
+                                    connectionStatus={this.state.dashConnectionStatus}
+                                    onClickConnect={this.handleClickConnectDash}>
+                                    <FormattedMessage id='App.connectToDash' />
+                                </DeviceConnectControl>
+                                */}
+                                {/* Put ThemeSelector back in C2LC-289
+                                <ThemeSelector onSelect={this.handleChangeTheme} />
+                                */}
+                            </div>
                         </div>
                     </header>
                     {/* Dash connection removed for version 0.5

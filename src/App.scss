@@ -10,42 +10,30 @@ body {
     box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr min-content minmax(auto, 78rem) 1fr;
-    grid-template-rows: 60px auto 1fr 90px;
+    grid-template-rows: auto auto 1fr 90px;
     row-gap: 0.5rem;
     height: 100vh;
 }
 
-.App__header-background {
-    background-color: #000;
-    grid-column-start: 1;
-    grid-column-end: 5;
-    grid-row-start: 1;
-    grid-row-end: 2;
-}
-
 .App__header {
+    margin: 0.5rem 0.5rem 0 0.5rem;
+    background-color: #000;
     color: #FFF;
-    display: flex;
     box-sizing: border-box;
     grid-column-start: 2;
-    grid-column-end: 4;
+    grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 2;
-}
-
-.App__title {
-    width: 100%;
-    padding: 0 2rem;
-    margin: auto 0;
 }
 
 .App__header-row {
-    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
 }
 
-.App__header-right {
-    display: flex;
-    align-items: center;
+.App__header-audio-toggle {
+    margin: auto;
 }
 
 .App__app-heading {
@@ -65,10 +53,11 @@ body {
 }
 
 .App__scene-container {
+    margin-top: 0.5rem;
     margin-right: 0.5rem;
     grid-column-start: 3;
     grid-column-end: 4;
-    grid-row-start: 2;
+    grid-row-start: 1;
     grid-row-end: 3;
     min-height: 12rem;
     min-width: 19.5rem;
