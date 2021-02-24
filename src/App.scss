@@ -17,9 +17,9 @@ body {
 
 .App__header {
     margin: 0.5rem 0.5rem 0 0.5rem;
+    padding: 0 1rem;
     background-color: #000;
     color: #FFF;
-    box-sizing: border-box;
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 1;
@@ -29,14 +29,15 @@ body {
 .App__header-row {
     display: flex;
     flex-direction: column;
-    text-align: center;
 }
 
 .App__header-audio-toggle {
-    margin: auto;
+    margin: 0 auto;
+    margin-bottom: 0.5rem;
 }
 
 .App__app-heading {
+    text-align: center;
     font-weight: normal;
     font-size: 1.3rem;
     margin: 1rem 0;
@@ -70,7 +71,7 @@ body {
 
 .App__scene-controls {
     position: absolute;
-    padding: 0.35rem 0;
+    padding: 1rem 0;
     bottom: 0;
     right: 0;
     display: grid;
@@ -102,7 +103,11 @@ body {
 .App__command-palette-heading {
     font-weight: bold;
     font-size: inherit;
-    margin: 2rem 0;
+    margin: 1.5rem 0;
+}
+
+.App__commandpalette-heading-short {
+    display: none;
 }
 
 .App__command-palette-command-container {
@@ -174,11 +179,32 @@ body {
 }
 
 @media only screen and (max-width: 768px) {
-    .App__command-palette-commands {
-        width: 6rem;
-        padding-left: 1rem;
-        grid-template-columns: repeat(1, 4rem);
+    .App__container {
+        grid-template-rows: auto auto 1fr min-content;
     }
+
+    .App__command-palette-commands {
+        height: 100%;
+        width: 100%;
+        display: block;
+    }
+
+    .App__command-palette-commands > button{
+        margin: 0.5rem 0;
+    }
+
+    .App__commandpalette-heading-short {
+        display: block;
+    }
+
+    .App__commandpalette-heading-long {
+        display: none;
+    }
+
+    .App__playAndShare-container {
+        padding-bottom: 2rem;
+    }
+
 }
 
 @media only screen and (max-width: 414px) {

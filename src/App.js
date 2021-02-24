@@ -596,8 +596,11 @@ export class App extends React.Component<AppProps, AppState> {
                     }
                     */}
                     <div className='App__command-palette'>
-                        <h2 className='App__command-palette-heading'>
+                        <h2 className='App__command-palette-heading App__commandpalette-heading-long'>
                             <FormattedMessage id='CommandPalette.movementsTitle' />
+                        </h2>
+                        <h2 className='App__command-palette-heading App__commandpalette-heading-short'>
+                            <FormattedMessage id='CommandPalette.shortMovementsTitle' />
                         </h2>
                         <div className='App__command-palette-command-container'>
                             <div className='App__command-palette-commands'>
