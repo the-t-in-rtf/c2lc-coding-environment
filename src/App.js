@@ -686,7 +686,7 @@ export class App extends React.Component<AppProps, AppState> {
             const params = new C2lcURLParams(window.location.search);
             const programQuery = params.getProgram();
             const characterStateQuery = params.getCharacterState();
-            const themeQuery = params.getTheme();
+            // const themeQuery = params.getTheme();
             if (programQuery != null && characterStateQuery != null) {
                 try {
                     this.setState({
@@ -698,11 +698,11 @@ export class App extends React.Component<AppProps, AppState> {
                     console.log(err.toString());
                 }
             }
-            this.setStateSettings({ theme: Utils.getThemeFromString(themeQuery, 'default') });
+            // this.setStateSettings({ theme: Utils.getThemeFromString(themeQuery, 'default') });
         } else {
             const localProgram = window.localStorage.getItem('c2lc-program');
             const localCharacterState = window.localStorage.getItem('c2lc-characterState');
-            const localTheme = window.localStorage.getItem('c2lc-theme');
+            // const localTheme = window.localStorage.getItem('c2lc-theme');
             if (localProgram != null && localCharacterState != null) {
                 try {
                     this.setState({
@@ -714,7 +714,7 @@ export class App extends React.Component<AppProps, AppState> {
                     console.log(err.toString());
                 }
             }
-            this.setStateSettings({ theme: Utils.getThemeFromString(localTheme, 'default') });
+            // this.setStateSettings({ theme: Utils.getThemeFromString(localTheme, 'default') });
         }
     }
 
@@ -728,7 +728,7 @@ export class App extends React.Component<AppProps, AppState> {
                 {
                     p: serializedProgram,
                     c: serializedCharacterState,
-                    t: this.state.settings.theme
+                    // t: this.state.settings.theme
                 },
                 '',
                 Utils.generateEncodedProgramURL(this.version, this.state.settings.theme, serializedProgram, serializedCharacterState)
@@ -736,7 +736,7 @@ export class App extends React.Component<AppProps, AppState> {
             window.localStorage.setItem('c2lc-version', this.version);
             window.localStorage.setItem('c2lc-program', serializedProgram);
             window.localStorage.setItem('c2lc-characterState', serializedCharacterState);
-            window.localStorage.setItem('c2lc-theme', this.state.settings.theme);
+            // window.localStorage.setItem('c2lc-theme', this.state.settings.theme);
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
@@ -745,15 +745,15 @@ export class App extends React.Component<AppProps, AppState> {
                 && this.state.runningState === 'running') {
             this.interpreter.startRun();
         }
-        if (this.state.settings.theme !== prevState.settings.theme) {
-            if (document.body) {
-                if (this.state.settings.theme === 'default') {
-                    document.body.className = '';
-                } else {
-                    document.body.className = `${this.state.settings.theme}-theme`;
-                }
-            }
-        }
+        // if (this.state.settings.theme !== prevState.settings.theme) {
+        //     if (document.body) {
+        //         if (this.state.settings.theme === 'default') {
+        //             document.body.className = '';
+        //         } else {
+        //             document.body.className = `${this.state.settings.theme}-theme`;
+        //         }
+        //     }
+        // }
         if (this.state.selectedAction !== prevState.selectedAction) {
             const messagePayload = {};
             const announcementKey = this.state.selectedAction ?
