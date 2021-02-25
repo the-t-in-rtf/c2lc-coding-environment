@@ -1,9 +1,18 @@
 @import 'variables';
 
-.ThemeSelector {
+.WorldSelector {
     margin-left: 2rem;
 }
 
-.ThemeSelector button:focus {
+.WorldSelector button {
+    padding-top: 0.25rem;
+    max-height: 2.4rem;
+}
+
+.WorldSelector button:focus {
     box-shadow: 0 0 0 $c2lc-focus-indicator-width #299DCE;
+}
+
+.WorldSelector button.btn:hover {
+    padding-top: 0.25rem;
 }

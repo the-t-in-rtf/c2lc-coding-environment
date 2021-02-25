@@ -15,7 +15,7 @@ type ThemeSelectorProps = {
 class ThemeSelector extends React.Component<ThemeSelectorProps, {}> {
     render() {
         return (
-            <DropdownButton className='WorldSelector' onSelect={this.props.onSelect} title={`${this.props.intl.formatMessage({id:'ThemeSelector.theme'})}`}>
+            <DropdownButton className='WorldSelector' onSelect={this.props.onSelect} title={`${this.props.intl.formatMessage({id:'WorldSelector.world'})}`}>
                 {
                     /* $FlowFixMe
                         Cannot get Dropdown.Item because property Item is missing in statics of Dropdown
