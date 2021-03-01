@@ -6,14 +6,17 @@ button.btn.PlayButton {
     border: 1px solid #FFF;
     border-radius: 50%;
     background-color: #FFF;
+    padding: 0;
 }
 
 button.btn.PlayButton--play {
-    padding: 0.6rem 0.45rem 0.6rem 0.75rem;
+    width: 4.6rem;
+    height: 4.6rem;
 }
 
 button.btn.PlayButton--pause {
-    padding: 0.6rem 0.6rem 0.6rem 0.6rem;
+    width: 4.6rem;
+    height: 4.6rem;
 }
 
 button.btn.PlayButton:not(:focus) {
@@ -27,9 +30,8 @@ button.btn.PlayButton:hover {
 
 button.btn.PlayButton svg {
     fill: #000;
-    width: 1.7rem;
-    height: 1.7rem;
 }
+
 
 button.btn.PlayButton--play.PlayButton--disabled {
     background-color: $c2lc-primary-button-color;

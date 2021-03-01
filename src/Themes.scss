@@ -1,0 +1,422 @@
+/* Colours used across themes */
+// TODO: Come up with a rational way of distinguishing these.
+$c2lc-very-very-very-dark-green-color: #18252C;
+$c2lc-very-very-dark-green-color: #22343C;
+$c2lc-very-dark-green-color: #30444E;
+$c2lc-dark-green-color: #4C9990;
+$c2lc-medium-green-color: #CCE6E2;
+$c2lc-light-green-color: #EBFAF8;
+$c2lc-light-grey-color: #F1F2F4;
+$c2lc-medium-grey-color: #D5D8DD;
+$c2lc-slightly-dark-grey-color: #C4C4C4;
+$c2lc-dark-grey-color: #818A98;
+$c2lc-very-dark-grey-color: #67717E;
+$c2lc-vivid-orange-color: #F97953;
+$c2lc-very-very-very-dark-blue-color: #33717F;
+
+
+/* "Mixed" Theme */
+
+body.mixed-theme {
+    background-color: #FFF;
+
+    button.btn.ProgramBlockEditor__program-deleteAll-button {
+        border: none;
+        background-color: $c2lc-dark-green-color;
+    }
+
+    .App__container {
+        background-color: #FFF;
+    }
+    
+    .App__header {
+        background-color: #FFF;
+        color: #000;
+    }
+    
+    .App__command-palette {
+        background-color: $c2lc-very-dark-green-color;
+    }
+
+    .App__command-palette-heading {
+        color: #F1AE5B;
+    }
+
+    .App__playAndShare-background {
+        background-color: $c2lc-medium-grey-color;
+    }
+   
+    .ProgramBlockEditor__header {
+        background-color: $c2lc-medium-green-color;
+    }
+
+    .ProgramBlockEditor__character-column {
+        background-color: $c2lc-very-dark-green-color;
+    }
+   
+    .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch--checked {
+        background-color: $c2lc-dark-green-color;
+    }
+    
+    .ProgramBlockEditor__program-sequence-scroll-container {
+        background-color: $c2lc-very-very-dark-green-color;
+    }
+
+    .ProgramSpeedController__slider {
+        ::-webkit-slider-runnable-track {
+            background-color: black;
+        }
+          
+        ::-webkit-slider-thumb {
+            border: 2px solid black;
+            background-color: $c2lc-vivid-orange-color;
+            box-shadow: -80px 0 0 80px $c2lc-vivid-orange-color;
+        }
+    
+        ::-moz-range-progress {
+            background-color: $c2lc-vivid-orange-color; 
+        }
+        ::-moz-range-track {
+            background-color: black;
+        }
+        ::-ms-fill-lower {
+            background-color: $c2lc-vivid-orange-color; 
+        }
+        ::-ms-fill-upper {  
+            background-color: black;
+        }
+    }
+    
+    .Scene__grid-line {
+        stroke: $c2lc-light-green-color;
+    }
+}
+
+/* Light Theme */
+
+body.light-theme {
+    background-color: #FFF;
+
+    .App__container {
+        background-color: #FFF;
+    }
+    
+    .App__header {
+        background-color: #FFF;
+        color: #000;
+    }
+    
+    .App__command-palette {
+        background-color: $c2lc-medium-green-color;
+    }
+    
+    .App__playAndShare-background {
+        background-color: $c2lc-medium-grey-color;
+    }
+   
+    // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
+    #command-block--forward1,
+    #command-block--forward2,
+    #command-block--forward3,
+    #command-block--left45,
+    #command-block--left90,
+    #command-block--left180,
+    #command-block--right45,
+    #command-block--right90,
+    #command-block--right180,
+    // TODO: Add backward commands to the above.
+    .command-block {
+        svg {
+            path, circle, rect {
+                stroke: white;
+            }
+            circle, rect, path.filled {
+                fill: white;
+            }                        
+        }
+    }
+
+    .ProgramBlockEditor__header {
+        background-color: $c2lc-medium-green-color;
+    }
+
+    .ProgramBlockEditor__character-column {
+        background-color: $c2lc-light-green-color;
+    }
+   
+    .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch--checked {
+        background-color: $c2lc-dark-green-color;
+    }
+    
+    button.btn.ProgramBlockEditor__program-deleteAll-button {
+        border: none;
+        background-color: $c2lc-dark-green-color;
+    }
+
+    .Scene {
+        background-color: white;
+    }
+
+    .Scene__grid-line {
+        stroke: $c2lc-light-grey-color;
+    }
+}
+
+
+/* Dark Theme */
+
+body.dark-theme {
+    background-color: $c2lc-very-very-very-dark-green-color;
+
+    .App__app-heading {
+        color: white;
+    }
+
+    .App__command-palette {
+        background-color: $c2lc-very-dark-green-color;
+    }
+
+    .App__command-palette-heading {
+        color: #F1AE5B;
+    }
+
+    .App__shareButton-container button {
+        background-color: $c2lc-dark-green-color;
+        color: $c2lc-light-green-color;
+    }
+
+    .ProgramBlockEditor__character-column {
+        background-color: $c2lc-very-dark-green-color;
+    }
+
+    .ProgramBlockEditor__header {
+        background-color: $c2lc-very-very-very-dark-blue-color;
+    }
+
+    .ProgramBlockEditor__program-sequence-scroll-container {
+        background-color: $c2lc-very-very-dark-green-color;
+    }
+
+    .Scene {
+        background-color: $c2lc-very-very-dark-green-color;
+    }
+}
+
+
+/* Grayscale Theme */
+
+body.gray-theme {
+    background-color: #FFF;
+
+    .App__container {
+        background-color: #FFF;
+    }
+    
+    .App__header {
+        background-color: #FFF;
+        color: #000;
+    }
+    
+    .App__command-palette {
+        background-color: $c2lc-light-grey-color;
+    }
+    
+    .App__command-palette-heading {
+        color: $c2lc-dark-grey-color;
+    }
+
+    .App__playAndShare-background {
+        background-color: $c2lc-medium-grey-color;
+    }
+
+    button.btn.PlayButton, button.btn.StopButton {
+        svg {
+            path {
+                fill: white;
+                stroke: $c2lc-slightly-dark-grey-color;     
+            }
+            circle {
+                fill: $c2lc-very-dark-grey-color;
+            }
+        }
+    }
+
+    // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
+    #command-block--forward1,
+    #command-block--forward2,
+    #command-block--forward3,
+    #command-block--left45,
+    #command-block--left90,
+    #command-block--left180,
+    #command-block--right45,
+    #command-block--right90,
+    #command-block--right180,
+    // TODO: Add backward commands to the above.
+    .command-block {
+        border-color: $c2lc-dark-grey-color;
+        background: $c2lc-dark-grey-color;
+
+        svg {
+            path, circle, rect {
+                stroke: white;
+            }
+            circle, rect, path.filled {
+                fill: white;
+            }                        
+        }
+    }
+
+    .AddNode__collapsed-icon {
+        background-color: black;
+    }
+
+    .AddNode__expanded-button {
+        border: 2px solid black;
+        box-shadow: none;
+    }
+    
+    .ProgramBlockEditor__character-column {
+        background-color: $c2lc-light-grey-color;
+    }
+
+    .ProgramBlockEditor__character-column-character-container {
+        background-color: inherit;
+    }
+
+    .ProgramBlockEditor__start-indicator {
+        border-color: $c2lc-dark-grey-color;
+        background: $c2lc-dark-grey-color;
+    }
+}
+
+/* High Contrast "Mono" Theme */
+
+body.contrast-theme {
+    background-color: black;
+
+    .AddNode__collapsed-icon {
+        background-color: white;
+        svg {
+            stroke: black;
+            fill: black;
+        }
+    }
+
+    .AddNode__expanded-button {
+        border: 2px solid white;
+        background-color: black;
+        box-shadow: none;
+        svg {
+            stroke: white;
+            fill: white;
+        }
+    }
+
+    .AddNode__expanded-button:hover {
+        svg {
+            stroke: black;
+            fill: black;
+        }
+    }
+
+    .App__container {
+        background-color: black;
+    }
+    
+    .App__header {
+        background-color: black;
+        color: white;
+    }
+    
+    .App__command-palette {
+        background-color: black;
+    }
+    
+    .App__command-palette-heading {
+        color: white;
+    }
+
+    .App__playAndShare-background {
+        background-color: white;
+    }
+
+    .App__shareButton-container button {
+        background-color: black;
+        color: white;
+    }
+
+    button.btn.PlayButton, button.btn.StopButton {
+        svg {
+            path {
+                fill: white;
+                stroke: white;     
+            }
+            circle {
+                fill: black;
+            }
+        }
+    }
+
+    // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
+    #command-block--forward1,
+    #command-block--forward2,
+    #command-block--forward3,
+    #command-block--left45,
+    #command-block--left90,
+    #command-block--left180,
+    #command-block--right45,
+    #command-block--right90,
+    #command-block--right180,
+    // TODO: Add backward commands to the above.
+    .command-block {
+        border-color: white;
+        background: white;
+
+        svg {
+            path, circle, rect {
+                stroke: black;
+            }
+            circle, rect, path.filled {
+                fill: black;
+            }                        
+        }
+    }
+
+    .PenDownToggleSwitch {
+        background-color: white;
+        .ToggleSwitch__switch-inner-circle {
+            background-color: black;
+            svg {
+                path {
+                    stroke: white;
+                }
+            }
+        }
+    }
+
+    .ProgramBlockEditor__character-column {
+        background-color: black;
+    }
+
+    .ProgramBlockEditor__character-column-character-container {
+        background-color: white;
+    }
+
+    .ProgramBlockEditor__program-sequence-scroll-container {
+        background-color: black;
+    }
+
+    .ProgramBlockEditor__start-indicator {
+        border-color: white;
+        background: white;
+        color: black;
+    }
+
+    .Scene {
+        background-color: black;
+    }
+
+    .ThemeSelector.btn {
+        background-color: white;
+    }
+}

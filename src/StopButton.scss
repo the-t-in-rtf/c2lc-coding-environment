@@ -1,15 +1,15 @@
 @import 'variables';
 
 .StopButton-svg {
-    fill: #000;
     width: 1.7rem;
     height: 1.7rem;
 }
 
 button.btn.StopButton {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    padding: 0.6rem;
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+    margin-top: 1.8rem;
     border: 1px solid #FFF;
     border-radius: 50%;
     background-color: #FFF;

@@ -7,9 +7,44 @@
 }
 
 .ProgramSpeedController__slider {
-    width: 8rem;
+    -webkit-appearance: none;
+    background-color: black;
+    height: 8px;
     margin-left: 0.3rem;
     margin-right: 0.3rem;
+    overflow: visible;
+    width: 8rem;
+      
+    ::-webkit-slider-runnable-track {
+        -webkit-appearance: none;
+        border-radius: 50%;
+        background-color: black;
+        height:8px;
+        overflow-x: clip;
+        overflow-y: visible;
+    }
+      
+    ::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: blue;
+        box-shadow: -80px 0 0 80px blue;
+    }
+
+    ::-moz-range-progress {
+        background-color: #43e5f7; 
+    }
+    ::-moz-range-track {
+        background-color: #9a905d;
+    }
+    ::-ms-fill-lower {
+        background-color: #43e5f7; 
+    }
+    ::-ms-fill-upper {  
+        background-color: #9a905d;
+    }
 }
 
 .form-control-range:focus,

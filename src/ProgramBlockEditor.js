@@ -16,8 +16,9 @@ import ToggleSwitch from './ToggleSwitch';
 import { ReactComponent as AddIcon } from './svg/Add.svg';
 import { ReactComponent as DeleteAllIcon } from './svg/DeleteAll.svg';
 import { ReactComponent as RobotIcon } from './svg/Robot.svg';
-import { ReactComponent as SpaceShipIcon } from './svg/SpaceShip.svg';
-import { ReactComponent as RabbitIcon } from './svg/Rabbit.svg';
+// TODO: Reenable / reconcile with "Worlds" work in C2LC-280.
+// import { ReactComponent as SpaceShipIcon } from './svg/SpaceShip.svg';
+// import { ReactComponent as RabbitIcon } from './svg/Rabbit.svg';
 import './ProgramBlockEditor.scss';
 
 // TODO: Send focus to Delete toggle button on close of Delete All confirmation
@@ -512,23 +513,27 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
     }
 
     getThemedCharacterAriaLabel() {
-        if (this.props.theme === 'space') {
-            return this.props.intl.formatMessage({id:'ProgramBlockEditor.spaceShipCharacter'});
-        } else if (this.props.theme === 'forest') {
-            return this.props.intl.formatMessage({id:'ProgramBlockEditor.rabbitCharacter'});
-        } else {
-            return this.props.intl.formatMessage({id:'ProgramBlockEditor.robotCharacter'});
-        }
+        return this.props.intl.formatMessage({id:'ProgramBlockEditor.robotCharacter'});
+        // TODO: Reenable / reconcile with "Worlds" work in C2LC-280.
+        // if (this.props.theme === 'space') {
+        //     return this.props.intl.formatMessage({id:'ProgramBlockEditor.spaceShipCharacter'});
+        // } else if (this.props.theme === 'forest') {
+        //     return this.props.intl.formatMessage({id:'ProgramBlockEditor.rabbitCharacter'});
+        // } else {
+        //     return this.props.intl.formatMessage({id:'ProgramBlockEditor.robotCharacter'});
+        // }
     }
 
     getThemedCharacter() {
-        if (this.props.theme === 'space') {
-            return <SpaceShipIcon className='ProgramBlockEditor__character-column-character' />
-        } else if (this.props.theme === 'forest') {
-            return <RabbitIcon className='ProgramBlockEditor__character-column-character' />
-        } else {
-            return <RobotIcon className='ProgramBlockEditor__character-column-character' />
-        }
+        return <RobotIcon className='ProgramBlockEditor__character-column-character' />
+        // TODO: Reenable / reconcile with "Worlds" work in C2LC-280.
+        // if (this.props.theme === 'space') {
+        //     return <SpaceShipIcon className='ProgramBlockEditor__character-column-character' />
+        // } else if (this.props.theme === 'forest') {
+        //     return <RabbitIcon className='ProgramBlockEditor__character-column-character' />
+        // } else {
+        //     return <RobotIcon className='ProgramBlockEditor__character-column-character' />
+        // }
     }
 
     render() {

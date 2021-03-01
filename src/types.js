@@ -11,7 +11,18 @@ export type DeviceConnectionStatus = 'notConnected' | 'connecting' | 'connected'
 
 export type EditorMode = 'text' | 'block';
 
-export type ThemeName = 'default' | 'forest' | 'space';
+/*
+
+    These theme names are shorthand for:
+
+    "mixed"    => A mixture of light and dark elements, with colour.
+    "light"    => A light theme, with colour.
+    "dark"     => A dark theme, with colour.
+    "gray"     => A grayscale theme, without colour.
+    "contrast" => A high-contrast black and white theme.
+
+*/
+export type ThemeName = 'mixed' | 'light' | 'dark' | 'gray' | 'contrast';
 
 export type Program = Array<string>;
 

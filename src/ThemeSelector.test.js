@@ -36,13 +36,14 @@ function getThemeSelector(wrapper) {
 }
 
 describe('When rendering selector options', () => {
-    test('there should be default, forest, and space options', () => {
-        expect.assertions(3);
+    test('All themes should be displayed as options', () => {
+        expect.assertions(4);
         const wrapper = createMountThemeSelector();
         const selectorOptions = getThemeSelector(wrapper).get(0).props.children;
-        expect(selectorOptions[0].props.eventKey).toBe('default');
-        expect(selectorOptions[1].props.eventKey).toBe('space');
-        expect(selectorOptions[2].props.eventKey).toBe('forest');
+        expect(selectorOptions[0].props.eventKey).toBe('light');
+        expect(selectorOptions[1].props.eventKey).toBe('dark');
+        expect(selectorOptions[2].props.eventKey).toBe('mono');
+        expect(selectorOptions[2].props.eventKey).toBe('high');
     });
 })
 

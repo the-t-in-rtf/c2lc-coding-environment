@@ -29,11 +29,10 @@ import ShareButton from './ShareButton';
 import type { AudioManager, DeviceConnectionStatus, RobotDriver, RunningState, ThemeName } from './types';
 import * as Utils from './Utils';
 import './App.scss';
-import './Themes.css';
+import './Themes.scss';
 import './vendor/dragdroptouch/DragDropTouch.js';
-/* Put ThemeSelector back in C2LC-289
 import ThemeSelector from './ThemeSelector';
-*/
+
 /* Dash connection removed for version 0.5
 import BluetoothApiWarning from './BluetoothApiWarning';
 import DeviceConnectControl from './DeviceConnectControl';
@@ -41,7 +40,6 @@ import DeviceConnectControl from './DeviceConnectControl';
 
 // Uncomment to use the FakeRobotDriver (see driver construction below also)
 //import FakeRobotDriver from './FakeRobotDriver';
-
 
 type AppContext = {
     bluetoothApiIsAvailable: boolean
@@ -103,7 +101,7 @@ export class App extends React.Component<AppProps, AppState> {
             settings: {
                 language: 'en',
                 addNodeExpandedMode: true,
-                theme: 'default'
+                theme: 'mixed'
             },
             dashConnectionStatus: 'notConnected',
             showDashConnectionError: false,
@@ -580,10 +578,8 @@ export class App extends React.Component<AppProps, AppState> {
                                     <FormattedMessage id='App.connectToDash' />
                                 </DeviceConnectControl>
                                 */}
-                                {/* Put ThemeSelector back in C2LC-289
-                                <ThemeSelector onSelect={this.handleChangeTheme} />
-                                */}
                             </div>
+                            <ThemeSelector onSelect={this.handleChangeTheme} />
                         </div>
                     </header>
                     {/* Dash connection removed for version 0.5
@@ -686,7 +682,7 @@ export class App extends React.Component<AppProps, AppState> {
             const params = new C2lcURLParams(window.location.search);
             const programQuery = params.getProgram();
             const characterStateQuery = params.getCharacterState();
-            // const themeQuery = params.getTheme();
+            const themeQuery = params.getTheme();
             if (programQuery != null && characterStateQuery != null) {
                 try {
                     this.setState({
@@ -698,11 +694,11 @@ export class App extends React.Component<AppProps, AppState> {
                     console.log(err.toString());
                 }
             }
-            // this.setStateSettings({ theme: Utils.getThemeFromString(themeQuery, 'default') });
+            this.setStateSettings({ theme: Utils.getThemeFromString(themeQuery, 'light') });
         } else {
             const localProgram = window.localStorage.getItem('c2lc-program');
             const localCharacterState = window.localStorage.getItem('c2lc-characterState');
-            // const localTheme = window.localStorage.getItem('c2lc-theme');
+            const localTheme = window.localStorage.getItem('c2lc-theme');
             if (localProgram != null && localCharacterState != null) {
                 try {
                     this.setState({
@@ -714,7 +710,7 @@ export class App extends React.Component<AppProps, AppState> {
                     console.log(err.toString());
                 }
             }
-            // this.setStateSettings({ theme: Utils.getThemeFromString(localTheme, 'default') });
+            this.setStateSettings({ theme: Utils.getThemeFromString(localTheme, 'light') });
         }
     }
 
@@ -728,7 +724,7 @@ export class App extends React.Component<AppProps, AppState> {
                 {
                     p: serializedProgram,
                     c: serializedCharacterState,
-                    // t: this.state.settings.theme
+                    t: this.state.settings.theme
                 },
                 '',
                 Utils.generateEncodedProgramURL(this.version, this.state.settings.theme, serializedProgram, serializedCharacterState)
@@ -736,7 +732,7 @@ export class App extends React.Component<AppProps, AppState> {
             window.localStorage.setItem('c2lc-version', this.version);
             window.localStorage.setItem('c2lc-program', serializedProgram);
             window.localStorage.setItem('c2lc-characterState', serializedCharacterState);
-            // window.localStorage.setItem('c2lc-theme', this.state.settings.theme);
+            window.localStorage.setItem('c2lc-theme', this.state.settings.theme);
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
             this.audioManager.setAudioEnabled(this.state.audioEnabled);
@@ -745,15 +741,12 @@ export class App extends React.Component<AppProps, AppState> {
                 && this.state.runningState === 'running') {
             this.interpreter.startRun();
         }
-        // if (this.state.settings.theme !== prevState.settings.theme) {
-        //     if (document.body) {
-        //         if (this.state.settings.theme === 'default') {
-        //             document.body.className = '';
-        //         } else {
-        //             document.body.className = `${this.state.settings.theme}-theme`;
-        //         }
-        //     }
-        // }
+
+        // As long as we have no underlying "default" theme styles, we need to always set this to ensure that the default theme is applied on startup.
+        if (document.body) {
+            document.body.className = `${this.state.settings.theme}-theme`;
+        }
+
         if (this.state.selectedAction !== prevState.selectedAction) {
             const messagePayload = {};
             const announcementKey = this.state.selectedAction ?

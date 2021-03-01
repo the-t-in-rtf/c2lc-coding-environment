@@ -21,14 +21,24 @@ function makeDelayedPromise(timeMs: number): Promise<void> {
 }
 
 function generateEncodedProgramURL(versionString: string, themeString: string, programString: string, characterStateString: string): string {
-    // return `?v=${encodeURIComponent(versionString)}&t=${themeString}&p=${encodeURIComponent(programString)}&c=${encodeURIComponent(characterStateString)}`;
-    return `?v=${encodeURIComponent(versionString)}&p=${encodeURIComponent(programString)}&c=${encodeURIComponent(characterStateString)}`;
+    return `?v=${encodeURIComponent(versionString)}&t=${encodeURIComponent(themeString)}&p=${encodeURIComponent(programString)}&c=${encodeURIComponent(characterStateString)}`;
 }
 
+
+/*
+    "mixed"    => A mixture of light and dark elements, with colour.
+    "light"    => A light theme, with colour.
+    "dark"     => A dark theme, with colour.
+    "gray"     => A grayscale theme, without colour.
+    "contrast" => A high-contrast black and white theme.
+*/
 function getThemeFromString(themeQuery: ?string, defaultThemeName: ThemeName): ThemeName {
     switch (themeQuery) {
-        case('space'): return 'space';
-        case('forest'): return 'forest';
+        case('mixed'): return 'mixed';
+        case('dark'): return 'dark';
+        case('light'): return 'light';
+        case('gray'): return 'gray';
+        case('contrast'): return 'contrast';
         default: return defaultThemeName;
     }
 }
