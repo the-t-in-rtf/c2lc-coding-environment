@@ -6,48 +6,71 @@
     align-items: center;
 }
 
+
+  
+
 .ProgramSpeedController__slider {
     -webkit-appearance: none;
-    background-color: black;
-    height: 8px;
+    border: 0;
+    background-color: inherit;
+    height: 16px;
     margin-left: 0.3rem;
     margin-right: 0.3rem;
-    overflow: visible;
-    width: 8rem;
-      
-    ::-webkit-slider-runnable-track {
+    overflow: hidden;
+
+    &:focus {
+        outline-color: $c2lc-focus-indicator-color;
+        outline-offset: 2px;
+        outline-width: 2px;
+        outline-style: solid;    
+    }
+
+    &::-webkit-slider-runnable-track {
+        border: 0;
         -webkit-appearance: none;
-        border-radius: 50%;
         background-color: black;
         height:8px;
-        overflow-x: clip;
-        overflow-y: visible;
+        overflow: hidden;
     }
-      
-    ::-webkit-slider-thumb {
+
+    &::-webkit-slider-thumb {
         -webkit-appearance: none;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
+        width: 8px;
+        height: 8px;
+        border: 0;
+        border-left-color: blue;
+        border-radius: 0;
         background-color: blue;
-        box-shadow: -80px 0 0 80px blue;
+        box-shadow: -8rem 0 0 8rem blue;
+    }
+    
+    &::-moz-range-thumb {
+        width: 8px;
+        height: 8px;
+        border: 0;
+        border-radius: 0;
+        border: 2px solid black;
+        background-color: black;
+        box-shadow: -8rem 0 0 8rem blue;
     }
 
-    ::-moz-range-progress {
+    &::-moz-range-progress {
+        height:8px;
         background-color: #43e5f7; 
+        overflow: hidden;
     }
-    ::-moz-range-track {
-        background-color: #9a905d;
-    }
-    ::-ms-fill-lower {
-        background-color: #43e5f7; 
-    }
-    ::-ms-fill-upper {  
-        background-color: #9a905d;
-    }
-}
 
-.form-control-range:focus,
-.form-control-range:focus::-webkit-slider-runnable-track{
-    outline: $c2lc-focus-indicator-color auto;
+    &::-moz-range-track {
+        height:8px;
+        overflow: hidden;
+        background-color: #9a905d;
+    }
+
+    &::-ms-fill-lower {
+        background-color: #43e5f7; 
+    }
+
+    &::-ms-fill-upper {  
+        background-color: #9a905d;
+    }
 }

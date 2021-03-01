@@ -63,26 +63,33 @@ body.mixed-theme {
     }
 
     .ProgramSpeedController__slider {
-        ::-webkit-slider-runnable-track {
+        &::-webkit-slider-runnable-track {
             background-color: black;
         }
-          
-        ::-webkit-slider-thumb {
+        &::-webkit-slider-thumb {
             border: 2px solid black;
             background-color: $c2lc-vivid-orange-color;
-            box-shadow: -80px 0 0 80px $c2lc-vivid-orange-color;
+            box-shadow: -8rem 0 0 8rem $c2lc-vivid-orange-color;
         }
     
-        ::-moz-range-progress {
+        &::-moz-range-thumb {
+            border-radius: 0;
+            border: 2px solid black;
+            background-color: $c2lc-vivid-orange-color;
+            box-shadow: -8rem 0 0 8rem $c2lc-vivid-orange-color;
+        }
+
+        &::-moz-range-progress {
             background-color: $c2lc-vivid-orange-color; 
         }
-        ::-moz-range-track {
+        &::-moz-range-track {
             background-color: black;
         }
-        ::-ms-fill-lower {
+
+        &::-ms-fill-lower {
             background-color: $c2lc-vivid-orange-color; 
         }
-        ::-ms-fill-upper {  
+        &::-ms-fill-upper {  
             background-color: black;
         }
     }
