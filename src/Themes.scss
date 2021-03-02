@@ -38,6 +38,15 @@ body.mixed-theme {
         background-color: $c2lc-very-dark-green-color;
     }
 
+    .App__command-palette-command-container {
+        &::-webkit-scrollbar {
+            background-color: $c2lc-very-dark-green-color;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: $c2lc-medium-green-color;
+        }
+    }
+
     .App__command-palette-heading {
         color: #F1AE5B;
     }
@@ -117,6 +126,15 @@ body.light-theme {
         background-color: $c2lc-medium-green-color;
     }
     
+    .App__command-palette-command-container {
+        &::-webkit-scrollbar {
+            background-color: $c2lc-medium-green-color;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: $c2lc-light-green-color;
+        }
+    }
+
     .App__playAndShare-background {
         background-color: $c2lc-medium-grey-color;
     }
@@ -183,6 +201,15 @@ body.dark-theme {
         background-color: $c2lc-very-dark-green-color;
     }
 
+    .App__command-palette-command-container {
+        &::-webkit-scrollbar {
+            background-color: $c2lc-very-dark-green-color;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: $c2lc-dark-green-color;
+        }
+    }
+
     .App__command-palette-heading {
         color: #F1AE5B;
     }
@@ -228,6 +255,15 @@ body.gray-theme {
         background-color: $c2lc-light-grey-color;
     }
     
+    .App__command-palette-command-container {
+        &::-webkit-scrollbar {
+            background-color: $c2lc-light-grey-color;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: $c2lc-medium-grey-color;
+        }
+    }
+
     .App__command-palette-heading {
         color: $c2lc-dark-grey-color;
     }
@@ -338,7 +374,17 @@ body.contrast-theme {
     .App__command-palette {
         background-color: black;
     }
-    
+
+    .App__command-palette-command-container {
+        &::-webkit-scrollbar {
+            background-color: black;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: black;
+            border: 2px solid white;
+        }
+    }
+
     .App__command-palette-heading {
         color: white;
     }
