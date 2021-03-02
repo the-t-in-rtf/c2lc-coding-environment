@@ -9,7 +9,7 @@ body {
     background-color: #FFF;
     box-sizing: border-box;
     display: grid;
-    grid-template-columns: 1fr min-content minmax(auto, 78rem) 1fr;
+    grid-template-columns: 1fr min-content minmax(auto, 78rem) min-content 1fr;
     grid-template-rows: 60px auto 1fr 90px;
     row-gap: 0.5rem;
     height: 100vh;
@@ -148,7 +148,7 @@ body {
     grid-column-start: 3;
     grid-column-end: 5;
     grid-row-start: 3;
-    grid-row-end: 4;
+    grid-row-end: 5;
     height: auto;
 }
 
