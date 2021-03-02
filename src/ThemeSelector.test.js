@@ -37,13 +37,14 @@ function getThemeSelector(wrapper) {
 
 describe('When rendering selector options', () => {
     test('All themes should be displayed as options', () => {
-        expect.assertions(4);
+        expect.assertions(5);
         const wrapper = createMountThemeSelector();
         const selectorOptions = getThemeSelector(wrapper).get(0).props.children;
-        expect(selectorOptions[0].props.eventKey).toBe('light');
-        expect(selectorOptions[1].props.eventKey).toBe('dark');
-        expect(selectorOptions[2].props.eventKey).toBe('mono');
-        expect(selectorOptions[2].props.eventKey).toBe('high');
+        expect(selectorOptions[0].props.eventKey).toBe('mixed');
+        expect(selectorOptions[1].props.eventKey).toBe('light');
+        expect(selectorOptions[2].props.eventKey).toBe('dark');
+        expect(selectorOptions[3].props.eventKey).toBe('gray');
+        expect(selectorOptions[4].props.eventKey).toBe('contrast');
     });
 })
 
