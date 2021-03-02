@@ -195,6 +195,9 @@ class Scene extends React.Component<SceneProps, {}> {
         // image is drawn upright when it is facing East
         const characterTransform = `translate(${this.getCharacterDrawXPos()} ${this.getCharacterDrawYPos()}) rotate(${this.props.characterState.getDirectionDegrees() - 90} 0 0)`;
 
+        // For the background, use the same translation, but skip the rotate.
+        const characterBackgroundTransform = `translate(${this.getCharacterDrawXPos()} ${this.getCharacterDrawYPos()})`;
+
         return (
             <div className='Scene-container'>
                 <span
@@ -212,6 +215,14 @@ class Scene extends React.Component<SceneProps, {}> {
                         {this.drawGrid()}
                         <g clipPath='url(#Scene-clippath)'>
                             {this.drawCharacterPath()}
+                            <rect
+                                className="Character__icon-background"
+                                x={-0.5}
+                                y={-0.5}
+                                height={1}
+                                width={1}
+                                transform={characterBackgroundTransform}
+                            />
                             <Character
                                 theme={this.props.theme}
                                 transform={characterTransform}

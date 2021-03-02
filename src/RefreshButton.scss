@@ -1,8 +1,13 @@
 @import 'variables';
 
+.RefreshButton {
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+}
+
 .RefreshButton-svg {
-    width: 2rem;
-    height: 2rem;
+    width: 1.4rem;
+    height: 1.4rem;
 }
 
 button.btn.RefreshButton svg {
@@ -10,7 +15,7 @@ button.btn.RefreshButton svg {
 }
 
 button.btn.RefreshButton {
-    padding: 0.2rem;
+    padding: 0.5rem;
     border: 1px solid #FFF;
     border-radius: 50%;
     background-color: #FFF;

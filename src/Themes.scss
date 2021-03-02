@@ -11,12 +11,12 @@ $c2lc-medium-grey-color: #D5D8DD;
 $c2lc-slightly-dark-grey-color: #C4C4C4;
 $c2lc-dark-grey-color: #818A98;
 $c2lc-very-dark-grey-color: #67717E;
+$c2lc-very-very-dark-gray-color: #505862;
 $c2lc-vivid-orange-color: #F97953;
 $c2lc-very-very-very-dark-blue-color: #33717F;
 
 
 /* "Mixed" Theme */
-
 body.mixed-theme {
     background-color: #FFF;
 
@@ -54,7 +54,23 @@ body.mixed-theme {
     .App__playAndShare-background {
         background-color: $c2lc-medium-grey-color;
     }
-   
+
+    .Character__icon-background {
+        fill: $c2lc-dark-green-color;
+    }
+
+    .PenDownToggleSwitch {
+        background-color: $c2lc-dark-green-color;
+        .ToggleSwitch__switch-inner-circle {
+            background-color: white;
+            svg {
+                path {
+                    stroke: black;
+                }
+            }
+        }
+    }
+
     .ProgramBlockEditor__header {
         background-color: $c2lc-medium-green-color;
     }
@@ -103,15 +119,26 @@ body.mixed-theme {
         }
     }
     
-    .Scene__grid-line {
+    .RefreshButton {
+        background-color: $c2lc-dark-green-color;
+    }
+
+    .Scene__grid-line, .Scene__path-line {
         stroke: $c2lc-light-green-color;
     }
 }
 
 /* Light Theme */
-
 body.light-theme {
     background-color: #FFF;
+
+    .AddNode__collapsed-icon {
+        background-color: $c2lc-very-very-dark-gray-color;
+    }
+    .AddNode__expanded-button {
+        border: 3px solid $c2lc-very-very-dark-gray-color;
+        box-shadow: none;
+    }
 
     .App__container {
         background-color: #FFF;
@@ -139,6 +166,10 @@ body.light-theme {
         background-color: $c2lc-medium-grey-color;
     }
    
+    .Character__icon-background {
+        fill: $c2lc-dark-green-color;
+    }
+
     // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
     #command-block--forward1,
     #command-block--forward2,
@@ -161,6 +192,18 @@ body.light-theme {
         }
     }
 
+    .PenDownToggleSwitch {
+        background-color: $c2lc-dark-green-color;
+        .ToggleSwitch__switch-inner-circle {
+            background-color: white;
+            svg {
+                path {
+                    stroke: black;
+                }
+            }
+        }
+    }
+
     .ProgramBlockEditor__header {
         background-color: $c2lc-medium-green-color;
     }
@@ -178,20 +221,51 @@ body.light-theme {
         background-color: $c2lc-dark-green-color;
     }
 
+    .RefreshButton {
+        background-color: $c2lc-dark-green-color;
+        svg path {
+            fill: black;
+        }
+    }
+
     .Scene {
         background-color: white;
     }
 
-    .Scene__grid-line {
+    .Scene__grid-line, .Scene__path-line {
         stroke: $c2lc-light-grey-color;
     }
 }
 
 
 /* Dark Theme */
-
 body.dark-theme {
     background-color: $c2lc-very-very-very-dark-green-color;
+
+
+    .AddNode__collapsed-icon {
+        background-color: white;
+        svg {
+            stroke: black;
+            fill: black;
+        }
+    }
+
+    .AddNode__expanded-button {
+        border: 2px solid $c2lc-medium-grey-color;
+        background-color: black;
+        box-shadow: none;
+        svg {
+            stroke: $c2lc-medium-grey-color;
+            fill: $c2lc-medium-grey-color;
+        }
+        &:hover {
+            svg {
+                stroke: black;
+                fill: black;
+            }
+        }
+    }
 
     .App__app-heading {
         color: white;
@@ -219,6 +293,22 @@ body.dark-theme {
         color: $c2lc-light-green-color;
     }
 
+    .Character__icon-background {
+        fill: $c2lc-dark-green-color;
+    }
+
+    .PenDownToggleSwitch {
+        background-color: $c2lc-dark-green-color;
+        .ToggleSwitch__switch-inner-circle {
+            background-color: white;
+            svg {
+                path {
+                    stroke: black;
+                }
+            }
+        }
+    }
+
     .ProgramBlockEditor__character-column {
         background-color: $c2lc-very-dark-green-color;
     }
@@ -231,14 +321,24 @@ body.dark-theme {
         background-color: $c2lc-very-very-dark-green-color;
     }
 
+    .RefreshButton {
+        background-color: $c2lc-dark-green-color;
+        svg path {
+            fill: black;
+        }
+    }
+
     .Scene {
         background-color: $c2lc-very-very-dark-green-color;
+    }
+
+    .Scene__grid-line, .Scene__path-line {
+        stroke: $c2lc-very-dark-green-color;
     }
 }
 
 
 /* Grayscale Theme */
-
 body.gray-theme {
     background-color: #FFF;
 
@@ -284,6 +384,10 @@ body.gray-theme {
         }
     }
 
+    .Character__icon-background {
+        fill: $c2lc-dark-grey-color;
+    }
+
     // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
     #command-block--forward1,
     #command-block--forward2,
@@ -317,7 +421,19 @@ body.gray-theme {
         border: 2px solid black;
         box-shadow: none;
     }
-    
+
+    .PenDownToggleSwitch {
+        background-color: $c2lc-dark-grey-color;
+        .ToggleSwitch__switch-inner-circle {
+            background-color: white;
+            svg {
+                path {
+                    stroke: $c2lc-dark-grey-color;
+                }
+            }
+        }
+    }
+
     .ProgramBlockEditor__character-column {
         background-color: $c2lc-light-grey-color;
     }
@@ -329,6 +445,13 @@ body.gray-theme {
     .ProgramBlockEditor__start-indicator {
         border-color: $c2lc-dark-grey-color;
         background: $c2lc-dark-grey-color;
+    }
+
+    .RefreshButton {
+        background-color: $c2lc-dark-grey-color;
+        svg path {
+            fill: white;
+        }
     }
 }
 
@@ -410,6 +533,10 @@ body.contrast-theme {
         }
     }
 
+    .Character__icon-background {
+        fill: white;
+    }
+
     // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
     #command-block--forward1,
     #command-block--forward2,
@@ -467,6 +594,10 @@ body.contrast-theme {
 
     .Scene {
         background-color: black;
+    }
+
+    .Scene__grid-line, .Scene__path-line {
+        stroke: white;
     }
 
     .ThemeSelector.btn {
