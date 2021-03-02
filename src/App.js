@@ -590,7 +590,6 @@ export class App extends React.Component<AppProps, AppState> {
                                         <FormattedMessage id='App.connectToDash' />
                                     </DeviceConnectControl>
                                     */}
-                                    <WorldSelector onSelect={this.handleChangeWorld} />
                                     {/* Put ThemeSelector back in C2LC-289
                                     <ThemeSelector onSelect={this.handleChangeTheme} />
                                     */}
@@ -637,6 +636,9 @@ export class App extends React.Component<AppProps, AppState> {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div className="App__world-selector-container">
+                        <WorldSelector onSelect={this.handleChangeWorld} />
                     </div>
                     <div className='App__program-block-editor'>
                         <ProgramBlockEditor
