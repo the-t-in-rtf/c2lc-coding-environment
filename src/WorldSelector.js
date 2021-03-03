@@ -53,21 +53,25 @@ class WorldSelector extends React.Component<WorldSelectorProps, WorldSelectorSta
         return (
             <div className='WorldSelector'>
                 <HeaderIcon
+                    aria-label={this.props.intl.formatMessage({id:'WorldSelector.world'})}
                     className="HeaderIcon"
                 />
                 <RobotIcon
+                    aria-label={this.props.intl.formatMessage({id:'WorldSelector.world.default'})}
                     className={"WorldIcon" + (this.state.world === 'default' ? " WorldIcon--selected" : "") }
                     onClick={(e: Event) => { this.handleCharacterClick(e, 'default')}}
                     onKeyDown={(e: KeyboardEvent) => { this.handleCharacterKeyDown(e, 'default')}}
                     tabIndex={0}
                 />
                 <RabbitIcon
+                    aria-label={this.props.intl.formatMessage({id:'WorldSelector.world.forest'})}
                     className={"WorldIcon" + (this.state.world === 'forest' ? " WorldIcon--selected" : "") }
                     onClick={(e: Event) => { this.handleCharacterClick(e, 'forest')}}
                     onKeyDown={(e: KeyboardEvent) => { this.handleCharacterKeyDown(e, 'forest')}}
                     tabIndex={0}
                 />
                 <SpaceShipIcon
+                    aria-label={this.props.intl.formatMessage({id:'WorldSelector.world.space'})}
                     className={"WorldIcon" + (this.state.world === 'space' ? " WorldIcon--selected" : "") }
                     onClick={(e: Event) => { this.handleCharacterClick(e, 'space')}}
                     onKeyDown={(e: KeyboardEvent) => { this.handleCharacterKeyDown(e, 'space')}}
