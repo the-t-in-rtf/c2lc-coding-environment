@@ -27,6 +27,11 @@
     padding: 0.4rem;
 }
 
+.WorldSelector .WorldIcon svg {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
 .WorldSelector .WorldIcon--selected {
     background: #88C3BC;
 }

@@ -20,17 +20,19 @@ type WorldSelectorProps = {
 
 
 class WorldSelector extends React.Component<WorldSelectorProps, {}> {
-    handleCharacterClick = (event: Event, worldName: WorldName) => {
+    handleCharacterClick = (event: Event) => {
         event.preventDefault();
-        this.props.onSelect(worldName);
+        // $FlowFixMe: Flow doesn't get what we're doing stashing a value on the element.
+        this.props.onSelect(event.currentTarget.value);
     }
 
-    handleCharacterKeyDown = (event: KeyboardEvent, worldName: WorldName) => {
+    handleCharacterKeyDown = (event: KeyboardEvent) => {
         const toggleKeys = [' ', 'Enter'];
 
         if (toggleKeys.indexOf(event.key) !== -1) {
             event.preventDefault();
-            this.props.onSelect(worldName);
+            // $FlowFixMe: Flow doesn't get what we're doing stashing a value on the element.
+            this.props.onSelect(event.currentTarget.value);
         }
     }
 
@@ -41,27 +43,36 @@ class WorldSelector extends React.Component<WorldSelectorProps, {}> {
                     aria-label={this.props.intl.formatMessage({id:'WorldSelector.world'})}
                     className="HeaderIcon"
                 />
-                <RobotIcon
+                <button
                     aria-label={this.props.intl.formatMessage({id:'WorldSelector.world.default'})}
+                    aria-pressed={this.props.world === 'default'}
                     className={"WorldIcon" + (this.props.world === 'default' ? " WorldIcon--selected" : "") }
-                    onClick={(e: Event) => { this.handleCharacterClick(e, 'default')}}
-                    onKeyDown={(e: KeyboardEvent) => { this.handleCharacterKeyDown(e, 'default')}}
-                    tabIndex={0}
-                />
-                <RabbitIcon
+                    onClick={this.handleCharacterClick}
+                    onKeyDown={this.handleCharacterKeyDown}
+                    value="default"
+                >
+                    <RobotIcon/>
+                </button>
+                <button
                     aria-label={this.props.intl.formatMessage({id:'WorldSelector.world.forest'})}
+                    aria-pressed={this.props.world === 'forest'}
                     className={"WorldIcon" + (this.props.world === 'forest' ? " WorldIcon--selected" : "") }
-                    onClick={(e: Event) => { this.handleCharacterClick(e, 'forest')}}
-                    onKeyDown={(e: KeyboardEvent) => { this.handleCharacterKeyDown(e, 'forest')}}
-                    tabIndex={0}
-                />
-                <SpaceShipIcon
+                    onClick={this.handleCharacterClick}
+                    onKeyDown={this.handleCharacterKeyDown}
+                    value="forest"
+                >
+                    <RabbitIcon/>
+                </button>
+                <button
                     aria-label={this.props.intl.formatMessage({id:'WorldSelector.world.space'})}
+                    aria-pressed={this.props.world === 'space'}
                     className={"WorldIcon" + (this.props.world === 'space' ? " WorldIcon--selected" : "") }
-                    onClick={(e: Event) => { this.handleCharacterClick(e, 'space')}}
-                    onKeyDown={(e: KeyboardEvent) => { this.handleCharacterKeyDown(e, 'space')}}
-                    tabIndex={0}
-                />
+                    onClick={this.handleCharacterClick}
+                    onKeyDown={this.handleCharacterKeyDown}
+                    value="space"
+                >
+                    <SpaceShipIcon/>
+                </button>
             </div>
         );
     }
