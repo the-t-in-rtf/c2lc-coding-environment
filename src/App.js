@@ -637,7 +637,10 @@ export class App extends React.Component<AppProps, AppState> {
                         </div>
                     </div>
                     <div className="App__world-selector-container">
-                        <WorldSelector onSelect={this.handleChangeWorld} />
+                        <WorldSelector
+                            world={this.state.settings.world}
+                            onSelect={this.handleChangeWorld}
+                        />
                     </div>
                     <div className='App__program-block-editor'>
                         <ProgramBlockEditor

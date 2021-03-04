@@ -7,6 +7,7 @@ import { configure, mount } from 'enzyme';
 import { createIntl, RawIntlProvider } from 'react-intl';
 import messages from './messages.json';
 import WorldSelector from './WorldSelector';
+import type {WorldName} from './types';
 
 configure({ adapter: new Adapter() });
 
@@ -16,32 +17,48 @@ const intl = createIntl({
     messages: messages.en
 });
 
+type WorldSelectorTestWrapperProps = {
+    onSelect: (value: WorldName) => void
+}
+
+type WorldSelectorTestWrapperState = {
+    world: WorldName
+}
+
+class WorldSelectorTestWrapper extends React.Component<WorldSelectorTestWrapperProps, WorldSelectorTestWrapperState> {
+    constructor (props) {
+        super(props);
+        this.state = {
+            world: 'default'
+        }
+    }
+
+    onSelect = (worldName: WorldName) => {
+        this.setState({ world: worldName});
+        this.props.onSelect(worldName);
+    };
+
+    render () {
+        return (<RawIntlProvider value={intl}>
+            <WorldSelector
+                world={this.state.world}
+                onSelect={this.onSelect}
+            />
+        </RawIntlProvider>);
+    }
+}
+
 function createMountWorldSelector(props) {
     const mockOnSelectHandler = jest.fn();
-    const wrapper = mount(
-        React.createElement(
-            WorldSelector,
-            {
-                onSelect: mockOnSelectHandler
-            }
-        ),
-        {
-            // We use the RawIntlProvider so that we can get access to the underlying `intl` instance.
-            wrappingComponent: RawIntlProvider,
-            wrappingComponentProps: {
-                value: intl
-            }
-        }
-    );
-    const worldSelector = wrapper.find(WorldSelector).childAt(0);
+    const worldSelectorTestWrapper = mount(<WorldSelectorTestWrapper onSelect={mockOnSelectHandler}/>);
+    const worldSelector = worldSelectorTestWrapper.find(WorldSelector).childAt(0);
 
-    return { worldSelector, mockOnSelectHandler };
+    return { worldSelector, worldSelectorTestWrapper, mockOnSelectHandler };
 }
 
 describe('When rendering the WorldSelector', () => {
     test('it should be possible to select a world using mouse input.', () => {
-        const {worldSelector, mockOnSelectHandler} = createMountWorldSelector();
-        expect(worldSelector.state('world')).toBe('default');
+        const {worldSelector, worldSelectorTestWrapper, mockOnSelectHandler} = createMountWorldSelector();
 
         const robotIcon = worldSelector.childAt(0).childAt(1);
         const rabbitIcon = worldSelector.childAt(0).childAt(2);
@@ -51,25 +68,24 @@ describe('When rendering the WorldSelector', () => {
 
         expect(mockOnSelectHandler.mock.calls.length).toBe(1);
         expect(mockOnSelectHandler.mock.calls[0][0]).toBe('forest');
-        expect(worldSelector.state('world')).toBe('forest');
+        expect(worldSelectorTestWrapper.state('world')).toBe('forest');
 
 
         spaceShipIcon.simulate('click');
 
         expect(mockOnSelectHandler.mock.calls.length).toBe(2);
         expect(mockOnSelectHandler.mock.calls[1][0]).toBe('space');
-        expect(worldSelector.state('world')).toBe('space');
+        expect(worldSelectorTestWrapper.state('world')).toBe('space');
 
         robotIcon.simulate('click');
 
         expect(mockOnSelectHandler.mock.calls.length).toBe(3);
         expect(mockOnSelectHandler.mock.calls[2][0]).toBe('default');
-        expect(worldSelector.state('world')).toBe('default');
+        expect(worldSelectorTestWrapper.state('world')).toBe('default');
     });
 
     test('it should be possible to select a world using keyboard input.', () => {
-        const {worldSelector, mockOnSelectHandler} = createMountWorldSelector();
-        expect(worldSelector.state('world')).toBe('default');
+        const {worldSelector, worldSelectorTestWrapper, mockOnSelectHandler} = createMountWorldSelector();
 
         const robotIcon = worldSelector.childAt(0).childAt(1);
         const rabbitIcon = worldSelector.childAt(0).childAt(2);
@@ -79,25 +95,24 @@ describe('When rendering the WorldSelector', () => {
 
         expect(mockOnSelectHandler.mock.calls.length).toBe(1);
         expect(mockOnSelectHandler.mock.calls[0][0]).toBe('forest');
-        expect(worldSelector.state('world')).toBe('forest');
+        expect(worldSelectorTestWrapper.state('world')).toBe('forest');
 
 
         spaceShipIcon.simulate('keyDown', {key: ' '});
 
         expect(mockOnSelectHandler.mock.calls.length).toBe(2);
         expect(mockOnSelectHandler.mock.calls[1][0]).toBe('space');
-        expect(worldSelector.state('world')).toBe('space');
+        expect(worldSelectorTestWrapper.state('world')).toBe('space');
 
         robotIcon.simulate('keyDown', {key: ' '});
 
         expect(mockOnSelectHandler.mock.calls.length).toBe(3);
         expect(mockOnSelectHandler.mock.calls[2][0]).toBe('default');
-        expect(worldSelector.state('world')).toBe('default');
+        expect(worldSelectorTestWrapper.state('world')).toBe('default');
     });
 
     test('all icons should have ARIA labels.', () => {
         const {worldSelector} = createMountWorldSelector();
-        expect(worldSelector.state('world')).toBe('default');
 
         const worldIcon = worldSelector.childAt(0).childAt(0)
         expect(worldIcon.prop('aria-label')).toBe("World");
