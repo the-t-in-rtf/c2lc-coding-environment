@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import { Row } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { injectIntl } from 'react-intl';
 import type {IntlShape} from 'react-intl';
@@ -567,34 +566,31 @@ export class App extends React.Component<AppProps, AppState> {
                     role='main'
                     onClick={this.handleRootClick}
                     onKeyDown={this.handleRootKeyDown}>
-                    <div className='App__header-background' />
                     <header className='App__header'>
-                        <div className='App__title'>
-                            <Row className='App__header-row'>
-                                <h1 className='App__app-heading'>
-                                    <FormattedMessage id='App.appHeading'/>
-                                </h1>
-                                <div className='App__header-right'>
-                                    <div className='App__audio-toggle-switch'>
-                                        <AudioFeedbackToggleSwitch
-                                            value={this.state.audioEnabled}
-                                            onChange={this.handleToggleAudioFeedback} />
-                                    </div>
-                                    {/* Dash connection removed for version 0.5
-                                    <DeviceConnectControl
-                                        disabled={
-                                            !this.appContext.bluetoothApiIsAvailable ||
-                                            this.state.dashConnectionStatus === 'connected' }
-                                        connectionStatus={this.state.dashConnectionStatus}
-                                        onClickConnect={this.handleClickConnectDash}>
-                                        <FormattedMessage id='App.connectToDash' />
-                                    </DeviceConnectControl>
-                                    */}
-                                    {/* Put ThemeSelector back in C2LC-289
-                                    <ThemeSelector onSelect={this.handleChangeTheme} />
-                                    */}
+                        <div className='App__header-row'>
+                            <h1 className='App__app-heading'>
+                                <FormattedMessage id='App.appHeading'/>
+                            </h1>
+                            <div className='App__header-audio-toggle'>
+                                <div className='App__audio-toggle-switch'>
+                                    <AudioFeedbackToggleSwitch
+                                        value={this.state.audioEnabled}
+                                        onChange={this.handleToggleAudioFeedback} />
                                 </div>
-                            </Row>
+                                {/* Dash connection removed for version 0.5
+                                <DeviceConnectControl
+                                    disabled={
+                                        !this.appContext.bluetoothApiIsAvailable ||
+                                        this.state.dashConnectionStatus === 'connected' }
+                                    connectionStatus={this.state.dashConnectionStatus}
+                                    onClickConnect={this.handleClickConnectDash}>
+                                    <FormattedMessage id='App.connectToDash' />
+                                </DeviceConnectControl>
+                                */}
+                                {/* Put ThemeSelector back in C2LC-289
+                                <ThemeSelector onSelect={this.handleChangeTheme} />
+                                */}
+                            </div>
                         </div>
                     </header>
                     {/* Dash connection removed for version 0.5
@@ -607,8 +603,11 @@ export class App extends React.Component<AppProps, AppState> {
                     }
                     */}
                     <div className='App__command-palette'>
-                        <h2 className='App__command-palette-heading'>
+                        <h2 className='App__command-palette-heading App__commandpalette-heading-long'>
                             <FormattedMessage id='CommandPalette.movementsTitle' />
+                        </h2>
+                        <h2 className='App__command-palette-heading App__commandpalette-heading-short'>
+                            <FormattedMessage id='CommandPalette.shortMovementsTitle' />
                         </h2>
                         <div className='App__command-palette-command-container'>
                             <div className='App__command-palette-commands'>
@@ -697,7 +696,7 @@ export class App extends React.Component<AppProps, AppState> {
             const params = new C2lcURLParams(window.location.search);
             const programQuery = params.getProgram();
             const characterStateQuery = params.getCharacterState();
-            const themeQuery = params.getTheme();
+            // const themeQuery = params.getTheme();
             const worldQuery = params.getWorld();
             if (programQuery != null && characterStateQuery != null) {
                 try {
@@ -710,12 +709,12 @@ export class App extends React.Component<AppProps, AppState> {
                     console.log(err.toString());
                 }
             }
-            this.setStateSettings({ theme: Utils.getThemeFromString(themeQuery, 'default') });
+            // this.setStateSettings({ theme: Utils.getThemeFromString(themeQuery, 'default') });
             this.setStateSettings({ world: Utils.getThemeFromString(worldQuery, 'default') });
         } else {
             const localProgram = window.localStorage.getItem('c2lc-program');
             const localCharacterState = window.localStorage.getItem('c2lc-characterState');
-            const localTheme = window.localStorage.getItem('c2lc-theme');
+            // const localTheme = window.localStorage.getItem('c2lc-theme');
             const localWorld = window.localStorage.getItem('c2lc-world');
             if (localProgram != null && localCharacterState != null) {
                 try {
@@ -728,8 +727,8 @@ export class App extends React.Component<AppProps, AppState> {
                     console.log(err.toString());
                 }
             }
-            this.setStateSettings({ theme: Utils.getThemeFromString(localTheme, 'default') });
             this.setStateSettings({ world: Utils.getWorldFromString(localWorld, 'default') });
+            // this.setStateSettings({ theme: Utils.getThemeFromString(localTheme, 'default') });
         }
     }
 
@@ -744,7 +743,7 @@ export class App extends React.Component<AppProps, AppState> {
                 {
                     p: serializedProgram,
                     c: serializedCharacterState,
-                    t: this.state.settings.theme,
+                    // t: this.state.settings.theme,
                     w: this.state.settings.world
                 },
                 '',
@@ -753,7 +752,7 @@ export class App extends React.Component<AppProps, AppState> {
             window.localStorage.setItem('c2lc-version', this.version);
             window.localStorage.setItem('c2lc-program', serializedProgram);
             window.localStorage.setItem('c2lc-characterState', serializedCharacterState);
-            window.localStorage.setItem('c2lc-theme', this.state.settings.theme);
+            // window.localStorage.setItem('c2lc-theme', this.state.settings.theme);
             window.localStorage.setItem('c2lc-world', this.state.settings.world)
         }
         if (this.state.audioEnabled !== prevState.audioEnabled) {
@@ -763,15 +762,15 @@ export class App extends React.Component<AppProps, AppState> {
                 && this.state.runningState === 'running') {
             this.interpreter.startRun();
         }
-        if (this.state.settings.theme !== prevState.settings.theme) {
-            if (document.body) {
-                if (this.state.settings.theme === 'default') {
-                    document.body.className = '';
-                } else {
-                    document.body.className = `${this.state.settings.theme}-theme`;
-                }
-            }
-        }
+        // if (this.state.settings.theme !== prevState.settings.theme) {
+        //     if (document.body) {
+        //         if (this.state.settings.theme === 'default') {
+        //             document.body.className = '';
+        //         } else {
+        //             document.body.className = `${this.state.settings.theme}-theme`;
+        //         }
+        //     }
+        // }
         if (this.state.selectedAction !== prevState.selectedAction) {
             const messagePayload = {};
             const announcementKey = this.state.selectedAction ?
