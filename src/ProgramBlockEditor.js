@@ -34,7 +34,9 @@ type ProgramBlockEditorProps = {
     audioManager: AudioManager,
     focusTrapManager: FocusTrapManager,
     addNodeExpandedMode: boolean,
-    theme: string,
+    // Bring back in C2LC-289
+    // theme: string,
+    world: string,
     onChangeProgramSequence: (programSequence: ProgramSequence) => void,
     onChangeActionPanelStepIndex: (index: ?number) => void,
     onChangeAddNodeExpandedMode: (boolean) => void
@@ -511,20 +513,20 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
         )
     }
 
-    getThemedCharacterAriaLabel() {
-        if (this.props.theme === 'space') {
+    getWorldCharacterAriaLabel() {
+        if (this.props.world === 'space') {
             return this.props.intl.formatMessage({id:'ProgramBlockEditor.spaceShipCharacter'});
-        } else if (this.props.theme === 'forest') {
+        } else if (this.props.world === 'forest') {
             return this.props.intl.formatMessage({id:'ProgramBlockEditor.rabbitCharacter'});
         } else {
             return this.props.intl.formatMessage({id:'ProgramBlockEditor.robotCharacter'});
         }
     }
 
-    getThemedCharacter() {
-        if (this.props.theme === 'space') {
+    getWorldCharacter() {
+        if (this.props.world === 'space') {
             return <SpaceShipIcon className='ProgramBlockEditor__character-column-character' />
-        } else if (this.props.theme === 'forest') {
+        } else if (this.props.world === 'forest') {
             return <RabbitIcon className='ProgramBlockEditor__character-column-character' />
         } else {
             return <RobotIcon className='ProgramBlockEditor__character-column-character' />
@@ -574,8 +576,8 @@ class ProgramBlockEditor extends React.Component<ProgramBlockEditorProps, Progra
                         <div
                             className='ProgramBlockEditor__character-column-character-container'
                             role='img'
-                            aria-label={this.getThemedCharacterAriaLabel()}>
-                            {this.getThemedCharacter()}
+                            aria-label={this.getWorldCharacterAriaLabel()}>
+                            {this.getWorldCharacter()}
                         </div>
                     </h3>
                 </div>

@@ -653,7 +653,7 @@ export class App extends React.Component<AppProps, AppState> {
                             audioManager={this.audioManager}
                             focusTrapManager={this.focusTrapManager}
                             addNodeExpandedMode={this.state.settings.addNodeExpandedMode}
-                            theme={this.state.settings.theme}
+                            world={this.state.settings.world}
                             onChangeProgramSequence={this.handleProgramSequenceChange}
                             onChangeActionPanelStepIndex={this.handleChangeActionPanelStepIndex}
                             onChangeAddNodeExpandedMode={this.handleChangeAddNodeExpandedMode}
