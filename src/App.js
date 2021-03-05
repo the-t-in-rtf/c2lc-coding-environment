@@ -638,6 +638,7 @@ export class App extends React.Component<AppProps, AppState> {
                     </div>
                     <div className="App__world-selector-container">
                         <WorldSelector
+                            disabled={this.state.runningState === 'running'}
                             world={this.state.settings.world}
                             onSelect={this.handleChangeWorld}
                         />
