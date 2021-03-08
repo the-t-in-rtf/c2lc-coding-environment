@@ -9,6 +9,7 @@ $c2lc-light-green-color: #EBFAF8;
 $c2lc-light-grey-color: #F1F2F4;
 $c2lc-medium-grey-color: #D5D8DD;
 $c2lc-slightly-dark-grey-color: #C4C4C4;
+$c2lc-slightly-darker-grey-color: #9DA4AF;
 $c2lc-dark-grey-color: #818A98;
 $c2lc-very-dark-grey-color: #67717E;
 $c2lc-very-very-dark-gray-color: #505862;
@@ -443,6 +444,8 @@ body.gray-theme {
     }
 
     button.btn.PlayButton, button.btn.StopButton {
+        box-shadow: 0px 0.675px 0.675px rgba(0, 0, 0, 0.25);
+   
         svg {
             path {
                 fill: white;
@@ -451,6 +454,55 @@ body.gray-theme {
             circle {
                 fill: $c2lc-very-dark-grey-color;
             }
+        }
+    }
+
+    button.btn.PlayButton--disabled, button.btn.StopButton--disabled {
+        background-color: $c2lc-medium-grey-color;
+        svg {
+            path {
+                fill: $c2lc-medium-grey-color;
+            }
+            circle {
+                fill: $c2lc-slightly-darker-grey-color;
+            }
+        }
+    }
+
+    .ProgramSpeedController__container svg path {
+        stroke: $c2lc-very-dark-grey-color;
+        fill: $c2lc-very-dark-grey-color;    
+    }
+
+    .ProgramSpeedController__slider {
+        &::-webkit-slider-runnable-track {
+            background-color: $c2lc-very-dark-grey-color;
+            border: 2px solid $c2lc-very-dark-grey-color;
+        }
+        &::-webkit-slider-thumb {
+            border: 2px solid $c2lc-very-dark-grey-color;
+            background-color: white;
+            box-shadow: -8rem 0 0 8rem white;
+        }
+        &::-moz-range-thumb {
+            border-radius: 0;
+            border: 2px solid black;
+            background-color: white;
+            box-shadow: -8rem 0 0 8rem white;
+        }
+
+        &::-moz-range-progress {
+            background-color: white; 
+        }
+        &::-moz-range-track {
+            background-color: $c2lc-very-dark-grey-color;
+        }
+
+        &::-ms-fill-lower {
+            background-color: white; 
+        }
+        &::-ms-fill-upper {  
+            background-color: $c2lc-very-dark-grey-color;
         }
     }
 }
@@ -508,6 +560,21 @@ body.contrast-theme {
             circle, rect, path.filled {
                 fill: black;
             }                        
+        }
+
+        &:hover, &:focus {
+            border: 1px solid white;
+            border-radius: 0.2rem;
+            background: black;
+    
+            svg {
+                path, circle, rect {
+                    stroke: white;
+                }
+                circle, rect, path.filled {
+                    fill: white;
+                }                        
+            }
         }
     }
 
@@ -592,6 +659,7 @@ body.contrast-theme {
     }
 
     button.btn.PlayButton, button.btn.StopButton {
+        box-shadow: 0px 0.675px 0.675px rgba(0, 0, 0, 0.25);
         svg {
             path {
                 fill: white;
@@ -600,6 +668,50 @@ body.contrast-theme {
             circle {
                 fill: black;
             }
+        }
+    }
+
+    button.btn.PlayButton--disabled, button.btn.StopButton--disabled {
+        svg {
+            path {
+                fill: white;
+                stroke: white;     
+            }
+            circle {
+                fill: $c2lc-slightly-dark-grey-color;
+            }
+        }
+    }
+
+    .ProgramSpeedController__slider {
+        &::-webkit-slider-runnable-track {
+            background-color: black;
+            border: 2px solid black;
+        }
+        &::-webkit-slider-thumb {
+            border: 2px solid black;
+            background-color: white;
+            box-shadow: -8rem 0 0 8rem white;
+        }
+        &::-moz-range-thumb {
+            border-radius: 0;
+            border: 2px solid black;
+            background-color: white;
+            box-shadow: -8rem 0 0 8rem white;
+        }
+
+        &::-moz-range-progress {
+            background-color: white; 
+        }
+        &::-moz-range-track {
+            background-color: black;
+        }
+
+        &::-ms-fill-lower {
+            background-color: white; 
+        }
+        &::-ms-fill-upper {  
+            background-color: black;
         }
     }
 }
