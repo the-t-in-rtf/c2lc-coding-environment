@@ -16,14 +16,9 @@ $c2lc-vivid-orange-color: #F97953;
 $c2lc-very-very-very-dark-blue-color: #33717F;
 
 
-/* "Mixed" Theme */
+/* "Mixed" (Default) Theme */
 body.mixed-theme {
     background-color: #FFF;
-
-    button.btn.ProgramBlockEditor__program-deleteAll-button {
-        border: none;
-        background-color: $c2lc-dark-green-color;
-    }
 
     .App__container {
         background-color: #FFF;
@@ -38,6 +33,10 @@ body.mixed-theme {
         background-color: $c2lc-very-dark-green-color;
     }
 
+    .App__command-palette-heading {
+        color: #F1AE5B;
+    }
+
     .App__command-palette-command-container {
         &::-webkit-scrollbar {
             background-color: $c2lc-very-dark-green-color;
@@ -47,12 +46,8 @@ body.mixed-theme {
         }
     }
 
-    .App__command-palette-heading {
-        color: #F1AE5B;
-    }
-
-    .App__playAndShare-background {
-        background-color: $c2lc-medium-grey-color;
+    .Scene__grid-line, .Scene__path-line {
+        stroke: $c2lc-light-green-color;
     }
 
     .Character__icon-background {
@@ -71,6 +66,10 @@ body.mixed-theme {
         }
     }
 
+    .RefreshButton {
+        background-color: $c2lc-dark-green-color;
+    }
+
     .ProgramBlockEditor__header {
         background-color: $c2lc-medium-green-color;
     }
@@ -79,12 +78,17 @@ body.mixed-theme {
         background-color: $c2lc-very-dark-green-color;
     }
    
+    .ProgramBlockEditor__program-sequence-scroll-container {
+        background-color: $c2lc-very-very-dark-green-color;
+    }
+
     .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch--checked {
         background-color: $c2lc-dark-green-color;
     }
-    
-    .ProgramBlockEditor__program-sequence-scroll-container {
-        background-color: $c2lc-very-very-dark-green-color;
+   
+    button.btn.ProgramBlockEditor__program-deleteAll-button {
+        border: none;
+        background-color: $c2lc-dark-green-color;
     }
 
     .ProgramSpeedController__slider {
@@ -119,26 +123,14 @@ body.mixed-theme {
         }
     }
     
-    .RefreshButton {
-        background-color: $c2lc-dark-green-color;
-    }
-
-    .Scene__grid-line, .Scene__path-line {
-        stroke: $c2lc-light-green-color;
+    .App__playAndShare-background {
+        background-color: $c2lc-medium-grey-color;
     }
 }
 
 /* Light Theme */
 body.light-theme {
     background-color: #FFF;
-
-    .AddNode__collapsed-icon {
-        background-color: $c2lc-very-very-dark-gray-color;
-    }
-    .AddNode__expanded-button {
-        border: 3px solid $c2lc-very-very-dark-gray-color;
-        box-shadow: none;
-    }
 
     .App__container {
         background-color: #FFF;
@@ -160,14 +152,6 @@ body.light-theme {
         &::-webkit-scrollbar-thumb {
             background-color: $c2lc-light-green-color;
         }
-    }
-
-    .App__playAndShare-background {
-        background-color: $c2lc-medium-grey-color;
-    }
-   
-    .Character__icon-background {
-        fill: $c2lc-dark-green-color;
     }
 
     // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
@@ -192,6 +176,18 @@ body.light-theme {
         }
     }
 
+    .Scene {
+        background-color: white;
+    }
+
+    .Scene__grid-line, .Scene__path-line {
+        stroke: $c2lc-light-grey-color;
+    }
+
+    .Character__icon-background {
+        fill: $c2lc-dark-green-color;
+    }
+
     .PenDownToggleSwitch {
         background-color: $c2lc-dark-green-color;
         .ToggleSwitch__switch-inner-circle {
@@ -204,6 +200,13 @@ body.light-theme {
         }
     }
 
+    .RefreshButton {
+        background-color: $c2lc-dark-green-color;
+        svg path {
+            fill: black;
+        }
+    }
+
     .ProgramBlockEditor__header {
         background-color: $c2lc-medium-green-color;
     }
@@ -211,7 +214,15 @@ body.light-theme {
     .ProgramBlockEditor__character-column {
         background-color: $c2lc-light-green-color;
     }
-   
+
+    .AddNode__collapsed-icon {
+        background-color: $c2lc-very-very-dark-gray-color;
+    }
+    .AddNode__expanded-button {
+        border: 3px solid $c2lc-very-very-dark-gray-color;
+        box-shadow: none;
+    }
+
     .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch--checked {
         background-color: $c2lc-dark-green-color;
     }
@@ -221,19 +232,8 @@ body.light-theme {
         background-color: $c2lc-dark-green-color;
     }
 
-    .RefreshButton {
-        background-color: $c2lc-dark-green-color;
-        svg path {
-            fill: black;
-        }
-    }
-
-    .Scene {
-        background-color: white;
-    }
-
-    .Scene__grid-line, .Scene__path-line {
-        stroke: $c2lc-light-grey-color;
+    .App__playAndShare-background {
+        background-color: $c2lc-medium-grey-color;
     }
 }
 
@@ -242,6 +242,69 @@ body.light-theme {
 body.dark-theme {
     background-color: $c2lc-very-very-very-dark-green-color;
 
+    .App__app-heading {
+        color: white;
+    }
+
+    .App__command-palette {
+        background-color: $c2lc-very-dark-green-color;
+    }
+
+    .App__command-palette-command-container {
+        &::-webkit-scrollbar {
+            background-color: $c2lc-very-dark-green-color;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: $c2lc-dark-green-color;
+        }
+    }
+
+    .App__command-palette-heading {
+        color: #F1AE5B;
+    }
+
+    .Scene {
+        background-color: $c2lc-very-very-dark-green-color;
+    }
+
+    .Scene__grid-line, .Scene__path-line {
+        stroke: $c2lc-very-dark-green-color;
+    }
+
+    .Character__icon-background {
+        fill: $c2lc-dark-green-color;
+    }
+
+    .PenDownToggleSwitch {
+        background-color: $c2lc-dark-green-color;
+        .ToggleSwitch__switch-inner-circle {
+            background-color: white;
+            svg {
+                path {
+                    stroke: black;
+                }
+            }
+        }
+    }
+
+    .RefreshButton {
+        background-color: $c2lc-dark-green-color;
+        svg path {
+            fill: black;
+        }
+    }
+
+    .ProgramBlockEditor__character-column {
+        background-color: $c2lc-very-dark-green-color;
+    }
+
+    .ProgramBlockEditor__header {
+        background-color: $c2lc-very-very-very-dark-blue-color;
+    }
+
+    .ProgramBlockEditor__program-sequence-scroll-container {
+        background-color: $c2lc-very-very-dark-green-color;
+    }
 
     .AddNode__collapsed-icon {
         background-color: white;
@@ -267,73 +330,9 @@ body.dark-theme {
         }
     }
 
-    .App__app-heading {
-        color: white;
-    }
-
-    .App__command-palette {
-        background-color: $c2lc-very-dark-green-color;
-    }
-
-    .App__command-palette-command-container {
-        &::-webkit-scrollbar {
-            background-color: $c2lc-very-dark-green-color;
-        }
-        &::-webkit-scrollbar-thumb {
-            background-color: $c2lc-dark-green-color;
-        }
-    }
-
-    .App__command-palette-heading {
-        color: #F1AE5B;
-    }
-
     .App__shareButton-container button {
         background-color: $c2lc-dark-green-color;
         color: $c2lc-light-green-color;
-    }
-
-    .Character__icon-background {
-        fill: $c2lc-dark-green-color;
-    }
-
-    .PenDownToggleSwitch {
-        background-color: $c2lc-dark-green-color;
-        .ToggleSwitch__switch-inner-circle {
-            background-color: white;
-            svg {
-                path {
-                    stroke: black;
-                }
-            }
-        }
-    }
-
-    .ProgramBlockEditor__character-column {
-        background-color: $c2lc-very-dark-green-color;
-    }
-
-    .ProgramBlockEditor__header {
-        background-color: $c2lc-very-very-very-dark-blue-color;
-    }
-
-    .ProgramBlockEditor__program-sequence-scroll-container {
-        background-color: $c2lc-very-very-dark-green-color;
-    }
-
-    .RefreshButton {
-        background-color: $c2lc-dark-green-color;
-        svg path {
-            fill: black;
-        }
-    }
-
-    .Scene {
-        background-color: $c2lc-very-very-dark-green-color;
-    }
-
-    .Scene__grid-line, .Scene__path-line {
-        stroke: $c2lc-very-dark-green-color;
     }
 }
 
@@ -368,25 +367,6 @@ body.gray-theme {
         color: $c2lc-dark-grey-color;
     }
 
-    .App__playAndShare-background {
-        background-color: $c2lc-medium-grey-color;
-    }
-
-    button.btn.PlayButton, button.btn.StopButton {
-        svg {
-            path {
-                fill: white;
-                stroke: $c2lc-slightly-dark-grey-color;     
-            }
-            circle {
-                fill: $c2lc-very-dark-grey-color;
-            }
-        }
-    }
-
-    .Character__icon-background {
-        fill: $c2lc-dark-grey-color;
-    }
 
     // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
     #command-block--forward1,
@@ -413,13 +393,8 @@ body.gray-theme {
         }
     }
 
-    .AddNode__collapsed-icon {
-        background-color: black;
-    }
-
-    .AddNode__expanded-button {
-        border: 2px solid black;
-        box-shadow: none;
+    .Character__icon-background {
+        fill: $c2lc-dark-grey-color;
     }
 
     .PenDownToggleSwitch {
@@ -432,6 +407,22 @@ body.gray-theme {
                 }
             }
         }
+    }
+
+    .RefreshButton {
+        background-color: $c2lc-dark-grey-color;
+        svg path {
+            fill: white;
+        }
+    }
+
+    .AddNode__collapsed-icon {
+        background-color: black;
+    }
+
+    .AddNode__expanded-button {
+        border: 2px solid black;
+        box-shadow: none;
     }
 
     .ProgramBlockEditor__character-column {
@@ -447,43 +438,26 @@ body.gray-theme {
         background: $c2lc-dark-grey-color;
     }
 
-    .RefreshButton {
-        background-color: $c2lc-dark-grey-color;
-        svg path {
-            fill: white;
+    .App__playAndShare-background {
+        background-color: $c2lc-medium-grey-color;
+    }
+
+    button.btn.PlayButton, button.btn.StopButton {
+        svg {
+            path {
+                fill: white;
+                stroke: $c2lc-slightly-dark-grey-color;     
+            }
+            circle {
+                fill: $c2lc-very-dark-grey-color;
+            }
         }
     }
 }
 
 /* High Contrast "Mono" Theme */
-
 body.contrast-theme {
     background-color: black;
-
-    .AddNode__collapsed-icon {
-        background-color: white;
-        svg {
-            stroke: black;
-            fill: black;
-        }
-    }
-
-    .AddNode__expanded-button {
-        border: 2px solid white;
-        background-color: black;
-        box-shadow: none;
-        svg {
-            stroke: white;
-            fill: white;
-        }
-    }
-
-    .AddNode__expanded-button:hover {
-        svg {
-            stroke: black;
-            fill: black;
-        }
-    }
 
     .App__container {
         background-color: black;
@@ -493,7 +467,11 @@ body.contrast-theme {
         background-color: black;
         color: white;
     }
-    
+
+    .ThemeSelector.btn {
+        background-color: white;
+    }
+
     .App__command-palette {
         background-color: black;
     }
@@ -506,35 +484,6 @@ body.contrast-theme {
             background-color: black;
             border: 2px solid white;
         }
-    }
-
-    .App__command-palette-heading {
-        color: white;
-    }
-
-    .App__playAndShare-background {
-        background-color: white;
-    }
-
-    .App__shareButton-container button {
-        background-color: black;
-        color: white;
-    }
-
-    button.btn.PlayButton, button.btn.StopButton {
-        svg {
-            path {
-                fill: white;
-                stroke: white;     
-            }
-            circle {
-                fill: black;
-            }
-        }
-    }
-
-    .Character__icon-background {
-        fill: white;
     }
 
     // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
@@ -560,6 +509,22 @@ body.contrast-theme {
                 fill: black;
             }                        
         }
+    }
+
+    .App__command-palette-heading {
+        color: white;
+    }
+
+    .Scene {
+        background-color: black;
+    }
+
+    .Scene__grid-line, .Scene__path-line {
+        stroke: white;
+    }
+
+    .Character__icon-background {
+        fill: white;
     }
 
     .PenDownToggleSwitch {
@@ -592,15 +557,49 @@ body.contrast-theme {
         color: black;
     }
 
-    .Scene {
-        background-color: black;
-    }
-
-    .Scene__grid-line, .Scene__path-line {
-        stroke: white;
-    }
-
-    .ThemeSelector.btn {
+    .AddNode__collapsed-icon {
         background-color: white;
+        svg {
+            stroke: black;
+            fill: black;
+        }
+    }
+
+    .AddNode__expanded-button {
+        border: 2px solid white;
+        background-color: black;
+        box-shadow: none;
+        svg {
+            stroke: white;
+            fill: white;
+        }
+    }
+
+    .AddNode__expanded-button:hover {
+        svg {
+            stroke: black;
+            fill: black;
+        }
+    }
+
+    .App__playAndShare-background {
+        background-color: white;
+    }
+
+    .App__shareButton-container button {
+        background-color: black;
+        color: white;
+    }
+
+    button.btn.PlayButton, button.btn.StopButton {
+        svg {
+            path {
+                fill: white;
+                stroke: white;     
+            }
+            circle {
+                fill: black;
+            }
+        }
     }
 }
