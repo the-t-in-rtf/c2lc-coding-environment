@@ -88,6 +88,7 @@ body {
 }
 
 .App__command-palette {
+    border-radius: 0.2rem;
     text-align: center;
     margin: 0 0.5rem;
     grid-column-start: 2;
@@ -121,6 +122,7 @@ body {
     font-weight: bold;
     font-size: inherit;
     margin: 1.5rem 0;
+    border-radius: 3px;
 }
 
 .App__commandpalette-heading-short {

@@ -1,4 +1,7 @@
+@import 'variables';
+
 /* Colours used across themes */
+
 // TODO: Come up with a rational way of distinguishing these.
 $c2lc-very-very-very-dark-green-color: #18252C;
 $c2lc-very-very-dark-green-color: #22343C;
@@ -317,16 +320,14 @@ body.dark-theme {
 
     .AddNode__expanded-button {
         border: 2px solid $c2lc-medium-grey-color;
-        background-color: black;
+        background-color: $c2lc-very-very-dark-green-color;
         box-shadow: none;
-        svg {
+        svg path {
             stroke: $c2lc-medium-grey-color;
-            fill: $c2lc-medium-grey-color;
         }
         &:hover {
-            svg {
+            svg path {
                 stroke: black;
-                fill: black;
             }
         }
     }
@@ -453,6 +454,20 @@ body.gray-theme {
             }
             circle {
                 fill: $c2lc-very-dark-grey-color;
+                &:hover {
+                    fill: $c2lc-slightly-darker-grey-color;
+                }
+            }
+        }
+
+        &:hover {
+            svg {
+                path {
+                    fill: $c2lc-very-dark-grey-color;
+                }
+                circle {
+                    fill: $c2lc-slightly-darker-grey-color;
+                }
             }
         }
     }
@@ -526,6 +541,7 @@ body.contrast-theme {
 
     .App__command-palette {
         background-color: black;
+        border: 1px solid white;
     }
 
     .App__command-palette-command-container {
@@ -562,11 +578,11 @@ body.contrast-theme {
             }                        
         }
 
-        &:hover, &:focus {
+        &:hover {
             border: 1px solid white;
             border-radius: 0.2rem;
             background: black;
-    
+
             svg {
                 path, circle, rect {
                     stroke: white;
@@ -575,6 +591,17 @@ body.contrast-theme {
                     fill: white;
                 }                        
             }
+        }
+
+        // TODO: Review w/ Sepi
+        &:focus:hover {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
+        }
+
+        &:focus:not(:hover) {
+            box-shadow:
+                0 0 0 0.1rem black,
+                0 0 0 $c2lc-focus-indicator-width white;
         }
     }
 
@@ -636,18 +663,20 @@ body.contrast-theme {
         border: 2px solid white;
         background-color: black;
         box-shadow: none;
-        svg {
+        svg path {
             stroke: white;
-            fill: white;
+            fill: white
+        }
+
+        &:hover {
+            svg path {
+                stroke: black;
+                fill: black;
+            }
         }
     }
 
-    .AddNode__expanded-button:hover {
-        svg {
-            stroke: black;
-            fill: black;
-        }
-    }
+
 
     .App__playAndShare-background {
         background-color: white;
