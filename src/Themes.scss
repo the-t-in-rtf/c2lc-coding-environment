@@ -59,7 +59,7 @@ body.mixed-theme {
     }
 
     .PenDownToggleSwitch {
-        background-color: $c2lc-dark-green-color;
+        background-color: #B9BEC6;
         .ToggleSwitch__switch-inner-circle {
             background-color: white;
             svg {
@@ -68,10 +68,13 @@ body.mixed-theme {
                 }
             }
         }
+        &.ToggleSwitch--checked {
+            background-color: #5BABBD;
+        }
     }
 
     .RefreshButton {
-        background-color: $c2lc-dark-green-color;
+        background-color: #5BABBD;
     }
 
     .ProgramBlockEditor__header {
@@ -86,13 +89,25 @@ body.mixed-theme {
         background-color: $c2lc-very-very-dark-green-color;
     }
 
+    .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch {
+        background-color: #B9BEC6;
+        .ToggleSwitch__switch-inner-circle {
+            background-color: white;
+            svg {
+                path {
+                    stroke: black;
+                }
+            }
+        }
+    }
+
     .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch--checked {
-        background-color: $c2lc-dark-green-color;
+        background-color: #5BABBD;
     }
    
     button.btn.ProgramBlockEditor__program-deleteAll-button {
         border: none;
-        background-color: $c2lc-dark-green-color;
+        background-color: #5BABBD;
     }
 
     .ProgramSpeedController__slider {

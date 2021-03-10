@@ -1,5 +1,6 @@
-.ShareButton {
+button.btn.ShareButton {
     width: 10rem;
+    border: 0;
 }
 
 button.btn.ShareButton:focus,

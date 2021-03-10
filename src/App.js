@@ -642,6 +642,7 @@ export class App extends React.Component<AppProps, AppState> {
                             onChangeAddNodeExpandedMode={this.handleChangeAddNodeExpandedMode}
                         />
                     </div>
+                    <div className='App__playAndShare-bumper'/>
                     <div className='App__playAndShare-background' />
                     <div className='App__playAndShare-container'>
                         <div className='App__playControl-container'>

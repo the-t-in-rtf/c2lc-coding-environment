@@ -9,7 +9,7 @@ body {
     box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr min-content minmax(auto, 78rem) 1fr;
-    grid-template-rows: auto auto 1fr 90px;
+    grid-template-rows: auto auto 1fr auto 7rem;
     row-gap: 0.5rem;
     height: 100vh;
 }
@@ -113,8 +113,10 @@ body {
     }
 
     .btn-command-block--right45, .btn-command-block--right90, .btn-command-block--right180 {
-        background-color: $c2lc-right-command-hover-color;
-        border: $c2lc-right-command-hover-color;
+        &:hover {
+            background-color: $c2lc-right-command-hover-color;
+            border: $c2lc-right-command-hover-color;    
+        }
     }
 }
 
@@ -167,16 +169,29 @@ body {
     }
 
     .btn-command-block--right45, .btn-command-block--right90, .btn-command-block--right180 {
-        background-color: $c2lc-right-command-hover-color;
-        border: $c2lc-right-command-hover-color;
+        &:hover {
+            background-color: $c2lc-right-command-hover-color;
+            border: $c2lc-right-command-hover-color;    
+        }
     }
+}
+
+.App__playAndShare-bumper {
+    padding: 0;
+    margin: 0;
+    box-shadow: 0px 0.7rem 4px rgba(0, 0, 0, 0.25);
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 4;
+    grid-row-end: 5;
+    height: 1px;
 }
 
 .App__playAndShare-background {
     grid-column-start: 1;
     grid-column-end: 5;
-    grid-row-start: 4;
-    grid-row-end: 5;
+    grid-row-start: 5;
+    grid-row-end: 6;
     height: 7rem;
 }
 
@@ -184,8 +199,8 @@ body {
     padding: 0 1rem;
     grid-column-start: 2;
     grid-column-end: 4;
-    grid-row-start: 4;
-    grid-row-end: 5;
+    grid-row-start: 5;
+    grid-row-end: 6;
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
