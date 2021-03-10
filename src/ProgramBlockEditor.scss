@@ -48,7 +48,7 @@
 }
 
 .ProgramBlockEditor__add-node-toggle-switch:focus {
-    box-shadow: 0 0 0 $c2lc-focus-indicator-width #299DCE;
+    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
 }
 
 .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch--checked {
