@@ -58,6 +58,10 @@ body.mixed-theme {
         fill: $c2lc-dark-green-color;
     }
 
+    .ProgramBlockEditor__container {
+        border: 2px solid $c2lc-medium-green-color;
+    }
+
     .ProgramBlockEditor__header {
         background-color: $c2lc-medium-green-color;
     }
@@ -136,6 +140,10 @@ body.light-theme {
         fill: $c2lc-dark-green-color;
     }
 
+    .ProgramBlockEditor__container {
+        border: 2px solid $c2lc-medium-green-color;
+    }
+
     .ProgramBlockEditor__header {
         background-color: $c2lc-medium-green-color;
     }
@@ -165,10 +173,6 @@ body.light-theme {
         &:hover {
             background-color: #e5e5e5;
         }
-    }
-
-    .ProgramBlockEditor__program-sequence-scroll-container {
-        border: 2px solid $c2lc-medium-green-color;
     }
 
     .App__playAndShare-background {
@@ -214,31 +218,17 @@ body.dark-theme {
         fill: $c2lc-dark-green-color;
     }
 
-    .PenDownToggleSwitch {
-        background-color: $c2lc-dark-green-color;
-        .ToggleSwitch__switch-inner-circle {
-            background-color: white;
-            svg {
-                path {
-                    stroke: black;
-                }
-            }
-        }
-    }
-
-    .RefreshButton {
-        background-color: $c2lc-dark-green-color;
-        svg path {
-            fill: black;
-        }
+    .ProgramBlockEditor__container {
+        border: 2px solid $c2lc-very-very-very-dark-blue-color;
     }
 
     .ProgramBlockEditor__character-column {
         background-color: $c2lc-very-dark-green-color;
     }
 
-    .ProgramBlockEditor__header {
+    .ProgramBlockEditor__header {        
         background-color: $c2lc-very-very-very-dark-blue-color;
+        color: #EBFAF8;
     }
 
     .ProgramBlockEditor__program-sequence-scroll-container {
@@ -360,6 +350,10 @@ body.gray-theme {
     .AddNode__expanded-button {
         border: 2px solid black;
         box-shadow: none;
+    }
+
+    .ProgramBlockEditor__container {
+        border: 2px solid #F1F1F1;
     }
 
     .ProgramBlockEditor__character-column {
@@ -566,6 +560,10 @@ body.contrast-theme {
                 }
             }
         }
+    }
+
+    .ProgramBlockEditor__container {
+        border: 2px solid #F1F1F1;
     }
 
     .ProgramBlockEditor__character-column {
