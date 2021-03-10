@@ -1,10 +1,5 @@
 @import 'variables';
 
-.RefreshButton {
-    margin-bottom: 1rem;
-    margin-right: 1rem;
-}
-
 .RefreshButton-svg {
     width: 1.4rem;
     height: 1.4rem;
@@ -15,10 +10,16 @@ button.btn.RefreshButton svg {
 }
 
 button.btn.RefreshButton {
-    padding: 0.5rem;
+    background-color: #5BABBD;
     border: 0;
     border-radius: 50%;
-    background-color: #FFF;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    padding: 0.5rem;
+
+    svg path {
+        fill: black;
+    }
 }
 
 button.btn.RefreshButton.RefreshButton--disabled:active:focus {

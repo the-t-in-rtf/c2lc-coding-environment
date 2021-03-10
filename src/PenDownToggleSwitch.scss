@@ -2,12 +2,19 @@
 
 .PenDownToggleSwitch {
     margin-bottom: 1rem;
-}
-
-.PenDownToggleSwitch:focus {
-    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
-}
-
-.PenDownToggleSwitch.ToggleSwitch--checked {
-    background: #000;
+    background-color: #B9BEC6;
+    .ToggleSwitch__switch-inner-circle {
+        background-color: white;
+        svg {
+            path {
+                stroke: black;
+            }
+        }
+    }
+    &.ToggleSwitch--checked {
+        background-color: #5BABBD;
+    }
+    &:focus {
+        box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+    }
 }

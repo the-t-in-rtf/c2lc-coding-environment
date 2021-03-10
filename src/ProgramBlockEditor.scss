@@ -45,23 +45,38 @@
 
 .ProgramBlockEditor__add-node-toggle-switch {
     float: left;
-}
 
-.ProgramBlockEditor__add-node-toggle-switch:focus {
-    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+    &.ToggleSwitch {
+        background-color: #B9BEC6;
+        .ToggleSwitch__switch-inner-circle {
+            background-color: white;
+            svg {
+                path {
+                    stroke: black;
+                }
+            }
+        }    
+    }
+
+    &:focus {
+        box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+    }
 }
 
 .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch--checked {
-    background: #000;
+    background-color: #5BABBD;
 }
 
 button.btn.ProgramBlockEditor__program-deleteAll-button {
-    vertical-align: top;
-    margin-left: 50px;
-    border: 1px solid #FFF;
+}
+
+button.btn.ProgramBlockEditor__program-deleteAll-button {
+    background-color: #5BABBD;
+    border: none;
     border-radius: 50%;
-    background-color: #FFF;
+    margin-left: 50px;
     padding: 0.5rem;
+    vertical-align: top;
 }
 
 button.btn.ProgramBlockEditor__program-deleteAll-button--pressed {
