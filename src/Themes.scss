@@ -2,7 +2,7 @@
 
 /* Colours used across themes */
 
-// TODO: Come up with a rational way of distinguishing these.
+// TODO: Come up with a rational way of organising and reusing these.
 $c2lc-very-very-very-dark-green-color: #18252C;
 $c2lc-very-very-dark-green-color: #22343C;
 $c2lc-very-dark-green-color: #30444E;
@@ -60,6 +60,7 @@ body.mixed-theme {
 
     .ProgramBlockEditor__container {
         border: 2px solid $c2lc-medium-green-color;
+        background-color: $c2lc-medium-green-color;
     }
 
     .ProgramBlockEditor__header {
@@ -127,7 +128,66 @@ body.light-theme {
     .App__command-palette {
         background-color: $c2lc-light-green-color;
     }
+
+
+    // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
+    #command-block--forward1,
+    #command-block--forward2,
+    #command-block--forward3,
+    #command-block--left45,
+    #command-block--left90,
+    #command-block--left180,
+    #command-block--right45,
+    #command-block--right90,
+    #command-block--right180 {
+        svg {
+            path, circle, rect {
+                stroke: black;
+            }
+            circle, rect, path.filled {
+                fill: black;
+            }                                            
+        }
+    }
+
+    // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
+    #command-block--forward1,
+    #command-block--forward2,
+    #command-block--forward3 {
+        border-color: #88C3BC;
+        background-color: #88C3BC;
+
+        &:hover, &:focus {
+            background-color: #66B2A9;
+        }
+    }
+
+    // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
+    #command-block--left45,
+    #command-block--left90,
+    #command-block--left180 {
+        border-color: #F5C58A;
+        background-color: #F5C58A;
+
+        &:hover, &:focus {
+            background-color: #F1AE5B;
+
+        }
+    }
+
+    // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
+    #command-block--right45,
+    #command-block--right90,
+    #command-block--right180 {
+        border-color: #F3988B;
+        background-color: #F3988B;
+
+        &:hover, &:focus {
+            background-color: #EA462F;
+        }
+    }
     
+
     .Scene {
         background-color: #EEF2F6;
     }
@@ -142,6 +202,7 @@ body.light-theme {
 
     .ProgramBlockEditor__container {
         border: 2px solid $c2lc-medium-green-color;
+        background-color: $c2lc-medium-green-color;
     }
 
     .ProgramBlockEditor__header {
@@ -219,6 +280,7 @@ body.dark-theme {
     }
 
     .ProgramBlockEditor__container {
+        background-color: $c2lc-very-very-very-dark-blue-color;
         border: 2px solid $c2lc-very-very-very-dark-blue-color;
     }
 
@@ -255,6 +317,10 @@ body.dark-theme {
                 stroke: black;
             }
         }
+    }
+
+    .App__playAndShare-background {
+        background-color: #30444e;
     }
 
     .App__shareButton-container button {
@@ -410,6 +476,7 @@ body.gray-theme {
     }
 
     .ProgramBlockEditor__container {
+        background-color: #D5D8DD;
         border: 2px solid #D5D8DD;
     }
 
@@ -450,6 +517,7 @@ body.gray-theme {
     .ProgramBlockEditor__program-sequence-scroll-container {
         margin-left: 0.1rem;
     }
+
     .ProgramBlockEditor__start-indicator {
         border-color: $c2lc-dark-grey-color;
         background: $c2lc-dark-grey-color;
@@ -476,24 +544,29 @@ body.gray-theme {
 
     button.btn.PlayButton, button.btn.StopButton {
         box-shadow: none;
-   
+        
         svg {
-            path {
+            path.inner-circle {
                 fill: white;
-                // stroke: $c2lc-slightly-dark-grey-color;     
             }
             circle {
-                fill: $c2lc-very-dark-grey-color;
+                fill: #67717E;
+            }
+            path.triangle {
+                fill: #30444E;
             }
         }
 
         &:hover {
             svg {
-                path {
+                path.inner-circle {
                     fill: $c2lc-slightly-darker-grey-color;
                 }
                 circle {
-                    fill: $c2lc-very-dark-grey-color;
+                    fill: #67717E;
+                }
+                path.triangle {
+                    fill: #30444E;
                 }
             }
         }
@@ -502,10 +575,10 @@ body.gray-theme {
     button.btn.PlayButton--disabled, button.btn.StopButton--disabled {
         background-color: $c2lc-medium-grey-color;
         svg {
-            path {
+            path.inner-circle {
                 fill: $c2lc-medium-grey-color;
             }
-            circle {
+            circle, path.triangle {
                 fill: $c2lc-slightly-darker-grey-color;
             }
         }
@@ -549,6 +622,7 @@ body.gray-theme {
     }
 
     button.btn.ShareButton:focus {
+        border: 3px solid white;
         box-shadow: 0 0 0 0.2rem black;
     }    
 }
@@ -566,8 +640,68 @@ body.contrast-theme {
         color: white;
     }
 
-    .ThemeSelector.btn {
-        background-color: white;
+    .ThemeSelector {
+        button {
+            &:focus {
+                box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
+                border: 2px solid black;
+            }
+            &:hover {
+                color: white;
+                background-color: black;
+                border: 2px solid white;
+            }    
+    
+        }
+    }
+
+    .AudioFeedbackToggleSwitch {
+        background-color:#818A98;
+
+        svg path {
+            stroke: transparent;
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
+            border: 2px solid black;
+        }
+
+        &.ToggleSwitch--checked{
+            background-color: white;
+            .ToggleSwitch__switch-inner-circle {
+                background-color: black;
+            }
+
+            svg path {
+                stroke: white;
+            }
+
+            svg path.filled {
+                fill: white;
+            }
+
+            &:hover {
+                svg path.filled {
+                    fill: black;
+                    stroke: black;
+                }
+                svg path:not(.filled) {
+                    stroke: black;
+                }                
+            }
+        }
+
+        .ToggleSwitch__switch-inner-circle {
+            background-color: white;
+        }
+
+        &:hover {
+            background-color: #505862;
+            .ToggleSwitch__switch-inner-circle {
+                background-color: #B9BEC6;
+            }
+        }
     }
 
     .App__command-palette {
@@ -617,6 +751,7 @@ body.contrast-theme {
             svg {
                 path, circle, rect {
                     stroke: white;
+                    fill: white;
                 }
                 circle, rect, path.filled {
                     fill: white;
@@ -654,6 +789,7 @@ body.contrast-theme {
 
     .PenDownToggleSwitch {
         background-color: white;
+        border: 1px solid black;
         .ToggleSwitch__switch-inner-circle {
             background-color: black;
             svg {
@@ -662,14 +798,97 @@ body.contrast-theme {
                 }
             }
         }
+
+        &.ToggleSwitch--checked {
+            background-color: black;
+            border: 2px solid white;
+            padding: 0.05rem;
+            .ToggleSwitch__switch-inner-circle {
+                background-color: white;
+                svg {
+                    path {
+                        stroke: black;
+                    }
+                }
+            }
+        }
+    }
+
+    .RefreshButton {
+        background-color: white;
+        border: 0.1rem solid black;
+        padding: 0.4rem;
+        svg path {
+            fill: black;
+            stroke: none;
+        }
+
+        &:focus {
+            box-shadow: 0 0 $c2lc-focus-indicator-width 0 white;
+            border: 0.1rem solid black;
+        }
+
+        &:hover {
+            background-color: black;
+            svg path {
+                fill: white;
+            }
+        }
     }
 
     .ProgramBlockEditor__container {
         border: 2px solid #F1F1F1;
     }
 
+    .ProgramBlockEditor__add-node-toggle-switch {
+        background-color: white;
+
+        .ToggleSwitch__switch-inner-circle {
+            background-color: black;
+            svg {
+                path {
+                    stroke: white;
+                }
+            }
+        }
+
+
+        &.ToggleSwitch--checked {
+            background-color: black;
+            .ToggleSwitch__switch-inner-circle {
+                background-color: white;
+                svg {
+                    path {
+                        stroke: black;
+                    }
+                }
+            }
+
+            &:focus {
+                border: 2px solid white;
+                padding: 0.05rem;
+            }
+        }
+    }
+
     button.btn.ProgramBlockEditor__program-deleteAll-button {
-        background-color: #818A98;
+        background-color: black;
+        border: 2px solid white;
+        svg {
+            stroke: white;
+        }
+
+        &:hover {
+            background-color: white;
+            border: 2px solid black;
+            svg {
+                stroke: black;
+            }
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width black;
+        }
     }
 
     .ProgramBlockEditor__character-column {
@@ -707,6 +926,10 @@ body.contrast-theme {
             fill: white
         }
 
+        &:focus {
+            box-shadow: 0 0 $c2lc-focus-indicator-width 0 white;
+        }
+
         &:hover {
             svg path {
                 stroke: black;
@@ -725,14 +948,21 @@ body.contrast-theme {
     }
 
     button.btn.PlayButton, button.btn.StopButton {
-        box-shadow: 0px 0.675px 0.675px rgba(0, 0, 0, 0.25);
         svg {
-            path {
+            path.inner-circle {
                 fill: white;
-                stroke: white;     
             }
             circle {
                 fill: black;
+            }
+        }
+    }
+
+    button.btn.PlayButton:hover {
+        background-color: white;
+        svg {
+            path.inner-circle {
+                fill: $c2lc-slightly-darker-grey-color;
             }
         }
     }
@@ -741,7 +971,6 @@ body.contrast-theme {
         svg {
             path {
                 fill: white;
-                stroke: white;     
             }
             circle {
                 fill: $c2lc-slightly-dark-grey-color;
@@ -779,5 +1008,10 @@ body.contrast-theme {
         &::-ms-fill-upper {  
             background-color: black;
         }
+    }
+
+    button.btn.ShareButton:focus {
+        border: 3px solid white;
+        box-shadow: 0 0 0 0.2rem black;
     }
 }

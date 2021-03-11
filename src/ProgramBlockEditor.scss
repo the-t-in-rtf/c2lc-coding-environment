@@ -16,7 +16,6 @@
 }
 
 .ProgramBlockEditor__header {
-    border-radius: 3px;
     display: grid;
     grid-column-start: 1;
     grid-column-end: 3;
@@ -128,7 +127,7 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEdi
     background: #FFF;
     box-shadow: 2px 0px 1px #8F8F8F;
     border: 0px;
-    border-radius: 3px;
+    border-radius: 3px 0 0 3px;
     padding-top: 2rem;
     pointer-events: none;
 }
@@ -146,7 +145,7 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--pressed.ProgramBlockEdi
 }
 
 .ProgramBlockEditor__program-sequence-scroll-container {
-    border-radius: 3px;
+    border-radius: 0 3px 3px 0px;
     display: flex;
     grid-column-start: 2;
     grid-column-end: 3;
