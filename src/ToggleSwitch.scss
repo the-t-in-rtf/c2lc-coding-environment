@@ -14,8 +14,8 @@
     outline: none;
 }
 
-.ToggleSwitch:hover {
-    background-color: #299DCE;
+.ToggleSwitch:hover, .ToggleSwitch.ToggleSwitch--checked:hover {
+    background-color: #F1AE5B;
 }
 
 .ToggleSwitch--checked > div {

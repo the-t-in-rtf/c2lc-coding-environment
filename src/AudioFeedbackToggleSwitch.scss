@@ -3,6 +3,7 @@
 .AudioFeedbackToggleSwitch {
     &:focus {
         box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+        padding: 0.1rem;
     }
     .ToggleSwitch__switch-inner-circle {
         background-color: white;
@@ -13,6 +14,6 @@
         }
     }
     &.ToggleSwitch--checked {
-        background-color: #5BABBD;
+        background-color: #4C9990;
     }
 }
