@@ -10,20 +10,29 @@ button.btn.PlayButton {
     padding-top: 0.05rem;
     width: 5rem;
     height: 5rem;
+    svg circle {
+        fill: black;
+    }
+
+    svg path.triangle {
+        fill: black;
+    }
 }
 
 button.btn.PlayButton:focus {
     border: $c2lc-focus-indicator-width solid $c2lc-focus-indicator-color;
+    padding: 0.05rem;
+    box-shadow: none;
 }
 
 button.btn.PlayButton:not(:focus) {
-    padding: $c2lc-focus-indicator-width;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+    padding: 0.3rem;
 }
 
 button.btn.PlayButton:hover {
-    box-shadow: 0 0 0 $c2lc-hover-indicator-width $c2lc-focus-indicator-color;
-    background-color: #e5e5e5;
+    svg path.inner-circle {
+        fill: #F1AE5B;
+    }
 }
 
 button.btn.PlayButton svg {
