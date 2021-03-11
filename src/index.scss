@@ -44,14 +44,16 @@ button.btn:focus {
 
 button.btn-primary,
 button.btn-primary:hover {
-    border: $c2lc-button-border-width solid #000000;
     font-weight: bold;
     padding: 1.15rem 1.25rem;
 }
 
 button.btn:hover {
-    box-shadow: 0 0 0 $c2lc-hover-indicator-width $c2lc-focus-indicator-color;
     z-index: 1;
+}
+
+button.btn:hover:not(:focus) {
+    box-shadow: none;
 }
 
 button.btn-primary:disabled {

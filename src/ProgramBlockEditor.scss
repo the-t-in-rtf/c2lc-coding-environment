@@ -68,15 +68,12 @@
 }
 
 button.btn.ProgramBlockEditor__program-deleteAll-button {
-}
-
-button.btn.ProgramBlockEditor__program-deleteAll-button {
     background-color: #5BABBD;
     border: none;
     border-radius: 50%;
+    box-shadow: none;
     margin-left: 50px;
     padding: 0.5rem;
-    vertical-align: top;
 }
 
 button.btn.ProgramBlockEditor__program-deleteAll-button--pressed {
@@ -107,7 +104,6 @@ button.btn.ProgramBlockEditor__program-deleteAll-button--disabled svg {
 }
 
 button.btn.ProgramBlockEditor__program-deleteAll-button:hover {
-    box-shadow: 0 0 0 $c2lc-hover-indicator-width $c2lc-focus-indicator-color;
     background-color: #e5e5e5;
 }
 

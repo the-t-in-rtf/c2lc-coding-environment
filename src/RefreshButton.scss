@@ -38,6 +38,9 @@ button.btn.RefreshButton--disabled svg {
 }
 
 button.btn.RefreshButton:hover {
-    box-shadow: 0 0 0 $c2lc-hover-indicator-width $c2lc-focus-indicator-color;
     background-color: #e5e5e5;
+}
+
+button.btn.RefreshButton:hover:not(:focus) {
+    box-shadow: none;
 }

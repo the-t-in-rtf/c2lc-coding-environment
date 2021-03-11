@@ -1,0 +1,12 @@
+@import '_variables';
+
+button.btn.ShareButton {
+    width: 10rem;
+    border: 0;
+    padding: 0.2rem;
+}
+
+button.btn.ShareButton:focus {
+    border: 3px solid white;
+    box-shadow: 0 0 $c2lc-focus-indicator-width 0 $c2lc-focus-indicator-color;
+}

@@ -7,7 +7,7 @@ import type { IntlShape } from 'react-intl';
 
 import ShareCompleteModal from './ShareCompleteModal';
 
-import './ShareButton.css';
+import './ShareButton.scss';
 
 type ShareButtonProps = {
     intl: IntlShape,

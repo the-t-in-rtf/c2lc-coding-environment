@@ -277,6 +277,10 @@ body.gray-theme {
         color: #000;
     }
     
+    .ThemeSelector  button:focus {
+        box-shadow: 0 0 0 $c2lc-focus-indicator-width black;
+    }
+
     .App__command-palette {
         background-color: $c2lc-light-grey-color;
     }
@@ -294,6 +298,24 @@ body.gray-theme {
         color: $c2lc-dark-grey-color;
     }
 
+    .AudioFeedbackToggleSwitch {
+        background-color: #B9BEC6;
+
+        &:focus {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width black;
+        }
+
+        &.ToggleSwitch--checked{
+            background-color: $c2lc-dark-grey-color;
+        }
+
+        &:hover {
+            background-color: #505862;
+            .ToggleSwitch__switch-inner-circle {
+                background-color: #B9BEC6;
+            }
+        }
+    }
 
     // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
     #command-block--forward1,
@@ -308,7 +330,7 @@ body.gray-theme {
     // TODO: Add backward commands to the above.
     .command-block {
         border-color: $c2lc-dark-grey-color;
-        background: $c2lc-dark-grey-color;
+        background-color: $c2lc-dark-grey-color;
 
         svg {
             path, circle, rect {
@@ -316,7 +338,11 @@ body.gray-theme {
             }
             circle, rect, path.filled {
                 fill: white;
-            }                        
+            }                                            
+        }
+
+        &:hover {
+            background-color: #505862;
         }
     }
 
@@ -324,8 +350,9 @@ body.gray-theme {
         fill: $c2lc-dark-grey-color;
     }
 
-    .PenDownToggleSwitch {
-        background-color: $c2lc-dark-grey-color;
+    .PenDownToggleSwitch.ToggleSwitch {
+        background-color: #B9BEC6;
+
         .ToggleSwitch__switch-inner-circle {
             background-color: white;
             svg {
@@ -333,7 +360,24 @@ body.gray-theme {
                     stroke: $c2lc-dark-grey-color;
                 }
             }
+        }        
+
+
+        &:focus {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width black;
         }
+        
+        &:hover {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width black;
+            background-color: #505862;
+            .ToggleSwitch__switch-inner-circle {
+                background-color: #B9BEC6;
+            }
+        }
+    }
+
+    .PenDownToggleSwitch.ToggleSwitch--checked {
+        background-color: $c2lc-dark-grey-color;
     }
 
     .RefreshButton {
@@ -341,32 +385,89 @@ body.gray-theme {
         svg path {
             fill: white;
         }
+        &:hover {
+            svg path {
+                fill: black;
+            }
+        }
     }
 
     .AddNode__collapsed-icon {
-        background-color: black;
+        background-color: #505862;
+        svg path {
+            stroke: white;
+            stroke-width: 6px;
+        }
     }
 
     .AddNode__expanded-button {
-        border: 2px solid black;
+        border: 2px solid #505862;
+        background-color: inherit;
         box-shadow: none;
+        svg path {
+            stroke: #505862;
+        }
     }
 
     .ProgramBlockEditor__container {
-        border: 2px solid #F1F1F1;
+        border: 2px solid #D5D8DD;
+    }
+
+    .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch:hover {
+        background-color: #505862;
+        .ToggleSwitch__switch-inner-circle {
+            background-color: #B9BEC6;
+        }  
+    }
+
+    .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch--checked {
+        background-color: #818A98;
+    }
+
+    button.btn.ProgramBlockEditor__program-deleteAll-button {
+        background-color: #818A98;
+        svg {
+            stroke: black;
+        }
+        &:hover {
+            background-color: #505862;
+        }
+    }
+
+    .ProgramBlockEditor__header {
+        background-color: #D5D8DD;
     }
 
     .ProgramBlockEditor__character-column {
         background-color: $c2lc-light-grey-color;
     }
-
+    
     .ProgramBlockEditor__character-column-character-container {
         background-color: inherit;
+        box-shadow: none;
     }
 
+    .ProgramBlockEditor__program-sequence-scroll-container {
+        margin-left: 0.1rem;
+    }
     .ProgramBlockEditor__start-indicator {
         border-color: $c2lc-dark-grey-color;
         background: $c2lc-dark-grey-color;
+    }
+
+    button.ProgramBlockEditor__program-block--active {
+        box-shadow: 0 0 0 6px black;
+    }
+
+    @keyframes pausedGreyscaleAnimation {
+        0% {box-shadow: 0 0 0 6px black;}
+        50% {box-shadow: 0 0 0 4px black;}
+        100% {box-shadow: 0 0 0 6px black;}
+    }
+
+    button.ProgramBlockEditor__program-block--paused {
+        animation-timing-function: ease;
+        animation: pausedGreyscaleAnimation 2s infinite;
     }
 
     .App__playAndShare-background {
@@ -374,28 +475,25 @@ body.gray-theme {
     }
 
     button.btn.PlayButton, button.btn.StopButton {
-        box-shadow: 0px 0.675px 0.675px rgba(0, 0, 0, 0.25);
+        box-shadow: none;
    
         svg {
             path {
                 fill: white;
-                stroke: $c2lc-slightly-dark-grey-color;     
+                // stroke: $c2lc-slightly-dark-grey-color;     
             }
             circle {
                 fill: $c2lc-very-dark-grey-color;
-                &:hover {
-                    fill: $c2lc-slightly-darker-grey-color;
-                }
             }
         }
 
         &:hover {
             svg {
                 path {
-                    fill: $c2lc-very-dark-grey-color;
+                    fill: $c2lc-slightly-darker-grey-color;
                 }
                 circle {
-                    fill: $c2lc-slightly-darker-grey-color;
+                    fill: $c2lc-very-dark-grey-color;
                 }
             }
         }
@@ -449,6 +547,10 @@ body.gray-theme {
             background-color: $c2lc-very-dark-grey-color;
         }
     }
+
+    button.btn.ShareButton:focus {
+        box-shadow: 0 0 0 0.2rem black;
+    }    
 }
 
 /* High Contrast "Mono" Theme */
@@ -566,6 +668,10 @@ body.contrast-theme {
         border: 2px solid #F1F1F1;
     }
 
+    button.btn.ProgramBlockEditor__program-deleteAll-button {
+        background-color: #818A98;
+    }
+
     .ProgramBlockEditor__character-column {
         background-color: black;
     }
@@ -608,8 +714,6 @@ body.contrast-theme {
             }
         }
     }
-
-
 
     .App__playAndShare-background {
         background-color: white;

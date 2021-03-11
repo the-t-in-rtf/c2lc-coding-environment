@@ -1,9 +1,0 @@
-button.btn.ShareButton {
-    width: 10rem;
-    border: 0;
-}
-
-button.btn.ShareButton:focus,
-button.btn.ShareButton:hover{
-    box-shadow: 0 0 0 0.2rem #299DCE;
-}
