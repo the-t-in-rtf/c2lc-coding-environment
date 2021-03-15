@@ -74,38 +74,6 @@ body.mixed-theme {
     .ProgramBlockEditor__program-sequence-scroll-container {
         background-color: $c2lc-very-very-dark-green-color;
     }
-  
-    .ProgramSpeedController__slider {
-        &::-webkit-slider-runnable-track {
-            background-color: black;
-        }
-        &::-webkit-slider-thumb {
-            border: 2px solid black;
-            background-color: $c2lc-vivid-orange-color;
-            box-shadow: -8rem 0 0 8rem $c2lc-vivid-orange-color;
-        }
-    
-        &::-moz-range-thumb {
-            border-radius: 0;
-            border: 2px solid black;
-            background-color: $c2lc-vivid-orange-color;
-            box-shadow: -8rem 0 0 8rem $c2lc-vivid-orange-color;
-        }
-
-        &::-moz-range-progress {
-            background-color: $c2lc-vivid-orange-color; 
-        }
-        &::-moz-range-track {
-            background-color: black;
-        }
-
-        &::-ms-fill-lower {
-            background-color: $c2lc-vivid-orange-color; 
-        }
-        &::-ms-fill-upper {  
-            background-color: black;
-        }
-    }
     
     .App__playAndShare-background {
         background-color: $c2lc-medium-grey-color;
@@ -141,10 +109,10 @@ body.light-theme {
     #command-block--right90,
     #command-block--right180 {
         svg {
-            path, circle, rect {
+            path, circle {
                 stroke: black;
             }
-            circle, rect, path.filled {
+            circle, path.filled {
                 fill: black;
             }                                            
         }
@@ -189,10 +157,6 @@ body.light-theme {
 
     .Scene {
         background-color: white;
-    }
-
-    .Scene__grid-line, .Scene__path-line {
-        stroke: #CDD7E4
     }
 
     .Character__icon-background {
@@ -286,6 +250,10 @@ body.dark-theme {
 
     .Scene {
         background-color: $c2lc-very-very-dark-green-color;
+    }
+
+    .Scene__grid-line {
+        stroke-width: 0.03;
     }
 
     .Scene__grid-line, .Scene__path-line {
@@ -418,7 +386,7 @@ body.gray-theme {
         background-color: #B9BEC6;
 
         &:focus {
-            box-shadow: 0 0 0 $c2lc-focus-indicator-width black;
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width #505862;
         }
 
         &.ToggleSwitch--checked{
@@ -452,9 +420,13 @@ body.gray-theme {
             path, circle, rect {
                 stroke: white;
             }
-            circle, rect, path.filled {
+            circle, path.filled {
                 fill: white;
-            }                                            
+            }
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width #505862;
         }
 
         &:hover {
@@ -480,11 +452,11 @@ body.gray-theme {
 
 
         &:focus {
-            box-shadow: 0 0 0 $c2lc-focus-indicator-width black;
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width #505862;
         }
         
         &:hover {
-            box-shadow: 0 0 0 $c2lc-focus-indicator-width black;
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width #505862;
             background-color: #505862;
             .ToggleSwitch__switch-inner-circle {
                 background-color: #B9BEC6;
@@ -505,6 +477,9 @@ body.gray-theme {
             svg path {
                 fill: black;
             }
+        }
+        &:focus {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width #505862;
         }
     }
 
@@ -530,11 +505,22 @@ body.gray-theme {
         border: 2px solid #D5D8DD;
     }
 
-    .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch:hover {
-        background-color: #505862;
-        .ToggleSwitch__switch-inner-circle {
-            background-color: #B9BEC6;
-        }  
+    .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch svg path {
+        stroke: #818A98
+    }
+
+    
+    .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch {
+        &:focus {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width #505862;
+        }
+        &:hover {
+            background-color: #505862;
+            .ToggleSwitch__switch-inner-circle {
+                background-color: #B9BEC6;
+            }  
+    
+        }
     }
 
     .ProgramBlockEditor__add-node-toggle-switch.ToggleSwitch--checked {
@@ -543,11 +529,14 @@ body.gray-theme {
 
     button.btn.ProgramBlockEditor__program-deleteAll-button {
         background-color: #818A98;
-        svg {
-            stroke: black;
+        svg path {
+            stroke: white;
         }
         &:hover {
             background-color: #505862;
+        }
+        &:focus {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width #505862;
         }
     }
 
@@ -569,7 +558,7 @@ body.gray-theme {
     }
 
     .ProgramBlockEditor__program-sequence-scroll-container--isDragging {
-        box-shadow: 0 0 0 0.4rem black;
+        box-shadow: 0 0 0 0.4rem #505862;
     }
 
     .ProgramBlockEditor__start-indicator {
@@ -583,22 +572,24 @@ body.gray-theme {
     }
 
     button.ProgramBlockEditor__program-block--active {
-        box-shadow: 0 0 0 6px black;
+        border: 1px solid white;
+        box-shadow: 0 0 0 6px #505862;
     }
 
     button.btn.AddNode__expanded-button.AddNode__expanded-button--isDragTarget {
-        box-shadow: 0 0 0 0.4rem black;
+        box-shadow: 0 0 0 0.4rem #505862;
     }
 
     @keyframes pausedGreyscaleAnimation {
-        0% {box-shadow: 0 0 0 6px black;}
-        50% {box-shadow: 0 0 0 4px black;}
-        100% {box-shadow: 0 0 0 6px black;}
+        0% {box-shadow: 0 0 0 6px #505862;}
+        50% {box-shadow: 0 0 0 4px #505862;}
+        100% {box-shadow: 0 0 0 6px #505862;}
     }
 
     button.ProgramBlockEditor__program-block--paused {
         animation-timing-function: ease;
         animation: pausedGreyscaleAnimation 2s infinite;
+        border: 1px solid white;
     }
 
     .App__playAndShare-background {
@@ -618,6 +609,11 @@ body.gray-theme {
             path.triangle {
                 fill: #30444E;
             }
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width #505862;
+            border: none;    
         }
 
         &:hover {
@@ -653,6 +649,9 @@ body.gray-theme {
     }
 
     .ProgramSpeedController__slider {
+        &:focus {
+            outline-color: #505862;
+        }
         &::-webkit-slider-runnable-track {
             background-color: $c2lc-very-dark-grey-color;
             border: 2px solid $c2lc-very-dark-grey-color;
@@ -685,8 +684,7 @@ body.gray-theme {
     }
 
     button.btn.ShareButton:focus {
-        border: 3px solid white;
-        box-shadow: 0 0 0 0.2rem black;
+        box-shadow: 0 0 0 0.2rem #505862;
     }    
 }
 
@@ -745,7 +743,7 @@ body.contrast-theme {
             background-color: white;
             svg {
                 path {
-                    stroke: black;
+                    fill: black;
                 }
             }
         }
@@ -756,13 +754,12 @@ body.contrast-theme {
                 background-color: black;
                 svg {
                     path {
-                        stroke: white;
+                        fill: white;
                     }
                 }
             }
         }
     }
-
     
     .App__command-palette {
         background-color: black;
@@ -795,10 +792,10 @@ body.contrast-theme {
         background: white;
 
         svg {
-            path, circle, rect {
+            path, circle {
                 stroke: black;
             }
-            circle, rect, path.filled {
+            circle, path.filled {
                 fill: black;
             }                        
         }
@@ -948,7 +945,7 @@ body.contrast-theme {
     button.btn.ProgramBlockEditor__program-deleteAll-button {
         background-color: black;
         border: 2px solid white;
-        svg {
+        svg path {
             stroke: white;
         }
 
@@ -979,7 +976,7 @@ body.contrast-theme {
     }
 
     .ProgramBlockEditor__program-sequence-scroll-container--isDragging {
-        box-shadow: 0 0 0 0.4rem #818A98;
+        box-shadow: 0 0 0 0.4rem white;
     }
 
     .ProgramBlockEditor__start-indicator {
@@ -997,7 +994,7 @@ body.contrast-theme {
     }
 
     button.btn.AddNode__expanded-button.AddNode__expanded-button--isDragTarget {
-        box-shadow: 0 0 0 0.4rem #818A98;
+        box-shadow: 0 0 0 0.4rem white;
     }
 
     .AddNode__expanded-button {
@@ -1019,6 +1016,18 @@ body.contrast-theme {
                 fill: black;
             }
         }
+    }
+
+    @keyframes pausedContrastAnimation {
+        0% {box-shadow: 0 0 0 6px white;}
+        50% {box-shadow: 0 0 0 4px white;}
+        100% {box-shadow: 0 0 0 6px white;}
+    }
+
+    button.ProgramBlockEditor__program-block--paused {
+        border: 1px solid black;
+        animation-timing-function: ease;
+        animation: pausedContrastAnimation 2s infinite;
     }
 
     .App__playAndShare-background {
