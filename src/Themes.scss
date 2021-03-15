@@ -250,6 +250,33 @@ body.light-theme {
 body.dark-theme {
     background-color: $c2lc-very-very-very-dark-green-color;
 
+    .ThemeSelector {
+        button.btn {
+            background-color: #4C9990;
+            color: white;
+    
+            &:hover:not(:active) {
+                background-color: #88C3BC;
+            }
+    
+            &:focus {
+                border: 2px solid black;
+                box-shadow: 0 0 0 $c2lc-focus-indicator-width #4C9990;
+            }
+
+            &:focus:not(:hover):not(:active) {
+                background-color: #4C9990;
+            }
+        }
+    
+        button.btn-primary {
+            &:not(:disabled):not(.disabled):active {
+                background-color: #F5C58A;
+                color: white;
+            }
+        }
+    }
+
     .App__app-heading {
         color: white;
     }
@@ -347,8 +374,26 @@ body.gray-theme {
         color: #000;
     }
     
-    .ThemeSelector  button:focus {
-        box-shadow: 0 0 0 $c2lc-focus-indicator-width black;
+    .ThemeSelector {
+        button.btn {
+            background-color: #F1F2F4;
+            color: black;
+    
+            &:hover:not(:active) {
+                background-color: #D5D8DD;
+            }
+    
+            &:focus {
+                border: 2px solid white;
+                box-shadow: 0 0 0 $c2lc-focus-indicator-width #505862
+            }
+        }
+    
+        button.btn-primary {
+            &:not(:disabled):not(.disabled):active {
+                background-color: #B9BEC6;
+            }
+        }
     }
 
     .App__command-palette {
@@ -650,17 +695,30 @@ body.contrast-theme {
     }
 
     .ThemeSelector {
-        button {
-            &:focus {
-                box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
-                border: 2px solid black;
-            }
-            &:hover {
-                color: white;
+        button.btn {
+            background-color: white;
+            color: black;
+    
+            &:hover:not(:active) {
                 background-color: black;
                 border: 2px solid white;
-            }    
+                color: white;
+            }
     
+            &:focus {
+                box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
+            }
+
+            &:focus:not(:hover) {
+                border: 2px solid black;
+            }
+        }
+    
+        button.btn-primary {
+            &:not(:disabled):not(.disabled):active {
+                background-color: white;
+                color: black;
+            }
         }
     }
 
