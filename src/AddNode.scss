@@ -2,8 +2,8 @@
 
 $widthOfCollapsedIcon: 0.8rem;
 $heightOfCollapsedIcon: 0.8rem;
-$widthOfExpandedIcon: 1.7rem;
-$heightOfExpandedIcon: 1.7rem;
+$widthOfExpandedIcon: 1.25rem;
+$heightOfExpandedIcon: 1.25rem;
 
 $addNodeExpandedButtonBorderWidth: 2px;
 $addNodeExpandedButtonPadding: 0.5rem;
@@ -16,6 +16,8 @@ button.btn.AddNode__expanded-button {
     border-radius: 50%;
     background-color:  #22343C;
     padding: $addNodeExpandedButtonPadding;
+    width: 45px;
+    height: 45px;
     svg {
         width: $widthOfExpandedIcon;
         height: $heightOfExpandedIcon;
