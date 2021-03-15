@@ -226,9 +226,13 @@ body.light-theme {
     }
 
     button.btn.AddNode__expanded-button {
-        border: 3px solid $c2lc-very-very-dark-gray-color;
-        box-shadow: none;
         background-color: white;
+        border: 3px solid $c2lc-very-very-dark-gray-color;
+
+        &:not(.AddNode__expanded-button--isDragTarget) {
+            box-shadow: none;
+        }
+
         svg {
             path {
                 stroke: black;
@@ -250,30 +254,12 @@ body.light-theme {
 body.dark-theme {
     background-color: $c2lc-very-very-very-dark-green-color;
 
-    .ThemeSelector {
-        button.btn {
-            background-color: #4C9990;
-            color: white;
-    
-            &:hover:not(:active) {
-                background-color: #88C3BC;
-            }
-    
-            &:focus {
-                border: 2px solid black;
-                box-shadow: 0 0 0 $c2lc-focus-indicator-width #4C9990;
-            }
 
-            &:focus:not(:hover):not(:active) {
-                background-color: #4C9990;
-            }
-        }
+    .AudioFeedbackToggleSwitch {
+        background-color: #B9BEC6;
     
-        button.btn-primary {
-            &:not(:disabled):not(.disabled):active {
-                background-color: #F5C58A;
-                color: white;
-            }
+        &:focus {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
         }
     }
 
@@ -357,6 +343,21 @@ body.dark-theme {
     .App__shareButton-container button {
         background-color: $c2lc-dark-green-color;
         color: $c2lc-light-green-color;
+    }
+
+    button.btn.PlayButton:focus, button.btn.StopButton:focus {
+        border-color: white;
+    }
+
+    .ProgramSpeedController__slider {
+        &:focus {
+            outline-color: white;
+        }
+    }
+
+    button.btn.ShareButton:focus {
+        box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
+        border-color: black;
     }
 }
 
@@ -567,6 +568,10 @@ body.gray-theme {
         margin-left: 0.1rem;
     }
 
+    .ProgramBlockEditor__program-sequence-scroll-container--isDragging {
+        box-shadow: 0 0 0 0.4rem black;
+    }
+
     .ProgramBlockEditor__start-indicator {
         background-color: #818A98;
         color: white;
@@ -579,6 +584,10 @@ body.gray-theme {
 
     button.ProgramBlockEditor__program-block--active {
         box-shadow: 0 0 0 6px black;
+    }
+
+    button.btn.AddNode__expanded-button.AddNode__expanded-button--isDragTarget {
+        box-shadow: 0 0 0 0.4rem black;
     }
 
     @keyframes pausedGreyscaleAnimation {
@@ -723,54 +732,38 @@ body.contrast-theme {
     }
 
     .AudioFeedbackToggleSwitch {
-        background-color:#818A98;
-
-        svg path {
-            stroke: transparent;
-        }
-
+        background-color: black;
+        border: 2px solid white;
+        padding: 0.1rem;
+    
         &:focus {
             box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
             border: 2px solid black;
         }
+    
+        .ToggleSwitch__switch-inner-circle {
+            background-color: white;
+            svg {
+                path {
+                    stroke: black;
+                }
+            }
+        }
 
-        &.ToggleSwitch--checked{
+        &.ToggleSwitch--checked {
             background-color: white;
             .ToggleSwitch__switch-inner-circle {
                 background-color: black;
-            }
-
-            svg path {
-                stroke: white;
-            }
-
-            svg path.filled {
-                fill: white;
-            }
-
-            &:hover {
-                svg path.filled {
-                    fill: black;
-                    stroke: black;
+                svg {
+                    path {
+                        stroke: white;
+                    }
                 }
-                svg path:not(.filled) {
-                    stroke: black;
-                }                
-            }
-        }
-
-        .ToggleSwitch__switch-inner-circle {
-            background-color: white;
-        }
-
-        &:hover {
-            background-color: #505862;
-            .ToggleSwitch__switch-inner-circle {
-                background-color: #B9BEC6;
             }
         }
     }
 
+    
     .App__command-palette {
         background-color: black;
         border: 1px solid white;
@@ -836,7 +829,14 @@ body.contrast-theme {
                 0 0 0 0.1rem black,
                 0 0 0 $c2lc-focus-indicator-width white;
         }
-    }
+
+        &.command-block--pressed,
+        &.command-block--pressed:hover,
+        &.command-block--pressed:active {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
+            border: 2px solid black;
+        }    
+    }    
 
     .App__command-palette-heading {
         color: white;
@@ -891,12 +891,13 @@ body.contrast-theme {
         }
 
         &:focus {
-            box-shadow: 0 0 $c2lc-focus-indicator-width 0 white;
-            border: 0.1rem solid black;
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
+            border: 2px solid black;
         }
 
         &:hover {
             background-color: black;
+            border: 2px solid white;
             svg path {
                 fill: white;
             }
@@ -908,32 +909,38 @@ body.contrast-theme {
     }
 
     .ProgramBlockEditor__add-node-toggle-switch {
-        background-color: white;
+        background-color: black;
 
         .ToggleSwitch__switch-inner-circle {
-            background-color: black;
+            background-color: white;
             svg {
                 path {
-                    stroke: white;
+                    stroke: black;
                 }
             }
         }
 
 
+        &:focus {
+            border: 2px solid white;
+            padding: 0.05rem;
+        }
+
         &.ToggleSwitch--checked {
-            background-color: black;
+            background-color: white;
+            border: 2px solid black;
+            padding: 0.05rem;
             .ToggleSwitch__switch-inner-circle {
-                background-color: white;
+                background-color: black;
                 svg {
                     path {
-                        stroke: black;
+                        stroke: white;
                     }
                 }
             }
 
             &:focus {
-                border: 2px solid white;
-                padding: 0.05rem;
+                border: 2px solid black;
             }
         }
     }
@@ -960,6 +967,7 @@ body.contrast-theme {
 
     .ProgramBlockEditor__character-column {
         background-color: black;
+        border-right: 2px solid #9DA4AF;
     }
 
     .ProgramBlockEditor__character-column-character-container {
@@ -968,6 +976,10 @@ body.contrast-theme {
 
     .ProgramBlockEditor__program-sequence-scroll-container {
         background-color: black;
+    }
+
+    .ProgramBlockEditor__program-sequence-scroll-container--isDragging {
+        box-shadow: 0 0 0 0.4rem #818A98;
     }
 
     .ProgramBlockEditor__start-indicator {
@@ -984,6 +996,10 @@ body.contrast-theme {
         }
     }
 
+    button.btn.AddNode__expanded-button.AddNode__expanded-button--isDragTarget {
+        box-shadow: 0 0 0 0.4rem #818A98;
+    }
+
     .AddNode__expanded-button {
         border: 2px solid white;
         background-color: black;
@@ -994,7 +1010,7 @@ body.contrast-theme {
         }
 
         &:focus {
-            box-shadow: 0 0 $c2lc-focus-indicator-width 0 white;
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
         }
 
         &:hover {

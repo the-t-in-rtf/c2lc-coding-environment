@@ -7,5 +7,6 @@ button.btn.ShareButton {
 }
 
 button.btn.ShareButton:focus {
-    box-shadow: 0 0 $c2lc-focus-indicator-width 0 $c2lc-focus-indicator-color;
+    box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+    border: 1px solid white;
 }

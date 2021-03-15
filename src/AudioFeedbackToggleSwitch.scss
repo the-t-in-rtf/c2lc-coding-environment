@@ -1,10 +1,13 @@
 @import 'variables';
 
 .AudioFeedbackToggleSwitch {
+    background-color: #B9BEC6;
+
     &:focus {
-        box-shadow: 0 0 0 $c2lc-focus-indicator-width $c2lc-focus-indicator-color;
+        box-shadow: 0 0 0 $c2lc-focus-indicator-width black;
         padding: 0.1rem;
     }
+
     .ToggleSwitch__switch-inner-circle {
         background-color: white;
         svg {
