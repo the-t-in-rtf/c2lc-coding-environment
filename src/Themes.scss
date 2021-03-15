@@ -186,10 +186,9 @@ body.light-theme {
             background-color: #EA462F;
         }
     }
-    
 
     .Scene {
-        background-color: #EEF2F6;
+        background-color: white;
     }
 
     .Scene__grid-line, .Scene__path-line {
@@ -211,6 +210,11 @@ body.light-theme {
 
     .ProgramBlockEditor__character-column {
         background-color: $c2lc-light-green-color;
+    }
+
+    .ProgramBlockEditor__start-indicator {
+        color: white;
+        background-color: black;
     }
 
     .AddNode__collapsed-icon {
@@ -516,6 +520,11 @@ body.gray-theme {
 
     .ProgramBlockEditor__program-sequence-scroll-container {
         margin-left: 0.1rem;
+    }
+
+    .ProgramBlockEditor__start-indicator {
+        background-color: #818A98;
+        color: white;
     }
 
     .ProgramBlockEditor__start-indicator {
