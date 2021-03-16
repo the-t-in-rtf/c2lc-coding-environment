@@ -50,10 +50,6 @@ body.mixed-theme {
         }
     }
 
-    .Scene__grid-line, .Scene__path-line {
-        stroke: $c2lc-light-green-color;
-    }
-
     .Character__icon-background {
         fill: $c2lc-dark-green-color;
     }
@@ -253,11 +249,11 @@ body.dark-theme {
     }
 
     .Scene__grid-line {
-        stroke-width: 0.03;
+        stroke: $c2lc-very-dark-green-color;
     }
 
-    .Scene__grid-line, .Scene__path-line {
-        stroke: $c2lc-very-dark-green-color;
+    .Scene__path-line {
+        stroke: white;
     }
 
     .Character__icon-background {
@@ -436,6 +432,10 @@ body.gray-theme {
 
     .Character__icon-background {
         fill: $c2lc-dark-grey-color;
+    }
+
+    .Scene__path-line {
+        stroke: #505862;
     }
 
     .PenDownToggleSwitch.ToggleSwitch {
@@ -806,11 +806,10 @@ body.contrast-theme {
             background: black;
 
             svg {
-                path, circle, rect {
+                path, rect, circle {
                     stroke: white;
-                    fill: white;
                 }
-                circle, rect, path.filled {
+                circle, path.filled {
                     fill: white;
                 }                        
             }
@@ -976,7 +975,9 @@ body.contrast-theme {
     }
 
     .ProgramBlockEditor__program-sequence-scroll-container--isDragging {
-        box-shadow: 0 0 0 0.4rem white;
+        box-shadow: 0 0 0 0.2rem black,
+        0 0 0 0.4rem white,
+        0 0 0 0.6rem black;
     }
 
     .ProgramBlockEditor__start-indicator {
@@ -994,7 +995,9 @@ body.contrast-theme {
     }
 
     button.btn.AddNode__expanded-button.AddNode__expanded-button--isDragTarget {
-        box-shadow: 0 0 0 0.4rem white;
+        box-shadow: 0 0 0 0.15rem white,
+        0 0 0 0.3rem black,
+        0 0 0 0.45rem white;
     }
 
     .AddNode__expanded-button {

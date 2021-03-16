@@ -13,11 +13,8 @@
     width: 1430px;
 }
 
-.Scene__grid-line, .Scene__path-line {
-    stroke: #F1F2F4
-}
-
 .Scene__grid-line {
+    stroke: #F1F2F4;
     stroke-width: 0.02;
 }
 
@@ -27,6 +24,7 @@
 }
 
 .Scene__path-line {
-    stroke-width: 0.06;
+    stroke-width: 0.05;
     stroke-linecap: round;
+    stroke: #505862;
 }
