@@ -93,6 +93,11 @@ body.light-theme {
         background-color: $c2lc-light-green-color;
     }
 
+    button.btn.command-block:focus {
+        box-shadow:
+            0 0 0 0.1rem white,
+            0 0 0 $c2lc-focus-indicator-width black;
+    }
 
     // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
     #command-block--forward1,
@@ -242,6 +247,11 @@ body.dark-theme {
 
     .App__command-palette-heading {
         color: #F1AE5B;
+    }
+
+    button.btn.command-block:focus {
+        box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
+        border: 2px solid $c2lc-very-dark-green-color;
     }
 
     .Scene {
@@ -422,7 +432,9 @@ body.gray-theme {
         }
 
         &:focus {
-            box-shadow: 0 0 0 $c2lc-focus-indicator-width #505862;
+            box-shadow:
+                0 0 0 0.1rem white,
+                0 0 0 $c2lc-focus-indicator-width #505862;
         }
 
         &:hover {
@@ -1047,7 +1059,7 @@ body.contrast-theme {
             path.inner-circle {
                 fill: white;
             }
-            circle {
+            circle, path.triangle {
                 fill: black;
             }
         }
@@ -1067,7 +1079,7 @@ body.contrast-theme {
             path {
                 fill: white;
             }
-            circle {
+            circle, path.triangle, rect {
                 fill: $c2lc-slightly-dark-grey-color;
             }
         }
