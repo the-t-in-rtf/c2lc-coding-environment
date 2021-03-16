@@ -20,22 +20,17 @@
         outline-color: $c2lc-focus-indicator-color;
         outline-offset: 2px;
         outline-width: 2px;
-        outline-style: solid;    
+        outline-style: solid;
     }
 
     &::-webkit-slider-runnable-track {
-        border: 0;
+        border: 2px solid black;
         -webkit-appearance: none;
         background-color: black;
-        // TODO; 50% l/r 0% top bottom?
-        border-radius: inherit;
+        border-radius: 8px;
         height: 16px;
         overflow: hidden;
     }
-
-    &::-webkit-slider-thumb {
-    }
-
 
     &::-webkit-slider-thumb {
         -webkit-appearance: none;
@@ -43,10 +38,9 @@
         border: 2px solid black;
         border-radius: 0;
         box-shadow: -8rem 0 0 8rem #F97953;
-        height: 16px;
-        width: 16px;
+        height: 12px;
+        width: 12px;
     }
-    
 
     &::-moz-range-thumb {
         background-color: #F97953;
