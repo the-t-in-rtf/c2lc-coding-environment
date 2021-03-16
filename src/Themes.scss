@@ -182,6 +182,57 @@ body.light-theme {
         background-color: black;
     }
 
+    .ActionPanel__background {
+        svg {
+            path {
+                fill: #F1F2F4;
+                stroke: #D5D8DD;
+            }
+        }
+    }
+       
+    button.btn.ActionPanel__action-buttons {
+        background-color: #D5D8DD;
+        svg {
+            path.stroked {
+                stroke: #505862;
+            }
+            path.filled {
+                fill: #505862;
+            }
+        }
+    
+        &:hover, &:focus:not(:disabled) {
+            background-color: #505862;
+            svg {
+                path.stroked {
+                    stroke: #F1F2F4;
+                }
+                path.filled {
+                    fill: #F1F2F4;
+                }
+            }
+        }
+    
+        &:focus {
+            box-shadow:
+                0 0 0 0.1rem #F1F2F4,
+                0 0 0 $c2lc-focus-indicator-width black;
+        }
+    }
+    
+    button.btn.ActionPanel__action-buttons--disabled {
+        background-color: #D5D8DD;
+        svg {
+            path.stroked {
+                stroke: #F1F2F4;
+            }
+            path.filled {
+                fill: #F1F2F4;
+            }
+        }
+    }
+
     .AddNode__collapsed-icon {
         background-color: #505862;
         svg path {
@@ -590,6 +641,59 @@ body.gray-theme {
 
     button.btn.AddNode__expanded-button.AddNode__expanded-button--isDragTarget {
         box-shadow: 0 0 0 0.4rem #505862;
+    }
+
+    .ActionPanel__background {
+        svg {
+            path {
+                fill: #F1F2F4;
+                stroke: #D5D8DD;
+            }
+        }
+    }
+    
+    button.btn.ActionPanel__action-buttons {
+        background-color: #D5D8DD;
+    
+        svg {
+            path.stroked {
+                stroke: #505862;
+            }
+            path.filled {
+                fill: #505862;
+            }
+        }
+    
+        &:hover, &:focus {
+            background-color: #505862;
+
+            svg {
+                path.stroked {
+                    stroke: #F1F2F4;
+                }
+                path.filled {
+                    fill: #F1F2F4;
+                }
+            }
+        }    
+   
+        &:focus {
+            box-shadow:
+                0 0 0 0.1rem #30444E,
+                0 0 0 $c2lc-focus-indicator-width white,
+                0 0 0 0.3rem #30444E;
+        }
+    }
+    
+    button.btn.ActionPanel__action-buttons--disabled {
+        svg {
+            path.stroked {
+                stroke: #F1F2F4;
+            }
+            path.filled {
+                fill: #F1F2F4;
+            }
+        }
     }
 
     @keyframes pausedGreyscaleAnimation {
@@ -1028,6 +1132,59 @@ body.contrast-theme {
             svg path {
                 stroke: black;
                 fill: black;
+            }
+        }
+    }
+
+    .ActionPanel__background {
+        svg {
+            path {
+                fill: white;
+                stroke: white;
+            }
+        }
+    }
+    
+    button.btn.ActionPanel__action-buttons {
+        background-color: black;
+    
+        svg {
+            path.stroked {
+                stroke: white;
+            }
+            path.filled {
+                fill: white;
+            }
+        }
+    
+        &:hover {
+            border: 1px solid black;
+            background-color: white;
+            svg {
+                path.stroked {
+                    stroke: black;
+                }
+                path.filled {
+                    fill: black;
+                }
+            }
+        }    
+   
+        &:focus {
+            box-shadow:
+                0 0 0 0.1rem #30444E,
+                0 0 0 $c2lc-focus-indicator-width white,
+                0 0 0 0.3rem #30444E;
+        }
+    }
+    
+    button.btn.ActionPanel__action-buttons--disabled {
+        svg {
+            path.stroked {
+                stroke: #505862;
+            }
+            path.filled {
+                fill: #505862;
             }
         }
     }
