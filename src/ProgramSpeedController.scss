@@ -23,6 +23,32 @@
         outline-style: solid;
     }
 
+    button.btn.PlayButton:hover {
+        svg path.inner-circle {
+            fill: #F1AE5B;
+        }
+    }
+
+    &:hover {
+        &::-webkit-slider-thumb {
+            background-color: #F1AE5B;
+            box-shadow: -8rem 0 0 8rem #F1AE5B;
+        }
+    
+        &::-moz-range-thumb {
+            background-color: #F1AE5B;
+        }
+       
+        &::-moz-range-progress {
+            background-color: #F1AE5B; 
+        }
+        
+        &::-ms-fill-lower {
+            background-color: #F1AE5B; 
+        }
+    }
+    
+
     &::-webkit-slider-runnable-track {
         border: 2px solid black;
         -webkit-appearance: none;

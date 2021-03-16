@@ -749,6 +749,7 @@ body.gray-theme {
 
     button.btn.PlayButton--disabled, button.btn.StopButton--disabled {
         background-color: $c2lc-medium-grey-color;
+
         svg {
             path.inner-circle {
                 fill: $c2lc-medium-grey-color;
@@ -764,18 +765,17 @@ body.gray-theme {
     }
 
     .ProgramSpeedController__slider {
-        &:focus {
-            outline-color: #505862;
-        }
         &::-webkit-slider-runnable-track {
             background-color: $c2lc-very-dark-grey-color;
             border: 2px solid $c2lc-very-dark-grey-color;
         }
+
         &::-webkit-slider-thumb {
             border: 2px solid $c2lc-very-dark-grey-color;
             background-color: white;
             box-shadow: -8rem 0 0 8rem white;
         }
+
         &::-moz-range-thumb {
             border-radius: 0;
             border: 2px solid black;
@@ -793,8 +793,32 @@ body.gray-theme {
         &::-ms-fill-lower {
             background-color: white; 
         }
+
         &::-ms-fill-upper {  
             background-color: $c2lc-very-dark-grey-color;
+        }
+
+        &:hover {
+            &::-webkit-slider-thumb {
+                background-color: $c2lc-slightly-darker-grey-color;
+                box-shadow: -8rem 0 0 8rem $c2lc-slightly-darker-grey-color;
+            }
+            &::-moz-range-thumb {
+                background-color: $c2lc-slightly-darker-grey-color;
+                box-shadow: -8rem 0 0 8rem $c2lc-slightly-darker-grey-color;
+            }
+    
+            &::-moz-range-progress {
+                background-color: $c2lc-slightly-darker-grey-color; 
+            }
+    
+            &::-ms-fill-lower {
+                background-color: $c2lc-slightly-darker-grey-color; 
+            }
+        }
+
+        &:focus {
+            outline-color: #505862;
         }
     }
 
@@ -1246,11 +1270,13 @@ body.contrast-theme {
             background-color: black;
             border: 2px solid black;
         }
+
         &::-webkit-slider-thumb {
             border: 2px solid black;
             background-color: white;
             box-shadow: -8rem 0 0 8rem white;
         }
+
         &::-moz-range-thumb {
             border-radius: 0;
             border: 2px solid black;
@@ -1261,6 +1287,7 @@ body.contrast-theme {
         &::-moz-range-progress {
             background-color: white; 
         }
+
         &::-moz-range-track {
             background-color: black;
         }
@@ -1268,8 +1295,28 @@ body.contrast-theme {
         &::-ms-fill-lower {
             background-color: white; 
         }
+
         &::-ms-fill-upper {  
             background-color: black;
+        }
+
+        &:hover {
+            &::-webkit-slider-thumb {
+                background-color: $c2lc-slightly-darker-grey-color;
+                box-shadow: -8rem 0 0 8rem $c2lc-slightly-darker-grey-color;
+            }
+            &::-moz-range-thumb {
+                background-color: $c2lc-slightly-darker-grey-color;
+                box-shadow: -8rem 0 0 8rem $c2lc-slightly-darker-grey-color;
+            }
+    
+            &::-moz-range-progress {
+                background-color: $c2lc-slightly-darker-grey-color; 
+            }
+    
+            &::-ms-fill-lower {
+                background-color: $c2lc-slightly-darker-grey-color; 
+            }
         }
     }
 
