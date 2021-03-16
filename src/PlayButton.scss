@@ -21,8 +21,13 @@ button.btn.PlayButton {
 
 button.btn.PlayButton:focus {
     border: $c2lc-focus-indicator-width solid $c2lc-focus-indicator-color;
-    padding: 0.05rem;
     box-shadow: none;
+    height: 5.1rem;
+    margin-right: 1.4rem;
+    padding: 0.05rem;
+    padding-left: 0.1rem;
+    padding-top: 0.15rem;
+    width: 5.1rem;
 }
 
 button.btn.PlayButton:not(:focus) {

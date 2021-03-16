@@ -9,6 +9,7 @@
         }
 
         &:focus {
+            padding: 0.2rem 1.1rem;
             background-color: #F5C58A;
             border: 2px solid white;
             box-shadow: 0 0 0 $c2lc-focus-indicator-width #F5C58A;
