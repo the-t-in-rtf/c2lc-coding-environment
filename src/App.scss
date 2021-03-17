@@ -1,11 +1,13 @@
 @import 'variables';
 
 body {
+    background-color: #FFF;
     overflow-y: hidden;
     overflow-x: hidden;
 }
 
 .App__container {
+    background-color: #FFF;
     box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr min-content minmax(auto, 78rem) 1fr;
@@ -15,13 +17,14 @@ body {
 }
 
 .App__header {
-    margin: 0.5rem 0.5rem 0 0.5rem;
-    padding: 0 1rem;
-    background-color: #000;
+    background-color: #FFF;
+    color: #000;
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 2;
+    margin: 0.5rem 0.5rem 0 0.5rem;
+    padding: 0 1rem;
 }
 
 .App__header-row {
@@ -88,6 +91,7 @@ body {
 }
 
 .App__command-palette {
+    background-color: #30444E;
     border-radius: 0.2rem;
     text-align: center;
     margin: 0 0.5rem;
@@ -99,6 +103,7 @@ body {
 }
 
 .App__command-palette-heading {
+    color: #F1AE5B;
     font-weight: bold;
     font-size: inherit;
     margin: 1.5rem 0;
@@ -144,6 +149,7 @@ body {
 }
 
 .App__playAndShare-background {
+    background-color: #D5D8DD;
     grid-column-start: 1;
     grid-column-end: 5;
     grid-row-start: 5;
