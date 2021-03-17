@@ -99,16 +99,26 @@ body.light-theme {
             0 0 0 $c2lc-focus-indicator-width black;
     }
 
-    // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
+    // Use both IDs and classnames here to overpower styles inherited from react-bootstrap's $theme-colors
     #command-block--forward1,
+    .btn-command-block--forward1,
     #command-block--forward2,
+    .btn-command-block--forward2,
     #command-block--forward3,
+    .btn-command-block--forward3,
     #command-block--left45,
+    .btn-command-block--left45,
     #command-block--left90,
+    .btn-command-block--left90,
     #command-block--left180,
+    .btn-command-block--left180,
     #command-block--right45,
+    .btn-command-block--right45,
     #command-block--right90,
-    #command-block--right180 {
+    .btn-command-block--right90,
+    #command-block--right180,
+    .btn-command-block--right180
+    {
         svg {
             path, circle {
                 stroke: black;
@@ -119,40 +129,49 @@ body.light-theme {
         }
     }
 
-    // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
+
+    // Use both IDs and classnames here to overpower styles inherited from react-bootstrap's $theme-colors
     #command-block--forward1,
+    .btn-command-block--forward1,
     #command-block--forward2,
-    #command-block--forward3 {
-        border-color: #88C3BC;
-        background-color: #88C3BC;
+    .btn-command-block--forward2,
+    #command-block--forward3,
+    .btn-command-block--forward3 {
+        background-color: #16796D;
+        border-color: #4C9990;
 
         &:hover, &:focus {
             background-color: #66B2A9;
         }
     }
 
-    // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
+    // Use both IDs and classnames here to overpower styles inherited from react-bootstrap's $theme-colors
     #command-block--left45,
+    .btn-command-block--left45,
     #command-block--left90,
-    #command-block--left180 {
-        border-color: #F5C58A;
-        background-color: #F5C58A;
+    .btn-command-block--left90,
+    #command-block--left180,
+    .btn-command-block--left180 {
+        background-color: #D37D12;
+        border-color: #D37D12;
 
         &:hover, &:focus {
-            background-color: #F1AE5B;
-
+            background-color: #AE6100;
         }
     }
 
-    // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
+    // Use both IDs and classnames here to overpower styles inherited from react-bootstrap's $theme-colors
     #command-block--right45,
+    .btn-command-block--right45,
     #command-block--right90,
-    #command-block--right180 {
-        border-color: #F3988B;
-        background-color: #F3988B;
+    .btn-command-block--right90,
+    #command-block--right180,
+    .btn-command-block--right180 {
+        background-color: #C13925;
+        border-color: #C13925;
 
         &:hover, &:focus {
-            background-color: #EA462F;
+            background-color: #952A1B;
         }
     }
 
@@ -464,16 +483,25 @@ body.gray-theme {
         }
     }
 
-    // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
+    // Use both IDs and classnames here to overpower styles inherited from react-bootstrap's $theme-colors
     #command-block--forward1,
+    .btn-command-block--forward1,
     #command-block--forward2,
+    .btn-command-block--forward2,
     #command-block--forward3,
+    .btn-command-block--forward3,
     #command-block--left45,
+    .btn-command-block--left45,
     #command-block--left90,
+    .btn-command-block--left90,
     #command-block--left180,
+    .btn-command-block--left180,
     #command-block--right45,
+    .btn-command-block--right45,
     #command-block--right90,
+    .btn-command-block--right90,
     #command-block--right180,
+    .btn-command-block--right180,
     // TODO: Add backward commands to the above.
     .command-block {
         border-color: $c2lc-dark-grey-color;
@@ -921,16 +949,25 @@ body.contrast-theme {
         }
     }
 
-    // We have to use IDs here to overpower styles inherited based on our use of react-bootstrap's $theme-colors
+    // Use both IDs and classnames here to overpower styles inherited from react-bootstrap's $theme-colors
     #command-block--forward1,
+    .btn-command-block--forward1,
     #command-block--forward2,
+    .btn-command-block--forward2,
     #command-block--forward3,
+    .btn-command-block--forward3,
     #command-block--left45,
+    .btn-command-block--left45,
     #command-block--left90,
+    .btn-command-block--left90,
     #command-block--left180,
+    .btn-command-block--left180,
     #command-block--right45,
+    .btn-command-block--right45,
     #command-block--right90,
+    .btn-command-block--right90,
     #command-block--right180,
+    .btn-command-block--right180,
     // TODO: Add backward commands to the above.
     .command-block {
         border-color: white;
