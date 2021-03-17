@@ -270,7 +270,6 @@ body.light-theme {
 body.dark-theme {
     background-color: $c2lc-very-very-very-dark-green-color;
 
-
     .AudioFeedbackToggleSwitch {
         background-color: #B9BEC6;
     
@@ -380,9 +379,16 @@ body.dark-theme {
         }
     }
 
-    button.btn.ShareButton:focus {
-        box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
-        border-color: black;
+    button.btn.ShareButton {
+        &:focus {
+            box-shadow: 0 0 0 $c2lc-focus-indicator-width white;
+            border-color: black;
+        }
+
+        &:hover {
+            background-color: #F5C58A;
+            color: black;
+        }          
     }
 }
 
@@ -1320,8 +1326,21 @@ body.contrast-theme {
         }
     }
 
-    button.btn.ShareButton:focus {
-        border: 3px solid white;
-        box-shadow: 0 0 0 0.2rem black;
+    button.btn.ShareButton {
+        &:focus {
+            box-shadow:
+                0 0 0 0.1rem white,
+                0 0 0 0.2rem black;
+        }
+    
+        &:hover {
+            background-color: white;
+            color: black;
+            box-shadow: 0 0 0 0.1rem black;
+        }
+
+        &:hover:focus {
+            box-shadow: 0 0 0 0.2rem black;            
+        }
     }
 }
